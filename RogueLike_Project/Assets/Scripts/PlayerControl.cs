@@ -3,6 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+
+
+
+/* WASD
+ * SHIFT 달리기
+ * CTRL 웅크리기
+ * RIFLE, PISTOL, origin weapons...
+ * 
+ */
+
+
+
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
@@ -44,13 +56,11 @@ public class PlayerControl : MonoBehaviour
             {
                 playerAnimator.SetBool("runningForward", true);
                 Movement += Vector3.forward * Time.deltaTime * moveSpeed * 2;
-                Debug.Log("running forward");
             }
             else
             {
                 playerAnimator.SetBool("walkingForward", true);
                 Movement += Vector3.forward * Time.deltaTime * moveSpeed;
-                Debug.Log("walking forward");
             }
         }
         if (Input.GetKey(KeyCode.D))
@@ -60,13 +70,11 @@ public class PlayerControl : MonoBehaviour
             {
                 playerAnimator.SetBool("runningRight",true);
                 Movement += Vector3.right * Time.deltaTime * moveSpeed * 2;
-                Debug.Log("running right");
             }
             else
             {
                 playerAnimator.SetBool("walkingRight", true);
                 Movement += Vector3.right * Time.deltaTime * moveSpeed;
-                Debug.Log("walking right");
             }
         }
         if (Input.GetKey(KeyCode.S))
@@ -76,13 +84,11 @@ public class PlayerControl : MonoBehaviour
             {
                 playerAnimator.SetBool("runningBackward", true);
                 Movement += Vector3.back * Time.deltaTime * moveSpeed * 2;
-                Debug.Log("running back");
             }
             else
             {
                 playerAnimator.SetBool("walkingBackward", true);
                 Movement += Vector3.back * Time.deltaTime * moveSpeed;
-                Debug.Log("walking backward");
             }
         }
         if (Input.GetKey(KeyCode.A))
@@ -92,18 +98,12 @@ public class PlayerControl : MonoBehaviour
             {
                 playerAnimator.SetBool("runningLeft", true);
                 Movement += Vector3.left * Time.deltaTime * moveSpeed * 2;
-                Debug.Log("running left");
             }
             else
             {
                 playerAnimator.SetBool("walkingLeft", true);
                 Movement += Vector3.left * Time.deltaTime * moveSpeed;
-                Debug.Log("walking left");
             }
-        }
-        else
-        {
-            Debug.Log("not walking");
         }
         transform.Translate(Movement,Space.World);
     }
@@ -112,13 +112,13 @@ public class PlayerControl : MonoBehaviour
         if (!isJumping && Input.GetKey(KeyCode.Space))
         {
             playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
-            isJumping = true;
+            playerAnimator.SetBool("isJumping", true);
         }
     }
     
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.tag == "Floor") isJumping = false;
+        if (collision.gameObject.tag == "Floor") playerAnimator.SetBool("isJumping", false);
     }
     private void ResetAnimationState()
     {
