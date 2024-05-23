@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -20,6 +21,10 @@ public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float jumpPower = 10f;
+    [SerializeField] float horizonRotateSpeed = 5f;
+    [SerializeField] float verticalRotateSpeed = 3f;
+    [SerializeField] int HP = 100;
+    [SerializeField] [Range(0,100)]int Stamina = 100;
 
     Animator playerAnimator;
     GameObject Player;
@@ -42,6 +47,7 @@ public class PlayerControl : MonoBehaviour
         MoveMent();
         Jump();
         shooting();
+        //cameraRotation();
     }
 
     // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
@@ -55,6 +61,7 @@ public class PlayerControl : MonoBehaviour
         {
 
         }
+        IsRunning();
         WtoMoveForward();
         DtoMoveRight();
         StoMoveBackward();
@@ -63,6 +70,21 @@ public class PlayerControl : MonoBehaviour
         return;
     }
 
+    private void IsRunning()
+    {
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !isJumping)
+        {
+            if (!playerAnimator.GetBool("isRunning")) moveSpeed *= 2f;
+            playerAnimator.SetBool("isRunning", true);
+            Stamina--;
+        }
+        else
+        {
+            if (playerAnimator.GetBool("isRunning")) moveSpeed /= 2f;
+            Stamina++;
+            playerAnimator.SetBool("isRunning", false);
+        }
+    }
     private void AtoMoveLeft()
     {
         if (Input.GetKey(KeyCode.A))
@@ -72,18 +94,9 @@ public class PlayerControl : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftControl))
             {
                 playerAnimator.SetBool("crawling",true);
-                Movement += Vector3.left * Time.deltaTime * moveSpeed * 0.6f;
+                 moveSpeed *= 0.6f;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
-            {
-                playerAnimator.SetBool("runningLeft", true);
-
-                Movement += Vector3.left * Time.deltaTime * moveSpeed * 2;
-            }
-            else
-            {
                 Movement += Vector3.left * Time.deltaTime * moveSpeed;
-            }
         }
     }
 
@@ -92,23 +105,13 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
         {
             playerAnimator.SetBool("isWalking", true);
+            playerAnimator.SetBool("walkingBackward", true);
             if (Input.GetKey(KeyCode.LeftControl))
             {
                 playerAnimator.SetBool("crawling", true);
-                Movement += Vector3.back * Time.deltaTime * moveSpeed * 0.6f;
+                moveSpeed *= 0.6f;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
-            {
-                playerAnimator.SetBool("runningBackward", true);
-                playerAnimator.SetBool("walkingBackward", true);
-
-                Movement += Vector3.back * Time.deltaTime * moveSpeed * 2;
-            }
-            else
-            {
-                playerAnimator.SetBool("walkingBackward", true);
-                Movement += Vector3.back * Time.deltaTime * moveSpeed;
-            }
+            Movement += Vector3.back * Time.deltaTime * moveSpeed;
         }
     }
 
@@ -117,23 +120,14 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             playerAnimator.SetBool("isWalking", true);
+            playerAnimator.SetBool("walkingRight", true);
             if (Input.GetKey(KeyCode.LeftControl))
             {
                 playerAnimator.SetBool("crawling", true);
                 Movement += Vector3.right * Time.deltaTime * moveSpeed * 0.6f;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
-            {
-                playerAnimator.SetBool("runningRight", true);
-                playerAnimator.SetBool("walkingRight", true);
-
-                Movement += Vector3.right * Time.deltaTime * moveSpeed * 2;
-            }
-            else
-            {
-                playerAnimator.SetBool("walkingRight", true);
-                Movement += Vector3.right * Time.deltaTime * moveSpeed;
-            }
+            Movement += Vector3.right * Time.deltaTime * moveSpeed;
+            
         }
     }
 
@@ -142,23 +136,13 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             playerAnimator.SetBool("isWalking", true);
+            playerAnimator.SetBool("walkingForward", true);
             if (Input.GetKey(KeyCode.LeftControl))
             {
                 playerAnimator.SetBool("crawling", true);
-                Movement += Vector3.forward * Time.deltaTime * moveSpeed * 0.6f;
+                moveSpeed *= 0.6f;
             }
-            else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
-            {
-                playerAnimator.SetBool("runningForward", true);
-                playerAnimator.SetBool("walkingForward", true);
-
-                Movement += Vector3.forward * Time.deltaTime * moveSpeed * 2;
-            }
-            else
-            {
-                playerAnimator.SetBool("walkingForward", true);
-                Movement += Vector3.forward * Time.deltaTime * moveSpeed;
-            }
+            Movement += Vector3.forward * Time.deltaTime * moveSpeed;
         }
     }
 
@@ -188,13 +172,9 @@ public class PlayerControl : MonoBehaviour
         playerAnimator.SetBool("walkingLeft", false);
         playerAnimator.SetBool("walkingForward", false);
         playerAnimator.SetBool("walkingBackward", false);
-        playerAnimator.SetBool("runningForward", false);
-        playerAnimator.SetBool("runningBackward", false);
-        playerAnimator.SetBool("runningLeft", false);
-        playerAnimator.SetBool("runningRight", false);
         playerAnimator.SetBool("crawling", false);
     }
-
+    
     private void shooting()
     {
         if (Input.GetMouseButton(0))
@@ -210,4 +190,14 @@ public class PlayerControl : MonoBehaviour
         }
 
     }
+    //private void cameraRotation()
+    //{
+    //    float xRotate = Input.GetAxis("mouseX") * horizonRotateSpeed * Time.deltaTime;
+    //    float yRotate = Input.GetAxis("mouseY") * verticalRotateSpeed * Time.deltaTime;
+    //    float mouseX = xRotate; 
+    //    float mouseY = 
+    //    transform.rotation = Quaternion.EulerRotation(mouseX, mouseY, 0) ;
+        
+       
+    //}
 }
