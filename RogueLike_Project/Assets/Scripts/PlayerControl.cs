@@ -19,7 +19,7 @@ using UnityEngine.UIElements;
 public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
-    [SerializeField] float jumpPower = 1f;
+    [SerializeField] float jumpPower = 10f;
 
     Animator playerAnimator;
     GameObject Player;
@@ -41,6 +41,7 @@ public class PlayerControl : MonoBehaviour
     {
         MoveMent();
         Jump();
+        shooting();
     }
 
     // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
@@ -67,6 +68,7 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             playerAnimator.SetBool("isWalking", true);
+            playerAnimator.SetBool("walkingLeft", true);
             if (Input.GetKey(KeyCode.LeftControl))
             {
                 playerAnimator.SetBool("crawling",true);
@@ -75,11 +77,11 @@ public class PlayerControl : MonoBehaviour
             else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
             {
                 playerAnimator.SetBool("runningLeft", true);
+
                 Movement += Vector3.left * Time.deltaTime * moveSpeed * 2;
             }
             else
             {
-                playerAnimator.SetBool("walkingLeft", true);
                 Movement += Vector3.left * Time.deltaTime * moveSpeed;
             }
         }
@@ -98,6 +100,8 @@ public class PlayerControl : MonoBehaviour
             else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
             {
                 playerAnimator.SetBool("runningBackward", true);
+                playerAnimator.SetBool("walkingBackward", true);
+
                 Movement += Vector3.back * Time.deltaTime * moveSpeed * 2;
             }
             else
@@ -121,6 +125,8 @@ public class PlayerControl : MonoBehaviour
             else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
             {
                 playerAnimator.SetBool("runningRight", true);
+                playerAnimator.SetBool("walkingRight", true);
+
                 Movement += Vector3.right * Time.deltaTime * moveSpeed * 2;
             }
             else
@@ -144,6 +150,8 @@ public class PlayerControl : MonoBehaviour
             else if (Input.GetKey(KeyCode.LeftShift) && !isJumping)
             {
                 playerAnimator.SetBool("runningForward", true);
+                playerAnimator.SetBool("walkingForward", true);
+
                 Movement += Vector3.forward * Time.deltaTime * moveSpeed * 2;
             }
             else
@@ -156,13 +164,11 @@ public class PlayerControl : MonoBehaviour
 
     void Jump()
     {
-        if (!isJumping && Input.GetKey(KeyCode.Space))
+        if (!playerAnimator.GetBool("isJumping") && Input.GetKey(KeyCode.Space))
         {
             playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             playerAnimator.SetBool("isJumping", true);
-            Transform arm = transform.Find("Arm1");
-            arm.transform.GetComponent<SkinnedMeshRenderer>().enabled = false;
-            transform.Find("Leg1").GetComponent<SkinnedMeshRenderer>().enabled = false;
+    
         }
     }
     
@@ -173,10 +179,8 @@ public class PlayerControl : MonoBehaviour
         {
             Transform arm = transform.Find("Arm1");
             playerAnimator.SetBool("isJumping", false);
-            arm.transform.GetComponent<SkinnedMeshRenderer>().enabled = true;
-            transform.Find("Leg1").GetComponent<SkinnedMeshRenderer>().enabled = true;
         }
-        }
+    }
         private void ResetAnimationState()
     {
         playerAnimator.SetBool("isWalking", false);
@@ -189,5 +193,21 @@ public class PlayerControl : MonoBehaviour
         playerAnimator.SetBool("runningLeft", false);
         playerAnimator.SetBool("runningRight", false);
         playerAnimator.SetBool("crawling", false);
+    }
+
+    private void shooting()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Debug.Log("shooting");
+            playerAnimator.Play("Shoot_SingleShot_AR");
+        }   
+        if (Input.GetMouseButton(1)) Debug.Log("targeting");
+        if (Input.GetKey(KeyCode.R))
+        {
+            Debug.Log("Reroad");
+            playerAnimator.Play("Reload");
+        }
+
     }
 }
