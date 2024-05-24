@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-
+// 게임 내 time 관리를 플레이어 쪽에서 하는 게 맞나? 게임 매니저를 만들어야 하는가?
 
 /* WASD
  * SHIFT 달리기
@@ -72,16 +72,19 @@ public class PlayerControl : MonoBehaviour
 
     private void IsRunning()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !isJumping)
+        float time = 0;
+        time += Time.deltaTime;
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !playerAnimator.GetBool("isJumping"))
         {
             if (!playerAnimator.GetBool("isRunning")) moveSpeed *= 2f;
             playerAnimator.SetBool("isRunning", true);
             Stamina--;
+            time = 0;
         }
         else
         {
             if (playerAnimator.GetBool("isRunning")) moveSpeed /= 2f;
-            Stamina++;
+            if (time  > 2f) Stamina++;
             playerAnimator.SetBool("isRunning", false);
         }
     }
