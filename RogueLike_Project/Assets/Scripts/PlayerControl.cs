@@ -22,8 +22,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float moveSpeed = 8f;
     float moveSpeed_origin;
     [SerializeField] float jumpPower = 10f;
-    [SerializeField] float horizonRotateSpeed = 5f;
-    [SerializeField] float verticalRotateSpeed = 3f;
+    [SerializeField] float horizonRotateSpeed = 50f;
+    [SerializeField] float verticalRotateSpeed = 30f;
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)]float Stamina = 100;
     float time;
@@ -31,6 +31,9 @@ public class PlayerControl : MonoBehaviour
     Animator playerAnimator;
     GameObject Player;
     Rigidbody playerRigidbody;
+
+    float yRotation;
+    float xRotation;
 
     Vector3 Movement = Vector3.zero;
 
@@ -70,7 +73,8 @@ public class PlayerControl : MonoBehaviour
         DtoMoveRight();
         StoMoveBackward();
         AtoMoveLeft();
-        transform.Translate(Movement, Space.World);
+        cameraRotation();
+        transform.Translate(Movement, Space.Self);
         return;
     }
 
@@ -191,14 +195,14 @@ public class PlayerControl : MonoBehaviour
         }
 
     }
-    //private void cameraRotation()
-    //{
-    //    float xRotate = Input.GetAxis("mouseX") * horizonRotateSpeed * Time.deltaTime;
-    //    float yRotate = Input.GetAxis("mouseY") * verticalRotateSpeed * Time.deltaTime;
-    //    float mouseX = xRotate; 
-    //    float mouseY = 
-    //    transform.rotation = Quaternion.EulerRotation(mouseX, mouseY, 0) ;
-        
-       
-    //}
+    private void cameraRotation()
+    {
+        float xRotate = Input.GetAxis("Mouse Y") * horizonRotateSpeed * Time.deltaTime;
+        float yRotate = Input.GetAxis("Mouse X") * verticalRotateSpeed * Time.deltaTime;
+        xRotation +=  -xRotate;
+        yRotation +=  yRotate;
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+        transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+      
+    }
 }
