@@ -74,7 +74,9 @@ public class PlayerControl : MonoBehaviour
         StoMoveBackward();
         AtoMoveLeft();
         cameraRotation();
-        transform.Translate(Movement, Space.Self);
+        Movement.Normalize();
+       
+        transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
         return;
     }
 
@@ -117,7 +119,7 @@ public class PlayerControl : MonoBehaviour
         {
             playerAnimator.SetBool("isWalking", true);
             playerAnimator.SetBool("walkingLeft", true);
-            Movement += Vector3.left * Time.deltaTime * moveSpeed;
+            Movement += Vector3.left;
         }
     }
 
@@ -127,7 +129,7 @@ public class PlayerControl : MonoBehaviour
         {
             playerAnimator.SetBool("isWalking", true);
             playerAnimator.SetBool("walkingBackward", true);
-            Movement += Vector3.back * Time.deltaTime * moveSpeed;
+            Movement += Vector3.back;
         }
     }
 
@@ -137,7 +139,7 @@ public class PlayerControl : MonoBehaviour
         {
             playerAnimator.SetBool("isWalking", true);
             playerAnimator.SetBool("walkingRight", true);
-            Movement += Vector3.right * Time.deltaTime * moveSpeed;
+            Movement += Vector3.right;
             
         }
     }
@@ -148,7 +150,7 @@ public class PlayerControl : MonoBehaviour
         {
             playerAnimator.SetBool("isWalking", true);
             playerAnimator.SetBool("walkingForward", true);
-            Movement += Vector3.forward * Time.deltaTime * moveSpeed;
+            Movement += Vector3.forward;
         }
     }
 
