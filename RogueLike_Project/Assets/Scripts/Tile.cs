@@ -4,7 +4,11 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-
+    bool isSetActive = true;
+    public bool IsSetActive
+    {
+        get { return isSetActive; }
+    }
     public void MovePosition(float pos_y, float duration = 2f)
     {
         StartCoroutine(MoveCoroutine(pos_y, duration));
@@ -43,5 +47,26 @@ public class Tile : MonoBehaviour
         }
 
         transform.localScale = newSize;
+    }
+
+    public void DestroyTile(float duration = 1f)
+    {
+        StartCoroutine(MoveCoroutine(-20f, duration));
+        StartCoroutine(SetActiveFalseCoroutine(duration));
+    }
+
+    public void CreateTile()
+    {
+        gameObject.SetActive(true);
+        isSetActive = true;
+        transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
+    }
+
+    IEnumerator SetActiveFalseCoroutine(float duration = 1f)
+    {
+
+        yield return new WaitForSeconds(duration);
+        gameObject.SetActive(false);
+        isSetActive = false;
     }
 }
