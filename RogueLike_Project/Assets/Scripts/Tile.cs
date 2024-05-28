@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    MeshRenderer meshRenderer;
+    [SerializeField] Material defaultMaterial;
+    [SerializeField] Material watchOutMaterial;
+    [SerializeField] Material warningMaterial;
     bool isSetActive = true;
+    private void Start()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
     public bool IsSetActive
     {
         get { return isSetActive; }
@@ -13,9 +21,42 @@ public class Tile : MonoBehaviour
     {
         StartCoroutine(MoveCoroutine(pos_y, duration));
     }
+    public void AlertChanging(float time = 3f, bool isWarning = false)
+    {
+        if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, isWarning));
+    }
+    IEnumerator AlertChangingCoroutine(float time, bool isWarning)
+    {
+        Material alertMaterial = isWarning ? warningMaterial : watchOutMaterial;
+
+        if (transform.position.y >= 0)
+        {
+            while (time > 1f)
+            {
+                meshRenderer.material = alertMaterial;
+                yield return new WaitForSeconds(0.66f);
+                meshRenderer.material = defaultMaterial;
+                yield return new WaitForSeconds(0.34f);
+                time -= 1f;
+            }
+            while (time > 0)
+            {
+                meshRenderer.material = alertMaterial;
+                yield return new WaitForSeconds(0.16f);
+                meshRenderer.material = defaultMaterial;
+                yield return new WaitForSeconds(0.09f);
+                time -= 0.25f;
+            }
+        }
+        else
+        {
+            yield return new WaitForSeconds(time);
+        }
+    }
 
     IEnumerator MoveCoroutine(float pos_y, float duration)
-    {
+    { 
+        //타일 움직이기
         Vector3 startPosition = transform.position;
         Vector3 newPosition = new Vector3(transform.position.x, pos_y, transform.position.z);
 
@@ -28,6 +69,7 @@ public class Tile : MonoBehaviour
         }
 
         transform.position = newPosition;
+
     }
     public void ChangeHeight(float size_y, float duration = 2f)
     {
@@ -35,6 +77,7 @@ public class Tile : MonoBehaviour
     }
     IEnumerator ChangeSizeCoroutine(float size_y, float duration)
     {
+        //타일 움직이기
         Vector3 startSize = transform.localScale;
         Vector3 newSize = new Vector3(transform.localScale.x, size_y, transform.localScale.z);
 
@@ -51,7 +94,6 @@ public class Tile : MonoBehaviour
 
     public void DestroyTile(float duration = 1f)
     {
-        StartCoroutine(MoveCoroutine(-20f, duration));
         StartCoroutine(SetActiveFalseCoroutine(duration));
     }
 
@@ -64,8 +106,7 @@ public class Tile : MonoBehaviour
 
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
-
-        yield return new WaitForSeconds(duration);
+        yield return StartCoroutine(MoveCoroutine(-20f, duration)); 
         gameObject.SetActive(false);
         isSetActive = false;
     }
