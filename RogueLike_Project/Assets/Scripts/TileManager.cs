@@ -105,7 +105,7 @@ public class TileManager : MonoBehaviour
             else
             {
                 posList.Add(pos);
-                testArray[randomY,randomX] = Random.Range(-10, 21);
+                testArray[randomY,randomX] = Random.Range(-10, 11);
             }
         }
     }
@@ -132,6 +132,15 @@ public class TileManager : MonoBehaviour
 
         for(int i = 0; i < 10; i++)
         {
+            MakeCircle(Random.Range(4,15));
+            StartCoroutine(MoveTilesByArray(testArray));
+            yield return new WaitForSeconds(5f);
+            MakeRandomMap(Random.Range(50, 201));
+            StartCoroutine(MoveTilesByArray(testArray));
+            yield return new WaitForSeconds(5f);
+            MakePyramid(Random.Range(10, 31));
+            StartCoroutine(MoveTilesByArray(testArray));
+            yield return new WaitForSeconds(5f);
             MakeRandomMap(Random.Range(50,201));
             StartCoroutine(MoveTilesByArray(testArray));
             yield return new WaitForSeconds(5f);
