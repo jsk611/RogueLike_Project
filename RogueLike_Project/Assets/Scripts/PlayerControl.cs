@@ -22,8 +22,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float moveSpeed = 8f;
     float moveSpeed_origin;
     [SerializeField] float jumpPower = 10f;
-    [SerializeField] float horizonRotateSpeed = 50f;
-    [SerializeField] float verticalRotateSpeed = 30f;
+    [SerializeField] float horizonRotateSpeed = 500f;
+    [SerializeField] float verticalRotateSpeed = 300f;
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)]float Stamina = 100;
     float time;
@@ -38,6 +38,7 @@ public class PlayerControl : MonoBehaviour
     Vector3 Movement = Vector3.zero;
 
     bool isJumping = false;
+    bool isAlive = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -50,10 +51,15 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveMent();
-        Jump();
-        shooting();
-        //cameraRotation();
+        if (isAlive)
+        {
+            MoveMent();
+            Jump();
+            shooting();
+        }
+        die();
+        if (Input.GetKey(KeyCode.L)) HP--;
+        
     }
 
     // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
@@ -83,17 +89,17 @@ public class PlayerControl : MonoBehaviour
     private void IsRunning()
     {
         time += Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !playerAnimator.GetBool("crawling"))
         {
             if (!playerAnimator.GetBool("isRunning")) moveSpeed *= 2f;
             playerAnimator.SetBool("isRunning", true);
-            Stamina -= 10 * Time.deltaTime;
-            time = 0;
+            Stamina -= 0.3f;
+            time = 0f;
         }
         else
         {
-            if (playerAnimator.GetBool("isRunning")) moveSpeed /= 2f;
-            if (time  > 1f) Stamina+=10;
+            if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
+            if (time  > 1f && Stamina <100) Stamina+=2;
             playerAnimator.SetBool("isRunning", false);
         }
     }
@@ -201,10 +207,19 @@ public class PlayerControl : MonoBehaviour
     {
         float xRotate = Input.GetAxis("Mouse Y") * horizonRotateSpeed * Time.deltaTime;
         float yRotate = Input.GetAxis("Mouse X") * verticalRotateSpeed * Time.deltaTime;
-        xRotation +=  -xRotate;
-        yRotation +=  yRotate;
+        xRotation += -xRotate;
+        yRotation += yRotate;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-      
+
     }
+    private void die()
+    {
+        if (HP <= 0)
+        {
+            isAlive = false;
+            playerAnimator.Play("Die");
+        }
+    }
+
 }
