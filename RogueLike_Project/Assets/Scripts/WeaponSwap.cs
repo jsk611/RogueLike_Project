@@ -10,7 +10,7 @@ public class WeaponSwap : MonoBehaviour
 
     void Start()
     {
-        Swapping(2);
+        Swapping(0);
     }
 
     void Swapping(int index)
@@ -19,18 +19,18 @@ public class WeaponSwap : MonoBehaviour
         {
             if(index == i)
             {
-                weapon[i].transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
-                rectTrans[i].anchoredPosition = new Vector3(0, 100 * i, 0);
+                weapon[i].transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+                rectTrans[i].anchoredPosition = new Vector3(0, 60 * i, 0);
             }
             else if(index > i)
             {
-                weapon[i].transform.localScale = new Vector3(1f, 1f, 1f);
-                rectTrans[i].anchoredPosition = new Vector3(0, 100 * i - 30, 0);
+                weapon[i].transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                rectTrans[i].anchoredPosition = new Vector3(0, 60 * i - 20, 0);
             }
             else
             {
-                weapon[i].transform.localScale = new Vector3(1f, 1f, 1f);
-                rectTrans[i].anchoredPosition = new Vector3(0, 100 * i + 30, 0);
+                weapon[i].transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
+                rectTrans[i].anchoredPosition = new Vector3(0, 60 * i + 20, 0);
             }
         }
     }
