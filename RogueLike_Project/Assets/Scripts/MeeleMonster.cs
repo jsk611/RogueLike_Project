@@ -26,6 +26,7 @@ public class MeeleMonster : MonoBehaviour
 
     void Start()
     {
+
         player = GameObject.FindGameObjectWithTag("Player").transform;
         playerData = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>();
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -34,12 +35,10 @@ public class MeeleMonster : MonoBehaviour
 
     void Update()
     {
-        navMeshAgent.SetDestination(player.position);
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer <= detectionRadius)
         {
-            navMeshAgent.SetDestination(player.position);
 
             if (distanceToPlayer <= attackRange)
             {
@@ -52,7 +51,7 @@ public class MeeleMonster : MonoBehaviour
         }
         else
         {
-            navMeshAgent.SetDestination(transform.position); // 몬스터를 현재 위치에 멈추게 함
+            // navMeshAgent.SetDestination(transform.position); // 몬스터를 현재 위치에 멈추게 함
         }
     }
 
@@ -67,5 +66,10 @@ public class MeeleMonster : MonoBehaviour
             playerData.TakeDamage(damage);
             // 플레이어에게 피해를 줌
         }
+    }
+
+    void Chase()
+    {
+
     }
 }
