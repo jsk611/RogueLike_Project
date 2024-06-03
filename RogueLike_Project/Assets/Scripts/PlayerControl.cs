@@ -17,6 +17,10 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
+    // test¿ë test hp;
+    private float maxHp;
+    private float hp;
+
     [SerializeField] float moveSpeed = 8f;
     [SerializeField] float jumpPower = 10f;
 
@@ -30,6 +34,10 @@ public class PlayerControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //test
+        maxHp = 100.0f;
+        hp = maxHp;
+
         Player = GetComponent<GameObject>();
         playerAnimator = GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
@@ -131,5 +139,14 @@ public class PlayerControl : MonoBehaviour
         playerAnimator.SetBool("runningBackward", false);
         playerAnimator.SetBool("runningLeft", false);
         playerAnimator.SetBool("runningRight", false);
+    }
+
+
+    
+    // test¿ë take Damage
+    public void TakeDamage(int dmg)
+    {
+        hp -= dmg;
+        Debug.Log("Currnet Hp: " + hp);
     }
 }

@@ -11,6 +11,7 @@ public class MeeleMonster : MonoBehaviour
     public int damage = 10; // 공격력
 
     private Transform player;
+    private PlayerControl playerData;
     private NavMeshAgent navMeshAgent;
     private Animator animator;
     private float lastAttackTime;
@@ -19,18 +20,21 @@ public class MeeleMonster : MonoBehaviour
     {
         None,
         Idle,
-        Attack
+        Run,
+        Attack,
     }
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        playerData = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerControl>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
+        navMeshAgent.SetDestination(player.position);
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
         if (distanceToPlayer <= detectionRadius)
@@ -60,6 +64,7 @@ public class MeeleMonster : MonoBehaviour
         // 실제 공격 로직은 애니메이션 이벤트나 충돌 검사를 통해 구현
         if (Vector3.Distance(transform.position, player.position) <= attackRange)
         {
+            playerData.TakeDamage(damage);
             // 플레이어에게 피해를 줌
         }
     }
