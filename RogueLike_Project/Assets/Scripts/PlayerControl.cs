@@ -79,7 +79,7 @@ public class PlayerControl : MonoBehaviour
         DtoMoveRight();
         StoMoveBackward();
         AtoMoveLeft();
-        cameraRotation();
+       // cameraRotation();
         Movement.Normalize();
        
         transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
@@ -99,7 +99,7 @@ public class PlayerControl : MonoBehaviour
         else
         {
             if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
-            if (time  > 1f && Stamina <100) Stamina+=2;
+            if (time  > 1f && Stamina <100 && !playerAnimator.GetBool("isJumping")) Stamina+=2;
             playerAnimator.SetBool("isRunning", false);
         }
     }
