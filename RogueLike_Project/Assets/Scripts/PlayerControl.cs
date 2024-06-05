@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -21,15 +22,15 @@ public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
     float moveSpeed_origin;
-    [SerializeField] float jumpPower = 10f;
+    
     [SerializeField] float horizonRotateSpeed = 50f;
     [SerializeField] float verticalRotateSpeed = 30f;
     [SerializeField] int HP = 100;
-    [SerializeField] [Range(0,100)]float Stamina = 100;
+    [SerializeField] [Range(0,100)] public float Stamina = 100;
     float time;
 
     Animator playerAnimator;
-    GameObject Player;
+    
     Rigidbody playerRigidbody;
 
     float yRotation;
@@ -37,23 +38,34 @@ public class PlayerControl : MonoBehaviour
 
     Vector3 Movement = Vector3.zero;
 
-    bool isJumping = false;
     // Start is called before the first frame update
     void Start()
     {
-        Player = GetComponent<GameObject>();
-        playerAnimator = GetComponent<Animator>();
-        playerRigidbody = GetComponent<Rigidbody>();
+        playerAnimator = GetComponentInParent<Animator>();
+        playerRigidbody = GetComponentInParent<Rigidbody>();
         moveSpeed_origin = moveSpeed;
     }
 
     // Update is called once per frame
     void Update()
     {
-        MoveMent();
-        Jump();
-        shooting();
-        //cameraRotation();
+        if (HP > 0)
+        {
+            MoveMent();
+ 
+            shooting();
+            cameraRotation();
+            if (Input.GetKey(KeyCode.L)) HP -= 1;
+        }
+        Die();
+    }
+
+    private void Die()
+    {
+        if (HP <= 0)
+        {
+            playerAnimator.Play("Die");
+        }
     }
 
     // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
@@ -63,20 +75,15 @@ public class PlayerControl : MonoBehaviour
     {
         Movement = Vector3.zero;
         ResetAnimationState();
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
 
-        }
         isCrawling();
         IsRunning();
         WtoMoveForward();
         DtoMoveRight();
         StoMoveBackward();
         AtoMoveLeft();
-       // cameraRotation();
         Movement.Normalize();
-       
-        transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
+        transform.parent.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
         return;
     }
 
@@ -92,13 +99,11 @@ public class PlayerControl : MonoBehaviour
         }
         else
         {
-<<<<<<< HEAD
             if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
             if (time  > 1f && Stamina <100 && !playerAnimator.GetBool("isJumping")) Stamina+=2;
-=======
+
             if (playerAnimator.GetBool("isRunning")) moveSpeed /= 2f;
-            if (time  > 1f) Stamina+=10;
->>>>>>> parent of fe51da5 (move advance)
+            if (time  > 1f && Stamina <100) Stamina+=10;
             playerAnimator.SetBool("isRunning", false);
         }
     }
@@ -159,25 +164,10 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    void Jump()
-    {
-        if (!playerAnimator.GetBool("isJumping") && Input.GetKey(KeyCode.Space) && Stamina >0)
-        {
-            playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
-            playerAnimator.SetBool("isJumping", true);
-            Stamina -= 20;
-        }
-    }
+
     
     
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Floor")
-        {
-            Transform arm = transform.Find("Arm1");
-            playerAnimator.SetBool("isJumping", false);
-        }
-    }
+
         private void ResetAnimationState()
     {
         playerAnimator.SetBool("isWalking", false);
