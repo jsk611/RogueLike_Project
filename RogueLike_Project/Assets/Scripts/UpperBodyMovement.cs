@@ -9,21 +9,25 @@ public class UpperBodyMovement : MonoBehaviour
 
     Animator anim;
     Transform spine;
-    
+
+
+   
+
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         spine = anim.GetBoneTransform(HumanBodyBones.Spine);
-        
+        if (spine != null) Debug.Log("It is Spine");
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        spine.transform.position += new Vector3(0, 1, 0);
-        relativeVec = target.position;
+        relativeVec = spine.position - target.position;
         spine.LookAt(target.position);
         spine.rotation *= Quaternion.Euler(relativeVec);
     }
+
+
 }
