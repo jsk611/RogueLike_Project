@@ -24,9 +24,8 @@ public class UpperBodyMovement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        relativeVec = spine.position - target.position;
+        
         spine.LookAt(target.position);
-        spine.rotation *= Quaternion.Euler(relativeVec);
     }
 
 
