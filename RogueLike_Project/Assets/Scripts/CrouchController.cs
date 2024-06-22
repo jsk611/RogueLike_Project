@@ -16,11 +16,15 @@ public class CrouchController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(playerAnimator.GetBool("crawling"))
+        if (playerAnimator.GetBool("crawling"))
         {
-            HitBox.transform.localScale = new Vector3(1,0.5f,1);
+            HitBox.transform.localScale = new Vector3(1, 0.5f, 1);
             Debug.Log("crawling");
         }
-        else HitBox.transform.localScale = new Vector3(1,1,1);
+        else
+        {
+            Debug.Log("not crawling");
+            HitBox.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 }

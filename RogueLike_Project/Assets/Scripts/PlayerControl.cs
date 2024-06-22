@@ -32,6 +32,7 @@ public class PlayerControl : MonoBehaviour
     
     Rigidbody playerRigidbody;
 
+    [SerializeField] GameObject MainCharacter;
 
 
     Vector3 Movement = Vector3.zero;
@@ -39,8 +40,8 @@ public class PlayerControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerAnimator = GetComponentInParent<Animator>();
-        playerRigidbody = GetComponentInParent<Rigidbody>();
+        playerAnimator = MainCharacter.GetComponent<Animator>();
+        playerRigidbody = MainCharacter.GetComponent<Rigidbody>();
         moveSpeed_origin = moveSpeed;
     }
 
@@ -81,7 +82,7 @@ public class PlayerControl : MonoBehaviour
         StoMoveBackward();
         AtoMoveLeft();
         Movement.Normalize();
-        transform.parent.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
+        transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
         return;
     }
 
