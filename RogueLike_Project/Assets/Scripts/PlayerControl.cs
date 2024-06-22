@@ -37,12 +37,14 @@ public class PlayerControl : MonoBehaviour
 
     Vector3 Movement = Vector3.zero;
 
+    BoxCollider HitBox;
     // Start is called before the first frame update
     void Start()
     {
         playerAnimator = MainCharacter.GetComponent<Animator>();
         playerRigidbody = MainCharacter.GetComponent<Rigidbody>();
         moveSpeed_origin = moveSpeed;
+        HitBox = GetComponent<BoxCollider>();
     }
 
     // Update is called once per frame
@@ -110,14 +112,25 @@ public class PlayerControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl) && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("isRunning"))
         {
-            if (!playerAnimator.GetBool("crawling")) moveSpeed *= 0.6f;
-            playerAnimator.SetBool("crawling", true);
-           // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
+            if (!playerAnimator.GetBool("crawling"))
+            {
+                moveSpeed *= 0.6f;
+                playerAnimator.SetBool("crawling", true);
+            }
+            if (playerAnimator.GetBool("crawling"))
+            {
+                Debug.Log("WHY");
+                HitBox.size = new Vector3(1, 0.6f, 1);
+                HitBox.center = new Vector3(0, -0.18f, HitBox.center.z);
+                // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
+            }
         }
         else
         {
             if (playerAnimator.GetBool("crawling")) moveSpeed = moveSpeed_origin;
             playerAnimator.SetBool("crawling", false);
+            HitBox.center = new Vector3(0, 0, 0);
+            HitBox.size = new Vector3(1, 1, 1);
            // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
 
         }
