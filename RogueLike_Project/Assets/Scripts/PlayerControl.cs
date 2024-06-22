@@ -65,6 +65,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (HP <= 0)
         {
+            playerAnimator.SetBool("isAlive", false);
             playerAnimator.Play("Die");
         }
     }
@@ -77,14 +78,16 @@ public class PlayerControl : MonoBehaviour
         Movement = Vector3.zero;
         ResetAnimationState();
         Jumping();
-        isCrawling();
+        
         IsRunning();
+        isCrawling();
         WtoMoveForward();
         DtoMoveRight();
         StoMoveBackward();
         AtoMoveLeft();
+        Debug.Log(moveSpeed);
         Movement.Normalize();
-        transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
+        transform.Translate(-Movement*Time.deltaTime*moveSpeed,Space.Self);
         return;
     }
 
@@ -103,7 +106,7 @@ public class PlayerControl : MonoBehaviour
         time += Time.deltaTime;
         if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
         {
-            if (!playerAnimator.GetBool("isRunning")) moveSpeed *= 2f;
+            if (!playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin * 2f;
             playerAnimator.SetBool("isRunning", true);
             Stamina -= 10 * Time.deltaTime;
             time = 0;
@@ -113,8 +116,7 @@ public class PlayerControl : MonoBehaviour
             if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
             if (time  > 1f && Stamina <100 && !playerAnimator.GetBool("isJumping")) Stamina+=2;
 
-            if (playerAnimator.GetBool("isRunning")) moveSpeed /= 2f;
-            if (time  > 1f && Stamina <100) Stamina+=10;
+
             playerAnimator.SetBool("isRunning", false);
         }
     }
@@ -124,16 +126,14 @@ public class PlayerControl : MonoBehaviour
         {
             if (!playerAnimator.GetBool("crawling"))
             {
-                moveSpeed *= 0.6f;
-                playerAnimator.SetBool("crawling", true);
+                moveSpeed = moveSpeed_origin * 0.6f;
+                Debug.Log("crawling");
             }
-            if (playerAnimator.GetBool("crawling"))
-            {
-                Debug.Log("WHY");
-                HitBox.size = new Vector3(1, 0.6f, 1);
-                HitBox.center = new Vector3(0, -0.18f, HitBox.center.z);
+            playerAnimator.SetBool("crawling", true);
+            HitBox.size = new Vector3(1, 0.6f, 1);
+            HitBox.center = new Vector3(0, -0.18f, HitBox.center.z);
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
-            }
+            
         }
         else
         {
@@ -154,7 +154,6 @@ public class PlayerControl : MonoBehaviour
             Movement += Vector3.left;
         }
     }
-
     private void StoMoveBackward()
     {
         if (Input.GetKey(KeyCode.S))
@@ -164,7 +163,6 @@ public class PlayerControl : MonoBehaviour
             Movement += Vector3.back;
         }
     }
-
     private void DtoMoveRight()
     {
         if (Input.GetKey(KeyCode.D))
@@ -175,7 +173,6 @@ public class PlayerControl : MonoBehaviour
             
         }
     }
-
     private void WtoMoveForward()
     {
         if (Input.GetKey(KeyCode.W))
@@ -186,9 +183,6 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-
-    
-    
 
         private void ResetAnimationState()
     {
