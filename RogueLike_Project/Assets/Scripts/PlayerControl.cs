@@ -22,7 +22,7 @@ public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
     float moveSpeed_origin;
-    
+    float jumpPower = 10f;
 
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)] public float Stamina = 100;
@@ -42,7 +42,7 @@ public class PlayerControl : MonoBehaviour
     void Start()
     {
         playerAnimator = MainCharacter.GetComponent<Animator>();
-        playerRigidbody = MainCharacter.GetComponent<Rigidbody>();
+        playerRigidbody = GetComponent<Rigidbody>();
         moveSpeed_origin = moveSpeed;
         HitBox = GetComponent<BoxCollider>();
     }
@@ -76,7 +76,7 @@ public class PlayerControl : MonoBehaviour
     {
         Movement = Vector3.zero;
         ResetAnimationState();
-
+        Jumping();
         isCrawling();
         IsRunning();
         WtoMoveForward();
@@ -86,6 +86,16 @@ public class PlayerControl : MonoBehaviour
         Movement.Normalize();
         transform.Translate(Movement*Time.deltaTime*moveSpeed, Space.Self);
         return;
+    }
+
+    private void Jumping()
+    {
+        if (!playerAnimator.GetBool("isJumping") && Input.GetKey(KeyCode.Space) && Stamina > 0)
+        {
+            playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
+            playerAnimator.SetBool("isJumping", true);
+            Stamina -= 20;
+        }
     }
 
     private void IsRunning()
@@ -204,5 +214,12 @@ public class PlayerControl : MonoBehaviour
         }
 
     }
-
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            playerAnimator.SetBool("isJumping", false);
+        }
+        else playerAnimator.SetBool("isJumping", true);
+    }
 }
