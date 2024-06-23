@@ -77,15 +77,17 @@ public class PlayerControl : MonoBehaviour
     {
         Movement = Vector3.zero;
         ResetAnimationState();
-        Jumping();
         
-        IsRunning();
-        isCrawling();
+        
         WtoMoveForward();
         DtoMoveRight();
         StoMoveBackward();
         AtoMoveLeft();
-        Debug.Log(moveSpeed);
+
+        Jumping();
+        IsRunning();
+        isCrawling();
+
         Movement.Normalize();
         transform.Translate(-Movement*Time.deltaTime*moveSpeed,Space.Self);
         return;
@@ -104,7 +106,7 @@ public class PlayerControl : MonoBehaviour
     private void IsRunning()
     {
         time += Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
         {
             if (!playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin * 2f;
             playerAnimator.SetBool("isRunning", true);
@@ -191,6 +193,7 @@ public class PlayerControl : MonoBehaviour
         playerAnimator.SetBool("walkingLeft", false);
         playerAnimator.SetBool("walkingForward", false);
         playerAnimator.SetBool("walkingBackward", false);
+        playerAnimator.SetBool("reloading", false);
     }
     
     private void shooting()
