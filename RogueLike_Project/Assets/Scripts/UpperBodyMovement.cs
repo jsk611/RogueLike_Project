@@ -25,8 +25,8 @@ public class UpperBodyMovement : MonoBehaviour
     void LateUpdate()
     {
        aim = (target.position - chest.position );
-        chest.rotation = Quaternion.Euler(aim);
-       //chest.LookAt(aim);
+       chest.rotation = Quaternion.Euler(aim);
+       //chest.LookAt(target.position,Vector3.left);
     }
 
 

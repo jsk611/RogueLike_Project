@@ -9,16 +9,19 @@ public class CameraControl : MonoBehaviour
 
     float yRotation;
     float xRotation;
+
+    [SerializeField] Transform playerRotation;
     // Start is called before the first frame update
     void Start()
     {
-        
+       
     }
 
     // Update is called once per frame
     void Update()
     {
         cameraRotation();
+        characterRotation();
     }
     private void cameraRotation()
     {
@@ -28,6 +31,9 @@ public class CameraControl : MonoBehaviour
         yRotation += yRotate;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
-
+    }
+    private void characterRotation()
+    {
+        playerRotation.rotation = Quaternion.Euler(0, transform.rotation.y, 0);
     }
 }
