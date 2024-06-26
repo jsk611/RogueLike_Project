@@ -53,7 +53,7 @@ public class PlayerControl : MonoBehaviour
         if (HP > 0)
         {
             MoveMent();
-            shooting();
+            //shooting();
             if (Input.GetKey(KeyCode.L)) HP -= 1;
         }
         Die();

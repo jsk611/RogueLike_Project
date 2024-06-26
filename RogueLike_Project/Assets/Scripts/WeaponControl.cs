@@ -16,20 +16,25 @@ public class WeaponControl : MonoBehaviour
     [SerializeField] GameObject first_weapon;
     [SerializeField] GameObject second_weapon;
     [SerializeField] GameObject melee_weapon;
+    [SerializeField] GameObject[] weapons;
+    private GameObject currentWeapon;
 
     Animator playerAnimator;
-    Animation weaponAnimation;
+    AnimationClip weaponAnimation;
     // Start is called before the first frame update
     void Start()
     {
+        
+        weaponAnimation = first_weapon.GetComponent<Weapon>().GetAnimation();
+        currentWeapon = first_weapon;
         playerAnimator = GetComponent<Animator>();
-        weaponAnimation = first_weapon.GetComponent<Animation>();
     }
     
     // Update is called once per frame
     void Update()
     {
         switchingWeapon();
+        weaponAnimation = currentWeapon.GetComponent<Weapon>().GetAnimation();
         shooting();
     }
 
@@ -37,18 +42,24 @@ public class WeaponControl : MonoBehaviour
     {
         if (Input.GetKey("1"))
         {
-            GetComponent<MeshRenderer>().material = first_weapon.GetComponent<MeshRenderer>().material;
-            weaponAnimation = first_weapon.GetComponent<Animation>();
+            currentWeapon.SetActive(false);
+            currentWeapon = first_weapon;
+            currentWeapon.SetActive(true);
+            weaponAnimation = first_weapon.GetComponent<Weapon>().GetAnimation();
         }
         else if (Input.GetKey("2"))
         {
-            GetComponent<MeshRenderer>().material = second_weapon.GetComponent<MeshRenderer>().material;
-            weaponAnimation = second_weapon.GetComponent<Animation>();
+            currentWeapon.SetActive(false);
+            currentWeapon = second_weapon;
+            currentWeapon.SetActive(true);
+            weaponAnimation = second_weapon.GetComponent<Weapon>().GetAnimation();
         }
         else if (Input.GetKey("3"))
         {
-            GetComponent<MeshRenderer>().material = melee_weapon.GetComponent<MeshRenderer>().material;
-            weaponAnimation = melee_weapon.GetComponent<Animation>();
+            currentWeapon.SetActive(false);
+            currentWeapon = melee_weapon;
+            currentWeapon.SetActive(true);
+            weaponAnimation = melee_weapon.GetComponent<Weapon>().GetAnimation();
         }
     }
     private void shooting()
@@ -56,14 +67,13 @@ public class WeaponControl : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             playerAnimator.SetTrigger("shooting");
-            Debug.Log(weaponAnimation.name);
-            playerAnimator.Play(weaponAnimation.name);
+            //playerAnimator.Play();
         }
         if (Input.GetMouseButton(1)) Debug.Log("targeting");
         if (Input.GetKey(KeyCode.R))
         {
             Debug.Log("Reroad");
-            playerAnimator.Play("Reload");
+            playerAnimator.SetTrigger("reloading");
         }
 
     }
