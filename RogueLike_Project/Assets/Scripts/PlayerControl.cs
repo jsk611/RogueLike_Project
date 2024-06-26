@@ -53,9 +53,7 @@ public class PlayerControl : MonoBehaviour
         if (HP > 0)
         {
             MoveMent();
- 
             shooting();
-            
             if (Input.GetKey(KeyCode.L)) HP -= 1;
         }
         Die();
@@ -70,8 +68,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
-    // 개같은 유니티 개같은 애니메이션 개같은 코딩
+  
 
     private void MoveMent()
     {
@@ -89,7 +86,7 @@ public class PlayerControl : MonoBehaviour
         isCrawling();
 
         Movement.Normalize();
-        transform.Translate(-Movement*Time.deltaTime*moveSpeed,Space.Self);
+        transform.Translate(Movement*Time.deltaTime*moveSpeed,Space.Self);
         return;
     }
 
@@ -196,21 +193,7 @@ public class PlayerControl : MonoBehaviour
         playerAnimator.SetBool("reloading", false);
     }
     
-    private void shooting()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            Debug.Log("shooting");
-            playerAnimator.Play("Shoot_SingleShot_AR");
-        }   
-        if (Input.GetMouseButton(1)) Debug.Log("targeting");
-        if (Input.GetKey(KeyCode.R))
-        {
-            Debug.Log("Reroad");
-            playerAnimator.Play("Reload");
-        }
 
-    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
@@ -218,5 +201,33 @@ public class PlayerControl : MonoBehaviour
             playerAnimator.SetBool("isJumping", false);
         }
         else playerAnimator.SetBool("isJumping", true);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void shooting()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            playerAnimator.SetTrigger("shooting");
+        }
+        if (Input.GetMouseButton(1)) Debug.Log("targeting");
+        if (Input.GetKey(KeyCode.R))
+        {
+            Debug.Log("Reroad");
+            playerAnimator.SetTrigger("reloading");
+        }
+
     }
 }

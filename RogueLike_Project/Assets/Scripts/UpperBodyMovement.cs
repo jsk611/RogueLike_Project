@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.AI;
 
 public class UpperBodyMovement : MonoBehaviour
 {
@@ -24,8 +25,8 @@ public class UpperBodyMovement : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-       aim = (target.position - chest.position );
-       chest.rotation = Quaternion.Euler(aim);
+        aim = (target.position - chest.position);
+        chest.rotation = Quaternion.LookRotation(aim, Vector3.up);
        //chest.LookAt(target.position,Vector3.left);
     }
 
