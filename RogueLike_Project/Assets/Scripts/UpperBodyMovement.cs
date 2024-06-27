@@ -9,7 +9,7 @@ public class UpperBodyMovement : MonoBehaviour
     Vector3 relativeVec;
 
     Animator anim;
-    Transform chest;
+    Transform spine;
     Vector3 aim;
 
    
@@ -18,15 +18,16 @@ public class UpperBodyMovement : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        chest = anim.GetBoneTransform(HumanBodyBones.Chest);
-        if (chest != null) Debug.Log("It is Spine");
+        spine = anim.GetBoneTransform(HumanBodyBones.Spine);
+        if (spine != null) Debug.Log("It is Spine");
     }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        aim = (target.position - chest.position);
-        chest.rotation = Quaternion.LookRotation(aim, Vector3.up);
+        aim = (target.position - spine.position);
+        //spine.rotation = Quaternion.Euler(0, -15, 0); //Quaternion.LookRotation(aim);
+        
        //chest.LookAt(target.position,Vector3.left);
     }
 
