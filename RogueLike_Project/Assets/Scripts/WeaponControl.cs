@@ -17,7 +17,7 @@ public class WeaponControl : MonoBehaviour
     [SerializeField] GameObject second_weapon;
     [SerializeField] GameObject melee_weapon;
     [SerializeField] GameObject[] weapons;
-    private GameObject currentWeapon;
+    public GameObject currentWeapon;
 
     Animator playerAnimator;
     AnimationClip weaponAnimation;
@@ -35,7 +35,7 @@ public class WeaponControl : MonoBehaviour
     {
         switchingWeapon();
         weaponAnimation = currentWeapon.GetComponent<Weapon>().GetAnimation();
-        shooting();
+        
     }
 
     private void switchingWeapon()
@@ -62,19 +62,9 @@ public class WeaponControl : MonoBehaviour
             weaponAnimation = melee_weapon.GetComponent<Weapon>().GetAnimation();
         }
     }
-    private void shooting()
+    public GameObject GetCurrentWeapon()
     {
-        if (Input.GetMouseButton(0))
-        {
-            playerAnimator.SetTrigger("shooting");
-            //playerAnimator.Play();
-        }
-        if (Input.GetMouseButton(1)) Debug.Log("targeting");
-        if (Input.GetKey(KeyCode.R))
-        {
-            Debug.Log("Reroad");
-            playerAnimator.SetTrigger("reloading");
-        }
-
+        return currentWeapon;
     }
+
 }

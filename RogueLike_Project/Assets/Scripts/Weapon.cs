@@ -5,6 +5,7 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField] AnimationClip weaponAnimation;
+    [SerializeField] string shootingName;
     // Start is called before the first frame update
     public AnimationClip GetAnimation()
     {
@@ -14,5 +15,8 @@ public class Weapon : MonoBehaviour
     {
         playerAnimator.Play(weaponAnimation.name);
     }
-
+    public string GetShootingName()
+    {
+        return shootingName;
+    }
 }

@@ -18,7 +18,7 @@ public class UpperBodyMovement : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        spine = anim.GetBoneTransform(HumanBodyBones.Spine);
+        spine = anim.GetBoneTransform(HumanBodyBones.Hips);
         if (spine != null) Debug.Log("It is Spine");
     }
 
@@ -26,8 +26,8 @@ public class UpperBodyMovement : MonoBehaviour
     void LateUpdate()
     {
         aim = (target.position - spine.position);
-        //spine.rotation = Quaternion.Euler(0, -15, 0); //Quaternion.LookRotation(aim);
-        
+        //spine.rotation = Quaternion.LookRotation(aim,Vector3.up);
+        //spine.LookAt(aim,Vector3.up);
        //chest.LookAt(target.position,Vector3.left);
     }
 
