@@ -110,4 +110,27 @@ public class Tile : MonoBehaviour
         gameObject.SetActive(false);
         isSetActive = false;
     }
+
+    public void ChangeHeightWithFixedBase(float size_y, float duration = 2f)
+    {
+        StartCoroutine(MoveCoroutine(size_y/2f, duration));
+        StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+    }
+
+    public void Wave(float height, float duration = 0.25f, int repetition = 1)
+    {
+        StartCoroutine(WaveCoroutine(height, duration, repetition));
+    }
+    
+    IEnumerator WaveCoroutine(float height, float durationPerLoop, int repetition)
+    {
+        float baseHeight = transform.localScale.y;
+        for(int i=0; i<repetition; i++)
+        {
+            ChangeHeightWithFixedBase(height, durationPerLoop / 2f);
+            yield return new WaitForSeconds(durationPerLoop / 2.01f);
+            ChangeHeightWithFixedBase(baseHeight, durationPerLoop / 2f);
+            yield return new WaitForSeconds(durationPerLoop / 2f);
+        }
+    }
 }
