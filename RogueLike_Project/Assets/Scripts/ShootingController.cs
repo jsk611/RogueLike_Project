@@ -13,7 +13,7 @@ public class ShootingController : MonoBehaviour
     {
         playerAnimator = GetComponent<Animator>();
     }
-
+        
     // Update is called once per frame
     void LateUpdate()
     {
@@ -24,7 +24,8 @@ public class ShootingController : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            playerAnimator.SetTrigger(weaponController.GetCurrentWeapon().GetComponent<Weapon>().GetShootingName());
+            Debug.Log(weaponController.weaponAnimation.name);
+            playerAnimator.Play(weaponController.weaponAnimation.name);
             Debug.Log("shooting");
             //playerAnimator.Play();
         }

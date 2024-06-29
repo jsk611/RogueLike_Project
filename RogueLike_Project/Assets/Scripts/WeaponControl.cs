@@ -20,7 +20,7 @@ public class WeaponControl : MonoBehaviour
     public GameObject currentWeapon;
 
     Animator playerAnimator;
-    AnimationClip weaponAnimation;
+    public AnimationClip weaponAnimation;
     // Start is called before the first frame update
     void Start()
     {
