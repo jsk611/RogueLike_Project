@@ -6,16 +6,24 @@ public class FieldOfView : MonoBehaviour
 {
     [SerializeField] float viewRadius;
     [SerializeField] [Range(0, 360)] float viewAngle;
-    private UnityEngine.AI.NavMeshAgent navMeshAgent;
 
     public LayerMask targetMask, obstacleMask, playerMask;
+
+    public bool upClear;
+    public bool downClear;
+    public bool leftClear;
+    public bool rightClear;
 
     // Target mask에 ray hit된 transform을 보관하는 리스트
     public List<Transform> visibleTargets = new List<Transform>();
 
     void Start()
     {
-        navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        upClear = true;
+        downClear = true;
+        leftClear = true;
+        rightClear = true;
+
         // 0.2초 간격으로 코루틴 호출
         StartCoroutine(FindTargetsWithDelay(0.2f));
     }
@@ -35,29 +43,52 @@ public class FieldOfView : MonoBehaviour
         // viewRadius를 반지름으로 한 원 영역 내 targetMask 레이어인 콜라이더를 모두 가져옴
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, playerMask);
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        if (targetsInViewRadius.Length > 0)
         {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - transform.position).normalized;
+            Transform target = targetsInViewRadius[0].transform;
+            CapsuleCollider targetCollider = target.GetComponent<CapsuleCollider>();
 
-            // 플레이어와 forward와 target이 이루는 각이 설정한 각도 내라면
-            if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
+            if (targetCollider != null)
             {
-                float dstToTarget = Vector3.Distance(transform.position, target.transform.position);
-
-                // 타겟으로 가는 레이캐스트에 obstacleMask가 걸리지 않으면 visibleTargets에 Add
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                Vector3 dirToTarget = (target.position - transform.position).normalized;
+                // 플레이어와 forward와 target이 이루는 각이 설정한 각도 내라면
+                if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
                 {
-                    visibleTargets.Add(target);
+                    float dstToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+                    if (Physics.Raycast(transform.position, dirToTarget, out RaycastHit hit, dstToTarget, obstacleMask))
+                    {
+                        Vector3 capsuleCenter = targetCollider.bounds.center;
+                        float capsuleHeight = targetCollider.height / 2;
+                        float capsuleRadius = targetCollider.radius;
+
+                        Vector3 upEdge = capsuleCenter + Vector3.up * capsuleHeight;
+                        Vector3 downEdge = capsuleCenter - Vector3.up * capsuleHeight;
+                        Vector3 rightEdge = capsuleCenter + target.right * capsuleRadius;
+                        Vector3 leftEdge = capsuleCenter - target.right * capsuleRadius;
+
+
+                        upClear = !Physics.Raycast(transform.position, (upEdge - transform.position).normalized, dstToTarget, obstacleMask);
+                        downClear = !Physics.Raycast(transform.position, (downEdge - transform.position).normalized, dstToTarget, obstacleMask);
+                        rightClear = !Physics.Raycast(transform.position, (rightEdge - transform.position).normalized, dstToTarget, obstacleMask);
+                        leftClear = !Physics.Raycast(transform.position, (leftEdge - transform.position).normalized, dstToTarget, obstacleMask);
+
+
+                        // 각 가장자리 점에 대해 Raycasting 수행
+                        if (upClear || downClear || rightClear || leftClear)
+                        {
+                            visibleTargets.Add(target);
+                        }
+
+                    }
+                    else
+                    {
+                        visibleTargets.Add(target);
+                    }
                 }
             }
         }
-        if (visibleTargets.Count > 0)
-        {
-            navMeshAgent.SetDestination(visibleTargets[0].position);
-            Debug.Log("Player Detected at  " + visibleTargets[0].position);
-            Debug.Log(visibleTargets.Count);
-        }
+       
     }
 
     // y축 오일러 각을 3차원 방향 벡터로 변환한다.
