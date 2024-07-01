@@ -25,7 +25,7 @@ public class ShootingController : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             Debug.Log(weaponController.weaponAnimation.name);
-            playerAnimator.Play(weaponController.weaponAnimation.name);
+            playerAnimator.Play(weaponController.weaponAnimation.name); 
             Debug.Log("shooting");
             //playerAnimator.Play();
         }

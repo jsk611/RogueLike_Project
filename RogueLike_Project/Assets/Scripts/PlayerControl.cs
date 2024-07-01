@@ -22,7 +22,7 @@ public class PlayerControl : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8f;
     float moveSpeed_origin;
-    float jumpPower = 10f;
+    float jumpPower = 5f;
 
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)] public float Stamina = 100;
