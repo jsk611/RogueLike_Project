@@ -32,6 +32,6 @@ public class CameraControl : MonoBehaviour
         yRotation += yRotate;
         xRotation = Mathf.Clamp(xRotation, -80f, 80f);
         playerRotation.rotation  = Quaternion.Euler(0,yRotation,0f);
-        //transform.localEulerAngles = Vector3.right * xRotation;
+        transform.localEulerAngles = Vector3.right * xRotation;
     }
 }
