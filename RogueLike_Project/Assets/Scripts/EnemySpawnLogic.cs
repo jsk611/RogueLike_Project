@@ -7,6 +7,8 @@ public class EnemySpawnLogic : MonoBehaviour
     TileManager tileManager;
     int mapSize;
 
+    [SerializeField] GameObject[] enemyPrefabs;
+
     private void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
@@ -17,13 +19,10 @@ public class EnemySpawnLogic : MonoBehaviour
     void SpawnEnemy(int x, int y, EnemyType enemyType)
     {
         GameObject enemyPrefab = GetEnemyPrefab(enemyType);
-        //Debug.Log(enemyType);
-        Debug.Log(Resources.Load<GameObject>("Assets/Prefabs/Enemy1"));
         if (enemyPrefab != null)
         {
-            Vector3 spawnVec = tileManager.GetTiles[y, x].transform.position + Vector3.up; 
-            Instantiate(enemyPrefab, spawnVec, Quaternion.identity);
-            Debug.Log("Instantiate ¿€µøµ ");
+            Vector3 spawnVec = tileManager.GetTiles[y, x].transform.position + new Vector3(0, tileManager.GetTiles[y, x].transform.localScale.y, 0); 
+            Instantiate(enemyPrefab, spawnVec, Quaternion.identity, this.transform);
         }
     }
 
@@ -43,14 +42,20 @@ public class EnemySpawnLogic : MonoBehaviour
     {
         switch (enemyType)
         {
-            case EnemyType.Type1:
-                return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-            case EnemyType.Type2:
-                return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-            case EnemyType.Type3:
-                return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-            default: return null;
+            case EnemyType.None: return null;
+            default: return enemyPrefabs[(int)enemyType-1];
         }
+
+        //switch (enemyType)
+        //{
+        //    case EnemyType.Type1:
+        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
+        //    case EnemyType.Type2:
+        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
+        //    case EnemyType.Type3:
+        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
+        //    default: return null;
+        //}
     }
 
 }

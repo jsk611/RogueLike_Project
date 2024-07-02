@@ -123,33 +123,9 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-    IEnumerator ChangingMapSample()
-    {
-        yield return new WaitForSeconds(1f);
-        InitializeArray(2);
-        yield return StartCoroutine(MoveTilesByArray(1f, 0.5f, 0f));
-        yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(MakeWave(15, 15, 6, 1f, 15f));
-        yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(MakeWave(15, 15, 6, 2f, 30f));
-        yield return new WaitForSeconds(2f);
-        yield return StartCoroutine(MakeWave(15, 15, 6, 3f, 30f));
 
-        for (int i = 0; i < 10; i++)
-        {
-            yield return new WaitForSeconds(1f);
-            StartCoroutine(MakeWave(15, 15, 4, 3f, 30f));
-        }
-        yield return StartCoroutine(MakeWave(15, 15, 4, 3f, 30f));
-        for (int i=0; i<10; i++)
-        {
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(MakeWave(Random.Range(0,30), Random.Range(0, 30), Random.Range(4,6), Random.Range(1f,3f), Random.Range(5, 30)));
-        }
-        
-    }
 
-    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1f, float durationAboutTile = 0.5f, float alertTime = 3f)
+    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1f, float durationAboutTile = 1f, float alertTime = 3f)
     {
         //경고 표시
         for (int i = 0; i < mapSize; i++)

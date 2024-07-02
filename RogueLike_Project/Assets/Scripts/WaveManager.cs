@@ -44,7 +44,7 @@ public class WaveManager : MonoBehaviour
                 continue;
             }
 
-            int randNum = Random.Range(1, 3);
+            int randNum = Random.Range(1, 4);
             enemyMap[y,x] = (EnemyType)randNum;
         }
     }
@@ -56,17 +56,34 @@ public class WaveManager : MonoBehaviour
         {
             yield return StartCoroutine(Wave1());
             yield return new WaitForSeconds(5f);
+            yield return StartCoroutine(Wave2());
+            yield return new WaitForSeconds(5f);
         }
     }
 
     IEnumerator Wave1()
     {
         tileManager.InitializeArray();
-        tileManager.MakeCircle(12);
+        tileManager.MakeCircle(Random.Range(8,16));
         yield return StartCoroutine(tileManager.MoveTilesByArray());
-        Debug.Log("Å×½ºÆ®");
+        yield return new WaitForSeconds(1f);
+
         InitializeEnemyArray();
-        MakeRandomEnemyMap(10);
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        yield return new WaitForSeconds(10f);
+    }
+
+    IEnumerator Wave2()
+    {
+        tileManager.InitializeArray();
+        tileManager.MakePyramid(Random.Range(15,31));
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(7);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
         yield return new WaitForSeconds(10f);
