@@ -19,7 +19,7 @@ public class UpperBodyMovement : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        spine = anim.GetBoneTransform(HumanBodyBones.Hips);
+        spine = anim.GetBoneTransform(HumanBodyBones.Spine);
         if (spine != null) Debug.Log("It is Spine");
     }
     private void Update()
@@ -35,8 +35,8 @@ public class UpperBodyMovement : MonoBehaviour
     void LateUpdate()
     {
         
-        spine.localEulerAngles =  Vector3.up*90 + Vector3.forward * xRotation;
-        spine.localEulerAngles = Vector3.forward * xRotation;
+        //spine.localEulerAngles =  Vector3.up*90 + Vector3.forward * xRotation;
+        //spine.localEulerAngles = Vector3.forward * xRotation;
         //spine.Rotate(0, 180, 0);
         //spine.rotation = Quaternion.LookRotation(aim,Vector3.up);
         //spine.LookAt(aim,Vector3.up);
