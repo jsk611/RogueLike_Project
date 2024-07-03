@@ -111,7 +111,7 @@ public class Tile : MonoBehaviour
         isSetActive = false;
     }
 
-    public void ChangeHeightWithFixedBase(float size_y, float duration = 2f)
+    public void ChangeHeightWithFixedBase(float size_y, float duration = 3f)
     {
         StartCoroutine(MoveCoroutine(size_y/2f, duration));
         StartCoroutine(ChangeSizeCoroutine(size_y, duration));

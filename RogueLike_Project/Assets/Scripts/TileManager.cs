@@ -77,7 +77,7 @@ public class TileManager : MonoBehaviour
                 // If the distance is less than or equal to the radius, mark the point as part of the circle
                 if (distance <= radius)
                 {
-                    tileMap[y, x] = 10;
+                    tileMap[y, x] = 5;
                 }
                 else
                 {
@@ -97,7 +97,7 @@ public class TileManager : MonoBehaviour
             {
                 for(int k = i; k < mapSize-i; k++)
                 {
-                    tileMap[j, k] += 2;
+                    tileMap[j, k] += 1;
                 }
             }
         }
@@ -125,7 +125,7 @@ public class TileManager : MonoBehaviour
     }
 
 
-    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1f, float durationAboutTile = 1f, float alertTime = 3f)
+    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 2f, float durationAboutTile = 2f, float alertTime = 3f)
     {
         //경고 표시
         for (int i = 0; i < mapSize; i++)
@@ -134,7 +134,7 @@ public class TileManager : MonoBehaviour
             {
                 if (tileMap[i, j]/2f != tiles[i, j].transform.position.y)
                 {
-                    if (tileMap[i, j] < 0) tiles[i, j].AlertChanging(alertTime, true);
+                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
                     else tiles[i, j].AlertChanging(alertTime);
                 }
             }
@@ -146,7 +146,7 @@ public class TileManager : MonoBehaviour
         {
             for(int j=0; j < mapSize; j++)
             {
-                if (tileMap[i,j] < 0)
+                if (tileMap[i,j] <= 0)
                 {
                     if(tiles[i, j].IsSetActive) tiles[i, j].DestroyTile(1f);
                 }

@@ -64,7 +64,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator Wave1()
     {
         tileManager.InitializeArray();
-        tileManager.MakeCircle(Random.Range(8,16));
+        tileManager.MakeCircle(Random.Range(8,14));
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
