@@ -27,19 +27,19 @@ public class UpperBodyMovement : MonoBehaviour
         float xRotate = Input.GetAxis("Mouse Y") * 150 * Time.deltaTime;
         float yRotate = Input.GetAxis("Mouse X") * 120 * Time.deltaTime;
 
-        xRotation -= xRotate;
+        xRotation += xRotate;
         yRotation += yRotate;
-        xRotation = Mathf.Clamp(xRotation, -120f, 60f);
+        xRotation = Mathf.Clamp(xRotation, -240f,-120f);
     }
     // Update is called once per frame
     void LateUpdate()
     {
         
-        //spine.localEulerAngles =  Vector3.up*90 + Vector3.forward * xRotation;
+        spine.localEulerAngles =  Vector3.up*180 + Vector3.forward * xRotation;
         //spine.localEulerAngles = Vector3.forward * xRotation;
         //spine.Rotate(0, 180, 0);
         //spine.rotation = Quaternion.LookRotation(aim,Vector3.up);
-        //spine.LookAt(aim,Vector3.up);
+        //spine.LookAt(target,Vector3.up);
         //chest.LookAt(target.position,Vector3.left);
 
     }
