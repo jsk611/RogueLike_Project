@@ -20,6 +20,7 @@ public class MeeleMonster : MonoBehaviour
     public float attackRange = 2f; // 공격 거리
     public float attackCooldown = 1.5f; // 공격 간격
     public int damage = 10; // 공격력
+    [SerializeField] float closeRange = 5f; // 매우 가까운 범위
 
 
     [Header("Type")]
@@ -27,6 +28,9 @@ public class MeeleMonster : MonoBehaviour
     public Transform target;
     private PlayerControl playerData;
     private float lastAttackTime;
+
+
+    [SerializeField] Transform player;
 
     private FieldOfView fov;
 
@@ -46,10 +50,13 @@ public class MeeleMonster : MonoBehaviour
         nmAgent = GetComponent<NavMeshAgent>();
 
         fov = GetComponent<FieldOfView>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
 
         hp_ = 10;
         state = State.IDLE;
         StartCoroutine(StateMachine());
+
     }
 
     IEnumerator StateMachine()
@@ -73,6 +80,11 @@ public class MeeleMonster : MonoBehaviour
         if (fov.visibleTargets.Count > 0)
         {
             target = fov.visibleTargets[0];
+            ChangeState(State.CHASE);
+        }
+        else if (Vector3.Distance(transform.position, player.position) <= closeRange)
+        {
+            target = player;
             ChangeState(State.CHASE);
         }
         else
@@ -105,10 +117,10 @@ public class MeeleMonster : MonoBehaviour
         }
 
         // 목표 감지를 실패한 경우
-        if (fov.visibleTargets.Count == 0 || target == null)
-        {
-            ChangeState(State.IDLE);
-        }
+        //if (fov.visibleTargets.Count == 0 || target == null)
+        //{
+        //    ChangeState(State.IDLE);
+        //}
         yield return null;
     }
 
@@ -138,12 +150,36 @@ public class MeeleMonster : MonoBehaviour
     void ChangeState(State newState)
     {
         state = newState;
+        StopAllCoroutines();
+        StartCoroutine(StateMachine());
     }
 
     void Update()
     {
-        if (target == null) return;
+        if (target != null && state == State.CHASE)
+        {
+            nmAgent.SetDestination(target.position);
+        }
         // target 이 null 이 아니면 target 을 계속 추적
-        nmAgent.SetDestination(target.position);
     }
+
+    public void TakeDamage(int damage)
+    {
+        hp_ -= damage;
+
+        if (hp_ > 0)
+        {
+            ChangeState(State.CHASE);
+        }
+        else
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        // 적이 사망하면 수행할 동작 (예: 애니메이션 재생, 오브젝트 비활성화 등)
+        Destroy(gameObject);
+    } 
 }

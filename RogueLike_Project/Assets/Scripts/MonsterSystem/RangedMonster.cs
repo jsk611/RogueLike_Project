@@ -108,11 +108,11 @@ public class RangedMonster : MonoBehaviour
         }
 
         // 목표 감지를 실패한 경우
-        if (fov.visibleTargets.Count == 0 || target == null)
-        {
-            yield return new WaitForSeconds(searchTargetDelay);
-            ChangeState(State.IDLE);
-        }
+        //if (fov.visibleTargets.Count == 0 || target == null)
+        //{
+        //    yield return new WaitForSeconds(searchTargetDelay);
+        //    ChangeState(State.IDLE);
+        //}
         yield return null;
     }
 
@@ -163,12 +163,38 @@ public class RangedMonster : MonoBehaviour
     void ChangeState(State newState)
     {
         state = newState;
+        StopAllCoroutines();
+        StartCoroutine(StateMachine());
     }
 
     void Update()
     {
-        if (target == null) return;
+        if (target != null && state == State.CHASE)
+        {
+            nmAgent.SetDestination(target.position);
+        }
         // target 이 null 이 아니면 target 을 계속 추적
-        nmAgent.SetDestination(target.position);
     }
+
+
+    public void TakeDamage(int damage)
+    {
+        hp_ -= damage;
+
+        if (hp_ > 0)
+        {
+            ChangeState(State.CHASE);
+        }
+        else
+        {
+            Die();
+        }
+    }
+
+    void Die()
+    {
+        // 적이 사망하면 수행할 동작 (예: 애니메이션 재생, 오브젝트 비활성화 등)
+        Destroy(gameObject);
+    }
+
 }

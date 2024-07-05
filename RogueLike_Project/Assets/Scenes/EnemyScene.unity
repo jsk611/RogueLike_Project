@@ -1161,7 +1161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.17
+      value: 16.13
       objectReference: {fileID: 0}
     - target: {fileID: 7673487251499544664, guid: c98043d57e0190845b790d7b92990bee, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1361,8 +1361,10 @@ MonoBehaviour:
   attackRange: 15
   attackCooldown: 1.5
   damage: 10
+  closeRange: 5
   wp: {fileID: 0}
   target: {fileID: 0}
+  player: {fileID: 0}
 --- !u!65 &1274241221
 BoxCollider:
   m_ObjectHideFlags: 0
