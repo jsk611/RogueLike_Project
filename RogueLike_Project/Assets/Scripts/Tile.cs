@@ -127,7 +127,7 @@ public class Tile : MonoBehaviour
         float baseHeight = transform.localScale.y;
         for(int i=0; i<repetition; i++)
         {
-            ChangeHeightWithFixedBase(height, durationPerLoop / 2f);
+            ChangeHeightWithFixedBase(baseHeight + height, durationPerLoop / 2f);
             yield return new WaitForSeconds(durationPerLoop / 2.01f);
             ChangeHeightWithFixedBase(baseHeight, durationPerLoop / 2f);
             yield return new WaitForSeconds(durationPerLoop / 2f);

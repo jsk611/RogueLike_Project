@@ -55,14 +55,17 @@ public class WaveManager : MonoBehaviour
         while (true)
         {
             yield return StartCoroutine(Wave1());
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave2());
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(3f);
+            yield return StartCoroutine(Wave3());
+            yield return new WaitForSeconds(3f);
         }
     }
 
     IEnumerator Wave1()
     {
+        Debug.Log("Wave 1");
         tileManager.InitializeArray();
         tileManager.MakeCircle(Random.Range(8,14));
         yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -72,11 +75,13 @@ public class WaveManager : MonoBehaviour
         MakeRandomEnemyMap(5);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Wave End");
     }
 
     IEnumerator Wave2()
     {
+        Debug.Log("Wave 2");
         tileManager.InitializeArray();
         tileManager.MakePyramid(Random.Range(15,31));
         yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -86,6 +91,27 @@ public class WaveManager : MonoBehaviour
         MakeRandomEnemyMap(7);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Wave End");
+    }
+
+    IEnumerator Wave3()
+    {
+        Debug.Log("Wave 3");
+        tileManager.InitializeArray(6);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(3);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        yield return new WaitForSeconds(3f);
+        for(int i=0; i<10; i++)
+        {
+            StartCoroutine(tileManager.MakeWave(15, 15, 1, 1.5f, 20));
+            yield return new WaitForSeconds(1f);
+        }
+        Debug.Log("Wave End");
     }
 }

@@ -89,7 +89,7 @@ public class TileManager : MonoBehaviour
 
     public void MakePyramid(int size)
     {
-        InitializeArray(size - 30);
+        InitializeArray(size-20);
 
         for (int i = 0; i < mapSize/2; i++)
         {
@@ -160,7 +160,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    IEnumerator MakeWave(int x, int y, int height, float time, float maxRadius)
+    public IEnumerator MakeWave(int x, int y, int height, float time, float maxRadius)
     {
         float radius = 0;
         bool[,] eventTriggered = new bool[mapSize, mapSize];
