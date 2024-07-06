@@ -7,8 +7,8 @@ using UnityEngine.UIElements;
 
 
 /* WASD
- * SHIFT 달리기
- * CTRL 웅크리기
+ * SHIFT ??????
+ * CTRL ????????
  * RIFLE, PISTOL, origin weapons...
  * 
  */
@@ -27,7 +27,7 @@ public class PlayerControl : MonoBehaviour
     Vector3 Movement = Vector3.zero;
 
     bool isJumping = false;
-    // Start is called before the first frame update
+
     void Start()
     {
         Player = GetComponent<GameObject>();
@@ -35,15 +35,11 @@ public class PlayerControl : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         MoveMent();
         Jump();
     }
-
-    // 이런 ㅆㅂ 그냥 개꿀 아니 ㅆㅂ아 진짜 패 죽여버리고 싶네
-    // 개같은 유니티 개같은 애니메이션 개같은 코딩
 
     private void MoveMent()
     {

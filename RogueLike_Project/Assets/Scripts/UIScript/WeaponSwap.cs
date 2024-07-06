@@ -8,14 +8,14 @@ public class WeaponSwap : MonoBehaviour
     public GameObject[] weapon;
     public RectTransform[] rectTrans;
 
-    void Start()
+    /*void Start()
     {
-        Swapping(0);
-    }
+        Swapping(1);
+    }*/
 
     void Swapping(int index)
     {
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 2; i++)
         {
             if(index == i)
             {

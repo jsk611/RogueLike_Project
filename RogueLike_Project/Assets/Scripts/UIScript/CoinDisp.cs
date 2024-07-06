@@ -10,7 +10,7 @@ public class CoinDisp : MonoBehaviour
 
     void Start()
     {
-        CoinReset(2353567);
+        CoinReset(235356);
     }
 
     public void CoinReset(int getCoin)
