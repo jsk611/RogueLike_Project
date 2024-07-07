@@ -149,7 +149,6 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             playerAnimator.SetBool("isWalking", true);
-            playerAnimator.SetBool("walkingLeft", true);
             Movement += Vector3.left;
         }
     }
@@ -158,7 +157,6 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
         {
             playerAnimator.SetBool("isWalking", true);
-            playerAnimator.SetBool("walkingBackward", true);
             Movement += Vector3.back;
         }
     }
@@ -167,7 +165,6 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             playerAnimator.SetBool("isWalking", true);
-            playerAnimator.SetBool("walkingRight", true);
             Movement += Vector3.right;
             
         }
@@ -177,9 +174,9 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             playerAnimator.SetBool("isWalking", true);
-            playerAnimator.SetBool("walkingForward", true);
             Movement += Vector3.forward;
         }
+
     }
 
 
