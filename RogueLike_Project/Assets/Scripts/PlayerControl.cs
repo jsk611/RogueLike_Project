@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
@@ -20,39 +21,47 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 8f;
+    [SerializeField] float moveSpeed = 16f;
     float moveSpeed_origin;
     float jumpPower = 5f;
 
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)] public float Stamina = 100;
+
     float time;
+    bool canDash =false ;
 
     Animator playerAnimator;
     
     Rigidbody playerRigidbody;
+
+    CharacterController character;
 
     [SerializeField] GameObject MainCharacter;
 
 
     Vector3 Movement = Vector3.zero;
 
-    BoxCollider HitBox;
+    
     // Start is called before the first frame update
     void Start()
     {
         playerAnimator = MainCharacter.GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
+        character = GetComponent<CharacterController>();
+
         moveSpeed_origin = moveSpeed;
-        HitBox = GetComponent<BoxCollider>();
+        
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (HP > 0)
         {
+           
             MoveMent();
+            StaminaRegeneration();
             //shooting();
             if (Input.GetKey(KeyCode.L)) HP -= 1;
         }
@@ -72,22 +81,44 @@ public class PlayerControl : MonoBehaviour
 
     private void MoveMent()
     {
-        Movement = Vector3.zero;
+        var h = Input.GetAxisRaw("Horizontal") * transform.right;
+        var v = Input.GetAxisRaw("Vertical") * transform.forward;
+        Movement = h + v;
         ResetAnimationState();
-        
-        
-        WtoMoveForward();
-        DtoMoveRight();
-        StoMoveBackward();
-        AtoMoveLeft();
+
+        if (Movement != Vector3.zero) playerAnimator.SetBool("isWalking", true); 
+        //WtoMoveForward();
+        //DtoMoveRight();
+        //StoMoveBackward();
+        //AtoMoveLeft();
 
         Jumping();
-        IsRunning();
+       
         isCrawling();
-
+            
         Movement.Normalize();
-        transform.Translate(Movement*Time.deltaTime*moveSpeed,Space.Self);
+        
+        //transform.TransformDirection(Movement);
+        Dash();
+        character.Move (Movement * Time.deltaTime * moveSpeed);
+        //transform.Translate(Movement * Time.deltaTime * moveSpeed, Space.Self);
+        
         return;
+    }
+
+    private void Dash()
+    {
+        
+        
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("crawling"))
+        {
+            if (time > 0.5f)
+            {
+                Stamina -= 20;
+                playerRigidbody.MovePosition(transform.position + Movement *  moveSpeed * 50);
+                time = 0;
+            }
+        }
     }
 
     private void Jumping()
@@ -96,29 +127,35 @@ public class PlayerControl : MonoBehaviour
         {
             playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             playerAnimator.SetBool("isJumping", true);
+            time = 0;
             Stamina -= 20;
         }
     }
-
-    private void IsRunning()
+    private void StaminaRegeneration()
     {
         time += Time.deltaTime;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
-        {
-            if (!playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin * 2f;
-            playerAnimator.SetBool("isRunning", true);
-            Stamina -= 10 * Time.deltaTime;
-            time = 0;
-        }
-        else
-        {
-            if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
-            if (time  > 1f && Stamina <100 && !playerAnimator.GetBool("isJumping")) Stamina+=2;
-
-
-            playerAnimator.SetBool("isRunning", false);
-        }
+        if (time > 1.5f) Stamina += 20 * Time.deltaTime;
     }
+
+    //private void isSprinting()
+    //{
+    //    time += Time.deltaTime;
+    //    if (Input.GetKey(KeyCode.LeftShift) && Stamina >0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("crawling"))
+    //    {
+    //        if (!playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin * 2f;
+    //        playerAnimator.SetBool("isRunning", true);
+    //        Stamina -= 10 * Time.deltaTime;
+    //        time = 0;
+    //    }
+    //    else
+    //    {
+    //        if (playerAnimator.GetBool("isRunning")) moveSpeed = moveSpeed_origin;
+    //        if (time  > 1f && Stamina <100 && !playerAnimator.GetBool("isJumping")) Stamina+=2;
+
+
+    //        playerAnimator.SetBool("isRunning", false);
+    //    }
+    //}
     private void isCrawling()
     {
         if (Input.GetKey(KeyCode.LeftControl) && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("isRunning"))
@@ -129,8 +166,8 @@ public class PlayerControl : MonoBehaviour
                 Debug.Log("crawling");
             }
             playerAnimator.SetBool("crawling", true);
-            HitBox.size = new Vector3(1, 0.6f, 1);
-            HitBox.center = new Vector3(0, -0.18f, HitBox.center.z);
+            character.height = 0.6f;
+            character.center = new Vector3(0, -0.18f, character.center.z);
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
             
         }
@@ -138,55 +175,51 @@ public class PlayerControl : MonoBehaviour
         {
             if (playerAnimator.GetBool("crawling")) moveSpeed = moveSpeed_origin;
             playerAnimator.SetBool("crawling", false);
-            HitBox.center = new Vector3(0, 0, 0);
-            HitBox.size = new Vector3(1, 1, 1);
+            character.center = new Vector3(0, 0, 0);
+            character.height =1f;
            // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
 
         }
     }
-    private void AtoMoveLeft()
-    {
-        if (Input.GetKey(KeyCode.A))
-        {
-            playerAnimator.SetBool("isWalking", true);
-            Movement += Vector3.left;
-        }
-    }
-    private void StoMoveBackward()
-    {
-        if (Input.GetKey(KeyCode.S))
-        {
-            playerAnimator.SetBool("isWalking", true);
-            Movement += Vector3.back;
-        }
-    }
-    private void DtoMoveRight()
-    {
-        if (Input.GetKey(KeyCode.D))
-        {
-            playerAnimator.SetBool("isWalking", true);
-            Movement += Vector3.right;
+    //private void AtoMoveLeft()
+    //{
+    //    if (Input.GetKey(KeyCode.A))
+    //    {
+    //        playerAnimator.SetBool("isWalking", true);
+    //        Movement += transform.rotation * Vector3.left;
+    //    }
+    //}
+    //private void StoMoveBackward()
+    //{
+    //    if (Input.GetKey(KeyCode.S))
+    //    {
+    //        playerAnimator.SetBool("isWalking", true);
+    //        Movement += transform.rotation * Vector3.back;
+    //    }
+    //}
+    //private void DtoMoveRight()
+    //{
+    //    if (Input.GetKey(KeyCode.D))
+    //    {
+    //        playerAnimator.SetBool("isWalking", true);
+    //        Movement += transform.rotation * Vector3.right;
             
-        }
-    }
-    private void WtoMoveForward()
-    {
-        if (Input.GetKey(KeyCode.W))
-        {
-            playerAnimator.SetBool("isWalking", true);
-            Movement += Vector3.forward;
-        }
+    //    }
+    //}
+    //private void WtoMoveForward()
+    //{
+    //    if (Input.GetKey(KeyCode.W))
+    //    {
+    //        playerAnimator.SetBool("isWalking", true);
+    //        Movement += transform.rotation * Vector3.forward;
+    //    }
 
-    }
+    //}
 
 
         private void ResetAnimationState()
     {
         playerAnimator.SetBool("isWalking", false);
-        playerAnimator.SetBool("walkingRight", false);
-        playerAnimator.SetBool("walkingLeft", false);
-        playerAnimator.SetBool("walkingForward", false);
-        playerAnimator.SetBool("walkingBackward", false);
         playerAnimator.SetBool("reloading", false);
     }
     

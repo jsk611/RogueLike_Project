@@ -7,11 +7,11 @@ using UnityEngine;
 
 public class WeaponControl : MonoBehaviour
 {
-    int remains = 5;
-    float shootSpeed = 0.5f;
-    float reloadSpeed = 2f;
-    float bulletSpeed = 1f;
-    float weight = 5f;
+    //int remains = 5;
+    //float shootSpeed = 0.5f;
+    //float reloadSpeed = 2f;
+    //float bulletSpeed = 1f;
+    //float weight = 5f;
 
     [SerializeField] GameObject first_weapon;
     [SerializeField] GameObject second_weapon;
