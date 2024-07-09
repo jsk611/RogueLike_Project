@@ -26,17 +26,15 @@ public class ShootingController : MonoBehaviour
         {
             Debug.Log(weaponController.weaponAnimation.name);
             playerAnimator.Play(weaponController.weaponAnimation.name); 
-            Debug.Log("shooting");
+            
             //playerAnimator.Play();
         }
         if (Input.GetMouseButton(1))
         {
-            Debug.Log("targeting");
             playerAnimator.SetTrigger("targeting");
         }
         if (Input.GetKey(KeyCode.R))
         {
-            Debug.Log("Reroad");
             playerAnimator.Play("Reload");
         }
 

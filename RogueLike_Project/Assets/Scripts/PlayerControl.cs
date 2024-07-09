@@ -21,15 +21,16 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 16f;
+    [SerializeField] float moveSpeed = 12f;
     float moveSpeed_origin;
-    float jumpPower = 5f;
+    [SerializeField] float jumpPower = 20f;
 
     [SerializeField] int HP = 100;
     [SerializeField] [Range(0,100)] public float Stamina = 100;
 
-    float time;
-    bool canDash =false ;
+    float dashCool;
+    bool isGrounded = true;
+    float gravity = 9.8f;
 
     Animator playerAnimator;
     
@@ -41,7 +42,7 @@ public class PlayerControl : MonoBehaviour
 
 
     Vector3 Movement = Vector3.zero;
-
+    Vector3 Vertical = Vector3.zero;
     
     // Start is called before the first frame update
     void Start()
@@ -81,62 +82,77 @@ public class PlayerControl : MonoBehaviour
 
     private void MoveMent()
     {
+        ResetAnimationState();
         var h = Input.GetAxisRaw("Horizontal") * transform.right;
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
-        ResetAnimationState();
+        
+        if (Movement != Vector3.zero) playerAnimator.SetBool("isWalking", true);
+        
+        isCrawling();
+        Dash();
 
-        if (Movement != Vector3.zero) playerAnimator.SetBool("isWalking", true); 
-        //WtoMoveForward();
-        //DtoMoveRight();
-        //StoMoveBackward();
-        //AtoMoveLeft();
-
+        Movement = Movement.normalized * moveSpeed;
+        character.Move (Movement * Time.deltaTime);
+        
+        CheckGrounded();
         Jumping();
        
-        isCrawling();
-            
-        Movement.Normalize();
-        
+        character.Move(Vertical * Time.deltaTime);
+
         //transform.TransformDirection(Movement);
-        Dash();
-        character.Move (Movement * Time.deltaTime * moveSpeed);
+
         //transform.Translate(Movement * Time.deltaTime * moveSpeed, Space.Self);
-        
+       // Debug.Log(Vertical.y);
         return;
     }
+    private void CheckGrounded()
+    {
+        isGrounded = false;
 
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, 3);
+        if (isGrounded) Debug.Log("grounded");
+    }
     private void Dash()
     {
-        
-        
+        if (dashCool > 0.15f) moveSpeed = moveSpeed_origin;
         if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("crawling"))
         {
-            if (time > 0.5f)
+            if (dashCool > 1f)
             {
-                Stamina -= 20;
-                playerRigidbody.MovePosition(transform.position + Movement *  moveSpeed * 50);
-                time = 0;
+                Stamina -= 15f;
+                moveSpeed = moveSpeed_origin * 4f;
+                dashCool = 0;
             }
         }
     }
 
     private void Jumping()
     {
-        if (!playerAnimator.GetBool("isJumping") && Input.GetKey(KeyCode.Space) && Stamina > 0)
+        
+        if (isGrounded)
         {
-            playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
-            playerAnimator.SetBool("isJumping", true);
-            time = 0;
-            Stamina -= 20;
+           // Debug.Log("On ground");
+            Movement.y = -0.8f;
+            if (Input.GetKey(KeyCode.Space))
+            {
+               // Debug.Log("Jump");
+                Vertical.y = jumpPower;
+                ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
+                
+            }
         }
-    }
-    private void StaminaRegeneration()
-    {
-        time += Time.deltaTime;
-        if (time > 1.5f) Stamina += 20 * Time.deltaTime;
+        else Vertical.y += Physics.gravity.y * Time.deltaTime;
     }
 
+    private void StaminaRegeneration()
+    {
+        dashCool += Time.deltaTime;
+        
+        if (dashCool > 1.5f) Stamina += 40 * Time.deltaTime;
+        Stamina = Mathf.Clamp(Stamina, 0f, 100f);
+    }
+    
     //private void isSprinting()
     //{
     //    time += Time.deltaTime;
@@ -158,12 +174,12 @@ public class PlayerControl : MonoBehaviour
     //}
     private void isCrawling()
     {
-        if (Input.GetKey(KeyCode.LeftControl) && !playerAnimator.GetBool("isJumping") && !playerAnimator.GetBool("isRunning"))
+        if (Input.GetKey(KeyCode.LeftControl) && !playerAnimator.GetBool("isJumping"))
         {
             if (!playerAnimator.GetBool("crawling"))
             {
                 moveSpeed = moveSpeed_origin * 0.6f;
-                Debug.Log("crawling");
+                
             }
             playerAnimator.SetBool("crawling", true);
             character.height = 0.6f;
@@ -203,7 +219,7 @@ public class PlayerControl : MonoBehaviour
     //    {
     //        playerAnimator.SetBool("isWalking", true);
     //        Movement += transform.rotation * Vector3.right;
-            
+
     //    }
     //}
     //private void WtoMoveForward()
@@ -217,10 +233,11 @@ public class PlayerControl : MonoBehaviour
     //}
 
 
-        private void ResetAnimationState()
+    private void ResetAnimationState()
     {
         playerAnimator.SetBool("isWalking", false);
         playerAnimator.SetBool("reloading", false);
+        playerAnimator.SetBool("isJumping", false);
     }
     
 
@@ -233,9 +250,13 @@ public class PlayerControl : MonoBehaviour
         else playerAnimator.SetBool("isJumping", true);
     }
 
-
-
-
+    private void OnTriggerEnter(Collider other)
+    {
+        //if (other.gameObject.layer == 3)
+        //{
+        //    isGrounded = true;
+        //}
+    }
 
 
 
@@ -252,10 +273,10 @@ public class PlayerControl : MonoBehaviour
         {
             playerAnimator.SetTrigger("shooting");
         }
-        if (Input.GetMouseButton(1)) Debug.Log("targeting");
+        if (Input.GetMouseButton(1)) 
         if (Input.GetKey(KeyCode.R))
         {
-            Debug.Log("Reroad");
+            
             playerAnimator.SetTrigger("reloading");
         }
 
