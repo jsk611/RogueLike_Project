@@ -89,9 +89,9 @@ public class PlayerControl : MonoBehaviour
         
         if (Movement != Vector3.zero) playerAnimator.SetBool("isWalking", true);
         
-        isCrawling();
+        
         Dash();
-
+        isCrawling();
         Movement = Movement.normalized * moveSpeed;
         character.Move (Movement * Time.deltaTime);
         
@@ -174,13 +174,12 @@ public class PlayerControl : MonoBehaviour
     //}
     private void isCrawling()
     {
-        if (Input.GetKey(KeyCode.LeftControl) && !playerAnimator.GetBool("isJumping"))
+        if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
-            if (!playerAnimator.GetBool("crawling"))
-            {
-                moveSpeed = moveSpeed_origin * 0.6f;
+
+                moveSpeed = moveSpeed_origin * 0.5f;
                 
-            }
+
             playerAnimator.SetBool("crawling", true);
             character.height = 0.6f;
             character.center = new Vector3(0, -0.18f, character.center.z);

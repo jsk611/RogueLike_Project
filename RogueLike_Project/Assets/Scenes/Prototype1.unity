@@ -977,7 +977,7 @@ Transform:
   m_GameObject: {fileID: 6244531110188551466}
   serializedVersion: 2
   m_LocalRotation: {x: 0.38152683, y: -0.5354051, z: 0.46823537, w: 0.590368}
-  m_LocalPosition: {x: 9.1, y: 3.3, z: 2.2}
+  m_LocalPosition: {x: 9, y: 4.1, z: 8}
   m_LocalScale: {x: 99.99998, y: 99.622086, z: 100.74706}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3612,7 +3612,8 @@ Animator:
     'Shoulder_Right'\n\tTransform 'Shoulder_Left'\n\tTransform 'Spine'\n\tTransform
     'Chest'\n\tTransform 'Chest'\n\tTransform 'Hips'\n\tTransform 'Shoulder_Right'\n\tFrom
     animation clip 'Idle_Shoot'\n\tFrom animation clip 'Walk_Front'\n\tFrom animation
-    clip 'Test_single_shooting'\n\tFrom animation clip 'Walk_Front'"
+    clip 'Test_single_shooting'\n\tFrom animation clip 'Walk_Front'\n\tFrom animation
+    clip 'Walk_Front'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
