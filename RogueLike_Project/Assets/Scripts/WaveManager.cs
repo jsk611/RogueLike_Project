@@ -54,11 +54,20 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
+            yield return StartCoroutine(Wave4());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(3f);
+            yield return StartCoroutine(Wave5());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave1());
+            yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave2());
+            yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave3());
+            yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
         }
     }
@@ -113,5 +122,55 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(1f);
         }
         Debug.Log("Wave End");
+    }
+    IEnumerator Wave4()
+    {
+        Debug.Log("Wave 4");
+        //tileManager.InitializeArray(6);
+        //yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        for(int i=0; i<5; i++)
+        {
+            //罚待栏肺 寒 积己
+            tileManager.InitializeArray(6);
+            tileManager.MakeRandomWall(Random.Range(8, 16));
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(5f);
+        }
+
+        //InitializeEnemyArray();
+        //MakeRandomEnemyMap(3);
+        //enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        Debug.Log("Wave End");
+    }
+
+    IEnumerator Wave5()
+    {
+        Debug.Log("Wave 5");
+        //tileManager.InitializeArray(6);
+        //yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < 5; i++)
+        {
+            //罚待栏肺 备港 积己
+            tileManager.MakeRandomHole(Random.Range(4, 9));
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(5f);
+        }
+
+        //InitializeEnemyArray();
+        //MakeRandomEnemyMap(3);
+        //enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        Debug.Log("Wave End");
+    }
+
+    IEnumerator WaveEnd()
+    {
+        tileManager.InitializeArray(6);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
     }
 }

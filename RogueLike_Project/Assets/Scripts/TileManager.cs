@@ -103,7 +103,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public void MakeRandomMap(int numOfChanging)
+    public void MakeRandomWall(int numOfChanging)
     {
         List<Vector2> posList = new List<Vector2>();
         for(int i = 0; i < numOfChanging; i++)
@@ -119,7 +119,25 @@ public class TileManager : MonoBehaviour
             else
             {
                 posList.Add(pos);
-                tileMap[randomY,randomX] = Random.Range(1, 4);
+                tileMap[randomY,randomX] += Random.Range(2,4);
+            }
+        }
+    }
+    public void MakeRandomHole(int numOfChanging)
+    {
+        for (int i = 0; i < numOfChanging; i++)
+        {
+            int randomX = Random.Range(0, mapSize);
+            int randomY = Random.Range(0, mapSize);
+            Vector2 pos = new Vector2(randomX, randomY);
+            if (tileMap[randomY, randomX] <= 0)
+            {
+                i--;
+                continue;
+            }
+            else
+            {
+                tileMap[randomY, randomX] = -2;
             }
         }
     }
