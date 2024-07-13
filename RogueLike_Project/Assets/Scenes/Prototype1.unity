@@ -361,7 +361,7 @@ Transform:
   m_GameObject: {fileID: 919654215}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.486, y: 2.082, z: -2.092}
+  m_LocalPosition: {x: -0.486, y: 1.314, z: -2.092}
   m_LocalScale: {x: 1, y: 1.9769257, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2747,7 +2747,7 @@ Transform:
   m_GameObject: {fileID: 2836004474434100731}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.47700322, z: 0}
+  m_LocalPosition: {x: 0, y: -0.496, z: 0}
   m_LocalScale: {x: 1, y: 0.5058359, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3612,8 +3612,8 @@ Animator:
     'Shoulder_Right'\n\tTransform 'Shoulder_Left'\n\tTransform 'Spine'\n\tTransform
     'Chest'\n\tTransform 'Chest'\n\tTransform 'Hips'\n\tTransform 'Shoulder_Right'\n\tFrom
     animation clip 'Idle_Shoot'\n\tFrom animation clip 'Walk_Front'\n\tFrom animation
-    clip 'Test_single_shooting'\n\tFrom animation clip 'Walk_Front'\n\tFrom animation
-    clip 'Walk_Front'"
+    clip 'Test_Reloading'\n\tFrom animation clip 'Test_Reloading'\n\tFrom animation
+    clip 'Walk_Front'\n\tFrom animation clip 'Walk_Front'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

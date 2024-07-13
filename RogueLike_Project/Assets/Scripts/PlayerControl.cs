@@ -177,8 +177,7 @@ public class PlayerControl : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
 
-                moveSpeed = moveSpeed_origin * 0.5f;
-                
+            moveSpeed = moveSpeed_origin * 0.5f;
 
             playerAnimator.SetBool("crawling", true);
             character.height = 0.6f;
