@@ -33,6 +33,8 @@ public class MeeleMonster : MonoBehaviour
     [SerializeField] Transform player;
 
     private FieldOfView fov;
+    private Coroutine stateMachineCoroutine;
+
 
     enum State
     {
@@ -55,7 +57,8 @@ public class MeeleMonster : MonoBehaviour
 
         hp_ = 10;
         state = State.IDLE;
-        StartCoroutine(StateMachine());
+        stateMachineCoroutine = StartCoroutine(StateMachine());
+
 
     }
 
@@ -150,8 +153,7 @@ public class MeeleMonster : MonoBehaviour
     void ChangeState(State newState)
     {
         state = newState;
-        StopAllCoroutines();
-        StartCoroutine(StateMachine());
+       
     }
 
     void Update()
@@ -163,13 +165,14 @@ public class MeeleMonster : MonoBehaviour
         // target 이 null 이 아니면 target 을 계속 추적
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Transform player)
     {
         hp_ -= damage;
 
         if (hp_ > 0)
         {
             ChangeState(State.CHASE);
+            target = player;
         }
         else
         {
@@ -179,6 +182,10 @@ public class MeeleMonster : MonoBehaviour
 
     void Die()
     {
+        if (stateMachineCoroutine != null)
+        {
+            StopCoroutine(stateMachineCoroutine);
+        }
         // 적이 사망하면 수행할 동작 (예: 애니메이션 재생, 오브젝트 비활성화 등)
         Destroy(gameObject);
     } 

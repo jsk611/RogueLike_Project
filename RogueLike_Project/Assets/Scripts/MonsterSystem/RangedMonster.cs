@@ -27,6 +27,7 @@ public class RangedMonster : MonoBehaviour
     public Transform target;
 
     private FieldOfView fov;
+    private Coroutine stateMachineCoroutine;
 
     private float searchTargetDelay = 0.2f;
 
@@ -47,12 +48,11 @@ public class RangedMonster : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
-
         fov = GetComponent<FieldOfView>();
 
         hp_ = 10;
         state = State.IDLE;
-        StartCoroutine(StateMachine());
+        stateMachineCoroutine = StartCoroutine(StateMachine());
     }
 
     IEnumerator StateMachine()
@@ -150,7 +150,15 @@ public class RangedMonster : MonoBehaviour
 
     IEnumerator SHOT()
     {
-        gun.Fire(transform.rotation);
+        try
+        {
+            gun.Fire(transform.rotation);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Gun Fire Error: " + e.Message);
+        }
+
         ChangeState(State.CHASE);
         yield return null;
     }
@@ -163,8 +171,6 @@ public class RangedMonster : MonoBehaviour
     void ChangeState(State newState)
     {
         state = newState;
-        StopAllCoroutines();
-        StartCoroutine(StateMachine());
     }
 
     void Update()
@@ -177,13 +183,14 @@ public class RangedMonster : MonoBehaviour
     }
 
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Transform playerTransform)
     {
         hp_ -= damage;
 
         if (hp_ > 0)
         {
             ChangeState(State.CHASE);
+            target = playerTransform;
         }
         else
         {
@@ -193,6 +200,10 @@ public class RangedMonster : MonoBehaviour
 
     void Die()
     {
+        if (stateMachineCoroutine != null)
+        {
+            StopCoroutine(stateMachineCoroutine);
+        }
         // 적이 사망하면 수행할 동작 (예: 애니메이션 재생, 오브젝트 비활성화 등)
         Destroy(gameObject);
     }
