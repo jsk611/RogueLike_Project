@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingManager : MonoBehaviour
+public class DispChange : MonoBehaviour
 {
     public GameObject CurDisp, NextDisp;
 
