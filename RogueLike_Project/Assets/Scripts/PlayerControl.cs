@@ -21,25 +21,26 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 12f;
+    public float moveSpeed = 12f;
     float moveSpeed_origin;
-    [SerializeField] float jumpPower = 20f;
+    public float jumpPower = 20f;
 
-    [SerializeField] int HP = 100;
-    [SerializeField] [Range(0,100)] public float Stamina = 100;
+    public int HP = 100;
+    [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
     bool isGrounded = true;
     float gravity = 9.8f;
 
-    Animator playerAnimator;
-    
-    Rigidbody playerRigidbody;
-
-    CharacterController character;
 
     [SerializeField] GameObject MainCharacter;
+    Animator playerAnimator;
+    Rigidbody playerRigidbody;
+    CharacterController character;
 
+    CameraControl cameraController;
+    UpperBodyMovement upperBodyMovement;
+    ShootingController shootingController;
 
     Vector3 Movement = Vector3.zero;
     Vector3 Vertical = Vector3.zero;
@@ -53,6 +54,10 @@ public class PlayerControl : MonoBehaviour
 
         moveSpeed_origin = moveSpeed;
         
+
+        cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
+        upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
+        shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
     }
 
     // Update is called once per frame
@@ -66,16 +71,21 @@ public class PlayerControl : MonoBehaviour
             //shooting();
             if (Input.GetKey(KeyCode.L)) HP -= 1;
         }
-        Die();
+        else Die();
     }
 
     private void Die()
     {
-        if (HP <= 0)
+        cameraController.enabled = false;
+        upperBodyMovement.enabled = false;
+        shootingController.enabled = false;
+        if (playerAnimator.GetBool("isAlive"))
         {
+            playerAnimator.SetTrigger("dead");
             playerAnimator.SetBool("isAlive", false);
-            playerAnimator.Play("Die");
         }
+          
+        
     }
 
   

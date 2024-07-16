@@ -19,6 +19,7 @@ public class ShootingController : MonoBehaviour
     {
         shooting();
         weaponController = weapon.GetComponent<WeaponControl>();
+        
     }
     private void shooting()
     {
@@ -35,6 +36,7 @@ public class ShootingController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.R))
         {
+            playerAnimator.SetTrigger("reloading");
             playerAnimator.Play("Reload");
         }
 

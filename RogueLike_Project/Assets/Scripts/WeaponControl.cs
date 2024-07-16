@@ -17,7 +17,8 @@ public class WeaponControl : MonoBehaviour
     [SerializeField] GameObject second_weapon;
     [SerializeField] GameObject melee_weapon;
     [SerializeField] GameObject[] weapons;
-    public GameObject currentWeapon;
+    private GameObject currentWeapon;
+    private GameObject prevWeapon;
 
     Animator playerAnimator;
     public AnimationClip weaponAnimation;
@@ -27,6 +28,7 @@ public class WeaponControl : MonoBehaviour
         
         weaponAnimation = first_weapon.GetComponent<Weapon>().GetAnimation();
         currentWeapon = first_weapon;
+        prevWeapon = currentWeapon;
         playerAnimator = GetComponent<Animator>();
     }
     
@@ -35,7 +37,12 @@ public class WeaponControl : MonoBehaviour
     {
         switchingWeapon();
         weaponAnimation = currentWeapon.GetComponent<Weapon>().GetAnimation();
-        
+
+        if(prevWeapon != currentWeapon)
+        {
+            playerAnimator.SetTrigger("WeaponSwap");
+        }
+        prevWeapon = currentWeapon;
     }
 
     private void switchingWeapon()
@@ -61,6 +68,7 @@ public class WeaponControl : MonoBehaviour
             currentWeapon.SetActive(true);
             weaponAnimation = melee_weapon.GetComponent<Weapon>().GetAnimation();
         }
+        
     }
     public GameObject GetCurrentWeapon()
     {

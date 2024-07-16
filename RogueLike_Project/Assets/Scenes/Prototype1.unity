@@ -122,6 +122,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &229933267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 229933268}
+  m_Layer: 0
+  m_Name: LeftHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &229933268
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229933267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.9, y: 52.7, z: 19.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9061037023356700867}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &668315462
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,7 +319,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 39e2efb343d77f244af47070eb703e4b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -361,7 +392,7 @@ Transform:
   m_GameObject: {fileID: 919654215}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.486, y: 1.314, z: -2.092}
+  m_LocalPosition: {x: 0.31, y: 1.314, z: -6.09}
   m_LocalScale: {x: 1, y: 1.9769257, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -650,6 +681,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 1
+--- !u!1 &1564941667
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1564941668}
+  m_Layer: 0
+  m_Name: RightHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1564941668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1564941667}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: -7.3, z: 19}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9061037023356700867}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1829038911
 GameObject:
   m_ObjectHideFlags: 0
@@ -1992,6 +2054,7 @@ GameObject:
   - component: {fileID: 2836004474867088990}
   - component: {fileID: 6661305670084490360}
   - component: {fileID: 2360453117167806281}
+  - component: {fileID: 6661305670084490361}
   m_Layer: 0
   m_Name: PBRCharacter
   m_TagString: Untagged
@@ -2098,7 +2161,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2836004474434585019}
-  - {fileID: 2836004474434585021}
   - {fileID: 4775305559555984855}
   m_Father: {fileID: 2836004474434585049}
   m_LocalEulerAnglesHint: {x: 7.949, y: 0, z: -7.162}
@@ -2492,7 +2554,8 @@ Transform:
   m_LocalPosition: {x: -8.526513e-14, y: -6.550316e-15, z: -13.487081}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2836004474434585021}
   m_Father: {fileID: 2836004474434584967}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2836004474434585021
@@ -2503,12 +2566,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2836004474434100701}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.5234401, y: 0.5463846, z: 0.4754055, w: 0.44884726}
-  m_LocalPosition: {x: 4.5, y: 14.9, z: 86.9}
+  m_LocalRotation: {x: -0.000000029802326, y: 1, z: 0.000000029802326, w: 0.000000029802326}
+  m_LocalPosition: {x: 101.5853, y: 0.4866619, z: -0.14833832}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2836004474434584967}
+  m_Father: {fileID: 2836004474434585019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2836004474434585023
 Transform:
@@ -3610,9 +3673,10 @@ Animator:
     are already bound by a Humanoid avatar. These transforms can only be changed
     by Humanoid clips.\n\tTransform 'Shoulder_Left'\n\tTransform 'Spine'\n\tTransform
     'Shoulder_Right'\n\tTransform 'Shoulder_Left'\n\tTransform 'Spine'\n\tTransform
-    'Chest'\n\tTransform 'Chest'\n\tTransform 'Hips'\n\tTransform 'Shoulder_Right'\n\tFrom
+    'Hips'\n\tTransform 'Chest'\n\tTransform 'Chest'\n\tTransform 'Shoulder_Right'\n\tFrom
     animation clip 'Idle_Shoot'\n\tFrom animation clip 'Walk_Front'\n\tFrom animation
-    clip 'Test_Reloading'\n\tFrom animation clip 'Test_Reloading'\n\tFrom animation
+    clip 'Test_Reloading'\n\tFrom animation clip 'Test_AutoShot'\n\tFrom animation
+    clip 'Test_Reloading'\n\tFrom animation clip 'Test_AutoShot'\n\tFrom animation
     clip 'Walk_Front'\n\tFrom animation clip 'Walk_Front'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -3892,7 +3956,7 @@ GameObject:
   - component: {fileID: 3183567579730442849}
   - component: {fileID: 8342238369123893979}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: ViewCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3911,6 +3975,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 2020129229479037295}
+--- !u!114 &6661305670084490361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2836004474434100731}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79bbecc217c61c4498b0bd98ec94180c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!23 &6763509528323851827
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4263,7 +4339,9 @@ Transform:
   m_LocalPosition: {x: 0.048, y: -0.104, z: 0.061}
   m_LocalScale: {x: 0.009395028, y: 0.009395028, z: 0.009395028}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1564941668}
+  - {fileID: 229933268}
   m_Father: {fileID: 5827545715267418058}
   m_LocalEulerAnglesHint: {x: 428.33, y: 142.992, z: 59.767}
 --- !u!33 &9181916172952856222
