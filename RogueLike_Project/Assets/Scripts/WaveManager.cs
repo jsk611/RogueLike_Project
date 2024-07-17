@@ -8,6 +8,8 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
+
+    [SerializeField] string[] mapPaths;
     void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
@@ -54,7 +56,13 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            yield return StartCoroutine(Wave4());
+            yield return StartCoroutine(Wave6());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(3f);
+            yield return StartCoroutine(Wave7());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(3f);
+            yield return StartCoroutine(Wave8());
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave5());
@@ -167,10 +175,55 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log("Wave End");
     }
+    IEnumerator Wave6()
+    {
+        Debug.Log("Wave 6");
+        tileManager.InitializeArray();
+        tileManager.MakeMapByCSV(mapPaths[0]);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave7()
+    {
+        Debug.Log("Wave 7");
+        tileManager.InitializeArray();
+        tileManager.MakeMapByCSV(mapPaths[1]);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave8()
+    {
+        Debug.Log("Wave 8");
+        tileManager.InitializeArray();
+        tileManager.MakeMapByCSV(mapPaths[2]);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        yield return new WaitForSeconds(5f);
+        Debug.Log("Wave End");
+    }
 
     IEnumerator WaveEnd()
     {
         tileManager.InitializeArray(6);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return StartCoroutine(tileManager.MoveTilesByArray(2,2,0));
     }
 }

@@ -11,7 +11,7 @@ public class TileManager : MonoBehaviour
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
     int[,] tileMap = new int[mapSize, mapSize];
-
+    CSVToArray CTA;
     public int GetMapSize
     {
         get { return mapSize; }
@@ -28,7 +28,7 @@ public class TileManager : MonoBehaviour
     void Awake()
     {
         GenerateTiles();
-        
+        CTA = FindObjectOfType<CSVToArray>();
 
         //StartCoroutine(ChangingMapSample());
 
@@ -102,7 +102,10 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-
+    public void MakeMapByCSV(string path)
+    {
+        tileMap = CTA.CSVFileToArray(path);
+    }
     public void MakeRandomWall(int numOfChanging)
     {
         List<Vector2> posList = new List<Vector2>();
