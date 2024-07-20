@@ -56,8 +56,8 @@ public class PlayerControl : MonoBehaviour
         
 
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
-        upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
-        shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
+        //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
+        //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
     }
 
     // Update is called once per frame
@@ -92,12 +92,10 @@ public class PlayerControl : MonoBehaviour
 
     private void MoveMent()
     {
-        ResetAnimationState();
         var h = Input.GetAxisRaw("Horizontal") * transform.right;
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
         
-        if (Movement != Vector3.zero) playerAnimator.SetBool("isWalking", true);
         
         
         Dash();
@@ -119,8 +117,8 @@ public class PlayerControl : MonoBehaviour
     private void CheckGrounded()
     {
         isGrounded = false;
-
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, 3);
+        
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
         if (isGrounded) Debug.Log("grounded");
     }
     private void Dash()
@@ -189,7 +187,6 @@ public class PlayerControl : MonoBehaviour
 
             moveSpeed = moveSpeed_origin * 0.5f;
 
-            playerAnimator.SetBool("crawling", true);
             character.height = 0.6f;
             character.center = new Vector3(0, -0.18f, character.center.z);
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
@@ -241,22 +238,10 @@ public class PlayerControl : MonoBehaviour
     //}
 
 
-    private void ResetAnimationState()
-    {
-        playerAnimator.SetBool("isWalking", false);
-        playerAnimator.SetBool("reloading", false);
-        playerAnimator.SetBool("isJumping", false);
-    }
+  
     
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            playerAnimator.SetBool("isJumping", false);
-        }
-        else playerAnimator.SetBool("isJumping", true);
-    }
+
 
     private void OnTriggerEnter(Collider other)
     {
