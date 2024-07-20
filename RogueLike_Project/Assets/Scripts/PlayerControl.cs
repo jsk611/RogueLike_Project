@@ -42,6 +42,8 @@ public class PlayerControl : MonoBehaviour
     UpperBodyMovement upperBodyMovement;
     ShootingController shootingController;
 
+    RaycastHit hitInfo;
+
     Vector3 Movement = Vector3.zero;
     Vector3 Vertical = Vector3.zero;
     
@@ -103,28 +105,24 @@ public class PlayerControl : MonoBehaviour
         Movement = Movement.normalized * moveSpeed;
         character.Move (Movement * Time.deltaTime);
         
+
         CheckGrounded();
         Jumping();
-       
         character.Move(Vertical * Time.deltaTime);
 
-        //transform.TransformDirection(Movement);
-
-        //transform.Translate(Movement * Time.deltaTime * moveSpeed, Space.Self);
-       // Debug.Log(Vertical.y);
         return;
     }
     private void CheckGrounded()
     {
         isGrounded = false;
-        
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, LayerMask.GetMask("Ground"));
+
+        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.1f, Vector3.down,out hitInfo ,1.1f);
         if (isGrounded) Debug.Log("grounded");
     }
     private void Dash()
     {
         if (dashCool > 0.15f) moveSpeed = moveSpeed_origin;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && playerAnimator.GetBool("isWalking") && !playerAnimator.GetBool("crawling"))
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && Movement.magnitude > Mathf.Epsilon)
         {
             if (dashCool > 1f)
             {
@@ -187,8 +185,8 @@ public class PlayerControl : MonoBehaviour
 
             moveSpeed = moveSpeed_origin * 0.5f;
 
-            character.height = 0.6f;
-            character.center = new Vector3(0, -0.18f, character.center.z);
+            character.height = 1.0f;
+            character.center = new Vector3(0, -0.39f, character.center.z);
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
             
         }
@@ -197,7 +195,7 @@ public class PlayerControl : MonoBehaviour
             if (playerAnimator.GetBool("crawling")) moveSpeed = moveSpeed_origin;
             playerAnimator.SetBool("crawling", false);
             character.center = new Vector3(0, 0, 0);
-            character.height =1f;
+            character.height = 1.8f;
            // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
 
         }

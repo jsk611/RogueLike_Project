@@ -277,8 +277,8 @@ namespace InfimaGames.LowPolyShooterPack
 			characterAnimator.SetBool(boolNameAim, aiming);
 			
 			//Update Animator Running.
-			const string boolNameRun = "Running";
-			characterAnimator.SetBool(boolNameRun, running);
+			//const string boolNameRun = "Running";
+			//characterAnimator.SetBool(boolNameRun, running);
 		}
 		
 		/// <summary>
