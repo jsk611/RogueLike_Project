@@ -67,7 +67,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         protected override void Awake()
         {
-            //Check if we have no scope. This could happen if we have an incorrect index.
+            //Check if we have no scope.This could happen if we have an incorrect index.
             if (scopeBehaviour == null)
             {
                 //Select Default Scope.
@@ -75,7 +75,7 @@ namespace InfimaGames.LowPolyShooterPack
                 //Set Active.
                 scopeBehaviour.gameObject.SetActive(scopeDefaultShow);
             }
-            
+
             //Select Muzzle!
             muzzleBehaviour = muzzleArray.SelectAndSetActive(muzzleIndex);
 

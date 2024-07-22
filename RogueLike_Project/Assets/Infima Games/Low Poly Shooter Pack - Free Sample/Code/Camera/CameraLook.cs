@@ -63,7 +63,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache the rigidbody.
             playerCharacterRigidbody = playerCharacter.GetComponent<Rigidbody>();
             characterController = playerCharacter.GetComponent<CharacterController>();
-            Debug.Log(playerCharacter.tag);
+           
         }
         private void Start()
         {
