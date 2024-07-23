@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEditor.Experimental.GraphView;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -748,7 +749,7 @@ namespace InfimaGames.LowPolyShooterPack
 			//Null Check.
 			if (inventory == null)
 				return;
-			
+		
 			//Switch.
 			switch (context)
 			{
@@ -756,16 +757,35 @@ namespace InfimaGames.LowPolyShooterPack
 				case {phase: InputActionPhase.Performed}:
 					//Get the index increment direction for our inventory using the scroll wheel direction. If we're not
 					//actually using one, then just increment by one.
+					Debug.Log($"{context.control.name}");
+
 					float scrollValue = context.valueType.IsEquivalentTo(typeof(Vector2)) ? Mathf.Sign(context.ReadValue<Vector2>().y) : 1.0f;
 					
 					//Get the next index to switch to.
 					int indexNext = scrollValue > 0 ? inventory.GetNextIndex() : inventory.GetLastIndex();
 					//Get the current weapon's index.
 					int indexCurrent = inventory.GetEquippedIndex();
+
+
 					
 					//Make sure we're allowed to change, and also that we're not using the same index, otherwise weird things happen!
 					if (CanChangeWeapon() && (indexCurrent != indexNext))
 						StartCoroutine(nameof(Equip), indexNext);
+					break;
+			}
+		}
+
+		public void OnSwap1(InputAction.CallbackContext context)
+		{
+			Debug.Log(context.control.name);
+			switch(context)
+			{
+			
+				case { phase: InputActionPhase.Performed}:
+					int nextIndex = int.Parse(context.control.name)-1;
+
+					if (CanChangeWeapon() && (nextIndex != inventory.GetEquippedIndex()))
+						StartCoroutine(nameof(Equip), nextIndex);
 					break;
 			}
 		}
