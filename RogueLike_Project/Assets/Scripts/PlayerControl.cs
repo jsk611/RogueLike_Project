@@ -182,21 +182,24 @@ public class PlayerControl : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftControl) && isGrounded)
         {
+            if (!playerAnimator.GetBool("Crouch")) playerAnimator.SetBool("Crouch", true);
 
-            moveSpeed = moveSpeed_origin * 0.5f;
-
-            character.height = 1.0f;
-            character.center = new Vector3(0, -0.39f, character.center.z);
+                moveSpeed = moveSpeed_origin * 0.5f;
+                character.height = 1.6f;
+                character.center = new Vector3(0, -0.09f, character.center.z);
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
+            
             
         }
         else
         {
-            if (playerAnimator.GetBool("crawling")) moveSpeed = moveSpeed_origin;
-            playerAnimator.SetBool("crawling", false);
-            character.center = new Vector3(0, 0, 0);
-            character.height = 1.8f;
-           // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
+            if (playerAnimator.GetBool("Crouch"))  moveSpeed = moveSpeed_origin;
+                playerAnimator.SetBool("Crouch", false);
+               
+                character.height = 1.8f;
+                character.center = new Vector3(0, 0, 0);
+                // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
+            
 
         }
     }
