@@ -17,7 +17,7 @@ namespace InfimaGames.LowPolyShooterPack
         private WeaponBehaviour weapon;
 
         #endregion
-
+            
         #region UNITY
 
         private void Awake()

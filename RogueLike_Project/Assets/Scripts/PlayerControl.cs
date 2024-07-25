@@ -117,7 +117,7 @@ public class PlayerControl : MonoBehaviour
         isGrounded = false;
 
         isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.1f, Vector3.down,out hitInfo ,1.1f);
-        if (isGrounded) Debug.Log("grounded");
+       
     }
     private void Dash()
     {
