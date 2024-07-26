@@ -5,7 +5,9 @@ using UnityEngine.AI;
 
 public class MeeleMonster : MonoBehaviour
 {
-    [Header("RangedMonster Stats")]
+    MonsterData monsterData;
+    public MonsterData MonsterData { set { monsterData = value; } }
+
     [SerializeField] int monsterID_ = 0;
     [SerializeField] float hp_ = 0;
     [SerializeField] float def = 0;

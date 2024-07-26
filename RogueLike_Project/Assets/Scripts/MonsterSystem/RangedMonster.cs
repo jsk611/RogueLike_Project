@@ -5,7 +5,11 @@ using UnityEngine.AI;
 
 public class RangedMonster : MonoBehaviour
 {
-    [Header("RangedMonster Stats")]
+    [SerializeField]
+    MonsterData monsterData;
+    public MonsterData MonsterData { set { monsterData = value; } }
+
+
     [SerializeField] int monsterID_ = 0;
     [SerializeField] float hp_ = 0;
     [SerializeField] float def = 0;
