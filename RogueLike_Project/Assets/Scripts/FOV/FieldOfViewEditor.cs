@@ -14,10 +14,10 @@ public class FieldOfViewEditor : Editor
         radius = fow.GetRadius();
         angle = fow.GetAngle();
         Handles.color = Color.black;
-        Handles.DrawWireArc(fow.transform.position, Vector3.up, Vector3.forward, 360, angle);
         Vector3 viewAngleA = fow.DirFromAngle(-angle / 2, false);
         Vector3 viewAngleB = fow.DirFromAngle(angle / 2, false);
 
+        Handles.DrawWireArc(fow.transform.position, Vector3.up, viewAngleA, angle, radius);
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * radius);
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * radius);
 
