@@ -1,5 +1,6 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 namespace InfimaGames.LowPolyShooterPack
@@ -55,6 +56,9 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private void OnSetActiveKnife(int active)
 		{
+			if (playerCharacter != null)
+				if (active != 0) playerCharacter.IsMeleeWeaponActive(true);
+				else playerCharacter.IsMeleeWeaponActive(false);
 		}
 		
 		/// <summary>

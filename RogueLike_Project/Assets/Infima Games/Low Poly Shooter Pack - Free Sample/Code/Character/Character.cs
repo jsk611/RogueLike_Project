@@ -124,6 +124,8 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private bool holstering;
 
+
+		private bool knifeActive;
 		/// <summary>
 		/// Look Axis Values.
 		/// </summary>
@@ -216,6 +218,8 @@ namespace InfimaGames.LowPolyShooterPack
 			running = holdingButtonRun && CanRun();
 
 			Crouching = characterAnimator.GetBool("Crouch");
+
+			
 
 			//Holding the firing button.
 			if (holdingButtonFire)
@@ -328,6 +332,7 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			#region Animation
 
+
 			//Get the name of the animation state to play, which depends on weapon settings, and ammunition!
 			string stateName = equippedWeapon.HasAmmunition() ? "Reload" : "Reload Empty";
 			//Play the animation state!
@@ -387,6 +392,13 @@ namespace InfimaGames.LowPolyShooterPack
 			equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
 			//Get equipped magazine. We need this one for its settings!
 			equippedWeaponMagazine = weaponAttachmentManager.GetEquippedMagazine();
+		}
+
+		public override void IsMeleeWeaponActive(bool activation)
+		{
+			if (activation) knifeActive = true;
+			else knifeActive = false;
+			Debug.Log(knifeActive);
 		}
 
 		private void FireEmpty()
@@ -458,6 +470,9 @@ namespace InfimaGames.LowPolyShooterPack
 
 			//Block while inspecting.
 			if (inspecting)
+				return false;
+
+			if (knifeActive)
 				return false;
 			
 			//Return.
@@ -537,6 +552,9 @@ namespace InfimaGames.LowPolyShooterPack
 
 			//Block.
 			if (reloading || holstering)
+				return false;
+
+			if (knifeActive)
 				return false;
 			
 			//Return.
@@ -630,6 +648,7 @@ namespace InfimaGames.LowPolyShooterPack
 			//Block.
 			if (!CanPlayAnimationReload())
 				return;
+			
 			
 			//Switch.
 			switch (context)
