@@ -58,7 +58,11 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private bool aiming;
 
-		private bool Crouching;
+
+		/// <summary>
+		/// True if the character is crouching
+		/// </summary>
+		private bool crouching;
 		/// <summary>
 		/// True if the character is running.
 		/// </summary>
@@ -67,11 +71,16 @@ namespace InfimaGames.LowPolyShooterPack
 		/// True if the character has its weapon holstered.
 		/// </summary>
 		private bool holstered;
-		
-		/// <summary>
-		/// Last Time.time at which we shot.
-		/// </summary>
-		private float lastShotTime;
+
+        /// <summary>
+        /// True if player can activate skill
+        /// </summary>
+        private bool canUseSkill;
+
+        /// <summary>
+        /// Last Time.time at which we shot.
+        /// </summary>
+        private float lastShotTime;
 		
 		/// <summary>
 		/// Overlay Layer Index. Useful for playing things like firing animations.
@@ -108,6 +117,11 @@ namespace InfimaGames.LowPolyShooterPack
 		/// The magazine equipped on the character's weapon.
 		/// </summary>
 		private MagazineBehaviour equippedWeaponMagazine;
+
+		/// <summary>
+		/// The skill of the player's current weapon
+		/// </summary>
+		private WeaponSkillManager equippedWeaponSkill;
 		
 		/// <summary>
 		/// True if the character is reloading.
@@ -124,7 +138,13 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private bool holstering;
 
-
+		/// <summary>
+		/// True if the character is using weapon skill
+		/// </summary>
+		private bool usingSkill;
+		/// <summary>
+		/// True if the character is using knife
+		/// </summary>
 		private bool knifeActive;
 		/// <summary>
 		/// Look Axis Values.
@@ -159,6 +179,9 @@ namespace InfimaGames.LowPolyShooterPack
 		/// True if the game cursor is locked! Used when pressing "Escape" to allow developers to more easily access the editor.
 		/// </summary>
 		private bool cursorLocked;
+
+		
+	
 
 		#endregion
 
@@ -208,6 +231,7 @@ namespace InfimaGames.LowPolyShooterPack
 			layerActions = characterAnimator.GetLayerIndex("Layer Actions");
 			//Cache a reference to the overlay layer's index.
 			layerOverlay = characterAnimator.GetLayerIndex("Layer Overlay");
+
 		}
 
 		protected override void Update()
@@ -217,7 +241,7 @@ namespace InfimaGames.LowPolyShooterPack
 			//Match Run.
 			running = holdingButtonRun && CanRun();
 
-			Crouching = characterAnimator.GetBool("Crouch");
+			crouching = characterAnimator.GetBool("Crouch");
 
 			
 
@@ -290,7 +314,7 @@ namespace InfimaGames.LowPolyShooterPack
 			//Update the aiming value, but use interpolation. This makes sure that things like firing can transition properly.
 			characterAnimator.SetFloat(HashAimingAlpha, Convert.ToSingle(aiming), 0.25f / 1.0f * dampTimeAiming, Time.deltaTime);
 
-			characterAnimator.SetFloat(HashCrouch,Convert.ToSingle(Crouching),0.25f/1.0f * dampTimeCrouching,Time.deltaTime);
+			characterAnimator.SetFloat(HashCrouch,Convert.ToSingle(crouching),0.25f/1.0f * dampTimeCrouching,Time.deltaTime);
 
 
 			//Update Animator Aiming.
@@ -348,6 +372,19 @@ namespace InfimaGames.LowPolyShooterPack
 		}
 
 		/// <summary>
+		/// Activate Current Weapon Skill
+		/// </summary>
+		private void PlayAnimationSkill()
+		{
+			usingSkill = true;
+			equippedWeapon.GetComponent<WeaponSkillManager>().ResetSkillCount();
+			const string stateName = "Skill";
+
+			characterAnimator.CrossFade(stateName, 0.3f, layerOverlay,0f);
+
+		}
+
+		/// <summary>
 		/// Equip Weapon Coroutine.
 		/// </summary>
 		private IEnumerator Equip(int index = 0)
@@ -392,6 +429,9 @@ namespace InfimaGames.LowPolyShooterPack
 			equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
 			//Get equipped magazine. We need this one for its settings!
 			equippedWeaponMagazine = weaponAttachmentManager.GetEquippedMagazine();
+
+			if (equippedWeapon.GetComponent<WeaponSkillManager>() != null)
+				equippedWeaponSkill = equippedWeapon.GetComponent<WeaponSkillManager>();
 		}
 
 		public override void IsMeleeWeaponActive(bool activation)
@@ -455,6 +495,10 @@ namespace InfimaGames.LowPolyShooterPack
 			if (inspecting)
 				return false;
 
+			//Block
+			if (usingSkill)
+				return false;
+
 			//Return.
 			return true;
 		}
@@ -474,6 +518,9 @@ namespace InfimaGames.LowPolyShooterPack
 
 			if (knifeActive)
 				return false;
+
+			if (usingSkill)
+				return false;
 			
 			//Return.
 			return true;
@@ -491,6 +538,9 @@ namespace InfimaGames.LowPolyShooterPack
 
 			//Block.
 			if (inspecting)
+				return false;
+
+			if (usingSkill)
 				return false;
 			
 			//Return.
@@ -514,6 +564,9 @@ namespace InfimaGames.LowPolyShooterPack
 			//Block.
 			if (inspecting)
 				return false;
+
+			if (usingSkill)
+				return false;
 			
 			//Return.
 			return true;
@@ -535,11 +588,32 @@ namespace InfimaGames.LowPolyShooterPack
 			//Block.
 			if (inspecting)
 				return false;
+
+			if (usingSkill)
+				return false;
 			
 			//Return.
 			return true;
 		}
 
+		private bool CanPlaySkillAnimation()
+		{
+			if (holstering || holstered)
+				return false;
+			if (reloading || inspecting)
+				return false;
+			if (usingSkill)
+				return false;
+
+			if (equippedWeaponSkill != null)
+			{
+				equippedWeaponSkill.CanActivateSkill();
+				return true;
+
+			}
+			return false;
+
+		}
 		/// <summary>
 		/// Returns true if the Character can Aim.
 		/// </summary>
@@ -554,7 +628,7 @@ namespace InfimaGames.LowPolyShooterPack
 			if (reloading || holstering)
 				return false;
 
-			if (knifeActive)
+			if (knifeActive || usingSkill)
 				return false;
 			
 			//Return.
@@ -657,6 +731,24 @@ namespace InfimaGames.LowPolyShooterPack
 				case {phase: InputActionPhase.Performed}:
 					//Play Animation.
 					PlayReloadAnimation();
+					break;
+			}
+		}
+
+		public void OnTryPlaySkill(InputAction.CallbackContext context)
+		{
+			if (!cursorLocked)
+				return;
+			if (!CanPlaySkillAnimation() || equippedWeaponSkill.GetSkillCount() == 0)
+			{
+				return;
+			}
+			switch(context)
+			{
+				case { phase: InputActionPhase.Performed}:
+					Debug.Log("skillused");
+					PlayAnimationSkill();
+					
 					break;
 			}
 		}
@@ -896,6 +988,12 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			//Stop Holstering.
 			holstering = false;
+		}
+
+		public override void AnimationEndedSKill()
+		{
+			//Stop Using SKill
+			usingSkill = false;
 		}
 
 		#endregion

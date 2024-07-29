@@ -131,6 +131,12 @@ namespace InfimaGames.LowPolyShooterPack
 		private void OnSlideBack(int back)
 		{
 		}
+		
+		private void OnAnimationEndedSkill()
+		{
+			if (playerCharacter != null)
+				playerCharacter.AnimationEndedSKill();
+		}
 
 		#endregion
 	}   
