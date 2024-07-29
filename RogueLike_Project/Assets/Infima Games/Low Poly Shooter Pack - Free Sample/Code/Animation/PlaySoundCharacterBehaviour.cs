@@ -20,6 +20,8 @@ namespace InfimaGames.LowPolyShooterPack
             Reload, ReloadEmpty,
             //Firing.
             Fire, FireEmpty,
+            //
+            Skill
         }
 
         #region FIELDS SERIALIZED
@@ -54,6 +56,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private InventoryBehaviour playerInventory;
 
+        private WeaponSkillManager weaponSkillBehaviour;
+
         /// <summary>
         /// The service that handles sounds.
         /// </summary>
@@ -81,6 +85,9 @@ namespace InfimaGames.LowPolyShooterPack
             //Try grab a reference to the sound managing service.
             audioManagerService ??= ServiceLocator.Current.Get<IAudioManagerService>();
 
+            if (weaponBehaviour.GetComponent<WeaponSkillManager>() != null)
+                weaponSkillBehaviour = weaponBehaviour.GetComponent<WeaponSkillManager>();
+
             #region Select Correct Clip To Play
 
             //Switch.
@@ -90,20 +97,22 @@ namespace InfimaGames.LowPolyShooterPack
                 SoundType.Holster => weaponBehaviour.GetAudioClipHolster(),
                 //Unholster.
                 SoundType.Unholster => weaponBehaviour.GetAudioClipUnholster(),
-                
+
                 //Reload.
                 SoundType.Reload => weaponBehaviour.GetAudioClipReload(),
                 //Reload Empty.
                 SoundType.ReloadEmpty => weaponBehaviour.GetAudioClipReloadEmpty(),
-                
+
                 //Fire.
                 SoundType.Fire => weaponBehaviour.GetAudioClipFire(),
                 //Fire Empty.
                 SoundType.FireEmpty => weaponBehaviour.GetAudioClipFireEmpty(),
-                
+
+                //Skill (identical to fire if the weapon doesn't have skill
+                SoundType.Skill => weaponSkillBehaviour.GetAudioClipSkill(),
                 //Default.
                 _ => default
-            };
+            }; ; ;
 
             #endregion
 

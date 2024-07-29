@@ -17,4 +17,6 @@ public abstract class WeaponSkillManager : MonoBehaviour
     public abstract void ResetSkillCount();
 
     public abstract int GetSkillCount();
+
+    public abstract AudioClip GetAudioClipSkill();
 }

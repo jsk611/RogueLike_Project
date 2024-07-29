@@ -107,7 +107,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 674278171877776469}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6392009262408596467}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -139,6 +140,24 @@ MonoBehaviour:
   audioSettings:
     automaticCleanup: 1
     volume: 0.2
+    spatialBlend: 0
+--- !u!114 &-6392009262408596467
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faf6976bc602496998955afbbf01060c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delay: 0
+  soundType: 6
+  audioSettings:
+    automaticCleanup: 1
+    volume: 1
     spatialBlend: 0
 --- !u!114 &-6065261773393433511
 MonoBehaviour:

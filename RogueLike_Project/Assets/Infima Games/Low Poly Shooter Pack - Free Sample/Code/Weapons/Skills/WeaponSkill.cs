@@ -13,6 +13,10 @@ public class WeaponSkill : WeaponSkillManager
     int skillCount;
 
     Tazer tazer;
+
+    [Tooltip("Skill Audio")]
+    [SerializeField]
+    AudioClip AudioClipSkill;
     // Start is called before the first frame update
     void Start()
     {
@@ -54,4 +58,7 @@ public class WeaponSkill : WeaponSkillManager
     }
 
     public override int GetSkillCount() => skillCount;
+
+
+    public override AudioClip GetAudioClipSkill() => AudioClipSkill;
 }

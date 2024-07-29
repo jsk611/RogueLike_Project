@@ -329,6 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillCoolTime: 8
+  AudioClipSkill: {fileID: 0}
 --- !u!1 &314832444
 GameObject:
   m_ObjectHideFlags: 0
@@ -931,6 +932,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillCoolTime: 10
+  AudioClipSkill: {fileID: 8300000, guid: f9eb44b85c96be5429737d4dcadbfa3b, type: 3}
 --- !u!1 &919654215 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8846308894517651529, guid: 6bc3913378d72e14db115a5d4ed746f2,
@@ -3623,7 +3625,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 027ae8cddc85a484fa5fd415d19d7a8e, type: 2}
+      objectReference: {fileID: 22100000, guid: 7e626d181ed96094eb7f6aa3eaf36707,
+        type: 2}
     - target: {fileID: 7593195566929187136, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
