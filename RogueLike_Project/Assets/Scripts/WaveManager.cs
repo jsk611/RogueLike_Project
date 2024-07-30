@@ -10,6 +10,8 @@ public class WaveManager : MonoBehaviour
     int mapSize;
 
     [SerializeField] string[] mapPaths;
+    [SerializeField] string startMapPath;
+    [SerializeField] string jeongbiMapPath;
     void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
@@ -56,6 +58,9 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
+            yield return StartCoroutine(StartMap());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave6());
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
@@ -79,7 +84,17 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(3f);
         }
     }
+    IEnumerator StartMap() //향후 게임매니저에서 관리
+    {
+        tileManager.InitializeArray();
+        tileManager.MakeMapByCSV(startMapPath); //시작 스테이지를 다른 신으로 관리할 지도 고민중
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
 
+        //시작 스테이지에서만 필요로 하는 코드 (영구적 업그레이드, 무기 선택, 훈련장 등등)을 작성
+
+        yield return new WaitForSeconds(10f); //향후 플레이어가 게임 입장 패드 위에 올라왔을 때 시작하게끔 변경
+
+    }
     IEnumerator Wave1()
     {
         Debug.Log("Wave 1");

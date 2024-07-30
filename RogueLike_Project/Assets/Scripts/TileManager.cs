@@ -10,13 +10,13 @@ public class TileManager : MonoBehaviour
     public static int mapSize = 30;
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
-    int[,] tileMap = new int[mapSize, mapSize];
+    float[,] tileMap = new float[mapSize, mapSize];
     CSVToArray CTA;
     public int GetMapSize
     {
         get { return mapSize; }
     }
-    public int[,] GetTileMap
+    public float[,] GetTileMap
     { 
         get { return tileMap; }
     }

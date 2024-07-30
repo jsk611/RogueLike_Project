@@ -3,15 +3,15 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CSVToArray : MonoBehaviour
-{
-    public float[,] CSVFileToArray(string path)
+public class ExcelToArray : MonoBehaviour
+{ 
+    public int[,] CSVFileToArray(string path)
     {
         string[] lines = File.ReadAllLines(path);
         int rows = lines.Length;
         int cols = lines[0].Split(',').Length;
 
-        float[,] dataArray = new float[rows, cols];
+        int[,] dataArray = new int[rows, cols];
 
         for (int i = 0; i < rows; i++)
         {
@@ -19,11 +19,10 @@ public class CSVToArray : MonoBehaviour
 
             for (int j = 0; j < cols; j++)
             {
-                dataArray[i, j] = float.Parse(values[j]);
+                dataArray[i, j] = int.Parse(values[j]);
             }
         }
 
         return dataArray;
     }
-
 }

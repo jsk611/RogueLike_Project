@@ -199,6 +199,8 @@ MonoBehaviour:
   - Assets/Sprites/Map/Map1.CSV
   - Assets/Sprites/Map/Map2.CSV
   - Assets/Sprites/Map/Map3.CSV
+  startMapPath: Assets/Sprites/Map/StartMapSample.CSV
+  jeongbiMapPath: 
 --- !u!4 &893349247
 Transform:
   m_ObjectHideFlags: 0
