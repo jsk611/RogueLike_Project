@@ -19,4 +19,6 @@ public abstract class WeaponSkillManager : MonoBehaviour
     public abstract int GetSkillCount();
 
     public abstract AudioClip GetAudioClipSkill();
+
+    public abstract void FireSkill();
 }

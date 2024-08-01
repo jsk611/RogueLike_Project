@@ -6,7 +6,11 @@ using Random = UnityEngine.Random;
 
 public class Projectile : MonoBehaviour {
 
-	[Range(5, 100)]
+	[Tooltip("Damage of the Bullet")]
+	[SerializeField]
+	public float bulletDamage;
+
+	[Range(0, 100)]
 	[Tooltip("After how long time should the bullet prefab be destroyed?")]
 	public float destroyAfter;
 	[Tooltip("If enabled the bullet destroys on impact")]
@@ -36,10 +40,19 @@ public class Projectile : MonoBehaviour {
 	//If the bullet collides with anything
 	private void OnCollisionEnter (Collision collision)
 	{
+
 		//Ignore collisions with other projectiles.
 		if (collision.gameObject.GetComponent<Projectile>() != null)
 			return;
-		
+
+		if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
+		{
+			if (collision.gameObject.GetComponent<Status>() != null)
+			{
+				collision.gameObject.GetComponent<Status>().DecreaseHealth(bulletDamage);
+			}
+			Destroy(gameObject);
+		}
 		// //Ignore collision if bullet collides with "Player" tag
 		// if (collision.gameObject.CompareTag("Player")) 
 		// {
@@ -140,7 +153,7 @@ public class Projectile : MonoBehaviour {
 			Destroy(gameObject);
 		}
 	}
-
+	
 	private IEnumerator DestroyTimer () 
 	{
 		//Wait random time based on min and max values

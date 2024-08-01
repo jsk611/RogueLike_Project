@@ -378,6 +378,7 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			usingSkill = true;
 			equippedWeapon.GetComponent<WeaponSkillManager>().ResetSkillCount();
+			equippedWeaponSkill.FireSkill();
 			const string stateName = "Skill";
 
 			characterAnimator.CrossFade(stateName, 0.3f, layerOverlay,0f);
@@ -432,6 +433,7 @@ namespace InfimaGames.LowPolyShooterPack
 
 			if (equippedWeapon.GetComponent<WeaponSkillManager>() != null)
 				equippedWeaponSkill = equippedWeapon.GetComponent<WeaponSkillManager>();
+			else equippedWeaponSkill = null;
 		}
 
 		public override void IsMeleeWeaponActive(bool activation)
@@ -607,11 +609,9 @@ namespace InfimaGames.LowPolyShooterPack
 
 			if (equippedWeaponSkill != null)
 			{
-				equippedWeaponSkill.CanActivateSkill();
-				return true;
-
+				return equippedWeaponSkill.CanActivateSkill();
 			}
-			return false;
+			else return false;
 
 		}
 		/// <summary>
@@ -739,7 +739,7 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			if (!cursorLocked)
 				return;
-			if (!CanPlaySkillAnimation() || equippedWeaponSkill.GetSkillCount() == 0)
+			if (!CanPlaySkillAnimation())
 			{
 				return;
 			}
