@@ -5,13 +5,23 @@ using UnityEngine;
 public class Tile : MonoBehaviour
 {
     MeshRenderer meshRenderer;
-    [SerializeField] Material defaultMaterial;
-    [SerializeField] Material watchOutMaterial;
-    [SerializeField] Material warningMaterial;
+    MeshRenderer childMesh;
+    //[SerializeField] Material defaultMaterial;
+    //[SerializeField] Material watchOutMaterial;
+    //[SerializeField] Material warningMaterial;
     bool isSetActive = true;
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
+        meshRenderer.material = Instantiate(meshRenderer.material);
+
+        childMesh = GetComponentsInChildren<MeshRenderer>()[1];
+        childMesh.material = Instantiate(childMesh.material);
+    }
+
+    private void Update()
+    {
+        meshRenderer.material.mainTextureScale = new Vector2(1, transform.localScale.y / transform.localScale.x);
     }
     public bool IsSetActive
     {
@@ -27,23 +37,27 @@ public class Tile : MonoBehaviour
     }
     IEnumerator AlertChangingCoroutine(float time, bool isWarning)
     {
-        Material alertMaterial = isWarning ? warningMaterial : watchOutMaterial;
+        Color alertColor = isWarning ? Color.red : Color.yellow;
 
         if (transform.position.y >= 0)
         {
             while (time > 1f)
             {
-                meshRenderer.material = alertMaterial;
+                meshRenderer.material.color = alertColor;
+                childMesh.material.color = alertColor;
                 yield return new WaitForSeconds(0.66f);
-                meshRenderer.material = defaultMaterial;
+                meshRenderer.material.color = Color.white;
+                childMesh.material.color = Color.white;
                 yield return new WaitForSeconds(0.34f);
                 time -= 1f;
             }
             while (time > 0)
             {
-                meshRenderer.material = alertMaterial;
+                meshRenderer.material.color = alertColor;
+                childMesh.material.color = alertColor;
                 yield return new WaitForSeconds(0.16f);
-                meshRenderer.material = defaultMaterial;
+                meshRenderer.material.color = Color.white;
+                childMesh.material.color = Color.white;
                 yield return new WaitForSeconds(0.09f);
                 time -= 0.25f;
             }
