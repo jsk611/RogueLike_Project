@@ -180,7 +180,58 @@ public class TileManager : MonoBehaviour
             yield return new WaitForSeconds((float)durationAboutCoroutine / (mapSize) );
         }
     }
+    public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 3f)
+    {
+        //경고 표시
+        for (int i = 0; i < mapSize; i++)
+        {
+            for (int j = 0; j < mapSize; j++)
+            {
+                if (tileMap[i, j] / 2f != tiles[i, j].transform.position.y)
+                {
+                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
+                    else tiles[i, j].AlertChanging(alertTime);
+                }
+            }
+        }
+        yield return new WaitForSeconds(alertTime);
 
+        //타일 위치 변경
+        float radius = 0;
+        float maxRadius = 25f;
+        bool[,] eventTriggered = new bool[mapSize, mapSize];
+        while (radius < maxRadius)
+        {
+
+            for (int i = 0; i < mapSize; i++)
+            {
+                for (int j = 0; j < mapSize; j++)
+                {
+                    if (eventTriggered[i, j])
+                        continue; // 이미 이벤트가 발생한 타일은 무시
+
+                    float distance = Mathf.Sqrt(Mathf.Pow(i - y, 2) + Mathf.Pow(j - x, 2));
+
+                    if (Mathf.Abs(distance - radius) < 0.5f)
+                    {
+                        eventTriggered[i, j] = true;
+                        if (tileMap[i, j] <= 0)
+                        {
+                            if (tiles[i, j].IsSetActive) tiles[i, j].DestroyTile(1f);
+                        }
+                        else
+                        {
+                            if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile();
+                            tiles[i, j].WaveToChange(height, 0.25f, tileMap[i,j]);
+                        }
+                    }
+
+                }
+            }
+            radius += maxRadius / 100f;
+            yield return new WaitForSeconds(time / 100);
+        }
+    }
     public IEnumerator MakeWave(int x, int y, int height, float time, float maxRadius)
     {
         float radius = 0;
@@ -209,4 +260,5 @@ public class TileManager : MonoBehaviour
             yield return new WaitForSeconds(time/100);
         }
     }
+
 }

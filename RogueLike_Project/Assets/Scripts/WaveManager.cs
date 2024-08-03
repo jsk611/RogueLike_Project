@@ -12,6 +12,10 @@ public class WaveManager : MonoBehaviour
     [SerializeField] string[] mapPaths;
     [SerializeField] string startMapPath;
     [SerializeField] string jeongbiMapPath;
+
+    [SerializeField] GameObject startStage;
+    [SerializeField] GameObject startPosition;
+    Vector3 sp;
     void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
@@ -19,6 +23,8 @@ public class WaveManager : MonoBehaviour
         mapSize = tileManager.GetMapSize;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
+        
+        sp = startPosition.transform.position;
 
         StartCoroutine(RunWaves()); //나중에 GameManager로 옮길 것
     }
@@ -86,15 +92,29 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator StartMap() //향후 게임매니저에서 관리
     {
-        tileManager.InitializeArray();
-        tileManager.MakeMapByCSV(startMapPath); //시작 스테이지를 다른 신으로 관리할 지도 고민중
+        startPosition.transform.position = sp;
+        tileManager.InitializeArray(-1);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,0,0));
+        startStage.SetActive(true);
 
         //시작 스테이지에서만 필요로 하는 코드 (영구적 업그레이드, 무기 선택, 훈련장 등등)을 작성
 
-        yield return new WaitForSeconds(20f); //향후 플레이어가 게임 입장 패드 위에 올라왔을 때 시작하게끔 변경
+        yield return new WaitForSeconds(5f); //향후 플레이어가 게임 입장 패드 위에 올라왔을 때 시작하게끔 변경
 
         //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
+        if (true)
+        {
+            Tile[] tiles = startPosition.GetComponentsInChildren<Tile>();
+            foreach(Tile t in tiles)
+            {
+                t.MovePosition(0, 10);
+            }
+            yield return new WaitForSeconds(9f);
+
+            tileManager.InitializeArray(4);
+            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 2, 3, 0));
+            startStage.SetActive(false);
+        }
 
     }
     IEnumerator Wave1()

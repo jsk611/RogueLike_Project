@@ -135,7 +135,11 @@ public class Tile : MonoBehaviour
     {
         StartCoroutine(WaveCoroutine(height, duration, repetition));
     }
-    
+    public void WaveToChange(float height, float duration, float targetY)
+    {
+        StartCoroutine(WaveToChangeCoroutine(height, duration, targetY));
+    }
+
     IEnumerator WaveCoroutine(float height, float durationPerLoop, int repetition)
     {
         float baseHeight = transform.localScale.y;
@@ -146,5 +150,21 @@ public class Tile : MonoBehaviour
             ChangeHeightWithFixedBase(baseHeight, durationPerLoop / 2f);
             yield return new WaitForSeconds(durationPerLoop / 2f);
         }
+    }
+
+    IEnumerator WaveToChangeCoroutine(float height, float durationPerLoop, float targetY)
+    {
+        //float baseHeight = transform.localScale.y;
+        if(targetY > 0 && !IsSetActive)
+        {
+            CreateTile();
+        }
+
+        ChangeHeightWithFixedBase(targetY + height, durationPerLoop / 2f);
+        yield return new WaitForSeconds(durationPerLoop / 2.01f);
+        ChangeHeightWithFixedBase(targetY, durationPerLoop / 2f);
+        yield return new WaitForSeconds(durationPerLoop / 2f);
+
+
     }
 }
