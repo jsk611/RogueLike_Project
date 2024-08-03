@@ -86,8 +86,9 @@ namespace InfimaGames.LowPolyShooterPack
             audioManagerService ??= ServiceLocator.Current.Get<IAudioManagerService>();
 
             if (weaponBehaviour.GetComponent<WeaponSkillManager>() != null)
+            {
                 weaponSkillBehaviour = weaponBehaviour.GetComponent<WeaponSkillManager>();
-
+            }
             #region Select Correct Clip To Play
 
             //Switch.
@@ -115,8 +116,8 @@ namespace InfimaGames.LowPolyShooterPack
             }; ; ;
 
             #endregion
-
             //Play with some delay. Granted, if the delay is set to zero, this will just straight-up play!
+
             audioManagerService.PlayOneShotDelayed(clip, audioSettings, delay);
         }
         

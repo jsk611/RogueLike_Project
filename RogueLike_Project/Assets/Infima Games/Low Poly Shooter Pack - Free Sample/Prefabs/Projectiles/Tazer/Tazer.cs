@@ -30,8 +30,9 @@ public class Tazer : MonoBehaviour
         {
  
                 hits = Physics.OverlapSphere(transform.position, 30.0f, hitMask, QueryTriggerInteraction.Collide);
-
+            
                 StartCoroutine(Oscillation(hits[0].transform,3.0f));
+                
                 //foreach (Collider hit in hits)
                 //{
                 //    StartCoroutine(Oscillation(hit.transform,0.3f));
@@ -40,6 +41,7 @@ public class Tazer : MonoBehaviour
         }
     }
     
+
     IEnumerator Oscillation(Transform body,float duration)
     {
         float shockedTime = 0.0f;
@@ -56,6 +58,7 @@ public class Tazer : MonoBehaviour
             body.position = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
 
             shockedTime += Time.deltaTime;
+            yield return null;
         }
         body.position = originalPosition; // 진동이 끝나면 원래 위치로 되돌리기
     }

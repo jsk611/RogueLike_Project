@@ -180,6 +180,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override AudioClip GetAudioClipFire() => muzzleBehaviour.GetAudioClipFire();
 
 
+
         public override int GetAmmunitionCurrent() => ammunitionCurrent;
 
         public override int GetAmmunitionTotal() => magazineBehaviour.GetAmmunitionTotal();

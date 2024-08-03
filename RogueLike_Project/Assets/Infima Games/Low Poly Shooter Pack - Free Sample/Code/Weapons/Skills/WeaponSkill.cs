@@ -60,6 +60,8 @@ public class WeaponSkill : WeaponSkillManager
         gameModeService = ServiceLocator.Current.Get<IGameModeService>();
         character = gameModeService.GetPlayerCharacter();
         playerCamera = character.GetCameraWorld().transform;
+
+        
     }
 
     // Update is called once per frame
@@ -72,7 +74,6 @@ public class WeaponSkill : WeaponSkillManager
     {
         
         float currentSkillUsed = Time.time;
-        Debug.Log(currentSkillUsed - recentSkillUsed);
         if (currentSkillUsed - recentSkillUsed > skillCoolTime)
         {
             recentSkillUsed = currentSkillUsed;
@@ -100,6 +101,7 @@ public class WeaponSkill : WeaponSkillManager
 
 
     public override AudioClip GetAudioClipSkill() => AudioClipSkill;
+    
 
     public override void FireSkill()
     {
@@ -117,6 +119,7 @@ public class WeaponSkill : WeaponSkillManager
 
 
 
+       
         Transform muzzleSocket = weaponMuzzle.GetSocket();
 
         Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000f - muzzleSocket.position);

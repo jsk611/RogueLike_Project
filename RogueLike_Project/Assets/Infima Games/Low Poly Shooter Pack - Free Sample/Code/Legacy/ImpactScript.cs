@@ -20,6 +20,7 @@ public class ImpactScript : MonoBehaviour {
 			[Random.Range(0, impactSounds.Length)];
 		//Play the random impact sound
 		audioSource.Play();
+		
 	}
 	
 	private IEnumerator DespawnTimer() {

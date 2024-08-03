@@ -67,6 +67,9 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract AudioClip GetAudioClipFire();
 
         
+
+
+
         /// <summary>
         /// Returns Current Ammunition. 
         /// </summary>
