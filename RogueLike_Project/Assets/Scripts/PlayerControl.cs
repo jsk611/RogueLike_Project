@@ -21,11 +21,10 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float moveSpeed = 12f;
+    private float moveSpeed;
     float moveSpeed_origin;
-    public float jumpPower = 20f;
+    private float jumpPower;
 
-    public int HP = 100;
     [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
@@ -42,6 +41,8 @@ public class PlayerControl : MonoBehaviour
     UpperBodyMovement upperBodyMovement;
     ShootingController shootingController;
 
+    Status characterStatus;
+
     RaycastHit hitInfo;
 
     Vector3 Movement = Vector3.zero;
@@ -54,26 +55,27 @@ public class PlayerControl : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
         character = GetComponent<CharacterController>();
 
-        moveSpeed_origin = moveSpeed;
+        
         
 
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
         //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
         //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
+
+        characterStatus = GetComponent<Status>();
+        moveSpeed = characterStatus.GetMoveSpeed();
+        moveSpeed_origin = moveSpeed;
+        jumpPower = characterStatus.GetJumpPower();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (HP > 0)
-        {
-           
-            MoveMent();
-            StaminaRegeneration();
-            //shooting();
-            if (Input.GetKey(KeyCode.L)) HP -= 1;
-        }
-        else Die();
+        if (characterStatus.IsDie()) Die();
+        MoveMent();
+        StaminaRegeneration();
+        
+
     }
 
     private void Die()
