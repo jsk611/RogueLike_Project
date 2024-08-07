@@ -1177,10 +1177,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ef32d82292a41dc89d49044463503e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bar: []
-  maxValue: []
-  currentValue: []
+  Bar:
+  - {fileID: 2009205065}
+  - {fileID: 1723632808}
+  maxValue:
+  - 100
+  - 100
+  currentValue:
+  - 100
+  - 100
   PauseCanvas: {fileID: 866702786}
+  weapon:
+  - {fileID: 831863690}
+  - {fileID: 28446471}
+  dnaText: {fileID: 162072658}
+  deactivateImage: {fileID: 507978228}
 --- !u!1 &279168260
 GameObject:
   m_ObjectHideFlags: 0
@@ -5839,7 +5850,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1426692540}
-  - component: {fileID: 1426692541}
   m_Layer: 5
   m_Name: DNA
   m_TagString: Untagged
@@ -5868,19 +5878,6 @@ RectTransform:
   m_AnchoredPosition: {x: 20, y: 40}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1426692541
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1426692539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2c5bf0d6e964ad1b0087ab5b334d13, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  coinText: {fileID: 162072658}
 --- !u!1 &1460387789
 GameObject:
   m_ObjectHideFlags: 0
@@ -6155,7 +6152,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1522154033}
-  - component: {fileID: 1522154034}
   m_Layer: 5
   m_Name: Skill_Button
   m_TagString: Untagged
@@ -6185,19 +6181,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 25}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0}
---- !u!114 &1522154034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522154032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 397af3d97e2124e9eb410696937caab2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onCoolImage: {fileID: 507978228}
 --- !u!1 &1523247465
 GameObject:
   m_ObjectHideFlags: 0
@@ -7231,7 +7214,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1723632806}
   - component: {fileID: 1723632808}
-  - component: {fileID: 1723632809}
   m_Layer: 5
   m_Name: Stamina_Bar
   m_TagString: Untagged
@@ -7312,21 +7294,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1723632809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1723632805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82d5347872d0b4cfdb583b03bc469554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bar: {fileID: 1723632808}
-  maxValue: 100
-  currentValue: 100
 --- !u!1 &1727669444
 GameObject:
   m_ObjectHideFlags: 0
@@ -8134,7 +8101,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1828924300}
-  - component: {fileID: 1828924301}
   m_Layer: 5
   m_Name: Weapons
   m_TagString: Untagged
@@ -8163,24 +8129,6 @@ RectTransform:
   m_AnchoredPosition: {x: -25, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0}
---- !u!114 &1828924301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1828924299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04920709185fb4516920e72788776644, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapon:
-  - {fileID: 831863690}
-  - {fileID: 28446471}
-  rectTrans:
-  - {fileID: 831863691}
-  - {fileID: 28446472}
 --- !u!1 &1837019221
 GameObject:
   m_ObjectHideFlags: 0
@@ -9041,7 +8989,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2009205064}
   - component: {fileID: 2009205065}
-  - component: {fileID: 2009205066}
   m_Layer: 5
   m_Name: Hp_Bar
   m_TagString: Untagged
@@ -9122,21 +9069,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &2009205066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2009205063}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82d5347872d0b4cfdb583b03bc469554, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Bar: {fileID: 2009205065}
-  maxValue: 100
-  currentValue: 100
 --- !u!1 &2023954998
 GameObject:
   m_ObjectHideFlags: 0
