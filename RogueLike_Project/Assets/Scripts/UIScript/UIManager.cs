@@ -13,12 +13,6 @@ public class UIManager : MonoBehaviour
         Swapping(0);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-            PauseGame();
-    }
-
     //Controlling bars value
     public Slider[] Bar;
     public float[] maxValue;
@@ -26,27 +20,6 @@ public class UIManager : MonoBehaviour
     public void BarValueChange(int i)
     {
         Bar[i].value = currentValue[i] / maxValue[i];
-    }
-
-    //TitleScene(Start, Quit)
-    public void InitGame()
-    {
-        SceneManager.LoadScene("Prototype1");
-    }
-    public void QuitGame()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-
-    //Pausing game
-    public GameObject PauseCanvas;
-    public void PauseGame()
-    {
-        PauseCanvas.SetActive(true);
     }
 
     //Swapping Weapons
