@@ -9,14 +9,12 @@ AnimatorOverrideController:
   m_Name: Handgun_Advanced
   m_Controller: {fileID: 9100000, guid: 027ae8cddc85a484fa5fd415d19d7a8e, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: f5a1384a9d9291c4898a54d2e1526593, type: 3}
-    m_OverrideClip: {fileID: 7400000, guid: 0c5985f59ad74e84aa65a4d310d13980, type: 3}
   - m_OriginalClip: {fileID: 7400000, guid: 402e385809e25da41bd06d2dc022c5fb, type: 3}
     m_OverrideClip: {fileID: 7400000, guid: 4e1533a6b78c19f409d31c343c67e93c, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 9e2dd26ab6618fd41afde0a260f013b5, type: 3}
     m_OverrideClip: {fileID: 7400000, guid: 6f72c15cb57c2ea488268d26e4919f14, type: 3}
   - m_OriginalClip: {fileID: 7400000, guid: f312af9f4da791b4c9c6bb02c492a398, type: 3}
-    m_OverrideClip: {fileID: 7400000, guid: 0bd5170972f02c9498bbf3a1e7eb6992, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 25d2363bacb1e4c479838e08a7b36426, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 720a6531fb0bd3649b7771aaee7cd12e, type: 3}
     m_OverrideClip: {fileID: 7400000, guid: 7358a4bdadd43b445b699645a2d9a1e7, type: 3}
   - m_OriginalClip: {fileID: 7400000, guid: c454e0fa9f500cb4292fc34b3c21c15a, type: 3}
@@ -33,3 +31,5 @@ AnimatorOverrideController:
     m_OverrideClip: {fileID: 7400000, guid: 295f0b33353c5c84391c617b1a358b6f, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 30649314a6fdc2143bd037dee66cdef5, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 6a425ab5f212c1f43a299e4bf541bb4d, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: f5a1384a9d9291c4898a54d2e1526593, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 817cf31318d68c74594135bee5621afb, type: 2}
