@@ -628,7 +628,7 @@ namespace InfimaGames.LowPolyShooterPack
 			if (reloading || holstering)
 				return false;
 
-			if (knifeActive)
+			if (knifeActive || usingSkill)
 				return false;
 			
 			//Return.
