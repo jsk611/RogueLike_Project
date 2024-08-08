@@ -64,13 +64,15 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
+            
+
             yield return StartCoroutine(StartMap());
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave6());
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
-            yield return StartCoroutine(Wave7());
+            yield return StartCoroutine(Maintenance());
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave8());
@@ -112,10 +114,21 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(9f);
 
             tileManager.InitializeArray(4);
-            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 2, 3, 0));
+            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 2, 2, 0));
             startStage.SetActive(false);
         }
 
+    }
+    IEnumerator Maintenance()
+    {
+        tileManager.InitializeArray(4);
+        tileManager.MakeMapByCSV(jeongbiMapPath);
+        yield return tileManager.MoveTilesByArrayByWave(15,15,2,2,0);
+
+        yield return new WaitForSeconds(10f); //플레이어 상호작용 코드 필요
+
+        tileManager.InitializeArray(4);
+        yield return tileManager.MoveTilesByArrayByWave(15,8,2,2,0);
     }
     IEnumerator Wave1()
     {

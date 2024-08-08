@@ -19,6 +19,7 @@ public class CSVToArray : MonoBehaviour
 
             for (int j = 0; j < cols; j++)
             {
+                Debug.Log(values[j]);
                 dataArray[i, j] = float.Parse(values[j]);
             }
         }
