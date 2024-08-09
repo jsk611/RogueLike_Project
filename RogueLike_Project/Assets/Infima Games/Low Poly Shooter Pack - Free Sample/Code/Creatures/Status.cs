@@ -41,7 +41,7 @@ public class Status : StatusBehaviour
 
     // Start is called before the first frame update
     public override void DecreaseHealth(float damage)
-    { Health -= damage * (DamageAlleviation / 100.0f) - Defence; }
+    { Health -= damage * (DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence); }
     public override void IncreaseHealth(float health)
     { Health += health; }
     public override void SetHealth(float health)
