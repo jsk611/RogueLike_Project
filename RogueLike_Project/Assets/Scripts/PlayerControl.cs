@@ -42,6 +42,8 @@ public class PlayerControl : MonoBehaviour
     UpperBodyMovement upperBodyMovement;
     ShootingController shootingController;
 
+    StatusBehaviour characterStatus;
+
     RaycastHit hitInfo;
 
     Vector3 Movement = Vector3.zero;
@@ -60,6 +62,7 @@ public class PlayerControl : MonoBehaviour
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
         //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
         //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
+        characterStatus = GetComponent<Status>();
     }
 
     // Update is called once per frame
@@ -94,6 +97,7 @@ public class PlayerControl : MonoBehaviour
 
     private void MoveMent()
     {
+        moveSpeed = characterStatus.GetMovementSpeed();
         var h = Input.GetAxisRaw("Horizontal") * transform.right;
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;

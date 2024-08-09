@@ -225,7 +225,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5233221354651812784}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1075430904}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cedea47162792a74cb9ec77109d20e72, type: 3}
@@ -822,7 +822,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
+  MaxHealth: 0
   Defence: 5
+  DamageAlleviation: 0
+  CriticalRate: 0
+  CriticalDamage: 0
+  MoveSpeed: 0
+  Damage: 0
 --- !u!1 &838531197
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +1000,32 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5233221354651812784}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1075430904 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6996948196452960142, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
+    type: 3}
+  m_PrefabInstance: {fileID: 5233221354651812784}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1075430905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075430904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5023e63a661e364bae1727215514b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 100
+  MaxHealth: 100
+  Defence: 10
+  DamageAlleviation: 12
+  CriticalRate: 5
+  CriticalDamage: 50
+  MoveSpeed: 12
+  Damage: 200
 --- !u!114 &1079295814 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1103329891092828159, guid: 613eeb9dc59c9934392391ae63fffa9d,
@@ -4067,6 +4099,10 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 73138714}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6996948196452960142, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1075430905}
     - targetCorrespondingSourceObject: {fileID: 4433797594461472252, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       insertIndex: -1
