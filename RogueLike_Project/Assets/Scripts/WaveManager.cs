@@ -15,6 +15,7 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField] GameObject startStage;
     [SerializeField] GameObject startPosition;
+    [SerializeField] GameObject jeongbiStage;
     Vector3 sp;
     void Start()
     {
@@ -114,7 +115,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(9f);
 
             tileManager.InitializeArray(4);
-            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 2, 2, 0));
+            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 3, 1, 0));
             startStage.SetActive(false);
         }
 
@@ -123,12 +124,14 @@ public class WaveManager : MonoBehaviour
     {
         tileManager.InitializeArray(4);
         tileManager.MakeMapByCSV(jeongbiMapPath);
-        yield return tileManager.MoveTilesByArrayByWave(15,15,2,2,0);
+        yield return tileManager.MoveTilesByArrayByWave(15,15,3,1,0);
+        jeongbiStage.SetActive(true);
 
         yield return new WaitForSeconds(10f); //플레이어 상호작용 코드 필요
 
         tileManager.InitializeArray(4);
-        yield return tileManager.MoveTilesByArrayByWave(15,8,2,2,0);
+        jeongbiStage.SetActive(false);
+        yield return tileManager.MoveTilesByArrayByWave(15,8,3,1,0);
     }
     IEnumerator Wave1()
     {
@@ -273,7 +276,7 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator WaveEnd()
     {
-        tileManager.InitializeArray(6);
+        tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(2,2,0));
     }
 }

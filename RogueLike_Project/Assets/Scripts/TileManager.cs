@@ -222,7 +222,7 @@ public class TileManager : MonoBehaviour
                         else
                         {
                             if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile();
-                            tiles[i, j].WaveToChange(height, 0.25f, tileMap[i,j]);
+                            tiles[i, j].WaveToChange(height, 0.5f, tileMap[i,j]);
                         }
                     }
 
