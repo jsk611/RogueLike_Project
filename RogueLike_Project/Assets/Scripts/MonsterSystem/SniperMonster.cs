@@ -75,7 +75,7 @@ public class SniperMonster : MonsterBase
     {
         try
         {
-            // gun.Fire(transform.rotation);
+            gun.Fire(transform.rotation);
         }
         catch (System.Exception e)
         {

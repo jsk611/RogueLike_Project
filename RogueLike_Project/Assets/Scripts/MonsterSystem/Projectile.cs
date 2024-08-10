@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    // Start is called before the first frame update
     [Header("Settings")]
     public int damage = 20; // 투사체의 피해량
     [SerializeField] float lifetime = 5f; // 투사체의 수명
-    [SerializeField] float speed = 5f; // 투사체의 수명
+    [SerializeField] float speed = 0.05f; // 투사체의 속도
 
     void Start()
     {
@@ -20,22 +19,25 @@ public class Projectile : MonoBehaviour
         UpdateBullet();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        Debug.Log("Collided with: " + other.name);
+
+        if (other.CompareTag("Player"))
         {
             Debug.Log("Player takes damage");
-           /* Player playerHealth = collision.gameObject.GetComponent<Player>();
+            PlayerControl playerHealth = other.GetComponent<PlayerControl>();
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(damage);
-            }*/
+            }
+
+            Destroy(gameObject);
         }
-        Destroy(gameObject); // 충돌 시 투사체 파괴
     }
 
     void UpdateBullet()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * speed);
     }
 }

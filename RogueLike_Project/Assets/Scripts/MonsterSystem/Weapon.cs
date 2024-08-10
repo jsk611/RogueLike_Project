@@ -22,6 +22,5 @@ public class Weapon : MonoBehaviour
     {
         // 지정된 회전으로 총알 생성
         Instantiate(bulletPrefab, firePoint.position, rotation);
-        Destroy(this, 0.5f);
     }
 }
