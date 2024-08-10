@@ -829,6 +829,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 0
   Damage: 0
+  JumpPower: 0
 --- !u!1 &838531197
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,6 +1027,7 @@ MonoBehaviour:
   CriticalDamage: 50
   MoveSpeed: 12
   Damage: 200
+  JumpPower: 4.9
 --- !u!114 &1079295814 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1103329891092828159, guid: 613eeb9dc59c9934392391ae63fffa9d,

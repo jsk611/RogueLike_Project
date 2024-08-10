@@ -21,11 +21,11 @@ using UnityEngine.UIElements;
 
 public class PlayerControl : MonoBehaviour
 {
-    public float moveSpeed = 12f;
+    private float moveSpeed;
     float moveSpeed_origin;
-    public float jumpPower = 20f;
+    private float jumpPower;
 
-    public int HP = 100;
+    private int HP = 100;
     [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
@@ -56,13 +56,13 @@ public class PlayerControl : MonoBehaviour
         playerRigidbody = GetComponent<Rigidbody>();
         character = GetComponent<CharacterController>();
 
-        moveSpeed_origin = moveSpeed;
-        
-
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
         //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
         //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
         characterStatus = GetComponent<Status>();
+
+        moveSpeed = characterStatus.GetMovementSpeed();
+        moveSpeed_origin = moveSpeed;
     }
 
     // Update is called once per frame
@@ -125,13 +125,13 @@ public class PlayerControl : MonoBehaviour
     }
     private void Dash()
     {
-        if (dashCool > 0.15f) moveSpeed = moveSpeed_origin;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina > 0 && Movement.magnitude > Mathf.Epsilon)
+        if (dashCool > 0.15f) characterStatus.SetMovementSpeed( moveSpeed_origin);
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina == 100f && Movement.magnitude > Mathf.Epsilon)
         {
             if (dashCool > 1f)
             {
-                Stamina -= 15f;
-                moveSpeed = moveSpeed_origin * 4f;
+                Stamina = 0f;
+                characterStatus.SetMovementSpeed(moveSpeed_origin * 4f);
                 dashCool = 0;
             }
         }
@@ -146,6 +146,7 @@ public class PlayerControl : MonoBehaviour
             Movement.y = -0.8f;
             if (Input.GetKey(KeyCode.Space))
             {
+                jumpPower = characterStatus.GetJumpPower();
                // Debug.Log("Jump");
                 Vertical.y = jumpPower;
                 ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);

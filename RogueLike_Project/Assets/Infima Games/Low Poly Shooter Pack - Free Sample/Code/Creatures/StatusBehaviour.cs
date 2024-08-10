@@ -44,4 +44,9 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void DecreaseAttackDamage(float attackDamage);
     public abstract void SetAttackDamage(float attackDamage);
     public abstract float GetAttackDamage();
+
+    public abstract void IncreaseJumpPower(float jumpPower);
+    public abstract void DecreaseJumpPower(float jumpPower);
+    public abstract void SetJumpPower(float jumpPower);
+    public abstract float GetJumpPower();
 }
