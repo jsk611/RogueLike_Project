@@ -316,7 +316,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5233221354651812784}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &263756994
+--- !u!114 &263757000
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -325,18 +325,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 263756988}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a180098e1a2b464599efadcdfd2afdf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8de1324dab9a14e45b48e9d68a4d1e00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillCoolTime: 2
-  speed: 517.7
-  maxReach: 1000
+  skillCoolTime: 3
+  maxSkillCount: 2
+  AudioClipSkill: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
   mask:
     serializedVersion: 2
     m_Bits: 1
-  prefabProjectile: {fileID: 1086664671600574, guid: 03457a86b682edc45b356541fc96027b,
-    type: 3}
-  AudioClipSkill: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
 --- !u!1 &314832444
 GameObject:
   m_ObjectHideFlags: 0
@@ -716,6 +713,7 @@ GameObject:
   - component: {fileID: 796151745}
   - component: {fileID: 796151744}
   - component: {fileID: 796151748}
+  - component: {fileID: 796151749}
   m_Layer: 16
   m_Name: Cube
   m_TagString: Blood
@@ -830,6 +828,18 @@ MonoBehaviour:
   MoveSpeed: 0
   Damage: 0
   JumpPower: 0
+--- !u!114 &796151749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796151743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e912b48611c6b94181d01eb8c8fc821, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &838531197
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,6 +964,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillCoolTime: 5
+  maxSkillCount: 1
+  AudioClipSkill: {fileID: 8300000, guid: f9eb44b85c96be5429737d4dcadbfa3b, type: 3}
   speed: 5000
   maxReach: 750
   mask:
@@ -961,7 +973,6 @@ MonoBehaviour:
     m_Bits: 1
   prefabProjectile: {fileID: 1086664671600574, guid: cba928e271d8c7040af14cfda5c2c2e8,
     type: 3}
-  AudioClipSkill: {fileID: 8300000, guid: f9eb44b85c96be5429737d4dcadbfa3b, type: 3}
 --- !u!1 &919654215 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8846308894517651529, guid: 6bc3913378d72e14db115a5d4ed746f2,
@@ -4044,6 +4055,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9202830834029819996, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1075430904}
+    - target: {fileID: 9202830834029819996, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
+        type: 3}
       propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 167844755}
@@ -4061,6 +4077,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9202830834029819996, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9202830834029819996, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
@@ -4108,7 +4129,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4433797594461472252, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 263756994}
+      addedObject: {fileID: 263757000}
     - targetCorrespondingSourceObject: {fileID: 712482871533109352, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       insertIndex: -1

@@ -5,15 +5,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponSkill : WeaponSkillManager
+public class WeaponSkillProjectile : WeaponSkillManager
 {
-    float recentSkillUsed;
-    [Tooltip("Skill Cool Time")]
-    [SerializeField]
-    float skillCoolTime;
-
-    int skillCount;
-
     [Tooltip("Bullet Speed")]
     [SerializeField]
     float speed;
@@ -43,14 +36,10 @@ public class WeaponSkill : WeaponSkillManager
 
     Tazer tazer;
 
-    [Tooltip("Skill Audio")]
-    [SerializeField]
-    AudioClip AudioClipSkill;
     // Start is called before the first frame update
-    void Awake()
+     void Start()
     {
-        recentSkillUsed = Time.time;
-        skillCount = 1;
+
         weapon = GetComponent<WeaponAttachmentManagerBehaviour>();
         weaponMuzzle = weapon.GetEquippedMuzzle();
         weaponMagazine = weapon.GetEquippedMagazine();
@@ -69,39 +58,6 @@ public class WeaponSkill : WeaponSkillManager
     {
         
     }
-
-    public override bool CanActivateSkill()
-    {
-        
-        float currentSkillUsed = Time.time;
-        if (currentSkillUsed - recentSkillUsed > skillCoolTime)
-        {
-            recentSkillUsed = currentSkillUsed;
-            skillCount = 1;
-  
-        }
-        if (skillCount > 0) return true;
-        else return false;
-    }
-    public override void SetSkillCoolTime(float newCoolTime)
-    {
-        Debug.Log("new coolTime &{newcoolTime}");
-
-        skillCoolTime = newCoolTime;
-    }
-
-    public override float GetSkillCoolTime() => skillCoolTime;
-    
-    public override void ResetSkillCount()
-    {
-        skillCount = 0;
-    }
-
-    public override int GetSkillCount() => skillCount;
-
-
-    public override AudioClip GetAudioClipSkill() => AudioClipSkill;
-    
 
     public override void FireSkill()
     {

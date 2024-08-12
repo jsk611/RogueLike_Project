@@ -6,19 +6,54 @@ using UnityEngine;
 public abstract class WeaponSkillManager : MonoBehaviour
 {
 
+    protected float recentSkillUsed;
+    [Tooltip("Skill Cool Time")]
+    [SerializeField]
+    public float skillCoolTime;
+
+    [Tooltip("Max Skill Count")]
+    [SerializeField]
+    public int maxSkillCount;
+
+    [Tooltip("Skill Audio")]
+    [SerializeField]
+    AudioClip AudioClipSkill;
     
+    private int skillCount;
+    protected void Awake()
+    {
+        recentSkillUsed = Time.time;
+        skillCount = maxSkillCount;
+    }
 
-    public abstract void SetSkillCoolTime(float newCoolTime);
+    public void SetSkillCoolTime(float newCoolTime)
+    { skillCoolTime = newCoolTime; }
 
-    public abstract bool CanActivateSkill();
+    public  bool CanActivateSkill()
+    {
 
-    public abstract float GetSkillCoolTime();
+        float currentSkillUsed = Time.time;
+        if (currentSkillUsed - recentSkillUsed > skillCoolTime)
+        {
+            recentSkillUsed = currentSkillUsed;
+            if (skillCount < maxSkillCount)
+                skillCount += 1;
 
-    public abstract void ResetSkillCount();
+        }
+        if (skillCount > 0) return true;
+        else return false;
+    }
+    public float GetSkillCoolTime()
+    { return skillCoolTime; }
 
-    public abstract int GetSkillCount();
+    public void DecreaseSkillCount()
+    { skillCount -= 1; }
 
-    public abstract AudioClip GetAudioClipSkill();
+    public int GetSkillCount()
+    { return skillCount; }
+
+    public AudioClip GetAudioClipSkill()
+    { return AudioClipSkill; }
 
     public abstract void FireSkill();
 }

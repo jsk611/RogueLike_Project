@@ -377,7 +377,7 @@ namespace InfimaGames.LowPolyShooterPack
 		private void PlayAnimationSkill()
 		{
 			usingSkill = true;
-			equippedWeapon.GetComponent<WeaponSkillManager>().ResetSkillCount();
+			equippedWeapon.GetComponent<WeaponSkillManager>().DecreaseSkillCount();
 			equippedWeaponSkill.FireSkill();
 			const string stateName = "Skill";
 
