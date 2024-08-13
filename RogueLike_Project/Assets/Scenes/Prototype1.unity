@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8de1324dab9a14e45b48e9d68a4d1e00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skillCoolTime: 3
+  skillCoolTime: 2
   maxSkillCount: 2
   AudioClipSkill: {fileID: 8300000, guid: 1b766da7cc2d648aa84e36cb5fe8abcb, type: 3}
   mask:
@@ -2992,6 +2992,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -76.89301
       objectReference: {fileID: 0}
+    - target: {fileID: 1980819286634964044, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2046649957322976865, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3677,7 +3682,8 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 60425d3e21c9fc34eacaf724da93612c, type: 2}
+      objectReference: {fileID: 22100000, guid: 7e626d181ed96094eb7f6aa3eaf36707,
+        type: 2}
     - target: {fileID: 7593195566929187136, guid: 42ba9f34d35eb1d4ba70c53c8e8464eb,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

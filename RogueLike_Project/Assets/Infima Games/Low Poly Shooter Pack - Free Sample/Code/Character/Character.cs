@@ -434,13 +434,16 @@ namespace InfimaGames.LowPolyShooterPack
 			if (equippedWeapon.GetComponent<WeaponSkillManager>() != null)
 				equippedWeaponSkill = equippedWeapon.GetComponent<WeaponSkillManager>();
 			else equippedWeaponSkill = null;
+
+			if (inventory.GetEquippedIndex() == 2) IsMeleeWeaponActive(true);
+			else IsMeleeWeaponActive(false);
+			
 		}
 
 		public override void IsMeleeWeaponActive(bool activation)
 		{
 			if (activation) knifeActive = true;
 			else knifeActive = false;
-			Debug.Log(knifeActive);
 		}
 
 		private void FireEmpty()
@@ -888,7 +891,6 @@ namespace InfimaGames.LowPolyShooterPack
 
 		public void OnSwap1(InputAction.CallbackContext context)
 		{
-			Debug.Log(context.control.name);
 			switch(context)
 			{
 			

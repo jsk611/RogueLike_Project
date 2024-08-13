@@ -2465,12 +2465,12 @@ GameObject:
   - component: {fileID: 8688246707206146552}
   - component: {fileID: 4569552666582642788}
   - component: {fileID: 8986564087149888267}
+  - component: {fileID: 2974903019065651061}
   - component: {fileID: 5197942934505033535}
   - component: {fileID: 6057457216534342380}
   - component: {fileID: 9202830834029819996}
   - component: {fileID: 5860634678045395068}
   - component: {fileID: 640861812583320628}
-  - component: {fileID: 2974903019065651061}
   m_Layer: 10
   m_Name: P_LPSP_FP_CH
   m_TagString: Player
@@ -2607,6 +2607,22 @@ MonoBehaviour:
   audioClipRunning: {fileID: 8300000, guid: d2add02f58e61e640aba3ae9110591cb, type: 3}
   speedWalking: 4
   speedRunning: 6.8
+--- !u!114 &2974903019065651061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996948196452960142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42b431f081a991c4da0e860b35e18ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Stamina: 100
+  MainCharacter: {fileID: 1300435428636797112}
+  Movement: {x: 0, y: 0, z: 0}
+  Vertical: {x: 0, y: 0, z: 0}
 --- !u!114 &5197942934505033535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2920,6 +2936,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 207fb2a2-8add-4ddb-bda7-c1887aeb313a
     m_ActionName: Player/Tutorial[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ef65988e-153f-468c-bb24-e662ef790d7f
+    m_ActionName: Player/Swap1[/Keyboard/1,/Keyboard/2,/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 312f5b70-3f6d-43b6-b184-ba923ec7e7c6
+    m_ActionName: Player/SkillActivate[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -2979,23 +3003,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &2974903019065651061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6996948196452960142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42b431f081a991c4da0e860b35e18ff1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 12
-  jumpPower: 9.8
-  HP: 100
-  Stamina: 100
-  MainCharacter: {fileID: 1300435428636797112}
 --- !u!1 &7354914888529575173
 GameObject:
   m_ObjectHideFlags: 0

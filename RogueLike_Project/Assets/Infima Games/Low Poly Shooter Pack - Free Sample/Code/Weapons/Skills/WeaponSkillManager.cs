@@ -49,6 +49,9 @@ public abstract class WeaponSkillManager : MonoBehaviour
     public void DecreaseSkillCount()
     { skillCount -= 1; }
 
+    public void IncreaseSkillCount()
+    { skillCount += 1; }
+
     public int GetSkillCount()
     { return skillCount; }
 

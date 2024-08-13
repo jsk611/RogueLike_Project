@@ -30,7 +30,7 @@ public class PlayerControl : MonoBehaviour
     [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
-    bool isGrounded = true;
+    public bool isGrounded = true;
     float gravity = 9.8f;
 
 
@@ -111,17 +111,16 @@ public class PlayerControl : MonoBehaviour
         CheckGrounded();
         Jumping();
 
-        
         character.Move(Vertical * Time.deltaTime);
 
         return;
     }
-    private void CheckGrounded()
+    public bool CheckGrounded()
     {
-        isGrounded = false;
-
-        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.1f, Vector3.down,out hitInfo ,1.1f);
-     
+        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f);
+        if (!isGrounded) Vertical.y += Physics.gravity.y * Time.deltaTime;
+        if (isGrounded) Vertical.y = -0.8f;
+        return isGrounded;
     }
     private void Dash()
     {
@@ -140,10 +139,9 @@ public class PlayerControl : MonoBehaviour
     private void Jumping()
     {
 
-        if (isGrounded)
+        if (Input.GetKey(KeyCode.Space))
         {
-            // Debug.Log("On ground");
-            if (Input.GetKey(KeyCode.Space))
+            if (isGrounded) 
             {
                 jumpPower = characterStatus.GetJumpPower();
                 // Debug.Log("Jump");
@@ -151,7 +149,6 @@ public class PlayerControl : MonoBehaviour
                 ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             }
         }
-        else Vertical.y += Physics.gravity.y * Time.deltaTime;
      
     }
 

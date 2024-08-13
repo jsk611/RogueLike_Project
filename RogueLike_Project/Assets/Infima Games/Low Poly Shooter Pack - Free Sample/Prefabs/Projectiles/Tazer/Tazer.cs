@@ -30,8 +30,8 @@ public class Tazer : MonoBehaviour
         {
  
                 hits = Physics.OverlapSphere(transform.position, 30.0f, hitMask, QueryTriggerInteraction.Collide);
-            
-                StartCoroutine(Oscillation(hits[0].transform,3.0f));
+            StartCoroutine(Test());
+             //   StartCoroutine(Oscillation(hits[0].transform,3.0f));
                 
                 //foreach (Collider hit in hits)
                 //{
@@ -48,20 +48,32 @@ public class Tazer : MonoBehaviour
         Vector3 originalPosition = body.position;
 
 
-        while (true)    
+        while (shockedTime < 3)    
         {
+             shockedTime += Time.deltaTime;
+
             Debug.Log(body.transform.name);
 
             float x = Random.Range(-1f, 1f);
             float y = Random.Range(-1f, 1f);
 
-            body.position = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
+            body.position += new Vector3(x,  y, 0);
 
-            shockedTime += Time.deltaTime;
-            yield return null;
+           
+
+            yield return null ;
         }
-        body.position = originalPosition; // 진동이 끝나면 원래 위치로 되돌리기
     }
 
+    IEnumerator Test()
+    {
+        float test = 0;
+        while (test < 3)
+        {
+            test += Time.deltaTime;
+            Debug.Log("SDFf");
+            yield return null;
+        }
+    }
 
 }

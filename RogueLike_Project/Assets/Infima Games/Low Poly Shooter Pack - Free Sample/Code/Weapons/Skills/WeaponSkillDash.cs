@@ -27,6 +27,8 @@ public class WeaponSkillDash : WeaponSkillManager
     
     Vector3 movement = Vector3.zero;
     float usedTIme;
+
+    bool jumped = false;
     private void Start()
     {
         character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
@@ -39,7 +41,24 @@ public class WeaponSkillDash : WeaponSkillManager
     {
         movement.y = 24;
         usedTIme = 0;
-        StartCoroutine(moving());
+        if (!jumped)
+        {
+            Debug.Log("jump");
+            StartCoroutine(moving());
+        }
+        else if (jumped)
+        {
+            if (playerControl.CheckGrounded())
+            {
+                Debug.Log(playerControl.isGrounded);
+                jumped = false;
+            }
+            else
+            {
+                playerControl.Vertical.y = -58f;
+                jumped = false;
+            }
+        }
     }
     IEnumerator fall()
     {
@@ -53,11 +72,14 @@ public class WeaponSkillDash : WeaponSkillManager
     IEnumerator moving()
     {
         playerControl.Vertical.y = 24;
+        jumped = true;
+        IncreaseSkillCount();
         while (usedTIme < 2)
         {
             usedTIme += Time.deltaTime;
-            if (Input.GetKey(KeyCode.Q)) Debug.Log("stomp");
+            Debug.Log("stomp");
             yield return null;
         }
+        
     }
 }
