@@ -9,5 +9,5 @@ EditorBuildSettings:
     path: Assets/Infima Games/Low Poly Shooter Pack - Free Sample/Scenes/S_Content_Overview.unity
     guid: 63fdc04a097eb0b4ba4af78a98dac40d
   m_configObjects:
-    com.unity.input.settings: {fileID: 11400000, guid: 9eb07e2d669e9c94e9d7d3c782a916f7,
+    com.unity.input.settings: {fileID: 11400000, guid: 2b856ee0da9acb14685fc521134bc32d,
       type: 2}
