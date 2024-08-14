@@ -40,7 +40,7 @@ public class PlayerControl : MonoBehaviour
     CharacterController character;
 
     CameraControl cameraController;
-    ShootingController shootingController;
+    //ShootingController shootingController;
 
     StatusBehaviour characterStatus;
 
@@ -82,7 +82,7 @@ public class PlayerControl : MonoBehaviour
     private void Die()
     {
         cameraController.enabled = false;
-        shootingController.enabled = false;
+        //shootingController.enabled = false;
         if (playerAnimator.GetBool("isAlive"))
         {
             playerAnimator.SetTrigger("dead");

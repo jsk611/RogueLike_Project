@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class MProjectile : MonoBehaviour
 {
     [Header("Settings")]
     public int damage = 20; // 투사체의 피해량
@@ -29,7 +29,7 @@ public class Projectile : MonoBehaviour
             PlayerControl playerHealth = other.GetComponent<PlayerControl>();
             if (playerHealth != null)
             {
-                playerHealth.TakeDamage(damage);
+                // playerHealth.TakeDamage(damage);
             }
 
             Destroy(gameObject);
