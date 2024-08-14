@@ -24,6 +24,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     protected enum State
     {
         IDLE,
+        SEARCH,
         ATTACK,
         CHASE,
         AIMING,
