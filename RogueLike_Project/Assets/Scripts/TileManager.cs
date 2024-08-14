@@ -7,7 +7,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class TileManager : MonoBehaviour
 {
-    public static int mapSize = 30;
+    public static int mapSize = 60;
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
     float[,] tileMap = new float[mapSize, mapSize];
@@ -104,7 +104,17 @@ public class TileManager : MonoBehaviour
     }
     public void MakeMapByCSV(string path)
     {
-        tileMap = CTA.CSVFileToArray(path);
+        float[,] csvMap = CTA.CSVFileToArray(path);
+        int csvMapSizeX = csvMap.GetLength(1);
+        int csvMapSizeY = csvMap.GetLength(0);
+        for(int x = 0; x<csvMapSizeX; x++)
+        {
+            for (int y = 0; y < csvMapSizeY; y++)
+            {
+                tileMap[y,x] = csvMap[y,x];
+            }
+        }
+
     }
     public void MakeRandomWall(int numOfChanging)
     {
@@ -198,7 +208,7 @@ public class TileManager : MonoBehaviour
 
         //타일 위치 변경
         float radius = 0;
-        float maxRadius = 25f;
+        float maxRadius = mapSize;
         bool[,] eventTriggered = new bool[mapSize, mapSize];
         while (radius < maxRadius)
         {
