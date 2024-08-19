@@ -155,9 +155,12 @@ public class PlayerControl : MonoBehaviour
     private void StaminaRegeneration()
     {
         dashCool += Time.deltaTime;
-        
-        if (dashCool > 1.5f) Stamina += 40 * Time.deltaTime;
-        Stamina = Mathf.Clamp(Stamina, 0f, 100f);
+
+        if (dashCool > 1.5f)
+        {
+            if (Stamina < 100)
+                Stamina += characterStatus.GetStaminaRegen() * Time.deltaTime;
+        }
     }
 
     private void isCrawling()

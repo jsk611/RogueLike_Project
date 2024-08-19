@@ -48,6 +48,7 @@ namespace InfimaGames.LowPolyShooterPack
 		[Tooltip("Character Animator.")]
 		[SerializeField]
 		private Animator characterAnimator;
+		
 
 		#endregion
 
@@ -96,9 +97,13 @@ namespace InfimaGames.LowPolyShooterPack
 		private int layerActions;
 
 		/// <summary>
-		/// Character Kinematics. Handles all the IK stuff.
+		/// Status Manager of the Character
 		/// </summary>
-		private CharacterKinematics characterKinematics;
+        private StatusBehaviour characterStatus;
+        /// <summary>
+        /// Character Kinematics. Handles all the IK stuff.
+        /// </summary>
+        private CharacterKinematics characterKinematics;
 		
 		/// <summary>
 		/// The currently equipped weapon.
@@ -232,6 +237,8 @@ namespace InfimaGames.LowPolyShooterPack
 			//Cache a reference to the overlay layer's index.
 			layerOverlay = characterAnimator.GetLayerIndex("Layer Overlay");
 
+			characterStatus = GetComponent<StatusBehaviour>();
+
 		}
 
 		protected override void Update()
@@ -252,7 +259,7 @@ namespace InfimaGames.LowPolyShooterPack
 				if (CanPlayAnimationFire() && equippedWeapon.HasAmmunition() && equippedWeapon.IsAutomatic())
 				{
 					//Has fire rate passed.
-					if (Time.time - lastShotTime > 60.0f / equippedWeapon.GetRateOfFire())
+					if (Time.time - lastShotTime > 1.0f / equippedWeapon.GetRateOfFire())
 						Fire();
 				}	
 			}
@@ -699,7 +706,7 @@ namespace InfimaGames.LowPolyShooterPack
 							break;
 							
 						//Has fire rate passed.
-						if (Time.time - lastShotTime > 60.0f / equippedWeapon.GetRateOfFire())
+						if (Time.time - lastShotTime > 1.0f / equippedWeapon.GetRateOfFire())
 							Fire();
 					}
 					//Fire Empty.
@@ -998,8 +1005,13 @@ namespace InfimaGames.LowPolyShooterPack
 			usingSkill = false;
 		}
 
-		#endregion
 
-		#endregion
-	}
+		public override Animator GetPlayerAnimator() => characterAnimator;
+        
+        public override Animator GetWeaponAnimator() => equippedWeapon.GetComponent<Animator>();
+
+        #endregion
+
+        #endregion
+    }
 }

@@ -23,7 +23,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         [Tooltip("Amount of shots this weapon can shoot in a minute. It determines how fast the weapon shoots.")]
         [SerializeField] 
-        private int roundsPerMinutes = 200;
+        private float roundsPerSeconds = 200;
 
         [Tooltip("Mask of things recognized when firing.")]
         [SerializeField]
@@ -186,7 +186,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override int GetAmmunitionTotal() => magazineBehaviour.GetAmmunitionTotal();
 
         public override bool IsAutomatic() => automatic;
-        public override float GetRateOfFire() => roundsPerMinutes;
+        public override float GetRateOfFire() => roundsPerSeconds;
         
         public override bool IsFull() => ammunitionCurrent == magazineBehaviour.GetAmmunitionTotal();
         public override bool HasAmmunition() => ammunitionCurrent > 0;

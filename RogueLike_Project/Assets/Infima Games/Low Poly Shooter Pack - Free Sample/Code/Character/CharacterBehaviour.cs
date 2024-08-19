@@ -113,6 +113,9 @@ namespace InfimaGames.LowPolyShooterPack
 
         public abstract void AnimationEndedSKill();
 
+
+        public abstract Animator GetPlayerAnimator();
+        public abstract Animator GetWeaponAnimator();
         #endregion
     }
 }

@@ -15,6 +15,17 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetMaxHealth(float maxHealth);
     public abstract float GetMaxHealth();
 
+    public abstract void IncreaseStaminaRegen(float staminaRegen);
+    public abstract void DecreaseStaminaRegen(float staminaRegen);
+    public abstract void SetStaminaRegen(float staminaRegen);
+    public abstract float GetStaminaRegen();
+
+    public abstract void IncreaseEffectResist(float effectResist);
+    public abstract void DecreaseEffectResist(float effectResist);
+    public abstract void SetEffectResist(float effectResist);
+    public abstract float GetEffectResist();
+
+
     public abstract void IncreaseDefence(float defence);
     public abstract void DecreaseDefence(float defence);
     public abstract void SetDefence(float defence);
@@ -40,10 +51,20 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetMovementSpeed(float moveSpeed);
     public abstract float GetMovementSpeed();
 
+    public abstract void IncreaseReloadSpeed(float reloadSpeed);
+    public abstract void DecreaseReloadSpeed(float reloadSpeed);
+    public abstract void SetReloadSpeed(float reloadSpeed);
+    public abstract float GetReloadSpeed();
+
     public abstract void IncreaseAttackDamage(float attackDamage);
     public abstract void DecreaseAttackDamage(float attackDamage);
     public abstract void SetAttackDamage(float attackDamage);
     public abstract float GetAttackDamage();
+
+    public abstract void IncreaseAttackSpeed(float attackSpeed);
+    public abstract void DecreaseAttackSpeed(float attackSpeed);
+    public abstract void SetAttackSpeed(float attackSpeed);
+    public abstract float GetAttackSpeed();
 
     public abstract void IncreaseJumpPower(float jumpPower);
     public abstract void DecreaseJumpPower(float jumpPower);
