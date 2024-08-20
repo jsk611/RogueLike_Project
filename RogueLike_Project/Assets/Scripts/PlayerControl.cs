@@ -71,14 +71,13 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (HP > 0)
-        {
-           
+
             MoveMent();
             StaminaRegeneration();
             //shooting();
             if (Input.GetKey(KeyCode.L)) HP -= 1;
-        }
+        
+
     }
 
     //private void Die()
