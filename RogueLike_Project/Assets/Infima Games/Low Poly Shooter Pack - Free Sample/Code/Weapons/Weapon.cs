@@ -127,9 +127,16 @@ namespace InfimaGames.LowPolyShooterPack
         /// The player character's camera.
         /// </summary>
         private Transform playerCamera;
-        
-        #endregion
 
+        /// <summary>
+        /// The player character's status
+        /// </summary>
+        private Status playerStatus;
+
+        private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
+        private static readonly int HashAtackSpeed = Animator.StringToHash("Fire Speed");
+        #endregion
+        
         #region UNITY
         
         protected override void Awake()
@@ -145,6 +152,8 @@ namespace InfimaGames.LowPolyShooterPack
             characterBehaviour = gameModeService.GetPlayerCharacter();
             //Cache the world camera. We use this in line traces.
             playerCamera = characterBehaviour.GetCameraWorld().transform;
+            //Cache the character status
+            playerStatus = characterBehaviour.GetComponent<Status>();
         }
         protected override void Start()
         {
@@ -160,7 +169,11 @@ namespace InfimaGames.LowPolyShooterPack
             //Max Out Ammo.
             ammunitionCurrent = magazineBehaviour.GetAmmunitionTotal();
         }
-
+        private void OnEnable()
+        {
+            animator.SetFloat(HashReloadSpeed, playerStatus.GetReloadSpeed());
+            animator.SetFloat(HashAtackSpeed, playerStatus.GetAttackSpeed());
+        }
         #endregion
 
         #region GETTERS
@@ -186,7 +199,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override int GetAmmunitionTotal() => magazineBehaviour.GetAmmunitionTotal();
 
         public override bool IsAutomatic() => automatic;
-        public override float GetRateOfFire() => roundsPerSeconds;
+        public override float GetRateOfFire() => roundsPerSeconds * playerStatus.GetAttackSpeed();
         
         public override bool IsFull() => ammunitionCurrent == magazineBehaviour.GetAmmunitionTotal();
         public override bool HasAmmunition() => ammunitionCurrent > 0;

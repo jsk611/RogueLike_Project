@@ -1,7 +1,9 @@
+using System;
 using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class Status : StatusBehaviour
 {
@@ -13,17 +15,17 @@ public class Status : StatusBehaviour
     [SerializeField]
     private float MaxHealth;
 
-    [Tooltip("Creature Stamina Regeneration")]
+    [Tooltip("Creature Stamina Regeneration Per Seconds")]
     [SerializeField]
     private float StaminaRegen;
 
-    [Tooltip("Creature Defence")]
-    [SerializeField]
-    private float Defence;
+    //[Tooltip("Creature Defence")]
+    //[SerializeField]
+    //private float Defence;
 
-    [Tooltip("Creature Damage Alleviation")]
-    [SerializeField]
-    private float DamageAlleviation = 0;
+    //[Tooltip("Creature Damage Alleviation")]
+    //[SerializeField]
+    //private float DamageAlleviation = 0;
 
     [Tooltip("Creature CriticalRate")]
     [SerializeField]
@@ -33,9 +35,9 @@ public class Status : StatusBehaviour
     [SerializeField]
     private float CriticalDamage;
 
-    [Tooltip("Creature Effect Resistance")]
-    [SerializeField]
-    private float EffectResist = 0f;
+    //[Tooltip("Creature Effect Resistance")]
+    //[SerializeField]
+    //private float EffectResist = 0f;
 
     [Tooltip("Creature Movement Speed")]
     [SerializeField]
@@ -53,20 +55,32 @@ public class Status : StatusBehaviour
     [SerializeField]
     private float AttackSpeed = 100f;
 
-    [Tooltip("Creature Jump Power")]
+    //[Tooltip("Creature Jump Power")]
+    //[SerializeField]
+    //private float JumpPower;
+
+    [Tooltip("Coin Owned")]
     [SerializeField]
-    private float JumpPower;
+    private int Coins;
 
+    [Tooltip("Permanent Coin Owned")]
+    [SerializeField]
+    private int PermanentCoins;
 
+    
     CharacterBehaviour character;
+    PlayerControl playerControl;
     private Animator characterAnimator;
     private Animator weaponAnimator;
 
     private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
     private static readonly int HashAttackSpeed = Animator.StringToHash("Fire Speed");
+
     private void Start()
     {
-        character = ServiceLocator.Current.Get<GameModeService>().GetPlayerCharacter();
+        character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+        
+        playerControl = character.GetComponent<PlayerControl>();
         characterAnimator = character.GetPlayerAnimator();
         weaponAnimator = character.GetWeaponAnimator();
 
@@ -74,9 +88,13 @@ public class Status : StatusBehaviour
 
     // Current Health
     public override void DecreaseHealth(float damage)
-    { 
-        Health -= damage * (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
-        if (Health < 0) Health = 0;
+    {
+        Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
+        if (Health <= 0)
+        {
+            Health = 0;
+            character.enabled = false;
+        }
     }
     public override void IncreaseHealth(float health)
     {
@@ -86,6 +104,7 @@ public class Status : StatusBehaviour
     public override void SetHealth(float health)
     { 
         Health = Mathf.Clamp(health,0,MaxHealth);
+        if (health <= 0) character.enabled = false;
     }
 
     // Max Health
@@ -116,13 +135,13 @@ public class Status : StatusBehaviour
         if (StaminaRegen < 0) StaminaRegen = 0;
     }
 
-    // Defence
-    public override void IncreaseDefence(float defence)
-    { Defence += defence; }
-    public override void DecreaseDefence(float defence)
-    { Defence -= defence; }
-    public override void SetDefence(float defence)
-    { Defence = defence; }
+    //// Defence
+    //public override void IncreaseDefence(float defence)
+    //{ Defence += defence; }
+    //public override void DecreaseDefence(float defence)
+    //{ Defence -= defence; }
+    //public override void SetDefence(float defence)
+    //{ Defence = defence; }
 
     // Critical Rate
     public override void IncreaseCriticalRate(float criticalRate)
@@ -152,22 +171,22 @@ public class Status : StatusBehaviour
         if (CriticalDamage < 0) CriticalDamage = 0;
     }
 
-    // Effect Resistance
-    public override void IncreaseEffectResist(float effectResist)
-    {
-        EffectResist += effectResist;
-        if (EffectResist > 100) effectResist = 100;
-    }
-    public override void DecreaseEffectResist(float effectResist)
-    { 
-        EffectResist -= effectResist; 
-        if (EffectResist < 0) EffectResist = 0;
-    }
-    public override void SetEffectResist(float effectResist)
-    {
-        EffectResist = effectResist;
-        EffectResist = Mathf.Clamp(EffectResist, 0, 100);
-    }
+    //// Effect Resistance
+    //public override void IncreaseEffectResist(float effectResist)
+    //{
+    //    EffectResist += effectResist;
+    //    if (EffectResist > 100) effectResist = 100;
+    //}
+    //public override void DecreaseEffectResist(float effectResist)
+    //{ 
+    //    EffectResist -= effectResist; 
+    //    if (EffectResist < 0) EffectResist = 0;
+    //}
+    //public override void SetEffectResist(float effectResist)
+    //{
+    //    EffectResist = effectResist;
+    //    EffectResist = Mathf.Clamp(EffectResist, 0, 100);
+    //}
 
     // Movement Speed
     public override void IncreaseMovementSpeed(float moveSpeed)
@@ -187,23 +206,20 @@ public class Status : StatusBehaviour
     public override void IncreaseReloadSpeed(float reloadSpeed)
     { 
         ReloadSpeed += reloadSpeed;
-        characterAnimator.SetFloat(HashReloadSpeed,ReloadSpeed);
-        weaponAnimator.SetFloat(HashReloadSpeed, ReloadSpeed);
+        StatusAnimatorChange(HashReloadSpeed, ReloadSpeed / 100f);
 
     }
     public override void DecreaseReloadSpeed(float reloadSpeed)
     {
         ReloadSpeed -= reloadSpeed;
         if (ReloadSpeed <= 0) ReloadSpeed = Mathf.Epsilon;
-        characterAnimator.SetFloat(HashReloadSpeed, ReloadSpeed);
-        weaponAnimator.SetFloat(HashReloadSpeed, ReloadSpeed);
+        StatusAnimatorChange(HashReloadSpeed, ReloadSpeed / 100f);
     }
     public override void SetReloadSpeed(float reloadSpeed)
     {
         ReloadSpeed = reloadSpeed;
         if (ReloadSpeed <= 0) ReloadSpeed = Mathf.Epsilon;
-        characterAnimator.SetFloat(HashReloadSpeed, ReloadSpeed);
-        weaponAnimator.SetFloat(HashReloadSpeed, ReloadSpeed);
+        StatusAnimatorChange(HashReloadSpeed, ReloadSpeed / 100f);
     }
 
     // Attack Damage
@@ -223,58 +239,92 @@ public class Status : StatusBehaviour
     // Attack Speed
     public override void IncreaseAttackSpeed(float attackSpeed)
     {
-        AttackSpeed += attackSpeed; 
-        characterAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
-        weaponAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
+        AttackSpeed += attackSpeed;
+        StatusAnimatorChange(HashAttackSpeed, AttackSpeed / 100f);
     }
     public override void DecreaseAttackSpeed(float attackSpeed)
     { 
-        AttackSpeed -= attackSpeed; 
-        characterAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
-        weaponAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
+        AttackSpeed -= attackSpeed;
+        StatusAnimatorChange(HashAttackSpeed, AttackSpeed / 100f);
     }
     public override void SetAttackSpeed(float attackSpeed)
     {
         AttackSpeed = attackSpeed;
-        characterAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
-        weaponAnimator.SetFloat(HashAttackSpeed, AttackSpeed);
+        StatusAnimatorChange(HashAttackSpeed, AttackSpeed / 100f);
     }
 
     // Damage Alleviation
-    public override void IncreaseDamageAlleviation(float alleviation)
-    {
-        DamageAlleviation += alleviation; 
-        if (DamageAlleviation >100) DamageAlleviation = 100;
-    }
-    public override void DecreaseDamageAlleviation(float alleviation)
-    { DamageAlleviation -= alleviation; }
-    public override void SetAlleviation(float alleviation)
-    { DamageAlleviation = alleviation; }
+    //public override void IncreaseDamageAlleviation(float alleviation)
+    //{
+    //    DamageAlleviation += alleviation; 
+    //    if (DamageAlleviation >100) DamageAlleviation = 100;
+    //}
+    //public override void DecreaseDamageAlleviation(float alleviation)
+    //{ DamageAlleviation -= alleviation; }
+    //public override void SetAlleviation(float alleviation)
+    //{ DamageAlleviation = alleviation; }
 
-    public override void IncreaseJumpPower(float jumpPower)
-    { JumpPower += jumpPower; }
-    public override void DecreaseJumpPower(float jumpPower)
-    {
-        jumpPower -= jumpPower; 
-        if (JumpPower < 0) JumpPower = 0;
-    }
-    public override void SetJumpPower(float jumpPower)
-    { 
-        if (jumpPower < 0) jumpPower = 0;
-        JumpPower = jumpPower; 
-    }
+    //public override void IncreaseJumpPower(float jumpPower)
+    //{ JumpPower += jumpPower; }
+    //public override void DecreaseJumpPower(float jumpPower)
+    //{
+    //    jumpPower -= jumpPower; 
+    //    if (JumpPower < 0) JumpPower = 0;
+    //}
+    //public override void SetJumpPower(float jumpPower)
+    //{ 
+    //    if (jumpPower < 0) jumpPower = 0;
+    //    JumpPower = jumpPower; 
+    //}
+
+    //Coins
+    public override void IncreaseCoin(int coin)
+    { Coins += coin; }
+    public override void DecreaseCoin(int coin)
+    { Coins -= coin; }
+    public override void SetCoin(int coin)
+    { Coins = coin; }
+
+    //Permanent Coins
+    public override void IncreasePermanentCoin(int coin)
+    { PermanentCoins += coin; }
+    public override void DecreasePermanentCoin(int coin)
+    { PermanentCoins -= coin; }
+    public override void SetPermanentCoin(int coin)
+    { PermanentCoins = coin; }
 
     public override float GetHealth() => Health;
     public override float GetMaxHealth() => MaxHealth;
     public override float GetStaminaRegen() => StaminaRegen;
-    public override float GetDefence() => Defence;
+  //  public override float GetDefence() => Defence;
     public override float GetAttackDamage() => Damage;
-    public override float GetAttackSpeed() => AttackSpeed;
+    public override float GetAttackSpeed() => AttackSpeed / 100f;
     public override float GetCriticalDamage() => CriticalDamage;
     public override float GetCriticalRate() => CriticalRate;
-    public override float GetEffectResist() => EffectResist;
-    public override float GetDamageAlleviation() => DamageAlleviation;
+    //public override float GetEffectResist() => EffectResist;
+   // public override float GetDamageAlleviation() => DamageAlleviation;
     public override float GetMovementSpeed() => MoveSpeed;
-    public override float GetReloadSpeed() => ReloadSpeed;
-    public override float GetJumpPower() => JumpPower;
+    public override float GetReloadSpeed() => ReloadSpeed / 100f;
+    //public override float GetJumpPower() => JumpPower;
+    public override int GetCoin() => Coins;
+    public override int GetPermanentCoin() => PermanentCoins;
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.L))
+        {
+            IncreaseAttackSpeed(1);
+        }
+        if (Input.GetKey(KeyCode.K))
+        {
+            IncreaseReloadSpeed(0.5f);
+        }
+    }
+
+    private void StatusAnimatorChange(int Id, float value)
+    {
+        weaponAnimator = character.GetWeaponAnimator();
+        characterAnimator.SetFloat(Id, value);
+        weaponAnimator.SetFloat(Id, value);
+    }
 }

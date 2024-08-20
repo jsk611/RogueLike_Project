@@ -20,21 +20,21 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetStaminaRegen(float staminaRegen);
     public abstract float GetStaminaRegen();
 
-    public abstract void IncreaseEffectResist(float effectResist);
-    public abstract void DecreaseEffectResist(float effectResist);
-    public abstract void SetEffectResist(float effectResist);
-    public abstract float GetEffectResist();
+    //public abstract void IncreaseEffectResist(float effectResist);
+    //public abstract void DecreaseEffectResist(float effectResist);
+    //public abstract void SetEffectResist(float effectResist);
+    //public abstract float GetEffectResist();
 
 
-    public abstract void IncreaseDefence(float defence);
-    public abstract void DecreaseDefence(float defence);
-    public abstract void SetDefence(float defence);
-    public abstract float GetDefence();
+    //public abstract void IncreaseDefence(float defence);
+    //public abstract void DecreaseDefence(float defence);
+    //public abstract void SetDefence(float defence);
+    //public abstract float GetDefence();
 
-    public abstract void IncreaseDamageAlleviation(float alleviation);
-    public abstract void DecreaseDamageAlleviation(float alleviation);
-    public abstract void SetAlleviation(float alleviation);
-    public abstract float GetDamageAlleviation();
+    //public abstract void IncreaseDamageAlleviation(float alleviation);
+    //public abstract void DecreaseDamageAlleviation(float alleviation);
+    //public abstract void SetAlleviation(float alleviation);
+    //public abstract float GetDamageAlleviation();
 
     public abstract void IncreaseCriticalRate(float criticalRate);
     public abstract void DecreaseCriticalRate(float criticalRate);
@@ -66,8 +66,18 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetAttackSpeed(float attackSpeed);
     public abstract float GetAttackSpeed();
 
-    public abstract void IncreaseJumpPower(float jumpPower);
-    public abstract void DecreaseJumpPower(float jumpPower);
-    public abstract void SetJumpPower(float jumpPower);
-    public abstract float GetJumpPower();
+    //public abstract void IncreaseJumpPower(float jumpPower);
+    //public abstract void DecreaseJumpPower(float jumpPower);
+    //public abstract void SetJumpPower(float jumpPower);
+    //public abstract float GetJumpPower();
+
+    public abstract void IncreaseCoin(int coin);
+    public abstract void DecreaseCoin(int coin);
+    public abstract void SetCoin(int coin);
+    public abstract int GetCoin();
+
+    public abstract void IncreasePermanentCoin(int coin);
+    public abstract void DecreasePermanentCoin(int coin);
+    public abstract void SetPermanentCoin(int coin);
+    public abstract int GetPermanentCoin();
 }

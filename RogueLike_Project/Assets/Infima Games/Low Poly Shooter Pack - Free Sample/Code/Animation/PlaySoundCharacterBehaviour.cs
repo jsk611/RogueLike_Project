@@ -58,6 +58,8 @@ namespace InfimaGames.LowPolyShooterPack
 
         private WeaponSkillManager weaponSkillBehaviour;
 
+        private Status playerStatus;
+
         /// <summary>
         /// The service that handles sounds.
         /// </summary>
@@ -77,6 +79,8 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Get Inventory.
             playerInventory ??= playerCharacter.GetInventory();
+
+            playerStatus ??= playerCharacter.GetComponent<Status>();    
 
             //Try to get the equipped weapon's Weapon component.
             if (!(playerInventory.GetEquipped() is { } weaponBehaviour))
@@ -117,8 +121,9 @@ namespace InfimaGames.LowPolyShooterPack
 
             #endregion
             //Play with some delay. Granted, if the delay is set to zero, this will just straight-up play!
-
+            
             audioManagerService.PlayOneShotDelayed(clip, audioSettings, delay);
+            
         }
         
         #endregion

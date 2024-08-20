@@ -54,9 +54,9 @@ public class Projectile : MonoBehaviour {
 				float crit = Random.Range(0, 100);
 				if (crit <= shooterStatus.GetCriticalRate())
 				{
-					collision.gameObject.GetComponent<Status>().DecreaseHealth(bulletDamage * (shooterStatus.GetCriticalDamage() / 100f));
+					collision.gameObject.GetComponent<Status>().DecreaseHealth((bulletDamage + shooterStatus.GetAttackDamage())* (shooterStatus.GetCriticalDamage() / 100f));
 				}
-				else collision.gameObject.GetComponent<Status>().DecreaseHealth(bulletDamage);
+				else collision.gameObject.GetComponent<Status>().DecreaseHealth(bulletDamage + shooterStatus.GetAttackDamage());
                 
 			}
 			Destroy(gameObject);
