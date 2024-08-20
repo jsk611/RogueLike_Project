@@ -8,10 +8,10 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
-    bool isGameStarted = false;
-    public bool IsGameStarted
+    bool nextWaveTrigger = false;
+    public bool NextWaveTrigger
     {
-        set { isGameStarted = value; }
+        set { nextWaveTrigger = value; }
     }
 
     [SerializeField] string[] mapPaths;
@@ -107,25 +107,25 @@ public class WaveManager : MonoBehaviour
         //시작 스테이지에서만 필요로 하는 코드 (영구적 업그레이드, 무기 선택, 훈련장 등등)을 작성
 
        //플레이어가 게임 시작할때까지 무한 대기
-        while (!isGameStarted)
+        while (!nextWaveTrigger)
         {
             yield return new WaitForEndOfFrame();
         }
 
+        nextWaveTrigger = false;
         //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
-        if (true)
+        
+        Tile[] tiles = startPosition.GetComponentsInChildren<Tile>();
+        foreach(Tile t in tiles)
         {
-            Tile[] tiles = startPosition.GetComponentsInChildren<Tile>();
-            foreach(Tile t in tiles)
-            {
-                t.MovePosition(0, 10);
-            }
-            yield return new WaitForSeconds(9f);
-
-            tileManager.InitializeArray(4);
-            yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 3, 1, 0));
-            startStage.SetActive(false);
+            t.MovePosition(0, 10);
         }
+        yield return new WaitForSeconds(9f);
+
+        tileManager.InitializeArray(4);
+        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 3, 1, 0));
+        startStage.SetActive(false);
+        
         StartCoroutine(RunWaves());
     }
     IEnumerator Maintenance()
@@ -135,8 +135,14 @@ public class WaveManager : MonoBehaviour
         yield return tileManager.MoveTilesByArrayByWave(15,15,3,1,0);
         jeongbiStage.SetActive(true);
 
-        yield return new WaitForSeconds(10f); //플레이어 상호작용 코드 필요
+        //플레이어 상호작용 코드 필요
 
+        while (!nextWaveTrigger) 
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        nextWaveTrigger= false;
         tileManager.InitializeArray(4);
         jeongbiStage.SetActive(false);
         yield return tileManager.MoveTilesByArrayByWave(15,8,3,1,0);
