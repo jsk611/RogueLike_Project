@@ -8,6 +8,11 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
+    bool isGameStarted = false;
+    public bool IsGameStarted
+    {
+        set { isGameStarted = value; }
+    }
 
     [SerializeField] string[] mapPaths;
     [SerializeField] string startMapPath;
@@ -27,7 +32,8 @@ public class WaveManager : MonoBehaviour
         
         sp = startPosition.transform.position;
 
-        StartCoroutine(RunWaves()); //나중에 GameManager로 옮길 것
+        StartCoroutine(StartMap());
+        //StartCoroutine(RunWaves()); //나중에 GameManager로 옮길 것
     }
 
 
@@ -66,9 +72,6 @@ public class WaveManager : MonoBehaviour
         while (true)
         {
             
-
-            yield return StartCoroutine(StartMap());
-            yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(3f);
             yield return StartCoroutine(Wave6());
             yield return StartCoroutine(WaveEnd());
@@ -95,6 +98,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator StartMap() //향후 게임매니저에서 관리
     {
+        yield return new WaitForSeconds(1f);
         startPosition.transform.position = sp;
         tileManager.InitializeArray(-1);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,0,0));
@@ -102,7 +106,11 @@ public class WaveManager : MonoBehaviour
 
         //시작 스테이지에서만 필요로 하는 코드 (영구적 업그레이드, 무기 선택, 훈련장 등등)을 작성
 
-        yield return new WaitForSeconds(5f); //향후 플레이어가 게임 입장 패드 위에 올라왔을 때 시작하게끔 변경
+       //플레이어가 게임 시작할때까지 무한 대기
+        while (!isGameStarted)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
         if (true)
@@ -118,7 +126,7 @@ public class WaveManager : MonoBehaviour
             yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 3, 1, 0));
             startStage.SetActive(false);
         }
-
+        StartCoroutine(RunWaves());
     }
     IEnumerator Maintenance()
     {

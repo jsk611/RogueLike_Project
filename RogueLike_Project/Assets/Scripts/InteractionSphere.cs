@@ -6,10 +6,10 @@ using UnityEngine;
 public class InteractionSphere : MonoBehaviour
 {
     // Start is called before the first frame update
-    SphereCollider sphereCollider;
+    WaveManager waveManager;
     void Start()
     {
-        sphereCollider = GetComponent<SphereCollider>();
+        waveManager = FindObjectOfType<WaveManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -42,6 +42,7 @@ public class InteractionSphere : MonoBehaviour
             {
                 // F 입력했을 때 신호 송신
                 Debug.Log("Switching!");
+                waveManager.IsGameStarted = true;
                 Destroy(gameObject);
             }
             Debug.Log("Press to Switch Wave!");
