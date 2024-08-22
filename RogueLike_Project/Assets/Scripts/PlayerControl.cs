@@ -44,7 +44,7 @@ public class PlayerControl : MonoBehaviour
     CameraControl cameraController;
     //ShootingController shootingController;
 
-    StatusBehaviour characterStatus;
+    PlayerStatus characterStatus;
 
     RaycastHit hitInfo;
 
@@ -61,7 +61,7 @@ public class PlayerControl : MonoBehaviour
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
         //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
         //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
-        characterStatus = GetComponent<Status>();
+        characterStatus = GetComponent<PlayerStatus>();
 
         moveSpeed = characterStatus.GetMovementSpeed();
         moveSpeed_origin = moveSpeed;

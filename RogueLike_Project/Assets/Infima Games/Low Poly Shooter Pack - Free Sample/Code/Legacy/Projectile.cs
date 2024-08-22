@@ -10,7 +10,7 @@ public class Projectile : MonoBehaviour {
 	[SerializeField]
 	public float bulletDamage;
 
-	Status shooterStatus;
+	PlayerStatus shooterStatus;
 
 	[Range(0, 100)]
 	[Tooltip("After how long time should the bullet prefab be destroyed?")]
@@ -34,7 +34,7 @@ public class Projectile : MonoBehaviour {
 		var gameModeService = ServiceLocator.Current.Get<IGameModeService>();
 		//Ignore the main player character's collision. A little hacky, but it should work.
 		Physics.IgnoreCollision(gameModeService.GetPlayerCharacter().GetComponent<Collider>(), GetComponent<Collider>());
-		shooterStatus = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<Status>();
+		shooterStatus = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
 		//Start destroy timer
 		StartCoroutine (DestroyAfter ());
 	}
@@ -49,14 +49,15 @@ public class Projectile : MonoBehaviour {
 
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
 		{
-			if (collision.gameObject.GetComponent<Status>() != null)
+			if (collision.gameObject.GetComponent<MonsterStatus>() != null)
 			{
+				Debug.Log("hit");
 				float crit = Random.Range(0, 100);
 				if (crit <= shooterStatus.GetCriticalRate())
 				{
-					collision.gameObject.GetComponent<Status>().DecreaseHealth((bulletDamage + shooterStatus.GetAttackDamage())* (shooterStatus.GetCriticalDamage() / 100f));
+					collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage())* (shooterStatus.GetCriticalDamage() / 100f));
 				}
-				else collision.gameObject.GetComponent<Status>().DecreaseHealth(bulletDamage + shooterStatus.GetAttackDamage());
+				else collision.gameObject.GetComponent<MonsterBase>().TakeDamage(bulletDamage + shooterStatus.GetAttackDamage());
                 
 			}
 			Destroy(gameObject);

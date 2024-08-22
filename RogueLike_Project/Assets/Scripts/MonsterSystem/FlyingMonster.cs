@@ -116,7 +116,7 @@ public class FlyingMonster : MonsterBase
             // 플레이어에게 데미지 전달
             if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
             {
-                target.GetComponent<Status>().DecreaseHealth(damage);
+                target.GetComponent<PlayerStatus>().DecreaseHealth(damage);
                 // 타겟에 데미지 주기 (플레이어에게 적용할 메서드 호출)
                 // target.GetComponent<PlayerHealth>().TakeDamage(damage);
             }

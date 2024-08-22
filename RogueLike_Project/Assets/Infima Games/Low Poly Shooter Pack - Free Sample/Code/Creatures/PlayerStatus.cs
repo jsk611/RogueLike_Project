@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Status : StatusBehaviour
+public class PlayerStatus : StatusBehaviour
 {
     [Tooltip("Creature Health")]
     [SerializeField]
@@ -78,14 +78,13 @@ public class Status : StatusBehaviour
 
     private void Start()
     {
-        if (gameObject.tag == "Player")
-        {
+  
             character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
 
             playerControl = character.GetComponent<PlayerControl>();
             characterAnimator = character.GetPlayerAnimator();
             weaponAnimator = character.GetWeaponAnimator();
-        }
+        
 
     }
 
@@ -125,14 +124,14 @@ public class Status : StatusBehaviour
     }
 
     // StaminaRegeneration
-    public override void IncreaseStaminaRegen(float staminaRegen)
+    public void IncreaseStaminaRegen(float staminaRegen)
     { StaminaRegen += staminaRegen; }
-    public override void DecreaseStaminaRegen(float staminaRegen)
+    public void DecreaseStaminaRegen(float staminaRegen)
     { 
         StaminaRegen -= staminaRegen;
         if (StaminaRegen < 0 ) StaminaRegen = 0;
     }
-    public override void SetStaminaRegen(float staminaRegen)
+    public void SetStaminaRegen(float staminaRegen)
     {
         StaminaRegen = staminaRegen;
         if (StaminaRegen < 0) StaminaRegen = 0;
@@ -281,25 +280,25 @@ public class Status : StatusBehaviour
     //}
 
     //Coins
-    public override void IncreaseCoin(int coin)
+    public void IncreaseCoin(int coin)
     { Coins += coin; }
-    public override void DecreaseCoin(int coin)
+    public void DecreaseCoin(int coin)
     { Coins -= coin; }
-    public override void SetCoin(int coin)
+    public void SetCoin(int coin)
     { Coins = coin; }
 
     //Permanent Coins
-    public override void IncreasePermanentCoin(int coin)
+    public void IncreasePermanentCoin(int coin)
     { PermanentCoins += coin; }
-    public override void DecreasePermanentCoin(int coin)
+    public void DecreasePermanentCoin(int coin)
     { PermanentCoins -= coin; }
-    public override void SetPermanentCoin(int coin)
+    public void SetPermanentCoin(int coin)
     { PermanentCoins = coin; }
 
     public override float GetHealth() => Health;
     public override float GetMaxHealth() => MaxHealth;
-    public override float GetStaminaRegen() => StaminaRegen;
-  //  public override float GetDefence() => Defence;
+    public float GetStaminaRegen() => StaminaRegen;
+  //  public override float GetDefence() => Defence;    
     public override float GetAttackDamage() => Damage;
     public override float GetAttackSpeed() => AttackSpeed / 100f;
     public override float GetCriticalDamage() => CriticalDamage;
@@ -309,8 +308,8 @@ public class Status : StatusBehaviour
     public override float GetMovementSpeed() => MoveSpeed;
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
-    public override int GetCoin() => Coins;
-    public override int GetPermanentCoin() => PermanentCoins;
+    public int GetCoin() => Coins;
+    public int GetPermanentCoin() => PermanentCoins;
 
     private void Update()
     {

@@ -58,7 +58,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         private WeaponSkillManager weaponSkillBehaviour;
 
-        private Status playerStatus;
+        private PlayerStatus playerStatus;
 
         /// <summary>
         /// The service that handles sounds.
@@ -80,7 +80,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Get Inventory.
             playerInventory ??= playerCharacter.GetInventory();
 
-            playerStatus ??= playerCharacter.GetComponent<Status>();    
+            playerStatus ??= playerCharacter.GetComponent<PlayerStatus>();    
 
             //Try to get the equipped weapon's Weapon component.
             if (!(playerInventory.GetEquipped() is { } weaponBehaviour))

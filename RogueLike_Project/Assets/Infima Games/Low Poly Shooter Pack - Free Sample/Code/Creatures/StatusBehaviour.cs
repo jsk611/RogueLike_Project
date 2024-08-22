@@ -15,10 +15,7 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetMaxHealth(float maxHealth);
     public abstract float GetMaxHealth();
 
-    public abstract void IncreaseStaminaRegen(float staminaRegen);
-    public abstract void DecreaseStaminaRegen(float staminaRegen);
-    public abstract void SetStaminaRegen(float staminaRegen);
-    public abstract float GetStaminaRegen();
+
 
     //public abstract void IncreaseEffectResist(float effectResist);
     //public abstract void DecreaseEffectResist(float effectResist);
@@ -71,13 +68,7 @@ public abstract class StatusBehaviour : MonoBehaviour
     //public abstract void SetJumpPower(float jumpPower);
     //public abstract float GetJumpPower();
 
-    public abstract void IncreaseCoin(int coin);
-    public abstract void DecreaseCoin(int coin);
-    public abstract void SetCoin(int coin);
-    public abstract int GetCoin();
+   
 
-    public abstract void IncreasePermanentCoin(int coin);
-    public abstract void DecreasePermanentCoin(int coin);
-    public abstract void SetPermanentCoin(int coin);
-    public abstract int GetPermanentCoin();
+
 }

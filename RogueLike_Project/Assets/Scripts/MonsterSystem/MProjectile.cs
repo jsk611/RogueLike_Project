@@ -26,7 +26,7 @@ public class MProjectile : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player takes damage");
-            Status playerHealth = other.GetComponent<Status>();
+            PlayerStatus playerHealth = other.GetComponent<PlayerStatus>();
             if (playerHealth != null)
             {
                 playerHealth.DecreaseHealth(damage);

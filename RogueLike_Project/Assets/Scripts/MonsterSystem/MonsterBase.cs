@@ -19,7 +19,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     [Header("Delay(CoolTime)")]
     [SerializeField] protected float transitionDelay;
 
-    protected Status monsterStatus;
+    protected MonsterStatus monsterStatus;
 
     protected Coroutine stateMachineCoroutine;
 
@@ -40,7 +40,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     {
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
-        monsterStatus = GetComponent<Status>();
+        monsterStatus = GetComponent<MonsterStatus>();
 
         hp = monsterStatus.GetHealth(); // 기본 체력
         //def = monsterStatus.GetDefence();

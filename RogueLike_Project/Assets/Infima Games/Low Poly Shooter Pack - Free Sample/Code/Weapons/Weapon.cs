@@ -131,7 +131,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// <summary>
         /// The player character's status
         /// </summary>
-        private Status playerStatus;
+        private PlayerStatus playerStatus;
 
         private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
         private static readonly int HashAtackSpeed = Animator.StringToHash("Fire Speed");
@@ -153,7 +153,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache the world camera. We use this in line traces.
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //Cache the character status
-            playerStatus = characterBehaviour.GetComponent<Status>();
+            playerStatus = characterBehaviour.GetComponent<PlayerStatus>();
         }
         protected override void Start()
         {
