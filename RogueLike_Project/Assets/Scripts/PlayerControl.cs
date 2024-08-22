@@ -23,7 +23,7 @@ using UnityEngine.UIElements;
 public class PlayerControl : MonoBehaviour
 {
     private float moveSpeed;
-    public float moveSpeed_origin;
+    private float moveSpeed_origin;
     private float jumpPower;
 
     private int HP = 100;
@@ -31,7 +31,6 @@ public class PlayerControl : MonoBehaviour
 
     float dashCool;
     public bool isGrounded = true;
-    float gravity = 9.8f;
 
     bool dashOver = true;
     bool crawlOver = true;

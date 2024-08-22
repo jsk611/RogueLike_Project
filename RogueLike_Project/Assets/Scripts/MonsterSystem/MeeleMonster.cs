@@ -7,26 +7,30 @@ public class MeeleMonster : MonsterBase
 {
     [Header("Flying Monster Settings")]
     public float flyHeight = 5.0f; // 공중 높이
-    public float chaseSpeed = 4.0f; // 추적 속도
-    public float attackRange = 2.0f; // 공격 범위
-    public float attackCooldown = 2.0f; // 공격 간격
-    public int damage = 15; // 공격력
+    private float chaseSpeed; // 추적 속도
+    public float attackRange = 5.0f; // 공격 범위
+    public float attackCooldown = 1.5f; // 공격 간격
+    private float damage; // 공격력
 
     private FieldOfView fov; // 시야 각도 컴포넌트
     private bool canAttack = true; // 공격 가능 여부
+
 
     protected override void Start()
     {
         fov = GetComponent<FieldOfView>(); // 시야 각도 컴포넌트 가져오기
         target = GameObject.FindGameObjectWithTag("Player").transform; // 타겟 지정
         base.Start();
+
+        chaseSpeed = monsterStatus.GetMovementSpeed();
+        damage = monsterStatus.GetAttackDamage();
     }
 
     protected override IEnumerator StateMachine()
     {
         while (hp > 0)
         {
-            Debug.Log(state + " state");
+            Debug.Log(state + " state melee");
             yield return StartCoroutine(state.ToString());
         }
     }
@@ -50,6 +54,8 @@ public class MeeleMonster : MonsterBase
     {
         while (target != null)
         {
+            //Debug.Log(Vector3.Distance(transform.position, target.position));
+            chaseSpeed = monsterStatus.GetMovementSpeed();
             Vector3 directionToTarget = (target.position - transform.position).normalized;
             Vector3 targetPosition = target.position + Vector3.up * flyHeight;
 
@@ -86,13 +92,14 @@ public class MeeleMonster : MonsterBase
             canAttack = false;
 
             // 공격 애니메이션 재생
-            anim.SetTrigger("Attack");
-
+            //anim.SetTrigger("Attack");
             // 플레이어에게 데미지 전달
             if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
             {
+                
                 // 타겟에 데미지 주기 (플레이어에게 적용할 메서드 호출)
                 // target.GetComponent<PlayerHealth>().TakeDamage(damage);
+                target.GetComponent<Status>().DecreaseHealth(damage);
             }
 
             yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기
@@ -102,6 +109,7 @@ public class MeeleMonster : MonsterBase
         // 공격 후 거리가 멀어지면 다시 추적
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
+            Debug.Log("chase1");
             ChangeState(State.CHASE);
         }
     }

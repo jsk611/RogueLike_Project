@@ -78,11 +78,14 @@ public class Status : StatusBehaviour
 
     private void Start()
     {
-        character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
-        
-        playerControl = character.GetComponent<PlayerControl>();
-        characterAnimator = character.GetPlayerAnimator();
-        weaponAnimator = character.GetWeaponAnimator();
+        if (gameObject.tag == "Player")
+        {
+            character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+
+            playerControl = character.GetComponent<PlayerControl>();
+            characterAnimator = character.GetPlayerAnimator();
+            weaponAnimator = character.GetWeaponAnimator();
+        }
 
     }
 
@@ -93,7 +96,7 @@ public class Status : StatusBehaviour
         if (Health <= 0)
         {
             Health = 0;
-            character.enabled = false;
+            Destroy(gameObject);
         }
     }
     public override void IncreaseHealth(float health)
@@ -104,7 +107,7 @@ public class Status : StatusBehaviour
     public override void SetHealth(float health)
     { 
         Health = Mathf.Clamp(health,0,MaxHealth);
-        if (health <= 0) character.enabled = false;
+        if (health <= 0) Destroy(gameObject);
     }
 
     // Max Health

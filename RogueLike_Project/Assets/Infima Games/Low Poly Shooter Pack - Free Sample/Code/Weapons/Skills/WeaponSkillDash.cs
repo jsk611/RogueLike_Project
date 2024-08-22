@@ -43,7 +43,6 @@ public class WeaponSkillDash : WeaponSkillManager
         usedTIme = 0;
         if (!jumped)
         {
-            Debug.Log("jump");
             StartCoroutine(moving());
         }
         else if (jumped)
@@ -77,7 +76,6 @@ public class WeaponSkillDash : WeaponSkillManager
         while (usedTIme < 2)
         {
             usedTIme += Time.deltaTime;
-            Debug.Log("stomp");
             yield return null;
         }
         

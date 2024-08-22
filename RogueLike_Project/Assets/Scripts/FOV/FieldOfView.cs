@@ -46,7 +46,7 @@ public class FieldOfView : MonoBehaviour
         if (targetsInViewRadius.Length > 0)
         {
             Transform target = targetsInViewRadius[0].transform;
-            CapsuleCollider targetCollider = target.GetComponent<CapsuleCollider>();
+            CharacterController targetCollider = target.GetComponent<CharacterController>();
 
             if (targetCollider != null)
             {
@@ -55,7 +55,6 @@ public class FieldOfView : MonoBehaviour
                 if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
                 {
                     float dstToTarget = Vector3.Distance(transform.position, target.transform.position);
-
                     if (Physics.Raycast(transform.position, dirToTarget, out RaycastHit hit, dstToTarget, obstacleMask))
                     {
                         Vector3 capsuleCenter = targetCollider.bounds.center;

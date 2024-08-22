@@ -26,10 +26,10 @@ public class MProjectile : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player takes damage");
-            PlayerControl playerHealth = other.GetComponent<PlayerControl>();
+            Status playerHealth = other.GetComponent<Status>();
             if (playerHealth != null)
             {
-                // playerHealth.TakeDamage(damage);
+                playerHealth.DecreaseHealth(damage);
             }
 
             Destroy(gameObject);

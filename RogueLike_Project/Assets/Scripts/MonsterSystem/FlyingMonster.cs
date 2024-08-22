@@ -5,10 +5,10 @@ public class FlyingMonster : MonsterBase
 {
     [Header("Flying Monster Settings")]
     public float flyHeight = 5.0f; // 공중 높이
-    public float chaseSpeed = 4.0f; // 추적 속도
+    private float chaseSpeed; // 추적 속도
     public float attackRange = 2.0f; // 공격 범위
     public float attackCooldown = 2.0f; // 공격 간격
-    public int damage = 15; // 공격력
+    private float damage; // 공격력
     public float obstacleAvoidanceDistance = 5.0f; // 장애물 회피 거리
     public float avoidanceDuration = 1.0f; // 회피 지속 시간
 
@@ -22,6 +22,9 @@ public class FlyingMonster : MonsterBase
         fov = GetComponent<FieldOfView>(); // 시야 각도 컴포넌트 가져오기
         target = GameObject.FindGameObjectWithTag("Player").transform; // 타겟 지정
         base.Start();
+
+        chaseSpeed = monsterStatus.GetMovementSpeed();
+        damage = monsterStatus.GetAttackDamage();
     }
 
     protected override IEnumerator StateMachine()
@@ -113,6 +116,7 @@ public class FlyingMonster : MonsterBase
             // 플레이어에게 데미지 전달
             if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
             {
+                target.GetComponent<Status>().DecreaseHealth(damage);
                 // 타겟에 데미지 주기 (플레이어에게 적용할 메서드 호출)
                 // target.GetComponent<PlayerHealth>().TakeDamage(damage);
             }
