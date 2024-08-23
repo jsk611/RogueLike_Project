@@ -43,6 +43,7 @@ public class Projectile : MonoBehaviour {
 	private void OnCollisionEnter (Collision collision)
 	{
 
+		Debug.Log(collision.transform.name);
 		//Ignore collisions with other projectiles.
 		if (collision.gameObject.GetComponent<Projectile>() != null)
 			return;

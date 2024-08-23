@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyWeapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     [SerializeField] AnimationClip weaponAnimation;
     // Start is called before the first frame update

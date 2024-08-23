@@ -6,14 +6,12 @@ using UnityEngine.AI;
 public class MeeleMonster : MonsterBase
 {
     [Header("Flying Monster Settings")]
-    public float flyHeight = 5.0f; // 공중 높이
     private float chaseSpeed; // 추적 속도
-    public float attackRange = 5.0f; // 공격 범위
+    public float attackRange = 1.0f; // 공격 범위
     public float attackCooldown = 1.5f; // 공격 간격
     private float damage; // 공격력
 
     private FieldOfView fov; // 시야 각도 컴포넌트
-    private bool canAttack = true; // 공격 가능 여부
 
 
     protected override void Start()
@@ -29,11 +27,24 @@ public class MeeleMonster : MonsterBase
 
     protected override IEnumerator StateMachine()
     {
+        
         while (hp > 0)
         {
             Debug.Log(state + " state melee");
-            yield return StartCoroutine(state.ToString());
+            switch (state)
+            {
+                case State.IDLE:
+                    yield return StartCoroutine(IDLE());
+                    break;
+                case State.CHASE:
+                    yield return StartCoroutine(CHASE());
+                    break;
+                case State.ATTACK:
+                    yield return StartCoroutine(ATTACK());
+                    break;
+            }
         }
+        
     }
 
     private IEnumerator IDLE()
@@ -53,63 +64,37 @@ public class MeeleMonster : MonsterBase
 
     private IEnumerator CHASE()
     {
-        while (target != null)
+        if (target == null)
         {
-            //Debug.Log(Vector3.Distance(transform.position, target.position));
-            nmAgent.speed = monsterStatus.GetMovementSpeed();
-            //Vector3 directionToTarget = (target.position - transform.position).normalized;
-            //Vector3 targetPosition = target.position + Vector3.up * flyHeight;
-
-            //// 장애물 감지를 위한 Raycast
-            //if (Physics.Raycast(transform.position, directionToTarget, out RaycastHit hit, chaseSpeed * Time.deltaTime))
-            //{
-            //    if (hit.collider.CompareTag("Obstacle")) // 장애물 태그 확인
-            //    {
-            //        // 장애물을 회피하기 위해 이동 방향 변경
-            //        Vector3 obstacleAvoidDirection = Vector3.Cross(directionToTarget, Vector3.up).normalized;
-            //        transform.position += obstacleAvoidDirection * chaseSpeed * Time.deltaTime;
-            //    }
-            //}
-            //else
-            //{
-            //    // 장애물이 없으면 목표 방향으로 이동
-            //    transform.position = Vector3.MoveTowards(transform.position, targetPosition, chaseSpeed * Time.deltaTime);
-            //}
-            nmAgent.SetDestination(target.position);
-            // 공격 범위에 도달하면 ATTACK 상태로 전환
-            Debug.Log(nmAgent.remainingDistance - nmAgent.stoppingDistance);
-            if (nmAgent.remainingDistance <= nmAgent.stoppingDistance) // Vector3.Distance(transform.position, target.position) <= attackRange)
-            {
-                ChangeState(State.ATTACK);
-            }
-
-            yield return null; // 다음 프레임까지 대기
+            ChangeState(State.IDLE);
+            yield break;
         }
+
+        nmAgent.speed = chaseSpeed; // 이전에 계산된 chaseSpeed 사용
+        nmAgent.SetDestination(target.position);
+
+        // Debug.Log($"Remaining Distance: {nmAgent.remainingDistance}, Stopping Distance: {nmAgent.stoppingDistance}");
+
+        if (nmAgent.remainingDistance <= nmAgent.stoppingDistance)
+        {
+            Debug.Log("Switching to ATTACK state");
+            ChangeState(State.ATTACK);
+        }
+
+        yield return null;
     }
 
     private IEnumerator ATTACK()
     {
         Debug.Log("Attack!!!!!!!!!!!!");
-        if (canAttack)
+
+        if (target != null && nmAgent.remainingDistance <= attackRange)
         {
-            canAttack = false;
-
-            // 공격 애니메이션 재생
-            //anim.SetTrigger("Attack");
-            // 플레이어에게 데미지 전달
-            if (target != null && nmAgent.remainingDistance <= attackRange)
-            {
-                
-                // 타겟에 데미지 주기 (플레이어에게 적용할 메서드 호출)
-                //target.GetComponent<PlayerHealth>().TakeDamage(damage);
-                target.GetComponent<PlayerStatus>().DecreaseHealth(damage);
-            }
-
-            yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기
-            canAttack = true;
+            target.GetComponent<PlayerStatus>().DecreaseHealth(damage);
         }
 
-        // 공격 후 거리가 멀어지면 다시 추적
+        yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기
+
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
             Debug.Log("chase1");

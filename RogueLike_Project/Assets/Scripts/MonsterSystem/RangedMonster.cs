@@ -10,7 +10,7 @@ public class RangedMonster : MonsterBase
     [SerializeField] float fireRate = 2f;
     [SerializeField] float rotationSpeed = 2f;
 
-    public Weapon gun;
+    public EnemyWeapon gun;
     public Transform firePoint;
 
     private FieldOfView fov;
