@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MProjectile : MonoBehaviour
 {
+    
+    private float damage; // 투사체의 피해량
+   
     [Header("Settings")]
-    public int damage = 20; // 투사체의 피해량
     [SerializeField] float lifetime = 5f; // 투사체의 수명
     [SerializeField] float speed = 0.05f; // 투사체의 속도
 
@@ -25,7 +27,7 @@ public class MProjectile : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Player takes damage");
+            Debug.Log("Player takes damage " + damage);
             PlayerStatus playerHealth = other.GetComponent<PlayerStatus>();
             if (playerHealth != null)
             {
@@ -39,5 +41,11 @@ public class MProjectile : MonoBehaviour
     void UpdateBullet()
     {
         transform.Translate(Vector3.forward * speed);
+    }
+
+    public void SetBulletDamage(float attackDamage)
+    {
+        damage = attackDamage;
+        Debug.Log("Bullet damage : "+ damage);
     }
 }

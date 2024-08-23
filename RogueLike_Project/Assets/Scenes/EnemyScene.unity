@@ -246,6 +246,7 @@ MonoBehaviour:
   firePoint: {fileID: 1897050058}
   bulletPrefab: {fileID: 4043381820185284376, guid: fa7f0ad35d5e30145b7ca6243ab373ae,
     type: 3}
+  monsterStatus: {fileID: 1414669712}
 --- !u!1 &233567036
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,7 +262,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &233567037
 Transform:
   m_ObjectHideFlags: 0
@@ -2729,6 +2730,7 @@ MonoBehaviour:
   firePoint: {fileID: 1753549032}
   bulletPrefab: {fileID: 4043381820185284376, guid: fa7f0ad35d5e30145b7ca6243ab373ae,
     type: 3}
+  monsterStatus: {fileID: 1829116567}
 --- !u!1 &868316614 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8384936262508141245, guid: cf202fc21aa293b4194a6f88c909c043,
@@ -3491,10 +3493,10 @@ MonoBehaviour:
   Health: 100
   MaxHealth: 100
   CriticalRate: 0
-  CriticalDamage: 0
+  CriticalDamage: 150
   MoveSpeed: 4
   ReloadSpeed: 100
-  Damage: 0
+  Damage: 10
   AttackSpeed: 100
 --- !u!1 &1335474005
 GameObject:
@@ -4021,7 +4023,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 4
   ReloadSpeed: 100
-  Damage: 0
+  Damage: 80
   AttackSpeed: 100
 --- !u!4 &1439704257 stripped
 Transform:
@@ -4463,7 +4465,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 4
   ReloadSpeed: 100
-  Damage: 20
+  Damage: 60.8
   AttackSpeed: 100
 --- !u!1001 &1839479446
 PrefabInstance:
@@ -4698,7 +4700,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2108629404
 Transform:
   m_ObjectHideFlags: 0

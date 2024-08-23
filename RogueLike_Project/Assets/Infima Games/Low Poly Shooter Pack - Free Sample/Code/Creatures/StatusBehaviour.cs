@@ -43,6 +43,8 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetCriticalDamage(float criticalDamage);
     public abstract float GetCriticalDamage();
 
+    public abstract float CalculateCriticalHit();
+
     public abstract void IncreaseMovementSpeed(float moveSpeed);
     public abstract void DecreaseMovementSpeed(float moveSpeed);
     public abstract void SetMovementSpeed(float moveSpeed);

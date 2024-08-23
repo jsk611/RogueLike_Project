@@ -3,6 +3,7 @@ using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 
 public class PlayerStatus : StatusBehaviour
@@ -171,6 +172,15 @@ public class PlayerStatus : StatusBehaviour
     { 
         CriticalDamage = criticalDamage; 
         if (CriticalDamage < 0) CriticalDamage = 0;
+    }
+
+    public override float CalculateCriticalHit()
+    {
+        float ran = Random.Range(0, 100);
+        if (ran < CriticalRate)
+            return CriticalDamage / 100f;
+        else
+            return 1f;
     }
 
     //// Effect Resistance

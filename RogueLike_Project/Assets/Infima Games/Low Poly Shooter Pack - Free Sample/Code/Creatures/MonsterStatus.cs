@@ -137,6 +137,15 @@ public class MonsterStatus : StatusBehaviour
         if (CriticalDamage < 0) CriticalDamage = 0;
     }
 
+    public override float CalculateCriticalHit()
+    {
+        float ran = Random.Range(0, 100);
+        if (ran < CriticalRate)
+            return CriticalDamage / 100f;
+        else
+            return 1;
+    }
+
     //// Effect Resistance
     //public override void IncreaseEffectResist(float effectResist)
     //{

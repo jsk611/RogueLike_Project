@@ -120,7 +120,7 @@ public class FlyingMonster : MonsterBase
     {
         if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
         {
-            target.GetComponent<PlayerStatus>().DecreaseHealth(damage);
+            target.GetComponent<PlayerStatus>().DecreaseHealth(damage * monsterStatus.CalculateCriticalHit());
         }
 
         yield return new WaitForSeconds(attackCooldown);

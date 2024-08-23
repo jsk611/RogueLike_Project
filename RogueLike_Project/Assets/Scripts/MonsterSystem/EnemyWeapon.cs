@@ -7,6 +7,8 @@ public class EnemyWeapon : MonoBehaviour
     [SerializeField] Transform firePoint; //발사 위치;
     public GameObject bulletPrefab;
 
+    public MonsterStatus monsterStatus;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,8 +22,10 @@ public class EnemyWeapon : MonoBehaviour
 
     public void Fire(Quaternion rotation)
     {
+
         // 지정된 회전으로 총알 생성
-        Instantiate(bulletPrefab, firePoint.position, rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, rotation);
+        bullet.GetComponent<MProjectile>().SetBulletDamage(monsterStatus.GetAttackDamage()*monsterStatus.CalculateCriticalHit());
     }
 }
 

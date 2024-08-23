@@ -30,7 +30,7 @@ public class MeeleMonster : MonsterBase
         
         while (hp > 0)
         {
-            Debug.Log(state + " state melee");
+            Debug.Log(state + " state Melee");
             switch (state)
             {
                 case State.IDLE:
@@ -77,7 +77,6 @@ public class MeeleMonster : MonsterBase
 
         if (nmAgent.remainingDistance <= nmAgent.stoppingDistance)
         {
-            Debug.Log("Switching to ATTACK state");
             ChangeState(State.ATTACK);
         }
 
@@ -86,18 +85,16 @@ public class MeeleMonster : MonsterBase
 
     private IEnumerator ATTACK()
     {
-        Debug.Log("Attack!!!!!!!!!!!!");
 
         if (target != null && nmAgent.remainingDistance <= attackRange)
         {
-            target.GetComponent<PlayerStatus>().DecreaseHealth(damage);
+            target.GetComponent<PlayerStatus>().DecreaseHealth(damage * monsterStatus.CalculateCriticalHit());
         }
 
         yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기
 
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
-            Debug.Log("chase1");
             ChangeState(State.CHASE);
         }
     }
