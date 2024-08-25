@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using Unity.VisualScripting.Dependencies.Sqlite;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -42,6 +44,7 @@ public class PlayerControl : MonoBehaviour
     CharacterController character;
 
     CameraControl cameraController;
+    Rigidbody rigidBody;
     //ShootingController shootingController;
 
     PlayerStatus characterStatus;
@@ -57,6 +60,7 @@ public class PlayerControl : MonoBehaviour
         playerAnimator = MainCharacter.GetComponent<Animator>();
         playerRigidbody = GetComponent<Rigidbody>();
         character = GetComponent<CharacterController>();
+        rigidBody = GetComponent<Rigidbody>();
 
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
         //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
@@ -107,19 +111,25 @@ public class PlayerControl : MonoBehaviour
         isCrawling();
         Movement = Movement.normalized * moveSpeed;
         character.Move (Movement * Time.deltaTime);
+       // character.Move(Vector3.down * 0.8f * Time.deltaTime);
 
         CheckGrounded();
         Jumping();
 
-        character.Move(Vertical * Time.deltaTime);
+       // character.Move(Vertical * Time.deltaTime);
 
         return;
     }
     public bool CheckGrounded()
     {
-        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f);
-        if (!isGrounded) Vertical.y += Physics.gravity.y * Time.deltaTime;
-        if (isGrounded) Vertical.y = -0.8f;
+        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f,LayerMask.GetMask("Wall"));
+        Debug.Log(isGrounded);
+        if (!isGrounded) rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
+        if (isGrounded)
+        {
+            rigidBody.isKinematic = true;//Vertical.y = -0.8f;
+            character.Move(Vector3.down * 2f * Time.deltaTime);
+        }
         return isGrounded;
     }
     private void Dash()
@@ -149,6 +159,8 @@ public class PlayerControl : MonoBehaviour
         {
             if (isGrounded) 
             {
+                rigidBody.isKinematic = false;
+                rigidBody.AddForce(Vector3.up*10, ForceMode.Impulse);
                 jumpPower = 4.9f;//characterStatus.GetJumpPower();
                 // Debug.Log("Jump");
                 Vertical.y = jumpPower;
@@ -195,6 +207,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    
 
 
 

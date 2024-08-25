@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using InfimaGames.LowPolyShooterPack;
 
 public class MeeleMonster : MonsterBase
 {
     [Header("Flying Monster Settings")]
     private float chaseSpeed; // 추적 속도
     public float attackRange = 1.0f; // 공격 범위
-    public float attackCooldown = 1.5f; // 공격 간격
+    public float attackCooldown = 0.1f; // 공격 간격
     private float damage; // 공격력
 
     private FieldOfView fov; // 시야 각도 컴포넌트
 
+    private Rigidbody playerRigidBody;
 
     protected override void Start()
     {
@@ -22,6 +24,8 @@ public class MeeleMonster : MonsterBase
 
         chaseSpeed = monsterStatus.GetMovementSpeed();
         damage = monsterStatus.GetAttackDamage();
+
+        playerRigidBody = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<Rigidbody>();
         
     }
 
@@ -89,6 +93,9 @@ public class MeeleMonster : MonsterBase
         if (target != null && nmAgent.remainingDistance <= attackRange)
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(damage * monsterStatus.CalculateCriticalHit());
+            StartCoroutine(Crowd_Control(target));
+            playerRigidBody.isKinematic = false;
+            playerRigidBody.AddForce((Vector3.up-target.forward) * 10f, ForceMode.Impulse);
         }
 
         yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기

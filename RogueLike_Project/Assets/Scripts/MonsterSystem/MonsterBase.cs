@@ -81,4 +81,11 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     {
         state = newState;
     }
+
+    protected IEnumerator Crowd_Control(Transform target)
+    {
+        target.GetComponent<PlayerControl>().enabled = false;
+        yield return new WaitForSeconds(0.1f);
+        target.GetComponent <PlayerControl>().enabled = true;
+    }
 }
