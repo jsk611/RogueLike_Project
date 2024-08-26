@@ -79,7 +79,7 @@ public class Tile : MonoBehaviour
         {
             transform.position = Vector3.Lerp(startPosition, newPosition, elapsed / duration);
             elapsed += Time.deltaTime;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         transform.position = newPosition;
@@ -100,7 +100,7 @@ public class Tile : MonoBehaviour
         {
             transform.localScale = Vector3.Lerp(startSize, newSize, elapsed / duration);
             elapsed += Time.deltaTime;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         transform.localScale = newSize;
@@ -167,4 +167,5 @@ public class Tile : MonoBehaviour
 
 
     }
+
 }
