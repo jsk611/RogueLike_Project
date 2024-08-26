@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -24,21 +25,28 @@ public class TileManager : MonoBehaviour
     {
         get { return tiles; }
     }
+
+    NavMeshSurface navMeshSurface;
+
     // Start is called before the first frame update
     void Awake()
     {
         GenerateTiles();
         CTA = FindObjectOfType<CSVToArray>();
 
-        //StartCoroutine(ChangingMapSample());
-
-        
+        //StartCoroutine(ChangingMapSample());    
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        navMeshSurface = GetComponent<NavMeshSurface>();
+        BuildNavMesh();
+    }
+
+    public void BuildNavMesh()
+    {
+        // NavMesh를 빌드합니다.
+        navMeshSurface.BuildNavMesh();
     }
 
     void GenerateTiles()
@@ -189,6 +197,8 @@ public class TileManager : MonoBehaviour
             }
             yield return new WaitForSeconds((float)durationAboutCoroutine / (mapSize) );
         }
+        yield return new WaitForSeconds(durationAboutTile + 0.5f);
+        BuildNavMesh();
     }
     public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 3f)
     {
@@ -241,6 +251,8 @@ public class TileManager : MonoBehaviour
             radius += maxRadius / 100f;
             yield return new WaitForSeconds(time / 100);
         }
+        yield return new WaitForSeconds(1f);
+        BuildNavMesh();
     }
     public IEnumerator MakeWave(int x, int y, int height, float time, float maxRadius)
     {
