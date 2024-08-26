@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 747960166914145416}
   - component: {fileID: 7305869867302924658}
   - component: {fileID: 2845495918801234029}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 3356759942231058146}
   - component: {fileID: 5753236316888085777}
   - component: {fileID: 4769717708961663022}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
