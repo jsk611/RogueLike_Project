@@ -159,6 +159,7 @@ MonoBehaviour:
   splashFx: {fileID: 0}
   nmAgent: {fileID: 7377058300007912619}
   transitionDelay: 0
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   attackRange: 1
   attackCooldown: 0.2
 --- !u!195 &7377058300007912619

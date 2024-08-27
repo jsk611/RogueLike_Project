@@ -7,9 +7,11 @@ public class InteractionSphere : MonoBehaviour
 {
     // Start is called before the first frame update
     WaveManager waveManager;
+    bool isActived;
     void Start()
     {
         waveManager = FindObjectOfType<WaveManager>();
+        isActived = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,14 +38,14 @@ public class InteractionSphere : MonoBehaviour
     
     IEnumerator PressToSwitchWave()
     {
-        while (true)
+        while (!isActived)
         {
             if(Input.GetKey(KeyCode.F))
             {
                 // F 입력했을 때 신호 송신
                 Debug.Log("Switching!");
                 waveManager.NextWaveTrigger = true;
-                Destroy(gameObject);
+                isActived=true;
             }
             Debug.Log("Press to Switch Wave!");
 

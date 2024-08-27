@@ -36,6 +36,8 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
 
     protected State state;
 
+    [SerializeField] EnemyCountData enemyCountData;
+    bool isDie = false;
     protected virtual void Start()
     {
         anim = GetComponent<Animator>();
@@ -74,6 +76,12 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
             StopCoroutine(stateMachineCoroutine);
         }
         // 적이 사망하면 수행할 동작 (예: 애니메이션 재생, 오브젝트 비활성화 등)
+        if (!isDie)
+        {
+            enemyCountData.enemyCount--;
+            Debug.Log("Enemy Died, 남은 적 : " + enemyCountData.enemyCount);
+            isDie = true;
+        }
         Destroy(gameObject);
     }
 
