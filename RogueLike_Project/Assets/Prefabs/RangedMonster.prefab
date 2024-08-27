@@ -269,7 +269,7 @@ MonoBehaviour:
     m_Bits: 131072
   playerMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 1088
   upClear: 0
   downClear: 0
   leftClear: 0

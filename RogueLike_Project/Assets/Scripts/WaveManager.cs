@@ -250,11 +250,13 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
+        Debug.Log("Setting Monsters");
+
         InitializeEnemyArray();
         MakeRandomEnemyMap(5);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(60f);
         Debug.Log("Wave End");
     }
     IEnumerator Wave7()
