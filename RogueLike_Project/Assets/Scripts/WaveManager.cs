@@ -55,7 +55,7 @@ public class WaveManager : MonoBehaviour
             int x = Random.Range(0, mapSize);
             int y = Random.Range(0, mapSize);
 
-            if (enemyMap[y,x] != EnemyType.None || tileManager.GetTileMap[y,x] < 0)
+            if (enemyMap[y,x] != EnemyType.None || tileManager.GetTileMap[y,x] <= 0)
             {
                 i--;
                 continue;
