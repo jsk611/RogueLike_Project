@@ -6,20 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
+    static public UIManager instance = new UIManager();
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
-        CoinReset(23456);
-        StartCoroutine(OnCooltime(5));
+        BarValueChange(0, 100, 100);
+        BarValueChange(1, 40, 40);
+        CoinReset(0);
         Swapping(0);
     }
 
     //Controlling bars value
     public Slider[] Bar;
-    public float[] maxValue;
-    public float[] currentValue;
-    public void BarValueChange(int i)
+    public void BarValueChange(int i, float maxValue, float curValue)
     {
-        Bar[i].value = currentValue[i] / maxValue[i];
+        Bar[i].value = curValue / maxValue;
     }
 
     //Swapping Weapons
@@ -40,12 +46,13 @@ public class UIManager : MonoBehaviour
     }
 
     public Text dnaText;
-    int dna = 0;
-    public void CoinReset(int getDNA)
+    public void CoinReset(int dna)
     {
-        dna += getDNA;
-        dnaText.text = GetThousandCommaText(dna).ToString();
-    }
+        if (dna == 0)
+            dnaText.text = "0";
+        else
+            dnaText.text = GetThousandCommaText(dna).ToString();
+    }   
     public string GetThousandCommaText(int data)
     {
         return string.Format("{0:#,###}", data);
