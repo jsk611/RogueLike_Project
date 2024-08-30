@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class PlayerStatus : StatusBehaviour
 {
+    [Header("Player Status")]
+
     [Tooltip("Creature Health")]
     [SerializeField]
     private float Health;
@@ -68,6 +70,9 @@ public class PlayerStatus : StatusBehaviour
     [SerializeField]
     private int PermanentCoins;
 
+    [Header("Player Stamina")]
+    [SerializeField] [Range(0,100)] float Stamina;
+
     
     CharacterBehaviour character;
     PlayerControl playerControl;
@@ -84,6 +89,13 @@ public class PlayerStatus : StatusBehaviour
             playerControl = character.GetComponent<PlayerControl>();
             characterAnimator = character.GetPlayerAnimator();
             weaponAnimator = character.GetWeaponAnimator();
+    }
+
+    private void Update()
+    {
+        ///Only for Stamina
+            Stamina = playerControl.Stamina;
+            UIManager.instance.BarValueChange(1,100,Stamina);
     }
 
     // Current Health
@@ -336,17 +348,7 @@ public class PlayerStatus : StatusBehaviour
     public int GetCoin() => Coins;
     public int GetPermanentCoin() => PermanentCoins;
 
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.L))
-        {
-            IncreaseAttackSpeed(1);
-        }
-        if (Input.GetKey(KeyCode.K))
-        {
-            IncreaseReloadSpeed(0.5f);
-        }
-    }
+
 
     private void StatusAnimatorChange(int Id, float value)
     {

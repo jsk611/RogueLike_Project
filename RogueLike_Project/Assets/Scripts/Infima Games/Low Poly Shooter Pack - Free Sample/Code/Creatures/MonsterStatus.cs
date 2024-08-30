@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MonsterStatus : StatusBehaviour
 {
+    [Header("Monster Status")]
+
     [Tooltip("Creature Health")]
     [SerializeField]
     private float Health;

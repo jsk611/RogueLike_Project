@@ -94,8 +94,7 @@ public class MeeleMonster : MonsterBase
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(damage * monsterStatus.CalculateCriticalHit());
             StartCoroutine(Crowd_Control(target));
-            playerRigidBody.isKinematic = false;
-            playerRigidBody.AddForce((Vector3.up-target.forward) * 10f, ForceMode.Impulse);
+            StartCoroutine(KnockBack());
         }
 
         yield return new WaitForSeconds(attackCooldown); // 공격 쿨타임 대기
@@ -104,6 +103,13 @@ public class MeeleMonster : MonsterBase
         {
             ChangeState(State.CHASE);
         }
+    }
+
+    private IEnumerator KnockBack()
+    {
+        playerRigidBody.isKinematic = false;
+        playerRigidBody.AddForce((Vector3.up+new Vector3((target.transform.position.x-transform.position.x),0,(target.transform.position.z-transform.position.z)).normalized)*10f,ForceMode.Impulse);
+        yield return new WaitForSeconds(1f) ;
     }
 
     public override void TakeDamage(float damage)
