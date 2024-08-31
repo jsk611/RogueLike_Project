@@ -16,7 +16,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         BarValueChange(0, 100, 100);
-        BarValueChange(1, 40, 40);
+        BarValueChange(1, 100, 100);
         CoinReset(0);
         Swapping(0);
     }
@@ -30,8 +30,13 @@ public class UIManager : MonoBehaviour
 
     //Swapping Weapons
     public GameObject[] weapon;
+    public Text[] curAmmo, maxAmmo;
+    Text curammo, maxammo;
     public void Swapping(int index)
     {
+        curammo = curAmmo[index];
+        maxammo = maxAmmo[index];
+
         for (int i = 0; i < 2; i++)
         {
             if (index == i)
@@ -43,6 +48,11 @@ public class UIManager : MonoBehaviour
                 weapon[i].transform.localScale = new Vector3(0.75f, 0.75f, 0.75f);
             }
         }
+    }
+    public void AmmoTextReset(int cur, int max)
+    {
+        curammo.text = cur.ToString();
+        maxammo.text = max.ToString();
     }
 
     public Text dnaText;
