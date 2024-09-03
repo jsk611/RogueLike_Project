@@ -77,14 +77,14 @@ public class PlayerControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
 
-            MoveMent();
-            StaminaRegeneration();
-            //shooting();
-            if (Input.GetKey(KeyCode.L)) HP -= 1;
         
+        MoveMent();
+        StaminaRegeneration();
+        CheckGrounded();
+        Jumping();
 
     }
 
@@ -134,25 +134,21 @@ public class PlayerControl : MonoBehaviour
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
         
-        
-        
         Dash();
         isCrawling();
+
         Movement = Movement.normalized * moveSpeed;
         character.Move (Movement * Time.deltaTime);
-       // character.Move(Vector3.down * 0.8f * Time.deltaTime);
+        // character.Move(Vector3.down * 0.8f * Time.deltaTime);
+        
 
-        CheckGrounded();
-        Jumping();
-
-       // character.Move(Vertical * Time.deltaTime);
-
+       // character.Move(Vertical * Time.deltaTime
         return;
     }
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f,LayerMask.GetMask("Wall"));
-        Debug.Log(isGrounded);
+        Debug.Log("isGrounded : "+isGrounded);
         if (!isGrounded) rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
         if (isGrounded)
         {

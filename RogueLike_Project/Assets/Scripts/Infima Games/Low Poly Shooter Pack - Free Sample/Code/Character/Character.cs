@@ -442,16 +442,19 @@ namespace InfimaGames.LowPolyShooterPack
 				equippedWeaponSkill = equippedWeapon.GetComponent<WeaponSkillManager>();
 			else equippedWeaponSkill = null;
 
-			if (inventory.GetEquippedIndex() == 2) IsMeleeWeaponActive(true);
-			else IsMeleeWeaponActive(false);
 			
 		}
+        public void Exchange(WeaponBehaviour otherWeapon)
+        {
+            int currentEquippedIndex = inventory.GetEquippedIndex();
+			equippedWeapon.enabled = false;
+          //  Destroy(equippedWeapon.gameObject);
+			inventory.Init(currentEquippedIndex);
+			RefreshWeaponSetup();
+			Equip(currentEquippedIndex);
+            return;
+        }
 
-		public override void IsMeleeWeaponActive(bool activation)
-		{
-			if (activation) knifeActive = true;
-			else knifeActive = false;
-		}
 
 		private void FireEmpty()
 		{

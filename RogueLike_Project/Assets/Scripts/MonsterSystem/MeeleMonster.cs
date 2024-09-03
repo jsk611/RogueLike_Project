@@ -90,7 +90,7 @@ public class MeeleMonster : MonsterBase
     private IEnumerator ATTACK()
     {
 
-        if (target != null && nmAgent.remainingDistance <= attackRange)
+        if (target != null && Vector3.Distance(target.transform.position,transform.position) <= attackRange+1)
         {
             target.GetComponent<PlayerStatus>().DecreaseHealth(damage * monsterStatus.CalculateCriticalHit());
             StartCoroutine(Crowd_Control(target));

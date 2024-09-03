@@ -56,9 +56,7 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private void OnSetActiveKnife(int active)
 		{
-			if (playerCharacter != null)
-				if (active != 0) playerCharacter.IsMeleeWeaponActive(true);
-				else playerCharacter.IsMeleeWeaponActive(false);
+		
 		}
 		
 		/// <summary>

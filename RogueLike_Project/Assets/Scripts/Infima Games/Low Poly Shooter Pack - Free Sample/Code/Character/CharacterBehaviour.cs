@@ -90,7 +90,6 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         public abstract void FillAmmunition(int amount);
 
-        public abstract void IsMeleeWeaponActive(bool activation);
 
         /// <summary>
         /// Sets the equipped weapon's magazine to be active or inactive!

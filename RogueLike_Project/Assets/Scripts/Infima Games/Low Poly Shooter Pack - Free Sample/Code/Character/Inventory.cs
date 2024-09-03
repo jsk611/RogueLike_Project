@@ -1,6 +1,7 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -93,6 +94,8 @@ namespace InfimaGames.LowPolyShooterPack
             //Return.
             return newIndex;
         }
+
+
 
         public override WeaponBehaviour GetEquipped() => equipped;
         public override int GetEquippedIndex() => equippedIndex;
