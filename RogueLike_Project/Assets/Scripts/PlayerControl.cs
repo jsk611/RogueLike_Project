@@ -11,11 +11,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 
-// ???? ?? time ?????? ???????? ?????? ???? ?? ????? ???? ???????? ???????? ???????
+// 게임 내 time 관리를 플레이어 쪽에서 하는 게 맞나? 게임 매니저를 만들어야 하는가?
 
 /* WASD
- * SHIFT ??????
- * CTRL ????????
+ * SHIFT 달리기
+ * CTRL 웅크리기
  * RIFLE, PISTOL, origin weapons...
  * 
  */
@@ -79,10 +79,13 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+
             MoveMent();
             StaminaRegeneration();
             //shooting();
             if (Input.GetKey(KeyCode.L)) HP -= 1;
+        
+
     }
 
     void LateUpdate()
@@ -90,10 +93,10 @@ public class PlayerControl : MonoBehaviour
         if(transform.parent != null)
         {
             Transform parentTransform = transform.parent.transform;
-            // ?????? ???????? ??????????.
+            // 부모의 스케일을 추적합니다.
             Vector3 parentScale = parentTransform.localScale;
 
-            // ?????? ?????? ?????? ???? ?????? ???? ???????? ??????????.
+            // 부모의 스케일 변화에 따라 자식의 로컬 스케일을 조정합니다.
             Vector3 currentWorldScale = transform.lossyScale;
             Vector3 scaleRatio = new Vector3(
                 initialWorldScale.x / currentWorldScale.x,
@@ -122,12 +125,16 @@ public class PlayerControl : MonoBehaviour
 
     //}
 
+
+
     private void MoveMent()
     {
         moveSpeed = characterStatus.GetMovementSpeed();
         var h = Input.GetAxisRaw("Horizontal") * transform.right;
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
+        
+        
         
         Dash();
         isCrawling();
@@ -142,7 +149,6 @@ public class PlayerControl : MonoBehaviour
 
         return;
     }
-
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f,LayerMask.GetMask("Wall"));
@@ -155,7 +161,6 @@ public class PlayerControl : MonoBehaviour
         }
         return isGrounded;
     }
-
     private void Dash()
     {
         if (dashCool > 0.15f && !dashOver)
@@ -231,17 +236,17 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    // ?????? ?????? ??
+    // 발판과 충돌할 때
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log(hit.gameObject.name);
         if (hit.gameObject.CompareTag("Wall") && hit.transform != transform.parent)
         {
-            transform.SetParent(hit.transform); // ?????????? ?????? ???????? ????
+            transform.SetParent(hit.transform); // 플레이어를 발판의 자식으로 설정
         }
         else if(!hit.gameObject.CompareTag("Wall"))
         {
-            transform.SetParent(originalParent); // ???? ?????? ????
+            transform.SetParent(originalParent); // 원래 부모로 복원
         }
     }
 

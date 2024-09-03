@@ -357,15 +357,12 @@ namespace InfimaGames.LowPolyShooterPack
 			//Play firing animation.
 			const string stateName = "Fire";
 			characterAnimator.CrossFade(stateName, 0.05f, layerOverlay, 0);
-
-			UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
 		}
 
 		private void PlayReloadAnimation()
 		{
 			#region Animation
 
-			UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
 
 			//Get the name of the animation state to play, which depends on weapon settings, and ammunition!
 			string stateName = equippedWeapon.HasAmmunition() ? "Reload" : "Reload Empty";
@@ -906,7 +903,6 @@ namespace InfimaGames.LowPolyShooterPack
 			
 				case { phase: InputActionPhase.Performed}:
 					int nextIndex = int.Parse(context.control.name)-1;
-					UIManager.instance.Swapping(nextIndex);
 
 					if (CanChangeWeapon() && (nextIndex != inventory.GetEquippedIndex()))
 						StartCoroutine(nameof(Equip), nextIndex);
