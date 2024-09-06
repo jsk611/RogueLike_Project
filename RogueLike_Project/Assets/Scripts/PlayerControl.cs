@@ -148,7 +148,7 @@ public class PlayerControl : MonoBehaviour
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.1f,LayerMask.GetMask("Wall"));
-        Debug.Log("isGrounded : "+isGrounded);
+        
         if (!isGrounded) rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
         if (isGrounded)
         {

@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Rendering;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -27,15 +28,17 @@ namespace InfimaGames.LowPolyShooterPack
         
         #region METHODS
         
-        public override void Init(int equippedAtStart = 0)
+        public override void Init(int equippedAtStart)
         {
             //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
-            weapons = GetComponentsInChildren<WeaponBehaviour>(false);
-            
+            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
+
             //Disable all weapons. This makes it easier for us to only activate the one we need.
             foreach (WeaponBehaviour weapon in weapons)
+            {
                 weapon.gameObject.SetActive(false);
-
+                Debug.Log(weapon.name);
+            }
             //Equip.
             Equip(equippedAtStart);
         }
@@ -95,11 +98,25 @@ namespace InfimaGames.LowPolyShooterPack
             return newIndex;
         }
 
+        public override void SwitchWeapons(int index,WeaponBehaviour newWeapon)
+        {
+            //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
+            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
 
+            //Disable all weapons. This makes it easier for us to only activate the one we need.
+            foreach (WeaponBehaviour weapon in weapons)
+            {
+                weapon.gameObject.SetActive(false);
+                Debug.Log(weapon.name);
+            }
+            
+            Equip(index);
+        }
 
         public override WeaponBehaviour GetEquipped() => equipped;
         public override int GetEquippedIndex() => equippedIndex;
 
+        
         #endregion
     }
 }

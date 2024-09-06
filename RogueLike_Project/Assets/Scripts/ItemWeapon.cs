@@ -38,12 +38,11 @@ public class ItemWeapon : MonoBehaviour
             if (Input.GetKey(KeyCode.F) )
             {
                 canExchangeWeapon = false;
-                Debug.Log(character.name);
                 Instantiate(weapon, inventory.transform);
+               
                 character.Exchange(weapon.GetComponent<WeaponBehaviour>());
                 Destroy(gameObject);
             }
-            Debug.Log("Switch weapon?");
             yield return null;
         }
     }

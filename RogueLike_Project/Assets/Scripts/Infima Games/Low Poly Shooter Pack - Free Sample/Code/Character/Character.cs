@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEditor.Experimental.GraphView;
+using Unity.VisualScripting;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -223,7 +224,7 @@ namespace InfimaGames.LowPolyShooterPack
 			characterKinematics = GetComponent<CharacterKinematics>();
 
 			//Initialize Inventory.
-			inventory.Init();
+			inventory.Init(0);
 
 			//Refresh!
 			RefreshWeaponSetup();
@@ -438,8 +439,8 @@ namespace InfimaGames.LowPolyShooterPack
 			//Get equipped magazine. We need this one for its settings!
 			equippedWeaponMagazine = weaponAttachmentManager.GetEquippedMagazine();
 
-			if (equippedWeapon.GetComponent<WeaponSkillManager>() != null)
-				equippedWeaponSkill = equippedWeapon.GetComponent<WeaponSkillManager>();
+			if (equippedWeapon.TryGetComponent<WeaponSkillManager>(out WeaponSkillManager skill))
+				equippedWeaponSkill = skill;//equippedWeapon.GetComponent<WeaponSkillManager>();
 			else equippedWeaponSkill = null;
 
 			
@@ -447,11 +448,15 @@ namespace InfimaGames.LowPolyShooterPack
         public void Exchange(WeaponBehaviour otherWeapon)
         {
             int currentEquippedIndex = inventory.GetEquippedIndex();
-			equippedWeapon.enabled = false;
-          //  Destroy(equippedWeapon.gameObject);
-			inventory.Init(currentEquippedIndex);
-			RefreshWeaponSetup();
-			Equip(currentEquippedIndex);
+			WeaponBehaviour weapontoswitch = equippedWeapon;
+			//equippedWeapon.enabled = false;
+			//equippedWeapon.transform.SetParent(null);
+			equippedWeapon.transform.SetParent(null);
+			
+			inventory.SwitchWeapons(currentEquippedIndex,otherWeapon);
+			//inventory.SwitchWeapons(currentEquippedIndex,otherWeapon);
+			StartCoroutine(nameof(Equip), inventory.GetLastIndex());
+			Destroy(equippedWeapon);
             return;
         }
 
