@@ -1,5 +1,6 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Rendering;
@@ -24,6 +25,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private int equippedIndex = -1;
 
+        public int maxInventorySize = 2;
         #endregion
         
         #region METHODS
@@ -31,13 +33,12 @@ namespace InfimaGames.LowPolyShooterPack
         public override void Init(int equippedAtStart)
         {
             //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
-            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
+            weapons =  GetComponentsInChildren<WeaponBehaviour>(true);
 
             //Disable all weapons. This makes it easier for us to only activate the one we need.
             foreach (WeaponBehaviour weapon in weapons)
             {
                 weapon.gameObject.SetActive(false);
-                Debug.Log(weapon.name);
             }
             //Equip.
             Equip(equippedAtStart);
@@ -47,7 +48,10 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //If we have no weapons, we can't really equip anything.
             if (weapons == null)
+            {
+                Debug.Log("null equip");
                 return equipped;
+            }
             
             //The index needs to be within the array's bounds.
             if (index > weapons.Length - 1)
@@ -55,8 +59,9 @@ namespace InfimaGames.LowPolyShooterPack
 
             //No point in allowing equipping the already-equipped weapon.
             if (equippedIndex == index)
+            {
                 return equipped;
-            
+            }
             //Disable the currently equipped weapon, if we have one.
             if (equipped != null)
                 equipped.gameObject.SetActive(false);
@@ -71,7 +76,30 @@ namespace InfimaGames.LowPolyShooterPack
             //Return.
             return equipped;
         }
-        
+
+        public WeaponBehaviour ExcahngeEquip(int index)
+        {
+            //If we have no weapons, we can't really equip anything.
+            if (weapons == null)
+            {
+                Debug.Log("null equip");
+                return equipped;
+            }
+
+            if (equipped != null)
+                equipped.gameObject.SetActive(false);
+
+            //Update index.
+            equippedIndex = index;
+            //Update equipped.
+            equipped = weapons[equippedIndex];
+            //Activate the newly-equipped weapon.
+            equipped.gameObject.SetActive(true);
+
+            //Return.
+            return equipped;
+        }
+
         #endregion
 
         #region Getters
@@ -81,7 +109,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Get last index with wrap around.
             int newIndex = equippedIndex - 1;
             if (newIndex < 0)
-                newIndex = weapons.Length - 1;
+                newIndex = maxInventorySize - 1;
 
             //Return.
             return newIndex;
@@ -91,26 +119,28 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Get next index with wrap around.
             int newIndex = equippedIndex + 1;
-            if (newIndex > weapons.Length - 1)
+            if (newIndex > maxInventorySize - 1)
                 newIndex = 0;
 
             //Return.
             return newIndex;
         }
 
-        public override void SwitchWeapons(int index,WeaponBehaviour newWeapon)
+        public override void SwitchWeapons(int currentindex,WeaponBehaviour deletedWeapon,WeaponBehaviour newWeapon)
         {
             //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
             weapons = GetComponentsInChildren<WeaponBehaviour>(true);
 
             //Disable all weapons. This makes it easier for us to only activate the one we need.
-            foreach (WeaponBehaviour weapon in weapons)
+            for (int i =0; i<maxInventorySize; i++)
             {
-                weapon.gameObject.SetActive(false);
-                Debug.Log(weapon.name);
+                if (weapons[i] == deletedWeapon) weapons[i] = newWeapon;
+                weapons[i].gameObject.SetActive(false);
+                Debug.Log(weapons[i].name); 
             }
             
-            Equip(index);
+            ExcahngeEquip(currentindex);
+
         }
 
         public override WeaponBehaviour GetEquipped() => equipped;

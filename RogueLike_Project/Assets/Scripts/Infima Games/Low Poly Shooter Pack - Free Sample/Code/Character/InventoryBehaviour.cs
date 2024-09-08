@@ -50,7 +50,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// <returns>Weapon that was just equipped.</returns>
         public abstract WeaponBehaviour Equip(int index);
 
-        public abstract void SwitchWeapons(int index, WeaponBehaviour newWeapon);
+        public abstract void SwitchWeapons(int index,WeaponBehaviour deletedWeapon, WeaponBehaviour newWeapon);
 
         #endregion
     }

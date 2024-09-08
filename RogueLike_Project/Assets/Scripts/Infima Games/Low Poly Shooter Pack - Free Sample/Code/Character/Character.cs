@@ -415,6 +415,8 @@ namespace InfimaGames.LowPolyShooterPack
 			inventory.Equip(index);
 			//Refresh.
 			RefreshWeaponSetup();
+
+			Debug.Log("character equip : "+equippedWeapon);
 		}
 
 		/// <summary>
@@ -426,20 +428,24 @@ namespace InfimaGames.LowPolyShooterPack
 			if ((equippedWeapon = inventory.GetEquipped()) == null)
 				return;
 			
-			//Update Animator Controller. We do this to update all animations to a specific weapon's set.
-			characterAnimator.runtimeAnimatorController = equippedWeapon.GetAnimatorController();
+            
+            //Update Animator Controller. We do this to update all animations to a specific weapon's set.
+            characterAnimator.runtimeAnimatorController = equippedWeapon.GetAnimatorController();
 
 			//Get the attachment manager so we can use it to get all the attachments!
 			weaponAttachmentManager = equippedWeapon.GetAttachmentManager();
-			if (weaponAttachmentManager == null) 
+			weaponAttachmentManager = equippedWeapon.GetComponent<WeaponAttachmentManager>();
+			if (weaponAttachmentManager == null)
+			{
+				Debug.Log("refresh error");
 				return;
-			
+			}
 			//Get equipped scope. We need this one for its settings!
 			equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
 			//Get equipped magazine. We need this one for its settings!
 			equippedWeaponMagazine = weaponAttachmentManager.GetEquippedMagazine();
-
-			if (equippedWeapon.TryGetComponent<WeaponSkillManager>(out WeaponSkillManager skill))
+            Debug.Log("refresh equipped : +" + equippedWeapon.name);
+            if (equippedWeapon.TryGetComponent<WeaponSkillManager>(out WeaponSkillManager skill))
 				equippedWeaponSkill = skill;//equippedWeapon.GetComponent<WeaponSkillManager>();
 			else equippedWeaponSkill = null;
 
@@ -451,12 +457,13 @@ namespace InfimaGames.LowPolyShooterPack
 			WeaponBehaviour weapontoswitch = equippedWeapon;
 			//equippedWeapon.enabled = false;
 			//equippedWeapon.transform.SetParent(null);
-			equippedWeapon.transform.SetParent(null);
 			
-			inventory.SwitchWeapons(currentEquippedIndex,otherWeapon);
-			//inventory.SwitchWeapons(currentEquippedIndex,otherWeapon);
-			StartCoroutine(nameof(Equip), inventory.GetLastIndex());
-			Destroy(equippedWeapon);
+			
+			
+			inventory.SwitchWeapons(currentEquippedIndex,equippedWeapon,otherWeapon);
+			StartCoroutine(nameof(Equip), currentEquippedIndex);
+			
+			//Destroy(equippedWeapon.gameObject);
             return;
         }
 
