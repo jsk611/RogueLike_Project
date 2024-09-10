@@ -10,6 +10,7 @@ public class WaveManager : MonoBehaviour
     int mapSize;
 
     [SerializeField] EnemyCountData enemyCountData;
+    [SerializeField] PlayerPositionData playerPositionData;
     bool nextWaveTrigger = false;
     public bool NextWaveTrigger
     {
@@ -133,10 +134,12 @@ public class WaveManager : MonoBehaviour
     IEnumerator Maintenance()
     {
         tileManager.InitializeArray(4);
-        tileManager.MakeMapByCSV(jeongbiMapPath);
-        yield return tileManager.MoveTilesByArrayByWave(15,15,3,1,0);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        Vector2Int stagePos = tileManager.MakeCenteredMapFromCSV(jeongbiMapPath, playerPos.x, playerPos.y);
+        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 3,1,0);
         jeongbiStage.SetActive(true);
-
+        jeongbiStage.transform.position = tileManager.GetTiles[stagePos.y, stagePos.x].transform.position;
+        jeongbiStage.transform.position = new Vector3(jeongbiStage.transform.position.x, 0, jeongbiStage.transform.position.z);
         //플레이어 상호작용 코드 필요
 
         while (!nextWaveTrigger) 
@@ -147,7 +150,8 @@ public class WaveManager : MonoBehaviour
         nextWaveTrigger= false;
         tileManager.InitializeArray(4);
         jeongbiStage.SetActive(false);
-        yield return tileManager.MoveTilesByArrayByWave(15,8,3,1,0);
+        playerPos = playerPositionData.playerTilePosition;
+        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 3,1,0);
     }
     IEnumerator Wave1()
     {

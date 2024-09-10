@@ -56,6 +56,7 @@ public class TileManager : MonoBehaviour
             for (int j = 0; j < mapSize; j++)
             {
                 tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0, j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
+                tiles[i,j].gameObject.name = j.ToString() + "," + i.ToString();
             }
         }
     }
@@ -110,7 +111,7 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-    public void MakeMapByCSV(string path)
+    public void MakeMapByCSV(string path, int start_x = 0, int start_y = 0)
     {
         float[,] csvMap = CTA.CSVFileToArray(path);
         int csvMapSizeX = csvMap.GetLength(1);
@@ -119,11 +120,25 @@ public class TileManager : MonoBehaviour
         {
             for (int y = 0; y < csvMapSizeY; y++)
             {
-                tileMap[y,x] = csvMap[y,x];
+                tileMap[start_y + y,start_x + x] = csvMap[y,x];
             }
         }
 
     }
+
+    public Vector2Int MakeCenteredMapFromCSV(string path, int player_x, int player_y)
+    {
+        int size = CTA.CSVFileToArray(path).GetLength(0);
+        
+        int improved_x = player_x - size/2 >= 0 ? player_x - size / 2 : 0;
+        int improved_y = player_y - size/2 >= 0 ? player_y - size / 2 : 0;
+        Debug.Log(size);
+        MakeMapByCSV(path, improved_x, improved_y);
+
+        return new Vector2Int(improved_x, improved_y);
+    }
+
+
     public void MakeRandomWall(int numOfChanging)
     {
         List<Vector2> posList = new List<Vector2>();

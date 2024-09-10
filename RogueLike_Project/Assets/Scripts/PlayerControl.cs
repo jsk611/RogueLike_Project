@@ -56,6 +56,7 @@ public class PlayerControl : MonoBehaviour
 
     Transform originalParent;
     Vector3 initialWorldScale;
+    [SerializeField] PlayerPositionData positionData;
     // Start is called before the first frame update
     void Start()
     {
@@ -239,6 +240,8 @@ public class PlayerControl : MonoBehaviour
         if (hit.gameObject.CompareTag("Wall") && hit.transform != transform.parent)
         {
             transform.SetParent(hit.transform); // 플레이어를 발판의 자식으로 설정
+            string[] tilePos = hit.gameObject.name.Split(',');
+            if(tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
         }
         else if(!hit.gameObject.CompareTag("Wall"))
         {
