@@ -435,7 +435,6 @@ namespace InfimaGames.LowPolyShooterPack
             inventory.Equip(index);
             RefreshWeaponSetup();
 
-            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(),equippedWeapon.GetAmmunitionTotal());
         }
 
         /// <summary>
