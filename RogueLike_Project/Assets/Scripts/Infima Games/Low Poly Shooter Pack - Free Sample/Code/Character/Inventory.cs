@@ -10,7 +10,7 @@ namespace InfimaGames.LowPolyShooterPack
     public class Inventory : InventoryBehaviour
     {
         #region FIELDS
-
+        
         /// <summary>
         /// Array of all weapons. These are gotten in the order that they are parented to this object.
         /// </summary>
@@ -36,9 +36,9 @@ namespace InfimaGames.LowPolyShooterPack
             weapons = GetComponentsInChildren<WeaponBehaviour>(true);
 
             //Disable all weapons. This makes it easier for us to only activate the one we need.
-            foreach (WeaponBehaviour weapon in weapons)
+            for (int i =0; i<maxInventorySize;i++)
             {
-                weapon.gameObject.SetActive(false);
+                weapons[i].gameObject.SetActive(false);
             }
             //Equip.
             Equip(equippedAtStart);

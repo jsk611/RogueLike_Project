@@ -19,8 +19,6 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
 
-        curAmmo = new Text[2];
-        maxAmmo = new Text[2];
     }
 
     private void Start()
@@ -59,9 +57,14 @@ public class UIManager : MonoBehaviour
     }
     public void AmmoTextReset(int cur, int max)
     {
-        
         curammo.text = cur.ToString();
         maxammo.text = max.ToString();
+    }
+
+    public void Init(int index,int cur, int max)
+    {
+        curAmmo[index].text = cur.ToString();
+        maxAmmo[index].text = max.ToString();
     }
 
     public Text dnaText;
