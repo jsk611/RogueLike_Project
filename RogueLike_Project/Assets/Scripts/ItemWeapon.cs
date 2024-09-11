@@ -29,21 +29,25 @@ public class ItemWeapon : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
-            StopCoroutine("ExchangeWeapon");    
+            StopCoroutine("ExchangeWeapon");
     }
     private IEnumerator ExchangeWeapon()
     {
         while (canExchangeWeapon)
         {
-            if (Input.GetKey(KeyCode.F) )
+            if (Input.GetKey(KeyCode.F))
             {
                 canExchangeWeapon = false;
-                Instantiate(weapon, inventory.transform);
-               
+                GameObject weaponToSwitch = Instantiate(weapon, inventory.transform);
+                int indexToSwitch = inventory.GetEquippedIndex();
+                weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
+
                 character.Exchange(weapon.GetComponent<WeaponBehaviour>());
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
             yield return null;
         }
     }
 }
+
+

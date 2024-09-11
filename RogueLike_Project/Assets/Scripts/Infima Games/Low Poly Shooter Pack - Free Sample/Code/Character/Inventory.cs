@@ -10,12 +10,12 @@ namespace InfimaGames.LowPolyShooterPack
     public class Inventory : InventoryBehaviour
     {
         #region FIELDS
-        
+
         /// <summary>
         /// Array of all weapons. These are gotten in the order that they are parented to this object.
         /// </summary>
         private WeaponBehaviour[] weapons;
-        
+
         /// <summary>
         /// Currently equipped WeaponBehaviour.
         /// </summary>
@@ -27,13 +27,13 @@ namespace InfimaGames.LowPolyShooterPack
 
         public int maxInventorySize = 2;
         #endregion
-        
+
         #region METHODS
-        
+
         public override void Init(int equippedAtStart)
         {
             //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
-            weapons =  GetComponentsInChildren<WeaponBehaviour>(true);
+            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
 
             //Disable all weapons. This makes it easier for us to only activate the one we need.
             foreach (WeaponBehaviour weapon in weapons)
@@ -49,19 +49,15 @@ namespace InfimaGames.LowPolyShooterPack
             //If we have no weapons, we can't really equip anything.
             if (weapons == null)
             {
-                Debug.Log("null equip");
                 return equipped;
             }
-            
+
             //The index needs to be within the array's bounds.
             if (index > weapons.Length - 1)
                 return equipped;
 
             //No point in allowing equipping the already-equipped weapon.
-            if (equippedIndex == index)
-            {
-                return equipped;
-            }
+
             //Disable the currently equipped weapon, if we have one.
             if (equipped != null)
                 equipped.gameObject.SetActive(false);
@@ -126,19 +122,18 @@ namespace InfimaGames.LowPolyShooterPack
             return newIndex;
         }
 
-        public override void SwitchWeapons(int currentindex,WeaponBehaviour deletedWeapon,WeaponBehaviour newWeapon)
+        public override void SwitchWeapons(int currentindex, WeaponBehaviour deletedWeapon, WeaponBehaviour newWeapon)
         {
             //Cache all weapons. Beware that weapons need to be parented to the object this component is on!
             weapons = GetComponentsInChildren<WeaponBehaviour>(true);
-
             //Disable all weapons. This makes it easier for us to only activate the one we need.
-            for (int i =0; i<maxInventorySize; i++)
+            foreach (WeaponBehaviour weapon in weapons)
             {
-                if (weapons[i] == deletedWeapon) weapons[i] = newWeapon;
-                weapons[i].gameObject.SetActive(false);
-                Debug.Log(weapons[i].name); 
+                Debug.Log(weapon.name);
+                weapon.gameObject.SetActive(false);
             }
-            
+            Destroy(deletedWeapon.gameObject);
+
             ExcahngeEquip(currentindex);
 
         }
@@ -146,7 +141,8 @@ namespace InfimaGames.LowPolyShooterPack
         public override WeaponBehaviour GetEquipped() => equipped;
         public override int GetEquippedIndex() => equippedIndex;
 
-        
+
         #endregion
     }
 }
+
