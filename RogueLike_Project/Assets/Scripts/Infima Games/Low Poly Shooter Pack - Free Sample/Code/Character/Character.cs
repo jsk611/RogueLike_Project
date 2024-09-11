@@ -239,9 +239,9 @@ namespace InfimaGames.LowPolyShooterPack
             layerOverlay = characterAnimator.GetLayerIndex("Layer Overlay");
 
             characterStatus = GetComponent<StatusBehaviour>();
-
+            //UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
         }
-
+        
         protected override void Update()
         {
             //Match Aim.
@@ -421,9 +421,12 @@ namespace InfimaGames.LowPolyShooterPack
             //Refresh.
             RefreshWeaponSetup();
 
+            yield return new WaitForEndOfFrame();
+            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
         private IEnumerator ExchangeEquip(int index, WeaponBehaviour otherWeapon)
         {
+
             if (!holstered)
             {
                 SetHolstered(holstering = true);
@@ -435,6 +438,8 @@ namespace InfimaGames.LowPolyShooterPack
             inventory.Equip(index);
             RefreshWeaponSetup();
 
+            yield return new WaitForEndOfFrame();
+            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
 
         /// <summary>
