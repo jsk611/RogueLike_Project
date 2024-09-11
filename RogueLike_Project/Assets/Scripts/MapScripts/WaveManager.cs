@@ -250,7 +250,7 @@ public class WaveManager : MonoBehaviour
         while(enemyCountData.enemyCount > 0)
         {
             //罚待栏肺 备港 积己
-            tileManager.MakeRandomHole(Random.Range(10,30));
+            tileManager.MakeRandomHole(Random.Range(100,200));
             yield return StartCoroutine(tileManager.MoveTilesByArray());
             yield return new WaitForSeconds(5f);
         }

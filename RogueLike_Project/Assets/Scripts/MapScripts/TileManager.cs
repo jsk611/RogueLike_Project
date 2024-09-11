@@ -132,6 +132,9 @@ public class TileManager : MonoBehaviour
         
         int improved_x = player_x - size/2 >= 0 ? player_x - size / 2 : 0;
         int improved_y = player_y - size/2 >= 0 ? player_y - size / 2 : 0;
+
+        if(improved_x > mapSize - size) improved_x = mapSize - size;
+        if(improved_y > mapSize - size) improved_y = mapSize - size;
         Debug.Log(size);
         MakeMapByCSV(path, improved_x, improved_y);
 
