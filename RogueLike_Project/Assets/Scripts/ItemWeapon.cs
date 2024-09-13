@@ -12,6 +12,14 @@ public class ItemWeapon : MonoBehaviour
 
     [Header("Weapon Prefab")]
     [SerializeField] GameObject weapon;
+
+    [Header("Weapon Position")]
+    [SerializeField]
+    Vector3 Position;
+
+    [Header("Weapon Rotationi")]
+    [SerializeField]
+    Quaternion Rotation;
     // Start is called before the first frame update    
     void Start()
     {
@@ -39,6 +47,8 @@ public class ItemWeapon : MonoBehaviour
             {
                 canExchangeWeapon = false;
                 GameObject weaponToSwitch = Instantiate(weapon, inventory.transform);
+                weaponToSwitch.transform.localPosition = Position;
+                weaponToSwitch.transform.localRotation = Rotation;
                 int indexToSwitch = inventory.GetEquippedIndex();
                 weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
 
