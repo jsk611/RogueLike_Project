@@ -61,11 +61,7 @@ public class UIManager : MonoBehaviour
         maxammo.text = max.ToString();
     }
 
-    public void Init(int index,int cur, int max)
-    {
-        curAmmo[index].text = cur.ToString();
-        maxAmmo[index].text = max.ToString();
-    }
+
 
     public Text dnaText;
     public void CoinReset(int dna)
