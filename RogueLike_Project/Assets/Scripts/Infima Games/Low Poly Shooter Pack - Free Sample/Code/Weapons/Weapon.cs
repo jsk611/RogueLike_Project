@@ -237,7 +237,7 @@ namespace InfimaGames.LowPolyShooterPack
             ammunitionCurrent = Mathf.Clamp(ammunitionCurrent - 1, 0, magazineBehaviour.GetAmmunitionTotal());
 
             //Play all muzzle effects.
-            muzzleBehaviour.Effect();
+           
 
             //Determine the rotation that we want to shoot our projectile in.
             Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000.0f - muzzleSocket.position);
@@ -251,6 +251,8 @@ namespace InfimaGames.LowPolyShooterPack
             GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation);
             //Add velocity to the projectile.
             projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
+
+             muzzleBehaviour.Effect();
         }
 
         public override void FillAmmunition(int amount)
@@ -268,23 +270,7 @@ namespace InfimaGames.LowPolyShooterPack
                 Instantiate(prefabCasing, socketEjection.position, socketEjection.rotation);
         }
 
-        public override void ForceAwake()
-        {
-            animator = GetComponent<Animator>();
-            //Get Attachment Manager.
-            attachmentManager = GetComponent<WeaponAttachmentManagerBehaviour>();
 
-            //Cache the game mode service. We only need this right here, but we'll cache it in case we ever need it again.
-            gameModeService = ServiceLocator.Current.Get<IGameModeService>();
-            //Cache the player character.
-            characterBehaviour = gameModeService.GetPlayerCharacter();
-            //Cache the world camera. We use this in line traces.
-            playerCamera = characterBehaviour.GetCameraWorld().transform;
-            //Cache the character status
-            playerStatus = characterBehaviour.GetComponent<PlayerStatus>();
-
-
-        }
 
         #endregion
     }

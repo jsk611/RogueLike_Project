@@ -939,10 +939,13 @@ namespace InfimaGames.LowPolyShooterPack
 
                 case { phase: InputActionPhase.Performed }:
                     int nextIndex = int.Parse(context.control.name) - 1;
-                    UIManager.instance.Swapping(nextIndex);
+                    
 
                     if (CanChangeWeapon() && (nextIndex != inventory.GetEquippedIndex()))
+                    {
+                        UIManager.instance.Swapping(nextIndex);
                         StartCoroutine(nameof(Equip), nextIndex);
+                    }
                     break;
             }
         }
