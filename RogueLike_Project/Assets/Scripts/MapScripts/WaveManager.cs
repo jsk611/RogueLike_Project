@@ -262,7 +262,8 @@ public class WaveManager : MonoBehaviour
     {
         Debug.Log("Wave 6");
         tileManager.InitializeArray();
-        tileManager.MakeMapByCSV(mapPaths[0]);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[0], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -284,7 +285,8 @@ public class WaveManager : MonoBehaviour
     {
         Debug.Log("Wave 7");
         tileManager.InitializeArray();
-        tileManager.MakeMapByCSV(mapPaths[1]);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[1], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -302,7 +304,8 @@ public class WaveManager : MonoBehaviour
     {
         Debug.Log("Wave 8");
         tileManager.InitializeArray();
-        tileManager.MakeMapByCSV(mapPaths[2]);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[2], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 

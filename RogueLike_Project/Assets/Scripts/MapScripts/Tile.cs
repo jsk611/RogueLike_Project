@@ -95,20 +95,40 @@ public class Tile : MonoBehaviour
         transform.localScale = newSize;
     }
 
-    public void DestroyTile(float duration = 1f)
+    public void DestroyTile(float duration = 2f)
     {
         StartCoroutine(SetActiveFalseCoroutine(duration));
     }
 
-    public void CreateTile()
+    public void CreateTile() //파동형으로 생성시
     {
         gameObject.SetActive(true);
         isSetActive = true;
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
     }
 
+    public void CreateTile(float size_y, float duration = 3f) //기본 생성시
+    {
+        gameObject.SetActive(true);
+        isSetActive = true;
+        StartCoroutine(TileCreating(size_y, duration));
+    }
+    IEnumerator TileCreating(float size_y, float duration = 3f)
+    {
+
+        transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
+        StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+        if(duration > 0f)
+        {
+            yield return StartCoroutine(MoveCoroutine(size_y / 2f + 0.5f, duration - 0.3f));
+            StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
+        }
+        else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
+
+    }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
+        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.3f));
         yield return StartCoroutine(MoveCoroutine(-20f, duration)); 
         gameObject.SetActive(false);
         isSetActive = false;
