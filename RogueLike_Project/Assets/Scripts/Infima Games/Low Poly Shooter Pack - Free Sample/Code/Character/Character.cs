@@ -927,7 +927,10 @@ namespace InfimaGames.LowPolyShooterPack
 
                     //Make sure we're allowed to change, and also that we're not using the same index, otherwise weird things happen!
                     if (CanChangeWeapon() && (indexCurrent != indexNext))
+                    {
+                        UIManager.instance.Swapping(indexNext);
                         StartCoroutine(nameof(Equip), indexNext);
+                    }
                     break;
             }
         }
