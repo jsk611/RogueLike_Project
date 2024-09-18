@@ -251,8 +251,6 @@ namespace InfimaGames.LowPolyShooterPack
 
             crouching = characterAnimator.GetBool("Crouch");
 
-
-
             //Holding the firing button.
             if (holdingButtonFire)
             {
@@ -359,7 +357,7 @@ namespace InfimaGames.LowPolyShooterPack
             const string stateName = "Fire";
             characterAnimator.CrossFade(stateName, 0.05f, layerOverlay, 0);
 
-            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
+            UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
 
         private void PlayReloadAnimation()
@@ -381,7 +379,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Reload.
             equippedWeapon.Reload();
 
-            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
+            UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
         }
 
         /// <summary>
@@ -422,7 +420,7 @@ namespace InfimaGames.LowPolyShooterPack
             RefreshWeaponSetup();
 
             yield return new WaitForEndOfFrame();
-            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
+            UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
         private IEnumerator ExchangeEquip(int index, WeaponBehaviour otherWeapon)
         {
@@ -439,7 +437,7 @@ namespace InfimaGames.LowPolyShooterPack
             RefreshWeaponSetup();
 
             yield return new WaitForEndOfFrame();
-            UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
+            UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
 
         /// <summary>
@@ -792,7 +790,6 @@ namespace InfimaGames.LowPolyShooterPack
             switch (context)
             {
                 case { phase: InputActionPhase.Performed }:
-                    Debug.Log("skillused");
                     PlayAnimationSkill();
 
                     break;
@@ -1046,6 +1043,11 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Stop Using SKill
             usingSkill = false;
+        }
+
+        public override void EquippingSword(bool Bool)
+        {
+            knifeActive = Bool;
         }
 
 

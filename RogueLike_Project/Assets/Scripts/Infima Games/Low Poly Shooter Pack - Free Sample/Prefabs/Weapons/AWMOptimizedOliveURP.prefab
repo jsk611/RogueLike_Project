@@ -1025,14 +1025,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   automatic: 0
   projectileImpulse: 400
-  roundsPerSeconds: 200
+  roundsPerSeconds: 1
   mask:
     serializedVersion: 2
     m_Bits: 1
   maximumDistance: 500
   socketEjection: {fileID: 4419723567681200437, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
     type: 3}
-  prefabCasing: {fileID: 1492315059354262, guid: b1995a53a949fac4db5722fc1df9efe4,
+  prefabCasing: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
     type: 3}
   prefabProjectile: {fileID: 1086664671600574, guid: 5953171a59c27394e9ad5cbb564affa8,
     type: 3}
@@ -1940,5 +1940,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965555d451af4a2299927c4e3dd7ee09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammunitionTotal: 30
+  ammunitionTotal: 5
   sprite: {fileID: 21300000, guid: 51d720b69910c244aa44a082bddf0155, type: 3}

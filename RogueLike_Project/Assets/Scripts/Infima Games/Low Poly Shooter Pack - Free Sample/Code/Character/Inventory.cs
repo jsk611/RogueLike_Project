@@ -129,7 +129,6 @@ namespace InfimaGames.LowPolyShooterPack
             //Disable all weapons. This makes it easier for us to only activate the one we need.
             foreach (WeaponBehaviour weapon in weapons)
             {
-                Debug.Log(weapon.name);
                 weapon.gameObject.SetActive(false);
             }
             Destroy(deletedWeapon.gameObject);

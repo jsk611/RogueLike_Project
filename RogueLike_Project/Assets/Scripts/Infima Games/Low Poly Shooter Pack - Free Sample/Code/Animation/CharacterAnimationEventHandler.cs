@@ -56,7 +56,8 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private void OnSetActiveKnife(int active)
 		{
-		
+			if (active == 1) playerCharacter.EquippingSword(true);
+			else playerCharacter.EquippingSword(false);
 		}
 		
 		/// <summary>

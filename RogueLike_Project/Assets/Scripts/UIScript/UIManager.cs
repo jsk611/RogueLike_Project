@@ -55,10 +55,19 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void AmmoTextReset(int cur, int max)
+    public void AmmoTextReset(bool knifeActive,int cur, int max)
     {
-        curammo.text = cur.ToString();
-        maxammo.text = max.ToString();
+        if (!knifeActive)
+        {
+            curammo.text = cur.ToString();
+            maxammo.text = max.ToString();
+        }
+        else
+        {
+            curammo.text = "-";
+            maxammo.text = "-";
+        }    
+
     }
 
 

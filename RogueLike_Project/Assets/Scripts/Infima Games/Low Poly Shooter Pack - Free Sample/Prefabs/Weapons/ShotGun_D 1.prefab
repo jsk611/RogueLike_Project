@@ -341,7 +341,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3483674376679704984}
-  - component: {fileID: 197812025618300878}
+  - component: {fileID: 3986157094119072025}
   - component: {fileID: 7358239485025251818}
   - component: {fileID: 7476680172368670961}
   - component: {fileID: 6799848037598013791}
@@ -377,7 +377,7 @@ Transform:
   - {fileID: 4954779048528833795}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &197812025618300878
+--- !u!114 &3986157094119072025
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -386,19 +386,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4256939380644483874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7170d51de97d79e4fb11d3321667acb0, type: 3}
+  m_Script: {fileID: 11500000, guid: d857d305cdbc3b5468143e1f488dfb15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 0
-  projectileImpulse: 400
-  roundsPerSeconds: 3
+  projectileImpulse: 200
+  roundsPerSeconds: 2
+  pelletAmounts: 10
   mask:
     serializedVersion: 2
     m_Bits: 1
   maximumDistance: 500
-  socketEjection: {fileID: 4419723567681200437, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
-    type: 3}
-  prefabCasing: {fileID: 1492315059354262, guid: b1995a53a949fac4db5722fc1df9efe4,
+  socketEjection: {fileID: 8897128229815599576}
+  prefabCasing: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
     type: 3}
   prefabProjectile: {fileID: 1086664671600574, guid: 5953171a59c27394e9ad5cbb564affa8,
     type: 3}
@@ -1247,7 +1247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965555d451af4a2299927c4e3dd7ee09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammunitionTotal: 30
+  ammunitionTotal: 8
   sprite: {fileID: 21300000, guid: 51d720b69910c244aa44a082bddf0155, type: 3}
 --- !u!4 &6878261435130743496 stripped
 Transform:

@@ -71,7 +71,6 @@ public class Tazer : MonoBehaviour
         while (test < 3)
         {
             test += Time.deltaTime;
-            Debug.Log("SDFf");
             yield return null;
         }
     }

@@ -17,7 +17,7 @@ public class ItemWeapon : MonoBehaviour
     [SerializeField]
     Vector3 Position;
 
-    [Header("Weapon Rotationi")]
+    [Header("Weapon Rotation")]
     [SerializeField]
     Quaternion Rotation;
     // Start is called before the first frame update    

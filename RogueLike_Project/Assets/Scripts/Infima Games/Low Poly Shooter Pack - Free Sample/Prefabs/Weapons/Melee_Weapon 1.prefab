@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   socket: {fileID: 6350139315606865299}
   sprite: {fileID: 0}
-  audioClipFire: {fileID: 0}
+  audioClipFire: {fileID: 8300000, guid: 7e9ee6dc04a5d40d1a5dfc4beb9865e7, type: 3}
   prefabFlashParticles: {fileID: 0}
   flashParticlesCount: 5
   prefabFlashLight: {fileID: 0}
@@ -169,52 +169,52 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.11514664
+      value: 0.017
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.39233
+      value: -0.006
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0053806
+      value: 0.004
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.041616905
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.00000008146034
+      value: -0.8602783
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.0014195929
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: -0.5081214
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 355.811
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 118.78
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 182.29
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   automatic: 0
   projectileImpulse: 400
-  roundsPerSeconds: 200
+  roundsPerSeconds: 3
   mask:
     serializedVersion: 2
     m_Bits: 0
