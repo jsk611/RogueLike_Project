@@ -239,7 +239,7 @@ public class TileManager : MonoBehaviour
 
         //타일 위치 변경
         float radius = 0;
-        float maxRadius = mapSize;
+        float maxRadius = mapSize*1.5f;
         bool[,] eventTriggered = new bool[mapSize, mapSize];
         while (radius < maxRadius)
         {
@@ -269,7 +269,7 @@ public class TileManager : MonoBehaviour
 
                 }
             }
-            radius += maxRadius / 100f;
+            radius += maxRadius / 100;
             yield return new WaitForSeconds(time / 100);
         }
         yield return new WaitForSeconds(1f);
