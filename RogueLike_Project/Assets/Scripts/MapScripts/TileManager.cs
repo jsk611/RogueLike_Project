@@ -57,6 +57,9 @@ public class TileManager : MonoBehaviour
             {
                 tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0, j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
                 tiles[i,j].gameObject.name = j.ToString() + "," + i.ToString();
+                tiles[i, j].isSetActive = false;
+                tiles[i,j].gameObject.SetActive(false);
+
             }
         }
     }

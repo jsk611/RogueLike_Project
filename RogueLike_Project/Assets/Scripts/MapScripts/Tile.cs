@@ -8,7 +8,7 @@ public class Tile : MonoBehaviour
     //[SerializeField] Material defaultMaterial;
     //[SerializeField] Material watchOutMaterial;
     //[SerializeField] Material warningMaterial;
-    bool isSetActive = true;
+    public bool isSetActive = true;
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
