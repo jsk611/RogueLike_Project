@@ -29,11 +29,12 @@ public class ItemWeapon : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && canExchangeWeapon)
             StartCoroutine("ExchangeWeapon");
     }
+    
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.tag == "Player")
@@ -41,11 +42,11 @@ public class ItemWeapon : MonoBehaviour
     }
     private IEnumerator ExchangeWeapon()
     {
-        while (canExchangeWeapon)
-        {
+       
             if (Input.GetKey(KeyCode.F))
             {
                 canExchangeWeapon = false;
+                StartCoroutine(ExchangeCoolTime());
                 GameObject weaponToSwitch = Instantiate(weapon, inventory.transform);
                 weaponToSwitch.transform.localPosition = Position;
                 weaponToSwitch.transform.localRotation = Rotation;
@@ -53,11 +54,15 @@ public class ItemWeapon : MonoBehaviour
                 weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
 
                 character.Exchange(weapon.GetComponent<WeaponBehaviour>());
-                //Destroy(gameObject);
             }
             yield return null;
-        }
     }
+    private IEnumerator ExchangeCoolTime()
+    {
+        yield return new WaitForSeconds(2);
+        canExchangeWeapon = true;
+    }
+    
 }
 
 
