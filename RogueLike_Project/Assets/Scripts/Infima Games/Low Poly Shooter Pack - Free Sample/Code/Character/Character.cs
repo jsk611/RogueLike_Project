@@ -6,6 +6,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEditor.Experimental.GraphView;
 using Unity.VisualScripting;
+//using UnityEngine.UIElements;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -186,6 +187,12 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private bool cursorLocked;
 
+        /// <summary>
+        /// True if character cannot exchange weapon;
+        /// </summary>
+        public bool weaponExchangeLocked;
+        
+
 
 
 
@@ -298,6 +305,8 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override bool IsAiming() => aiming;
         public override bool IsCursorLocked() => cursorLocked;
+
+        public override bool IsWeaponExchangeLocked() => weaponExchangeLocked;
 
         public override bool IsTutorialTextVisible() => tutorialTextVisible;
 
@@ -422,9 +431,10 @@ namespace InfimaGames.LowPolyShooterPack
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
-        private IEnumerator ExchangeEquip(int index, WeaponBehaviour otherWeapon)
+        public IEnumerator ExchangeEquip(WeaponBehaviour otherWeapon)
         {
-
+            int currentEquippedIndex = inventory.GetEquippedIndex();
+           
             if (!holstered)
             {
                 SetHolstered(holstering = true);
@@ -432,13 +442,14 @@ namespace InfimaGames.LowPolyShooterPack
             }
             SetHolstered(false);
             characterAnimator.Play("Unholster", layerHolster, 0);
-            inventory.SwitchWeapons(index, equippedWeapon, otherWeapon);
-            inventory.Equip(index);
+            inventory.SwitchWeapons(currentEquippedIndex, equippedWeapon, otherWeapon);
+            inventory.Equip(currentEquippedIndex);
             RefreshWeaponSetup();
 
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
+        
 
         /// <summary>
         /// Refresh all weapon things to make sure we're all set up!
@@ -472,19 +483,7 @@ namespace InfimaGames.LowPolyShooterPack
 
 
         }
-        public void Exchange(WeaponBehaviour otherWeapon)
-        {
-            int currentEquippedIndex = inventory.GetEquippedIndex();
-            //equippedWeapon.enabled = false;
-            //equippedWeapon.transform.SetParent(null);
-
-
-
-            StartCoroutine(ExchangeEquip(currentEquippedIndex, otherWeapon));
-
-            //Destroy(equippedWeapon.gameObject);
-            return;
-        }
+   
 
 
         private void FireEmpty()
@@ -867,6 +866,18 @@ namespace InfimaGames.LowPolyShooterPack
                     break;
             }
         }
+
+        public void OnTryExchangeWeapon(WeaponBehaviour otherWeapon,Vector3 Position, Quaternion Rotation)
+        {
+            if (!CanChangeWeapon()) return;
+            weaponExchangeLocked = true;
+            GameObject weaponToSwitch = Instantiate(otherWeapon.gameObject, inventory.transform);
+            weaponToSwitch.transform.localPosition = Position;
+            weaponToSwitch.transform.localRotation = Rotation;
+            int indexToSwitch = inventory.GetEquippedIndex();
+            weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
+            StartCoroutine(ExchangeEquip(otherWeapon));
+        }
         /// <summary>
         /// Run. 
         /// </summary>
@@ -1048,6 +1059,11 @@ namespace InfimaGames.LowPolyShooterPack
         public override void EquippingSword(bool Bool)
         {
             knifeActive = Bool;
+        }
+
+        public override void EnableWeaponExchange()
+        {
+            weaponExchangeLocked = false;
         }
 
 

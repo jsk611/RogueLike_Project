@@ -1,5 +1,6 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
+using System.Collections;
 using UnityEngine;
 
 namespace InfimaGames.LowPolyShooterPack
@@ -51,6 +52,7 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract WeaponBehaviour Equip(int index);
 
         public abstract void SwitchWeapons(int index,WeaponBehaviour deletedWeapon, WeaponBehaviour newWeapon);
+
 
         #endregion
     }

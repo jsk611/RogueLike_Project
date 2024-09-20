@@ -64,6 +64,11 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract bool IsCursorLocked();
 
         /// <summary>
+        /// Returns true if character cannot exchange weapon
+        /// </summary>
+        public abstract bool IsWeaponExchangeLocked();
+
+        /// <summary>
         /// Returns true if the tutorial text should be visible on the screen.
         /// </summary>
         public abstract bool IsTutorialTextVisible();
@@ -114,9 +119,12 @@ namespace InfimaGames.LowPolyShooterPack
 
         public abstract void EquippingSword(bool Bool);
 
+        public abstract void EnableWeaponExchange();
 
         public abstract Animator GetPlayerAnimator();
         public abstract Animator GetWeaponAnimator();
+
+        
 
         #endregion
     }

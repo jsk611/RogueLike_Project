@@ -137,6 +137,10 @@ namespace InfimaGames.LowPolyShooterPack
 				playerCharacter.AnimationEndedSKill();
 		}
 
+		private void OnEnableWeaponChange()
+		{
+			playerCharacter.EnableWeaponExchange();
+		}
 		#endregion
 	}   
 }

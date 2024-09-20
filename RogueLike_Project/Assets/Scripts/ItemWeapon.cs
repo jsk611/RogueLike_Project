@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemWeapon : MonoBehaviour
+public class ItemWeapon : ItemWeaponBehaviour
 {
     BoxCollider boxCollider;
     Character character;
     Inventory inventory;
-    bool canExchangeWeapon = true;
 
     [Header("Weapon Prefab")]
     [SerializeField] GameObject weapon;
@@ -43,26 +42,16 @@ public class ItemWeapon : MonoBehaviour
     private IEnumerator ExchangeWeapon()
     {
        
-            if (Input.GetKey(KeyCode.F))
+            if (Input.GetKey(KeyCode.F) && !character.IsWeaponExchangeLocked())
             {
-                canExchangeWeapon = false;
+            
                 StartCoroutine(ExchangeCoolTime());
-                GameObject weaponToSwitch = Instantiate(weapon, inventory.transform);
-                weaponToSwitch.transform.localPosition = Position;
-                weaponToSwitch.transform.localRotation = Rotation;
-                int indexToSwitch = inventory.GetEquippedIndex();
-                weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
-
-                character.Exchange(weapon.GetComponent<WeaponBehaviour>());
+                character.OnTryExchangeWeapon(weapon.GetComponent<WeaponBehaviour>(),Position,Rotation);
             }
             yield return null;
     }
-    private IEnumerator ExchangeCoolTime()
-    {
-        yield return new WaitForSeconds(2);
-        canExchangeWeapon = true;
-    }
     
+
 }
 
 
