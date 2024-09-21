@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemWeapon : ItemWeaponBehaviour
+public class ItemWeapon : MonoBehaviour
 {
     BoxCollider boxCollider;
     Character character;
@@ -30,7 +30,7 @@ public class ItemWeapon : ItemWeaponBehaviour
     // Update is called once per frame
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" && canExchangeWeapon)
+        if (other.gameObject.tag == "Player" && !character.IsWeaponExchangeLocked())
             StartCoroutine("ExchangeWeapon");
     }
     
@@ -41,15 +41,12 @@ public class ItemWeapon : ItemWeaponBehaviour
     }
     private IEnumerator ExchangeWeapon()
     {
-       
-            if (Input.GetKey(KeyCode.F) && !character.IsWeaponExchangeLocked())
-            {
-            
-                StartCoroutine(ExchangeCoolTime());
+            if (Input.GetKey(KeyCode.F))
                 character.OnTryExchangeWeapon(weapon.GetComponent<WeaponBehaviour>(),Position,Rotation);
-            }
+            
             yield return null;
     }
+
     
 
 }

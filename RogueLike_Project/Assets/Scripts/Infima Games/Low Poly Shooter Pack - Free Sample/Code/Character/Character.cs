@@ -872,6 +872,7 @@ namespace InfimaGames.LowPolyShooterPack
             if (!CanChangeWeapon()) return;
             weaponExchangeLocked = true;
             GameObject weaponToSwitch = Instantiate(otherWeapon.gameObject, inventory.transform);
+            weaponToSwitch.SetActive(false);
             weaponToSwitch.transform.localPosition = Position;
             weaponToSwitch.transform.localRotation = Rotation;
             int indexToSwitch = inventory.GetEquippedIndex();
