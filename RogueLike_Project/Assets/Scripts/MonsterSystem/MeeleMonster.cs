@@ -34,7 +34,6 @@ public class MeeleMonster : MonsterBase
         
         while (hp > 0)
         {
-            Debug.Log(state + " state Melee");
             switch (state)
             {
                 case State.IDLE:

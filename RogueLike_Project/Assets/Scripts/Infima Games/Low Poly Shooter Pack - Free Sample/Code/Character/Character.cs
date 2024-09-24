@@ -388,7 +388,6 @@ namespace InfimaGames.LowPolyShooterPack
             //Reload.
             equippedWeapon.Reload();
 
-            UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
         }
 
         /// <summary>
@@ -1037,7 +1036,10 @@ namespace InfimaGames.LowPolyShooterPack
         public override void AnimationEndedReload()
         {
             //Stop reloading!
+
+            UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
             reloading = false;
+            
         }
 
         public override void AnimationEndedInspect()

@@ -34,7 +34,6 @@ public class SniperMonster : MonsterBase
     {
         while (hp > 0)
         {
-            Debug.Log(state + " state");
             yield return StartCoroutine(state.ToString());
         }
     }

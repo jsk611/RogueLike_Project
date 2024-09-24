@@ -27,7 +27,7 @@ public class RangedMonster : MonsterBase
     {
         while (hp > 0)
         {
-            Debug.Log(state + " state Ranged");
+            
             yield return StartCoroutine(state.ToString());
         }
     }

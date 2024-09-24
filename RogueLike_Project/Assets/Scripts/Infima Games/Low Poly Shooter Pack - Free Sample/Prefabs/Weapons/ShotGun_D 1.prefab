@@ -392,7 +392,7 @@ MonoBehaviour:
   automatic: 0
   projectileImpulse: 200
   roundsPerSeconds: 2
-  pelletAmounts: 10
+  pelletAmounts: 9
   mask:
     serializedVersion: 2
     m_Bits: 1

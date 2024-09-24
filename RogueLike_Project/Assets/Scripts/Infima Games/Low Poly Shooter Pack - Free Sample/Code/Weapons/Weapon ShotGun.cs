@@ -261,10 +261,9 @@ namespace InfimaGames.LowPolyShooterPack
       
             for (int i =0; i<pelletAmounts; i++)
             {
-                rotation *= Quaternion.Euler(Random.Range(-2, 2), Random.Range(-2, 2), Random.Range(-2, 2));
-                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position,rotation);
+             
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position,rotation* Quaternion.Euler(i - (pelletAmounts / 2), i - (pelletAmounts / 2), 0));
                 projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
-                
             }
             yield return null;
         }

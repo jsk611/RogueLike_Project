@@ -49,8 +49,9 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			//Notify the character.
 			if(playerCharacter != null)
-				playerCharacter.FillAmmunition(amount);	
-		}
+				playerCharacter.FillAmmunition(amount);
+
+        }
 		/// <summary>
 		/// Sets the character's knife active value. This function is called from an Animation Event.
 		/// </summary>
