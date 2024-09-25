@@ -311,7 +311,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override bool IsTutorialTextVisible() => tutorialTextVisible;
 
         public override Vector2 GetInputMovement() => axisMovement;
-        public override Vector2 GetInputLook() => axisLook;
+        public override Vector2 GetInputLook() => axisLook; 
 
         #endregion
 
@@ -395,8 +395,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private void PlayAnimationSkill()
         {
-            usingSkill = true;
-            equippedWeapon.GetComponent<WeaponSkillManager>().DecreaseSkillCount();
+            if (equippedWeaponSkill != null) equippedWeaponSkill.DecreaseSkillCount();
             equippedWeaponSkill.FireSkill();
             const string stateName = "Skill";
 
@@ -457,21 +456,15 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Make sure we have a weapon. We don't want errors!
             if ((equippedWeapon = inventory.GetEquipped()) == null)
-            {
                 return;
-            }
-
 
             //Update Animator Controller. We do this to update all animations to a specific weapon's set.
             characterAnimator.runtimeAnimatorController = equippedWeapon.GetAnimatorController();
-
             //Get the attachment manager so we can use it to get all the attachments!
             weaponAttachmentManager = equippedWeapon.GetAttachmentManager();
-            weaponAttachmentManager = equippedWeapon.GetComponent<WeaponAttachmentManager>();
             if (weaponAttachmentManager == null)
-            {
                 return;
-            }
+
             //Get equipped scope. We need this one for its settings!
             equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
             //Get equipped magazine. We need this one for its settings!
@@ -479,8 +472,6 @@ namespace InfimaGames.LowPolyShooterPack
             if (equippedWeapon.TryGetComponent<WeaponSkillManager>(out WeaponSkillManager skill))
                 equippedWeaponSkill = skill;//equippedWeapon.GetComponent<WeaponSkillManager>();
             else equippedWeaponSkill = null;
-
-
         }
    
 
@@ -598,7 +589,7 @@ namespace InfimaGames.LowPolyShooterPack
         private bool CanChangeWeapon()
         {
             //Block.
-            if (holstering)
+            if (holstering || holstered)
                 return false;
 
             //Block.
@@ -788,8 +779,8 @@ namespace InfimaGames.LowPolyShooterPack
             switch (context)
             {
                 case { phase: InputActionPhase.Performed }:
+                    usingSkill = true;
                     PlayAnimationSkill();
-
                     break;
             }
         }
@@ -869,6 +860,11 @@ namespace InfimaGames.LowPolyShooterPack
         public void OnTryExchangeWeapon(WeaponBehaviour otherWeapon,Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
+            if (otherWeapon.name + "(Clone)" == inventory.GetOtherEquipped().name)
+            {
+                Debug.Log("Already have same weapon");
+                return;
+            }
             weaponExchangeLocked = true;
             GameObject weaponToSwitch = Instantiate(otherWeapon.gameObject, inventory.transform);
             weaponToSwitch.SetActive(false);
