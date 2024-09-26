@@ -93,7 +93,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     protected IEnumerator Crowd_Control(Transform target)
     {
         target.GetComponent<PlayerControl>().enabled = false;
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.5f);
         target.GetComponent <PlayerControl>().enabled = true;
     }
 }

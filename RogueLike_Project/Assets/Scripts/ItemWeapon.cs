@@ -30,7 +30,7 @@ public class ItemWeapon : MonoBehaviour
     // Update is called once per frame
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "Player" && !character.IsWeaponExchangeLocked())
+        if (other.gameObject.tag == "Player" && character.CanExchangeWeapon())
             StartCoroutine("ExchangeWeapon");
     }
     

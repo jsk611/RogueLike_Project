@@ -607,6 +607,14 @@ namespace InfimaGames.LowPolyShooterPack
             return true;
         }
 
+        public bool CanExchangeWeapon()
+        {
+            if (holstered || holstered) return false;
+            if (reloading || inspecting) return false;
+            if (usingSkill) return false;
+            if (weaponExchangeLocked) return false;
+            return true;
+        }
         /// <summary>
         /// Returns true if the Character can play the Inspect animation.
         /// </summary>

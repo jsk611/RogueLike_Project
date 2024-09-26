@@ -258,11 +258,9 @@ namespace InfimaGames.LowPolyShooterPack
 
         private IEnumerator ShotgunFire(Transform muzzleSocket, Quaternion rotation)
         {
-      
-            for (int i =0; i<pelletAmounts; i++)
+            for (int i = 0; i < pelletAmounts; i++)
             {
-             
-                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position,rotation* Quaternion.Euler(i - (pelletAmounts / 2), i - (pelletAmounts / 2), 0));
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(i - 4+Random.Range(-1,1),i-4+ Random.Range(-1,1), 0));   ///updown , rightleft, forwardback
                 projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
             }
             yield return null;
