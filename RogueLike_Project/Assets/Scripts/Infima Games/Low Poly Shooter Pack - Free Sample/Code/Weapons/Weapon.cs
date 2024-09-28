@@ -240,7 +240,7 @@ namespace InfimaGames.LowPolyShooterPack
            
 
             //Determine the rotation that we want to shoot our projectile in.
-            Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 1000.0f - muzzleSocket.position);
+            Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleSocket.position);
 
             //If there's something blocking, then we can aim directly at that thing, which will result in more accurate shooting.
             if (Physics.Raycast(new Ray(playerCamera.position, playerCamera.forward),

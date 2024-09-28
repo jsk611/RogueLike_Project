@@ -106,6 +106,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         public abstract void AnimationEndedReload();
 
+        public abstract void AnimationCancelReload();
+
         /// <summary>
         /// Inspect Animation Ended.
         /// </summary>

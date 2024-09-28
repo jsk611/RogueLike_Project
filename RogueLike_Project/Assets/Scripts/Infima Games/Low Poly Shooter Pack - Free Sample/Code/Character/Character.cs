@@ -6,6 +6,7 @@ using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEditor.Experimental.GraphView;
 using Unity.VisualScripting;
+using UnityEditor;
 //using UnityEngine.UIElements;
 
 namespace InfimaGames.LowPolyShooterPack
@@ -1044,6 +1045,15 @@ namespace InfimaGames.LowPolyShooterPack
             UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
             reloading = false;
             
+        }
+
+        public override void AnimationCancelReload()
+        {
+            if (!reloading) return;
+            string stateName = "Cancel";
+            characterAnimator.Play(stateName, layerActions, 0.1f);
+            Debug.Log("cancel reloading");
+            reloading = false;
         }
 
         public override void AnimationEndedInspect()

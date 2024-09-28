@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,8 +28,6 @@ public class PlayerControl : MonoBehaviour
     private float moveSpeed;
     private float moveSpeed_origin;
     private float jumpPower;
-
-    private int HP = 100;
     [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
@@ -38,10 +37,11 @@ public class PlayerControl : MonoBehaviour
     bool crawlOver = true;
 
 
-    [SerializeField] GameObject MainCharacter;
     Animator playerAnimator;
+  
     Rigidbody playerRigidbody;
     CharacterController character;
+    CharacterBehaviour playerCharacter;
 
     CameraControl cameraController;
     Rigidbody rigidBody;
@@ -60,9 +60,11 @@ public class PlayerControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerAnimator = MainCharacter.GetComponent<Animator>();
+        playerCharacter = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+        playerAnimator = playerCharacter.GetPlayerAnimator();
         playerRigidbody = GetComponent<Rigidbody>();
         character = GetComponent<CharacterController>();
+       
         rigidBody = GetComponent<Rigidbody>();
 
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
@@ -169,6 +171,7 @@ public class PlayerControl : MonoBehaviour
         {
             if (dashCool > 1f)
             {
+                playerCharacter.AnimationCancelReload();
                 moveSpeed_origin = characterStatus.GetMovementSpeed();
                 Stamina = 0f;
                 characterStatus.SetMovementSpeed(moveSpeed * 4f);

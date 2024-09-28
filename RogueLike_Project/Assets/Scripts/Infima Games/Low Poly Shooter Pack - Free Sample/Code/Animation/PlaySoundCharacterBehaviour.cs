@@ -21,7 +21,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Firing.
             Fire, FireEmpty,
             //
-            Skill
+            Skill, CancelReload
         }
 
         #region FIELDS SERIALIZED
@@ -115,6 +115,8 @@ namespace InfimaGames.LowPolyShooterPack
 
                 //Skill (identical to fire if the weapon doesn't have skill
                 SoundType.Skill => weaponSkillBehaviour.GetAudioClipSkill(),
+
+            
                 //Default.
                 _ => default
             }; ; ;

@@ -260,7 +260,7 @@ namespace InfimaGames.LowPolyShooterPack
         {
             for (int i = 0; i < pelletAmounts; i++)
             {
-                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(i - 4+Random.Range(-1,1),i-4+ Random.Range(-1,1), 0));   ///updown , rightleft, forwardback
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(Mathf.Clamp(Random.Range(-10,10),-6,6),Mathf.Clamp(Random.Range(-10,10),-6,6),0));   ///updown , rightleft, forwardback
                 projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
             }
             yield return null;
