@@ -31,6 +31,8 @@ namespace InfimaGames.LowPolyShooterPack
         [Tooltip("Normal Camera.")]
         [SerializeField]
         private Camera cameraWorld;
+        [SerializeField]
+        private Camera cameraScope;
 
         [Header("Animation")]
 
@@ -337,6 +339,24 @@ namespace InfimaGames.LowPolyShooterPack
             const string boolNameAim = "Aim";
             characterAnimator.SetBool(boolNameAim, aiming);
 
+            if(cameraScope != null)
+            {
+                AnimatorStateInfo stateInfo = characterAnimator.GetCurrentAnimatorStateInfo(4);
+
+                // 현재 상태가 특정 애니메이션이고, normalizedTime이 1 이상일 때 (즉, 애니메이션이 끝났을 때)
+                if (Animator.StringToHash("Wiggle In") == stateInfo.shortNameHash && stateInfo.normalizedTime >= 0.6f && aiming)
+                {
+                    cameraWorld.gameObject.SetActive(false);
+                    cameraScope.gameObject.SetActive(true);
+                }
+                else
+                {
+                    cameraWorld.gameObject.SetActive(true);
+                    cameraScope.gameObject.SetActive(false);
+                }
+                
+            }
+
             //Update Animator Running.
             //const string boolNameRun = "Running";
             //characterAnimator.SetBool(boolNameRun, running);
@@ -447,6 +467,12 @@ namespace InfimaGames.LowPolyShooterPack
 
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
+
+            //스코프가 있는 무기로 변경 시 스코프 카메라 저장
+            if(GameObject.Find("ScopeCamera") != null)
+            {
+                cameraScope = GameObject.Find("ScopeCamera").GetComponent<Camera>();
+            }
         }
         
 
