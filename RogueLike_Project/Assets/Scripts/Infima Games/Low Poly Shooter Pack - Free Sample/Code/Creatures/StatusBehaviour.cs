@@ -70,6 +70,20 @@ public abstract class StatusBehaviour : MonoBehaviour
     //public abstract void SetJumpPower(float jumpPower);
     //public abstract float GetJumpPower();
 
+    public IEnumerator Slow(float effect, float duration)
+    {
+        Debug.Log("slow");
+        DecreaseMovementSpeed(effect);
+        yield return new WaitForSeconds(duration);
+        IncreaseMovementSpeed(effect);
+    }
+    
+    public IEnumerator Accelerate(float effect,float duration)
+    {
+        IncreaseMovementSpeed(effect);
+        yield return new WaitForSeconds(duration);
+        DecreaseMovementSpeed(effect);
+    }
    
 
 

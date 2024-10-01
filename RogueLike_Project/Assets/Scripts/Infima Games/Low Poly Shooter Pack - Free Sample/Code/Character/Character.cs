@@ -198,6 +198,10 @@ namespace InfimaGames.LowPolyShooterPack
 
 
 
+        private float reloadSlowness = 7;
+
+
+
 
         #endregion
 
@@ -394,11 +398,12 @@ namespace InfimaGames.LowPolyShooterPack
         {
             #region Animation
 
-            
+            characterStatus.DecreaseMovementSpeed(reloadSlowness);
 
             //Get the name of the animation state to play, which depends on weapon settings, and ammunition!
             string stateName = equippedWeapon.HasAmmunition() ? "Reload" : "Reload Empty";
             //Play the animation state!
+            
             characterAnimator.Play(stateName, layerActions, 0.0f);
 
             //Set.
@@ -571,7 +576,7 @@ namespace InfimaGames.LowPolyShooterPack
         private bool CanPlayAnimationReload()
         {
             //No reloading!
-            if (reloading)
+            if (reloading || equippedWeapon.GetAmmunitionCurrent() >= equippedWeapon.GetAmmunitionTotal())
                 return false;
 
             //Block while inspecting.
@@ -797,7 +802,7 @@ namespace InfimaGames.LowPolyShooterPack
                 //Performed.
                 case { phase: InputActionPhase.Performed }:
                     //Play Animation.
-
+                    
                     PlayReloadAnimation();
                     break;
             }
@@ -1067,7 +1072,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override void AnimationEndedReload()
         {
             //Stop reloading!
-
+            characterStatus.IncreaseMovementSpeed(reloadSlowness);
             UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
             reloading = false;
             
@@ -1076,6 +1081,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override void AnimationCancelReload()
         {
             if (!reloading) return;
+            characterStatus.IncreaseMovementSpeed(reloadSlowness);
             string stateName = "Cancel";
             characterAnimator.Play(stateName, layerActions, 0.1f);
             Debug.Log("cancel reloading");

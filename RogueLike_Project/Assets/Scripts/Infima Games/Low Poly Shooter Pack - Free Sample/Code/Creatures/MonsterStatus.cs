@@ -14,7 +14,7 @@ public class MonsterStatus : StatusBehaviour
     [Tooltip("Creature MaxHealth")]
     [SerializeField]
     private float MaxHealth;
-
+    //
 
     //[Tooltip("Creature Defence")]
     //[SerializeField]
