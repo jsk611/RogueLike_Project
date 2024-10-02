@@ -19,7 +19,12 @@ namespace InfimaGames.LowPolyShooterPack
         
         [Tooltip("Default Scope!")]
         [SerializeField]
-        private ScopeBehaviour scopeDefaultBehaviour;
+        private ScopeBehaviour scopeDefaultBehaviour = null;
+
+
+        [Tooltip("Scope that can be zoomed")]
+        [SerializeField]
+        private Camera zoomScope;
         
         [Header("Muzzle")]
 
@@ -93,6 +98,13 @@ namespace InfimaGames.LowPolyShooterPack
         public override MagazineBehaviour GetEquippedMagazine() => magazineBehaviour;
         public override MuzzleBehaviour GetEquippedMuzzle() => muzzleBehaviour;
 
+        public override bool CanZoom()
+        {
+            if (zoomScope != null) return true;
+            else return false;
+        }
+
+        public override Camera GetZoomScope() => zoomScope;
         #endregion
     }
 }

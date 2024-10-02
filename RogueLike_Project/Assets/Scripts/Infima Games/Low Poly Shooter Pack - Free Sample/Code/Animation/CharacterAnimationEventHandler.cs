@@ -143,6 +143,14 @@ namespace InfimaGames.LowPolyShooterPack
 		{
 			playerCharacter.EnableWeaponExchange();
 		}
+
+		private void OnActivateScope(int zoom)
+		{
+			if (zoom != 0) playerCharacter.ActivateScopeZoom(true);
+			else playerCharacter.ActivateScopeZoom(false);
+		}
+
+
 		#endregion
 	}   
 }

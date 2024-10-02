@@ -789,7 +789,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4871952136865193947}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &5281611713317636036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1196,6 +1196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopeDefaultShow: 1
   scopeDefaultBehaviour: {fileID: 2912335144552137468}
+  zoomScope: {fileID: 2893886937079841999}
   muzzleIndex: 0
   muzzleArray:
   - {fileID: 5227958185818627610}

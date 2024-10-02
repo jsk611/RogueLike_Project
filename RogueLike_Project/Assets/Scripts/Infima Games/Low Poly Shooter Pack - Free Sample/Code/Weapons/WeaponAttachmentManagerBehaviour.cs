@@ -52,7 +52,14 @@ namespace InfimaGames.LowPolyShooterPack
         /// Returns the equipped muzzle.
         /// </summary>
         public abstract MuzzleBehaviour GetEquippedMuzzle();
-        
+
+
+        ///<summary>
+        /// Returns if zoom is usable
+        /// </summary>
+        public abstract bool CanZoom();
+
+        public abstract Camera GetZoomScope();
         #endregion
     }
 }

@@ -27,12 +27,8 @@ namespace InfimaGames.LowPolyShooterPack
         private InventoryBehaviour inventory;
 
         [Header("Cameras")]
-
-        [Tooltip("Normal Camera.")]
         [SerializeField]
         private Camera cameraWorld;
-        [SerializeField]
-        private Camera cameraScope;
 
         [Header("Animation")]
 
@@ -193,7 +189,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// <summary>
         /// True if character cannot exchange weapon;
         /// </summary>
-        public bool weaponExchangeLocked;
+        private bool weaponExchangeLocked;
         
 
 
@@ -297,6 +293,8 @@ namespace InfimaGames.LowPolyShooterPack
                 //Compute.
                 characterKinematics.Compute();
             }
+
+            
         }
 
         #endregion
@@ -343,23 +341,7 @@ namespace InfimaGames.LowPolyShooterPack
             const string boolNameAim = "Aim";
             characterAnimator.SetBool(boolNameAim, aiming);
 
-            if(cameraScope != null)
-            {
-                AnimatorStateInfo stateInfo = characterAnimator.GetCurrentAnimatorStateInfo(4);
-
-                // 현재 상태가 특정 애니메이션이고, normalizedTime이 1 이상일 때 (즉, 애니메이션이 끝났을 때)
-                if (Animator.StringToHash("Wiggle In") == stateInfo.shortNameHash && stateInfo.normalizedTime >= 0.6f && aiming)
-                {
-                    cameraWorld.gameObject.SetActive(false);
-                    cameraScope.gameObject.SetActive(true);
-                }
-                else
-                {
-                    cameraWorld.gameObject.SetActive(true);
-                    cameraScope.gameObject.SetActive(false);
-                }
-                
-            }
+   
 
             //Update Animator Running.
             //const string boolNameRun = "Running";
@@ -473,11 +455,8 @@ namespace InfimaGames.LowPolyShooterPack
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
 
-            //스코프가 있는 무기로 변경 시 스코프 카메라 저장
-            if(GameObject.Find("ScopeCamera") != null)
-            {
-                cameraScope = GameObject.Find("ScopeCamera").GetComponent<Camera>();
-            }
+           
+
         }
         
 
@@ -862,6 +841,7 @@ namespace InfimaGames.LowPolyShooterPack
             {
                 case InputActionPhase.Started:
                     //Started.
+                    
                     holdingButtonAim = true;
                     break;
                 case InputActionPhase.Canceled:
@@ -870,6 +850,7 @@ namespace InfimaGames.LowPolyShooterPack
                     break;
             }
         }
+
 
         /// <summary>
         /// Holster.
@@ -1060,7 +1041,10 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Notify the weapon to fill the ammunition by the amount.
             if (equippedWeapon != null)
+            {
                 equippedWeapon.FillAmmunition(amount);
+                UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
+            }
         }
 
         public override void SetActiveMagazine(int active)
@@ -1073,7 +1057,7 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Stop reloading!
             characterStatus.IncreaseMovementSpeed(reloadSlowness);
-            UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
+            
             reloading = false;
             
         }
@@ -1083,7 +1067,7 @@ namespace InfimaGames.LowPolyShooterPack
             if (!reloading) return;
             characterStatus.IncreaseMovementSpeed(reloadSlowness);
             string stateName = "Cancel";
-            characterAnimator.Play(stateName, layerActions, 0.1f);
+            characterAnimator.CrossFade(stateName, 0.05f,layerActions);
             Debug.Log("cancel reloading");
             reloading = false;
         }
@@ -1115,6 +1099,12 @@ namespace InfimaGames.LowPolyShooterPack
             weaponExchangeLocked = false;
         }
 
+        public override void ActivateScopeZoom(bool zoomState)
+        {
+            if (!weaponAttachmentManager.CanZoom()) return;
+            cameraWorld.gameObject.SetActive(!zoomState);
+            weaponAttachmentManager.GetZoomScope().gameObject.SetActive(zoomState);
+        }
 
         public override Animator GetPlayerAnimator() => characterAnimator;
 

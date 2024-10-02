@@ -123,6 +123,8 @@ namespace InfimaGames.LowPolyShooterPack
 
         public abstract void EnableWeaponExchange();
 
+        public abstract void ActivateScopeZoom(bool zoomState);
+
         public abstract Animator GetPlayerAnimator();
         public abstract Animator GetWeaponAnimator();
 
