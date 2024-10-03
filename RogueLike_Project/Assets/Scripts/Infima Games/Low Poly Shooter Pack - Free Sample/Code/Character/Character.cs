@@ -194,7 +194,6 @@ namespace InfimaGames.LowPolyShooterPack
 
 
 
-        private float reloadSlowness = 7;
 
 
 
@@ -380,7 +379,6 @@ namespace InfimaGames.LowPolyShooterPack
         {
             #region Animation
 
-            characterStatus.DecreaseMovementSpeed(reloadSlowness);
 
             //Get the name of the animation state to play, which depends on weapon settings, and ammunition!
             string stateName = equippedWeapon.HasAmmunition() ? "Reload" : "Reload Empty";
@@ -843,6 +841,7 @@ namespace InfimaGames.LowPolyShooterPack
                     //Started.
                     
                     holdingButtonAim = true;
+
                     break;
                 case InputActionPhase.Canceled:
                     //Canceled.
@@ -1056,8 +1055,6 @@ namespace InfimaGames.LowPolyShooterPack
         public override void AnimationEndedReload()
         {
             //Stop reloading!
-            characterStatus.IncreaseMovementSpeed(reloadSlowness);
-            
             reloading = false;
             
         }
@@ -1065,7 +1062,6 @@ namespace InfimaGames.LowPolyShooterPack
         public override void AnimationCancelReload()
         {
             if (!reloading) return;
-            characterStatus.IncreaseMovementSpeed(reloadSlowness);
             string stateName = "Cancel";
             characterAnimator.CrossFade(stateName, 0.05f,layerActions);
             Debug.Log("cancel reloading");
