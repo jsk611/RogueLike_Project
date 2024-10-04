@@ -38,6 +38,10 @@ namespace InfimaGames.LowPolyShooterPack
         [SerializeField]
         private float maximumDistance = 500.0f;
 
+        [Tooltip("집탄율 변수")]
+        [SerializeField]
+        float concentration = 10f;
+
         [Header("Animation")]
 
         [Tooltip("Transform that represents the weapon's ejection port, meaning the part of the weapon that casings shoot from.")]
@@ -258,11 +262,32 @@ namespace InfimaGames.LowPolyShooterPack
 
         private IEnumerator ShotgunFire(Transform muzzleSocket, Quaternion rotation)
         {
-            for (int i = 0; i < pelletAmounts; i++)
+            float randNum;
+            for (int i = 1; i <= pelletAmounts; i++)
             {
-                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(Mathf.Clamp(Random.Range(-10,10),-6,6),Mathf.Clamp(Random.Range(-10,10),-6,6),0));   ///updown , rightleft, forwardback
+                randNum = Random.Range(-0.5f / pelletAmounts, 0.5f / pelletAmounts) * 2 * Mathf.PI;
+                float theta = Mathf.Atan(concentration/10);
+                float degree = theta * 180f / Mathf.PI;
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position,  rotation * Quaternion.Euler(degree * Mathf.Cos(2*Mathf.PI*i/pelletAmounts + randNum), degree * Mathf.Sin(2*Mathf.PI*i/pelletAmounts + randNum),0));   ///updown , rightleft, forwardback
                 projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
             }
+            for (int i = 1; i <= pelletAmounts/2; i++)
+            {
+                randNum = Random.Range(-0.5f / pelletAmounts, 0.5f / pelletAmounts) * 2 * Mathf.PI;
+                float theta = Mathf.Atan(concentration / 20);
+                float degree = theta * 180f / Mathf.PI;
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(degree * Mathf.Cos(2 * Mathf.PI * i / (pelletAmounts/2) + randNum), degree * Mathf.Sin(2 * Mathf.PI * i / (pelletAmounts/2) + randNum), 0));   ///updown , rightleft, forwardback
+                projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
+            }
+            for (int i = 1; i <= pelletAmounts / 10; i++)
+            {
+                randNum = Random.Range(-0.5f / pelletAmounts, 0.5f / pelletAmounts) * 2 * Mathf.PI;
+                float theta = Mathf.Atan(concentration / 100);
+                float degree = theta * 180f / Mathf.PI;
+                GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation * Quaternion.Euler(degree * Mathf.Cos(2 * Mathf.PI * i / (pelletAmounts / 10) + randNum), degree * Mathf.Sin(2 * Mathf.PI * i / (pelletAmounts / 10) + randNum), 0));   ///updown , rightleft, forwardback
+                projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
+            }
+
             yield return null;
         }
 

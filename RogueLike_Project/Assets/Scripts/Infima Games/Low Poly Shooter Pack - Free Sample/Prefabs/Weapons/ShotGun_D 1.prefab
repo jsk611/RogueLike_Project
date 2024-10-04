@@ -392,11 +392,12 @@ MonoBehaviour:
   automatic: 0
   projectileImpulse: 200
   roundsPerSeconds: 2
-  pelletAmounts: 9
+  pelletAmounts: 10
   mask:
     serializedVersion: 2
     m_Bits: 1
   maximumDistance: 500
+  concentration: 1
   socketEjection: {fileID: 8897128229815599576}
   prefabCasing: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
     type: 3}
@@ -424,6 +425,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopeDefaultShow: 1
   scopeDefaultBehaviour: {fileID: 4052557569334719876}
+  zoomScope: {fileID: 0}
   muzzleIndex: 0
   muzzleArray:
   - {fileID: 2206699837838892158}
