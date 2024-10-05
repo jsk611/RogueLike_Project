@@ -16,6 +16,7 @@ namespace InfimaGames.LowPolyShooterPack
     /// with basically every part of the asset, it is the hub where it all converges.
     /// </summary>
     [RequireComponent(typeof(CharacterKinematics))]
+    
     public sealed class Character : CharacterBehaviour
     {
         #region FIELDS SERIALIZED
@@ -839,12 +840,14 @@ namespace InfimaGames.LowPolyShooterPack
             {
                 case InputActionPhase.Started:
                     //Started.
-                    
+
+                    characterStatus.DecreaseMovementSpeed(5);
                     holdingButtonAim = true;
 
                     break;
                 case InputActionPhase.Canceled:
                     //Canceled.
+                    characterStatus.IncreaseMovementSpeed(5);
                     holdingButtonAim = false;
                     break;
             }

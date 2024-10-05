@@ -77,6 +77,8 @@ public class PlayerControl : MonoBehaviour
 
         originalParent = transform.parent;
         initialWorldScale = transform.lossyScale;
+
+
     }
 
     // Update is called once per frame
@@ -138,14 +140,15 @@ public class PlayerControl : MonoBehaviour
         Movement = h + v;
         
         Dash();
-        isCrawling();
+        character.height = 1.8f;
+        character.center = new Vector3(0, 0, 0);
 
         Movement = Movement.normalized * moveSpeed;
         character.Move (Movement * Time.deltaTime);
         // character.Move(Vector3.down * 0.8f * Time.deltaTime);
-        
 
-       // character.Move(Vertical * Time.deltaTime
+     
+        // character.Move(Vertical * Time.deltaTime
         return;
     }
     public bool CheckGrounded()
@@ -212,28 +215,9 @@ public class PlayerControl : MonoBehaviour
 
     private void isCrawling()
     {
-        if (Input.GetKey(KeyCode.LeftControl) && isGrounded && dashOver)
-        {
-            if (!playerAnimator.GetBool("Crouch")) playerAnimator.SetBool("Crouch", true);
-            {
-                moveSpeed_origin = moveSpeed;
-                moveSpeed = moveSpeed_origin * 0.5f;
-            }
-                character.height = 1.6f;
-                character.center = new Vector3(0, -0.09f, character.center.z);
-            crawlOver = false;
-                // transform.Translate(new Vector3(transform.position.x, transform.position.y - 10, transform.position.z),Space.World);
-        }
-        else
-        {
-            if (playerAnimator.GetBool("Crouch"))  moveSpeed = moveSpeed_origin;
-                playerAnimator.SetBool("Crouch", false);
-               
-                character.height = 1.8f;
-                character.center = new Vector3(0, 0, 0);
-            crawlOver = true;
+
                 // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
-        }
+        
     }
 
     // 발판과 충돌할 때
@@ -251,17 +235,5 @@ public class PlayerControl : MonoBehaviour
             transform.SetParent(originalParent); // 원래 부모로 복원
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

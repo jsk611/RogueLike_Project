@@ -149,12 +149,10 @@ namespace InfimaGames.LowPolyShooterPack
 
 			if (zoom != 0)
 			{
-				playerCharacter.GetComponent<StatusBehaviour>().DecreaseMovementSpeed(5);
 				playerCharacter.ActivateScopeZoom(true);
 			}
 			else
 			{
-				playerCharacter.GetComponent<StatusBehaviour>().IncreaseMovementSpeed(5);
 				playerCharacter.ActivateScopeZoom(false);
 			}
 		}
