@@ -9,6 +9,9 @@ public class Tile : MonoBehaviour
     //[SerializeField] Material watchOutMaterial;
     //[SerializeField] Material warningMaterial;
     public bool isSetActive = true;
+
+    [SerializeField] SpriteRenderer minimapTile;
+    public float maxHeight;
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -68,11 +71,22 @@ public class Tile : MonoBehaviour
         {
             transform.position = Vector3.Lerp(startPosition, newPosition, elapsed / duration);
             elapsed += Time.deltaTime;
+
+            //미니맵 색 변경
+            if (transform.position.y <= 0) minimapTile.color = Color.black;
+            else minimapTile.color = Color.white * 1.7f * transform.position.y / maxHeight;
+            Color tmp = minimapTile.color;
+            tmp.a = 0.6f;
+            minimapTile.color = tmp;
+
             yield return new WaitForFixedUpdate();
         }
 
         transform.position = newPosition;
-
+        minimapTile.color = pos_y <= 0 ? Color.black : Color.white * 1.7f * transform.position.y / maxHeight;
+        Color tmp2 = minimapTile.color;
+        tmp2.a = 0.6f;
+        minimapTile.color = tmp2;
     }
     public void ChangeHeight(float size_y, float duration = 2f)
     {

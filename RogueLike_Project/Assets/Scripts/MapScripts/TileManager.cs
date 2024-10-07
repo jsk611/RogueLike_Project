@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,6 +9,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 
 public class TileManager : MonoBehaviour
 {
+
     public static int mapSize = 60;
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
@@ -184,14 +186,20 @@ public class TileManager : MonoBehaviour
         }
     }
 
-
+    float GetMaxTileHeight()
+    {
+        float max = tileMap.Cast<float>().Max();
+        return max < 10 ? 10 : max;
+    }
     public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 2f, float durationAboutTile = 2f, float alertTime = 3f)
     {
+        float maxTileHeight = GetMaxTileHeight();
         //경고 표시
         for (int i = 0; i < mapSize; i++)
         {
             for (int j = 0; j < mapSize; j++)
             {
+                tiles[i,j].maxHeight = maxTileHeight;
                 if (tileMap[i, j]/2f != tiles[i, j].transform.position.y)
                 {
                     if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
@@ -223,11 +231,13 @@ public class TileManager : MonoBehaviour
     }
     public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 3f)
     {
+        float maxTileHeight = GetMaxTileHeight();
         //경고 표시
         for (int i = 0; i < mapSize; i++)
         {
             for (int j = 0; j < mapSize; j++)
             {
+                tiles[i, j].maxHeight = maxTileHeight;
                 if (tileMap[i, j] / 2f != tiles[i, j].transform.position.y)
                 {
                     if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
