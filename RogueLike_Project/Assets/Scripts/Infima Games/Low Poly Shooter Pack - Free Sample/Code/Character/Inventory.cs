@@ -134,7 +134,6 @@ namespace InfimaGames.LowPolyShooterPack
             Destroy(deletedWeapon.gameObject);
 
             Equip(currentindex);
-
         }
 
 

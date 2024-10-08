@@ -356,7 +356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 0
-  projectileImpulse: 30
+  projectileImpulse: 90
   roundsPerSeconds: 0.8
   mask:
     serializedVersion: 2
@@ -401,6 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopeDefaultShow: 0
   scopeDefaultBehaviour: {fileID: 5576978753467311459}
+  zoomScope: {fileID: 0}
   muzzleIndex: 0
   muzzleArray:
   - {fileID: 5121122579892129542}

@@ -1100,9 +1100,16 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void ActivateScopeZoom(bool zoomState)
         {
-            if (!weaponAttachmentManager.CanZoom()) return;
-            cameraWorld.gameObject.SetActive(!zoomState);
-            weaponAttachmentManager.GetZoomScope().gameObject.SetActive(zoomState);
+            if (!weaponAttachmentManager.CanZoom())
+            {
+                if (zoomState) cameraWorld.fieldOfView = Mathf.Lerp(60, 50, 0.5f);
+                else cameraWorld.fieldOfView = Mathf.Lerp(50, 60, 0.5f);
+            }
+            else
+            {
+                cameraWorld.gameObject.SetActive(!zoomState);
+                weaponAttachmentManager.GetZoomScope().gameObject.SetActive(zoomState);
+            }
         }
 
         public override Animator GetPlayerAnimator() => characterAnimator;
