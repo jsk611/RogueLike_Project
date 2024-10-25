@@ -8,7 +8,7 @@ public class SettingManager : MonoBehaviour
 {
     public void InitGame()
     {
-        SceneManager.LoadScene("Prototype1");
+        SceneManager.LoadScene("MapScene");
     }
 
     public void QuitGame()
