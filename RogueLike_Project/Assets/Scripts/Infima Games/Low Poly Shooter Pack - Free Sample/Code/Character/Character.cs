@@ -30,6 +30,7 @@ namespace InfimaGames.LowPolyShooterPack
         [Header("Cameras")]
         [SerializeField]
         private Camera cameraWorld;
+        private Camera currentCamera;
 
         [Header("Animation")]
 
@@ -191,11 +192,11 @@ namespace InfimaGames.LowPolyShooterPack
         /// True if character cannot exchange weapon;
         /// </summary>
         private bool weaponExchangeLocked;
-        
 
 
 
 
+        Coroutine zoomStateCoroutine;
 
 
 
@@ -230,6 +231,7 @@ namespace InfimaGames.LowPolyShooterPack
 
             #endregion
 
+            currentCamera = cameraWorld;
             //Cache the CharacterKinematics component.
             characterKinematics = GetComponent<CharacterKinematics>();
 
@@ -301,7 +303,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         #region GETTERS
 
-        public override Camera GetCameraWorld() => cameraWorld;
+        public override Camera GetCameraWorld() => currentCamera;
 
         public override InventoryBehaviour GetInventory() => inventory;
 
@@ -474,6 +476,8 @@ namespace InfimaGames.LowPolyShooterPack
             weaponAttachmentManager = equippedWeapon.GetAttachmentManager();
             if (weaponAttachmentManager == null)
                 return;
+
+            currentCamera = cameraWorld;
 
             //Get equipped scope. We need this one for its settings!
             equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
@@ -1100,23 +1104,44 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void ActivateScopeZoom(bool zoomState)
         {
+            //when weapon does not have scope
             if (!weaponAttachmentManager.CanZoom())
             {
-                if (zoomState) cameraWorld.fieldOfView = Mathf.Lerp(60, 50, 0.5f);
-                else cameraWorld.fieldOfView = Mathf.Lerp(50, 60, 0.5f);
+                if (zoomState)
+                {
+                    cameraWorld.fieldOfView = 60;
+                    if(zoomStateCoroutine != null) StopCoroutine(zoomStateCoroutine);
+                    zoomStateCoroutine = StartCoroutine(zoomtest(50));
+                }
+                else
+                {
+                    cameraWorld.fieldOfView = 50;
+                    if(zoomStateCoroutine != null) StopCoroutine(zoomStateCoroutine);
+                    zoomStateCoroutine = StartCoroutine(zoomtest(60));
+                }
             }
+            //sniper etc.
             else
             {
                 cameraWorld.gameObject.SetActive(!zoomState);
                 weaponAttachmentManager.GetZoomScope().gameObject.SetActive(zoomState);
+                if (currentCamera == cameraWorld) currentCamera = weaponAttachmentManager.GetZoomScope();
+                else currentCamera = cameraWorld;
             }
         }
-
+      IEnumerator zoomtest(float FOV)
+        {
+            while (Mathf.Abs(cameraWorld.fieldOfView-FOV) > 0.05)
+            {
+            cameraWorld.fieldOfView = Mathf.Lerp(cameraWorld.fieldOfView, FOV, Time.deltaTime*10);
+            yield return null;
+            }
+        }
         public override Animator GetPlayerAnimator() => characterAnimator;
 
         public override Animator GetWeaponAnimator() => equippedWeapon.GetComponent<Animator>();
 
-
+  
         #endregion
 
         #endregion

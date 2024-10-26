@@ -151,7 +151,6 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache the player character.
             characterBehaviour = gameModeService.GetPlayerCharacter();
             //Cache the world camera. We use this in line traces.
-            playerCamera = characterBehaviour.GetCameraWorld().transform;
             //Cache the character status
             playerStatus = characterBehaviour.GetComponent<PlayerStatus>();
 
@@ -219,6 +218,8 @@ namespace InfimaGames.LowPolyShooterPack
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
+            //getcamera
+            playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
             if (muzzleBehaviour == null)
                 return;
