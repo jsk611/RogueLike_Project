@@ -108,7 +108,6 @@ public class PlayerStatus : StatusBehaviour
             Destroy(gameObject);
         }
 
-        Debug.Log("test");
         UIManager.instance.BarValueChange(0, MaxHealth, Health);
     }
     public override void IncreaseHealth(float health)

@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletDamage: 35
-  explosionRange: 5
+  explosionRange: 10
   explosionPrefab: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909,
     type: 3}
   destroyAfter: 5

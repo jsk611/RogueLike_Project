@@ -4848,7 +4848,6 @@ ParticleSystemRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 3064a05586bfc724c9e53002a01b53d6, type: 2}
-  - {fileID: 2100000, guid: b1c68c048883aa04e98206611bbd70f7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4929,7 +4928,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 1.13}
-  m_LocalScale: {x: 0.29174203, y: 0.29174203, z: 0.29174203}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4811645123968692}
@@ -6490,8 +6489,8 @@ ParticleSystem:
     - sprite: {fileID: 21300082, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
     - sprite: {fileID: 21300084, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
     - sprite: {fileID: 21300086, guid: 501216200c963de40a28b3a52d2cc505, type: 3}
-    flipU: 1
-    flipV: 1
+    flipU: 0
+    flipV: 0
   VelocityModule:
     enabled: 1
     x:
@@ -9826,7 +9825,7 @@ ParticleSystemRenderer:
   m_ShadowBias: 0
   m_RenderAlignment: 0
   m_Pivot: {x: 0, y: 0, z: 0}
-  m_Flip: {x: 0, y: 0, z: 0}
+  m_Flip: {x: 1, y: 1, z: 0}
   m_EnableGPUInstancing: 0
   m_ApplyActiveColorSpace: 0
   m_AllowRoll: 1
@@ -9873,7 +9872,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 6.048068, y: 6.048068, z: 6.048068}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4811645123968692}
@@ -19774,7 +19773,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.0155808, y: 1.0155808, z: 1.0155808}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4408349199982126}
