@@ -221,7 +221,11 @@ public class TileManager : MonoBehaviour
                 else
                 {
                     if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile(tileMap[i, j], durationAboutTile);
-                    else tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile);
+                    else 
+                    {
+                        if (tiles[i, j].transform.position.y == tileMap[i, j]/2) continue;
+                        tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile);
+                    } 
                 }
             }
             yield return new WaitForSeconds((float)durationAboutCoroutine / (mapSize) );

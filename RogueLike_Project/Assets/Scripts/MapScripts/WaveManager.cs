@@ -75,28 +75,28 @@ public class WaveManager : MonoBehaviour
         while (true)
         {
             
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave6());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Maintenance());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(Wave7());
+            yield return StartCoroutine(WaveEnd());
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave8());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
-            yield return StartCoroutine(Wave5());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave1());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave2());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave3());
             yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
         }
     }
     IEnumerator StartMap() //향후 게임매니저에서 관리

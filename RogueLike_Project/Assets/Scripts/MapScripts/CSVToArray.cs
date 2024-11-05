@@ -7,8 +7,17 @@ public class CSVToArray : MonoBehaviour
 {
     public float[,] CSVFileToArray(string path)
     {
-        string[] lines = File.ReadAllLines(path);
-        int rows = lines.Length;
+        //string[] lines = File.ReadAllLines(path);
+        TextAsset csvFile = Resources.Load<TextAsset>(path);
+        
+        if(csvFile == null)
+        {
+            Debug.LogError("Cannot Find CSV File");
+            return null;
+        }
+        string csvData = csvFile.text;
+        string[] lines = csvData.Split('\n');
+        int rows = lines.Length -1;
         int cols = lines[0].Split(',').Length;
 
         float[,] dataArray = new float[rows, cols];
