@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon: {fileID: 969286855819054170, guid: c9cb721bd1ba64b41885e1662e296b1f, type: 3}
   Position: {x: 0.005001003, y: 0.008357062, z: -0.03166197}
-  Rotation: {x: -0.011075845, y: -0.011075845, z: -0.70702004, w: 0.70702004}
+  Rotation: {x: 0.70702004, y: -0.70702004, z: -0.011075876, w: -0.011075814}
 --- !u!1 &160878
 GameObject:
   m_ObjectHideFlags: 0
