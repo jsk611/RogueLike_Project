@@ -41,7 +41,6 @@ public class EnemySpawnLogic : MonoBehaviour
                 SpawnEnemy(x, y, enemyMap[y,x]);
             }
         }
-
     }
 
     GameObject GetEnemyPrefab(EnemyType enemyType)
@@ -51,7 +50,6 @@ public class EnemySpawnLogic : MonoBehaviour
             case EnemyType.None: return null;
             default: return enemyPrefabs[(int)enemyType-1];
         }
-
         //switch (enemyType)
         //{
         //    case EnemyType.Type1:
@@ -63,5 +61,4 @@ public class EnemySpawnLogic : MonoBehaviour
         //    default: return null;
         //}
     }
-
 }

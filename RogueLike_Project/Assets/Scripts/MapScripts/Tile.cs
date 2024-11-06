@@ -16,7 +16,6 @@ public class Tile : MonoBehaviour
     {
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.material = Instantiate(meshRenderer.material);
-
     }
 
     public bool IsSetActive

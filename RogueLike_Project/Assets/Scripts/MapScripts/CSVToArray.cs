@@ -9,7 +9,7 @@ public class CSVToArray : MonoBehaviour
     {
         //string[] lines = File.ReadAllLines(path);
         TextAsset csvFile = Resources.Load<TextAsset>(path);
-        
+       
         if(csvFile == null)
         {
             Debug.LogError("Cannot Find CSV File");

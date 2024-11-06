@@ -23,7 +23,7 @@ public class WaveManager : MonoBehaviour
 
     [SerializeField] GameObject startStage;
     [SerializeField] GameObject startPosition;
-    [SerializeField] GameObject jeongbiStage;
+    [SerializeField] GameObject jeongbiStage; 
     Vector3 sp;
     void Start()
     {
@@ -74,7 +74,11 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            
+            yield return new WaitForSeconds(1f);
+            yield return StartCoroutine(Wave9());
+            yield return StartCoroutine(WaveEnd());
+
+
             yield return new WaitForSeconds(1f);
             yield return StartCoroutine(Wave6());
             yield return StartCoroutine(WaveEnd());
@@ -322,7 +326,25 @@ public class WaveManager : MonoBehaviour
         }
         Debug.Log("Wave End");
     }
+    IEnumerator Wave9()
+    {
+        Debug.Log("Wave 9");
+        tileManager.InitializeArray();
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[3], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
 
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log("Wave End");
+    }
     IEnumerator WaveEnd()
     {
         tileManager.InitializeArray(4);
