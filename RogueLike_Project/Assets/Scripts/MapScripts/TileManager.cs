@@ -191,7 +191,7 @@ public class TileManager : MonoBehaviour
         float max = tileMap.Cast<float>().Max();
         return max < 10 ? 10 : max;
     }
-    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 2f, float durationAboutTile = 2f, float alertTime = 3f)
+    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1.25f, float durationAboutTile = 1f, float alertTime = 3f)
     {
         float maxTileHeight = GetMaxTileHeight();
         //경고 표시

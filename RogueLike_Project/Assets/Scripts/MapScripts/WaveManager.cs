@@ -74,33 +74,18 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         while (true)
         {
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave9());
-            yield return StartCoroutine(WaveEnd());
+            int prevWave = -1;
+            for(int i=0; i<5; i++)
+            {
+                int randNum = Random.Range(1, 9);
+                while(prevWave == randNum) randNum = Random.Range(0, 10);
 
-
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave6());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
+                yield return StartCoroutine("Wave" + randNum.ToString());
+                yield return StartCoroutine(WaveEnd());
+                yield return new WaitForSeconds(0.5f);
+            }
             yield return StartCoroutine(Maintenance());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave7());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave8());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave1());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave2());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
-            yield return StartCoroutine(Wave3());
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
     IEnumerator StartMap() //향후 게임매니저에서 관리
@@ -164,6 +149,86 @@ public class WaveManager : MonoBehaviour
     {
         Debug.Log("Wave 1");
         tileManager.InitializeArray();
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[0], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Setting Monsters");
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        //적이 다 처치될 때까지 대기
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave2()
+    {
+        Debug.Log("Wave 2");
+        tileManager.InitializeArray();
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[1], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave3()
+    {
+        Debug.Log("Wave 3");
+        tileManager.InitializeArray();
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[2], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave4()
+    {
+        Debug.Log("Wave 4");
+        tileManager.InitializeArray();
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[3], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(5);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log("Wave End");
+    }
+    IEnumerator Wave6()
+    {
+        Debug.Log("Wave 9");
+        tileManager.InitializeArray();
         tileManager.MakeCircle(Random.Range(8,14));
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
@@ -179,7 +244,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave2()
+    IEnumerator Wave7()
     {
         Debug.Log("Wave 2");
         tileManager.InitializeArray();
@@ -198,50 +263,20 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave3()
+    IEnumerator Wave8()
     {
-        Debug.Log("Wave 3");
-        tileManager.InitializeArray(6);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
         InitializeEnemyArray();
-        MakeRandomEnemyMap(3);
+        MakeRandomEnemyMap(7);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
-        yield return new WaitForSeconds(3f);
-        for(int i=0; i<10; i++)
-        {
-            StartCoroutine(tileManager.MakeWave(15, 15, 1, 1.5f, 20));
-            yield return new WaitForSeconds(1f);
-        }
 
         while (enemyCountData.enemyCount > 0)
         {
-            yield return new WaitForEndOfFrame();
-        }
-
-        Debug.Log("Wave End");
-    }
-    IEnumerator Wave4()
-    {
-        Debug.Log("Wave 4");
-        //tileManager.InitializeArray(6);
-        //yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        for(int i=0; i<5; i++)
-        {
             //랜덤으로 벽 생성
             tileManager.InitializeArray(6);
-            tileManager.MakeRandomWall(Random.Range(8, 16));
+            tileManager.MakeRandomWall(Random.Range(80, 120));
             yield return StartCoroutine(tileManager.MoveTilesByArray());
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(1f);//랜덤으로 벽 생성
         }
-
-        //InitializeEnemyArray();
-        //MakeRandomEnemyMap(3);
-        //enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
         Debug.Log("Wave End");
     }
@@ -252,7 +287,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         InitializeEnemyArray();
-        MakeRandomEnemyMap(15);
+        MakeRandomEnemyMap(7);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
         while(enemyCountData.enemyCount > 0)
         {
@@ -265,86 +300,7 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log("Wave End");
     }
-    IEnumerator Wave6()
-    {
-        Debug.Log("Wave 6");
-        tileManager.InitializeArray();
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(mapPaths[0], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("Setting Monsters");
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(5);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
-        //적이 다 처치될 때까지 대기
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        
-        Debug.Log("Wave End");
-    }
-    IEnumerator Wave7()
-    {
-        Debug.Log("Wave 7");
-        tileManager.InitializeArray();
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(mapPaths[1], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(5);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        Debug.Log("Wave End");
-    }
-    IEnumerator Wave8()
-    {
-        Debug.Log("Wave 8");
-        tileManager.InitializeArray();
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(mapPaths[2], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(5);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        Debug.Log("Wave End");
-    }
-    IEnumerator Wave9()
-    {
-        Debug.Log("Wave 9");
-        tileManager.InitializeArray();
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(mapPaths[3], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(5);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-        Debug.Log("Wave End");
-    }
+    
     IEnumerator WaveEnd()
     {
         tileManager.InitializeArray(4);
