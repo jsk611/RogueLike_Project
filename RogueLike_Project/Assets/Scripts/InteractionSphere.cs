@@ -13,6 +13,10 @@ public class InteractionSphere : MonoBehaviour
         waveManager = FindObjectOfType<WaveManager>();
         isActived = false;
     }
+    private void OnEnable()
+    {
+        isActived = false;
+    }
 
     private void OnTriggerEnter(Collider other)
     {

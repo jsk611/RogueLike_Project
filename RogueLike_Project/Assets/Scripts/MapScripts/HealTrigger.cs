@@ -11,6 +11,12 @@ public class HealTrigger : MonoBehaviour
         isHealed = false;
     }
 
+    private void OnEnable()
+    {
+        isHealed = false;
+        GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 1f);
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))

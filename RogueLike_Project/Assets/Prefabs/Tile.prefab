@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4fb086194b5c15a4bbdac6b0b6295592, type: 2}
+  - {fileID: 2100000, guid: 9789f486f6582664ea486c4bb85ca631, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isSetActive: 1
   minimapTile: {fileID: 6946046808946640772}
+  maxHeight: 0
 --- !u!1 &8439232580100957939
 GameObject:
   m_ObjectHideFlags: 0

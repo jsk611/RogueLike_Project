@@ -191,7 +191,7 @@ public class TileManager : MonoBehaviour
         float max = tileMap.Cast<float>().Max();
         return max < 10 ? 10 : max;
     }
-    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1.25f, float durationAboutTile = 1f, float alertTime = 3f)
+    public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1.25f, float durationAboutTile = 1f, float alertTime = 1f)
     {
         float maxTileHeight = GetMaxTileHeight();
         //경고 표시
@@ -233,7 +233,7 @@ public class TileManager : MonoBehaviour
         yield return new WaitForSeconds(durationAboutTile + 0.5f);
         BuildNavMesh();
     }
-    public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 3f)
+    public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 1f)
     {
         float maxTileHeight = GetMaxTileHeight();
         //경고 표시

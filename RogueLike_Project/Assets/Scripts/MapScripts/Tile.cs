@@ -26,7 +26,7 @@ public class Tile : MonoBehaviour
     {
         StartCoroutine(MoveCoroutine(pos_y, duration));
     }
-    public void AlertChanging(float time = 3f, bool isWarning = false)
+    public void AlertChanging(float time = 1f, bool isWarning = false)
     {
         if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, isWarning));
     }
@@ -47,10 +47,10 @@ public class Tile : MonoBehaviour
             while (time > 0)
             {
                 meshRenderer.material.SetColor("GridColor", alertColor);
-                yield return new WaitForSeconds(0.16f);
+                yield return new WaitForSeconds(0.25f);
                 meshRenderer.material.SetColor("GridColor", Color.white);
-                yield return new WaitForSeconds(0.09f);
-                time -= 0.25f;
+                yield return new WaitForSeconds(0.25f);
+                time -= 0.5f;
             }
         }
         else
@@ -130,11 +130,19 @@ public class Tile : MonoBehaviour
     {
 
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
-        StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+        StartCoroutine(ChangeSizeCoroutine(size_y, 0));
         if(duration > 0f)
         {
-            yield return StartCoroutine(MoveCoroutine(size_y / 2f + 0.5f, duration - 0.3f));
-            StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
+            StartCoroutine(MoveCoroutine(size_y / 2f, 0));
+            float tmp = duration;
+            while (tmp > 0f)
+            {
+                tmp -= Time.deltaTime;
+                Color newColor = meshRenderer.material.GetColor("GridColor") + new Color(0, 0, 0, Time.deltaTime / duration);
+                meshRenderer.material.SetColor("GridColor", newColor);
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            //StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
         }
         else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
 
@@ -142,7 +150,16 @@ public class Tile : MonoBehaviour
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
         if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.3f));
-        yield return StartCoroutine(MoveCoroutine(-20f, duration)); 
+        StartCoroutine(MoveCoroutine(-20f, duration));
+
+        float tmp = duration;
+        while(tmp > 0f)
+        {
+            tmp -= Time.deltaTime;
+            Color newColor = meshRenderer.material.GetColor("GridColor") - new Color(0,0,0,Time.deltaTime/duration);
+            meshRenderer.material.SetColor("GridColor", newColor);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
         gameObject.SetActive(false);
         isSetActive = false;
     }
