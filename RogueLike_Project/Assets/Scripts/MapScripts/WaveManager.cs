@@ -77,12 +77,13 @@ public class WaveManager : MonoBehaviour
             int prevWave = -1;
             for(int i=0; i<5; i++)
             {
-                int randNum = Random.Range(1, 9);
-                while(prevWave == randNum) randNum = Random.Range(0, 10);
+                int randNum = Random.Range(1, 7);
+                while(prevWave == randNum) randNum = Random.Range(1, 7);
 
                 yield return StartCoroutine("Wave" + randNum.ToString());
                 yield return StartCoroutine(WaveEnd());
                 yield return new WaitForSeconds(0.5f);
+                prevWave = randNum;
             }
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
@@ -118,7 +119,7 @@ public class WaveManager : MonoBehaviour
         //yield return new WaitForSeconds(9f);
         yield return new WaitForSeconds(0.1f);
         tileManager.InitializeArray(4);
-        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 3, 1, 0));
+        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 1.5f, 1, 0));
         startStage.SetActive(false);
         
         StartCoroutine(RunWaves());
@@ -128,7 +129,7 @@ public class WaveManager : MonoBehaviour
         tileManager.InitializeArray(4);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         Vector2Int stagePos = tileManager.MakeCenteredMapFromCSV(jeongbiMapPath, playerPos.x, playerPos.y);
-        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 3,1,0);
+        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
         jeongbiStage.SetActive(true);
         jeongbiStage.transform.position = tileManager.GetTiles[stagePos.y, stagePos.x].transform.position;
         jeongbiStage.transform.position = new Vector3(jeongbiStage.transform.position.x, 0, jeongbiStage.transform.position.z);
@@ -143,7 +144,7 @@ public class WaveManager : MonoBehaviour
         tileManager.InitializeArray(4);
         jeongbiStage.SetActive(false);
         playerPos = playerPositionData.playerTilePosition;
-        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 3,1,0);
+        yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
     }
     IEnumerator Wave1()
     {
@@ -225,7 +226,7 @@ public class WaveManager : MonoBehaviour
         }
         Debug.Log("Wave End");
     }
-    IEnumerator Wave6()
+    IEnumerator Wave7()
     {
         Debug.Log("Wave 9");
         tileManager.InitializeArray();
@@ -244,7 +245,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave7()
+    IEnumerator Wave8()
     {
         Debug.Log("Wave 2");
         tileManager.InitializeArray();
@@ -263,7 +264,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave8()
+    IEnumerator Wave6()
     {
         InitializeEnemyArray();
         MakeRandomEnemyMap(7);
@@ -272,10 +273,10 @@ public class WaveManager : MonoBehaviour
         while (enemyCountData.enemyCount > 0)
         {
             //랜덤으로 벽 생성
-            tileManager.InitializeArray(6);
-            tileManager.MakeRandomWall(Random.Range(80, 120));
-            yield return StartCoroutine(tileManager.MoveTilesByArray());
-            yield return new WaitForSeconds(1f);//랜덤으로 벽 생성
+            tileManager.InitializeArray(4);
+            tileManager.MakeRandomWall(Random.Range(700, 900));
+            yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,0));
+            yield return new WaitForSeconds(2f);//랜덤으로 벽 생성
         }
 
         Debug.Log("Wave End");
@@ -304,6 +305,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator WaveEnd()
     {
         tileManager.InitializeArray(4);
-        yield return StartCoroutine(tileManager.MoveTilesByArray(2,2,0));
+        yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
+        yield return new WaitForSeconds(2f);
     }
 }

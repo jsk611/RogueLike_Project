@@ -163,7 +163,7 @@ public class TileManager : MonoBehaviour
             else
             {
                 posList.Add(pos);
-                tileMap[randomY,randomX] += Random.Range(2,4);
+                tileMap[randomY,randomX] += Random.Range(1,7);
             }
         }
     }
@@ -235,13 +235,11 @@ public class TileManager : MonoBehaviour
     }
     public IEnumerator MoveTilesByArrayByWave(int x, int y, float height, float time, float alertTime = 1f)
     {
-        float maxTileHeight = GetMaxTileHeight();
         //경고 표시
         for (int i = 0; i < mapSize; i++)
         {
             for (int j = 0; j < mapSize; j++)
             {
-                tiles[i, j].maxHeight = maxTileHeight;
                 if (tileMap[i, j] / 2f != tiles[i, j].transform.position.y)
                 {
                     if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
@@ -253,7 +251,7 @@ public class TileManager : MonoBehaviour
 
         //타일 위치 변경
         float radius = 0;
-        float maxRadius = mapSize*1.5f;
+        float maxRadius = mapSize*Mathf.Sqrt(2);
         bool[,] eventTriggered = new bool[mapSize, mapSize];
         while (radius < maxRadius)
         {
@@ -277,7 +275,7 @@ public class TileManager : MonoBehaviour
                         else
                         {
                             if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile();
-                            tiles[i, j].WaveToChange(height, 0.5f, tileMap[i,j]);
+                            tiles[i, j].WaveToChange(height*(1-radius/maxRadius), 0.75f, tileMap[i,j]);
                         }
                     }
 

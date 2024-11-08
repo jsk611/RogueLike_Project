@@ -14,12 +14,13 @@ GameObject:
   - component: {fileID: 3356759942231058146}
   - component: {fileID: 5753236316888085777}
   - component: {fileID: 4769717708961663022}
+  - component: {fileID: 9036666279645293602}
   m_Layer: 8
   m_Name: Tile
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 18
   m_IsActive: 1
 --- !u!4 &7295974586078931598
 Transform:
@@ -150,6 +151,31 @@ MonoBehaviour:
   isSetActive: 1
   minimapTile: {fileID: 6946046808946640772}
   maxHeight: 0
+--- !u!205 &9036666279645293602
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7438511172107195512}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.12
+    fadeTransitionWidth: 0.05
+    renderers:
+    - renderer: {fileID: 7627629330283186329}
+  - screenRelativeHeight: 0
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
 --- !u!1 &8439232580100957939
 GameObject:
   m_ObjectHideFlags: 0

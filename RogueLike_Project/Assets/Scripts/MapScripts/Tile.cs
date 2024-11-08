@@ -26,31 +26,24 @@ public class Tile : MonoBehaviour
     {
         StartCoroutine(MoveCoroutine(pos_y, duration));
     }
-    public void AlertChanging(float time = 1f, bool isWarning = false)
+    public void AlertChanging(float time = 1.6f, bool isWarning = false)
     {
         if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, isWarning));
     }
     IEnumerator AlertChangingCoroutine(float time, bool isWarning)
     {
         Color alertColor = isWarning ? Color.red : Color.yellow;
+        if(isWarning) alertColor -= new Color(0, 0, 0, 0.5f);
 
         if (transform.position.y >= 0)
         {
-            while (time > 1f)
-            {
-                meshRenderer.material.SetColor("GridColor", alertColor);
-                yield return new WaitForSeconds(0.66f);
-                meshRenderer.material.SetColor("GridColor", Color.white);
-                yield return new WaitForSeconds(0.34f);
-                time -= 1f;
-            }
             while (time > 0)
             {
                 meshRenderer.material.SetColor("GridColor", alertColor);
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.4f);
                 meshRenderer.material.SetColor("GridColor", Color.white);
-                yield return new WaitForSeconds(0.25f);
-                time -= 0.5f;
+                yield return new WaitForSeconds(0.4f);
+                time -= 0.8f;
             }
         }
         else
@@ -126,7 +119,7 @@ public class Tile : MonoBehaviour
         isSetActive = true;
         StartCoroutine(TileCreating(size_y, duration));
     }
-    IEnumerator TileCreating(float size_y, float duration = 3f)
+    IEnumerator TileCreating(float size_y, float duration = 2f)
     {
 
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
@@ -142,6 +135,7 @@ public class Tile : MonoBehaviour
                 meshRenderer.material.SetColor("GridColor", newColor);
                 yield return new WaitForSeconds(Time.deltaTime);
             }
+            meshRenderer.material.SetColor("GridColor", new Color(1,1,1,1));
             //StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
         }
         else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
@@ -156,12 +150,15 @@ public class Tile : MonoBehaviour
         while(tmp > 0f)
         {
             tmp -= Time.deltaTime;
-            Color newColor = meshRenderer.material.GetColor("GridColor") - new Color(0,0,0,Time.deltaTime/duration);
-            meshRenderer.material.SetColor("GridColor", newColor);
+            
+            Color newColor = meshRenderer.material.GetColor("GridColor");
+            if (newColor.a > 0) newColor = newColor - new Color(0, 0, 0, 3 * Time.deltaTime / duration);
+            else { isSetActive = false; gameObject.SetActive(false); }
+                meshRenderer.material.SetColor("GridColor", newColor);
             yield return new WaitForSeconds(Time.deltaTime);
         }
-        gameObject.SetActive(false);
-        isSetActive = false;
+        //gameObject.SetActive(false);
+        //isSetActive = false;
     }
 
     public void ChangeHeightWithFixedBase(float size_y, float duration = 3f)
