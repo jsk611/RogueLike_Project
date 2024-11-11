@@ -2,107 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering.VirtualTexturing;
 
 public class RangedMonster : MonsterBase
 {
-    //[Header("Settings")]
-    //[SerializeField] float attackRange = 10f;
-    //[SerializeField] float fireRate = 2f;
-    //[SerializeField] float rotationSpeed = 2f;
+    [Header("settings")]
+    [SerializeField] float firerate = 2f;
+    [SerializeField] float rotationSpeed = 2f;
 
-    //public EnemyWeapon gun;
-    //public Transform firePoint;
+    public EnemyWeapon gun;
+    public Transform firePoint;
 
-    //private FieldOfView fov;
+    protected override void Start() { base.Start(); }
 
-    //protected override void Start()
-    //{
-    //    fov = GetComponent<FieldOfView>();
-    //    hp = 10; // 기본 체력 설정
-    //    state = State.IDLE;
-    //    base.Start();
-    //}
+    #region StateMachine
+    protected override IEnumerator IDLE() { return base.IDLE(); }
+    protected override IEnumerator CHASE() { return base.CHASE(); }
+    protected override IEnumerator ATTACK() { 
+        yield return base.ATTACK();
 
-    //protected override IEnumerator StateMachine()
-    //{
-    //    while (hp > 0)
-    //    {
-            
-    //        yield return StartCoroutine(state.ToString());
-    //    }
-    //}
+        try
+        {
+            gun.Fire(transform.rotation);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("gun fire error: " + e.Message);
+        }
 
-    //IEnumerator IDLE()
-    //{
-    //    if (fov.visibleTargets.Count > 0)
-    //    {
-    //        target = fov.visibleTargets[0];
-    //        ChangeState(State.CHASE);
-    //    }
-    //    else
-    //    {
-    //        target = null;
-    //    }
+        ChangeState(State.ATTACK);
+        yield return null;
 
-    //    yield return null;
-    //}
 
-    //IEnumerator CHASE()
-    //{
-    //    nmAgent.SetDestination(target.position);
+    }
+    protected override IEnumerator HIT() { return base.HIT(); }
+    protected override IEnumerator AIM() { return base.AIM(); }
 
-    //    if (nmAgent.remainingDistance <= nmAgent.stoppingDistance)
-    //    {
-    //        ChangeState(State.AIMING);
-    //    }
+    protected override IEnumerator DIE() { return base.DIE(); }
+    #endregion
 
-    //    yield return null;
-    //}
 
-    //private IEnumerator AIMING()
-    //{
-    //    ChangeState(State.SHOT);
-    //    yield return new WaitForSeconds(fireRate);
-    //}
+    private void Update()
+    {
+        if (target != null && (state == State.AIM || state == State.CHASE))
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
 
-    //private IEnumerator SHOT()
-    //{
-    //    try
-    //    {
-    //        gun.Fire(transform.rotation);
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError("Gun Fire Error: " + e.Message);
-    //    }
-
-    //    ChangeState(State.ATTACK);
-    //    yield return null;
-    //}
-
-    //IEnumerator ATTACK()
-    //{
-    //    try
-    //    {
-    //        gun.Fire(transform.rotation);
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError("Gun Fire Error: " + e.Message);
-    //    }
-
-    //    ChangeState(State.CHASE);
-    //    yield return new WaitForSeconds(fireRate);
-    //}
-
-    //private void Update()
-    //{
-    //    if (target != null && (state == State.AIMING || state == State.CHASE))
-    //    {
-    //        Vector3 direction = (target.position - transform.position).normalized;
-    //        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-    //    }
-    //}
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+        }
+    }
 }
