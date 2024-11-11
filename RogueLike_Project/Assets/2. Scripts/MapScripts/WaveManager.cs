@@ -110,11 +110,7 @@ public class WaveManager : MonoBehaviour
         tileManager.MakeMapByCSV(startMapPath);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
         startStage.SetActive(false);
-        //Tile[] tiles = startPosition.GetComponentsInChildren<Tile>();
-        //foreach(Tile t in tiles)
-        //{
-        //    t.MovePosition(0, 10);
-        //}
+        
         //yield return new WaitForSeconds(9f);
         yield return new WaitForSeconds(0.1f);
         tileManager.InitializeArray(4);
