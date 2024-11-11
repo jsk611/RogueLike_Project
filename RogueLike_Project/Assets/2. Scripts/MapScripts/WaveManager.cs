@@ -77,9 +77,8 @@ public class WaveManager : MonoBehaviour
             int prevWave = -1;
             for(int i=0; i<5; i++)
             {
-                int randNum = Random.Range(1, 7);
-                while(prevWave == randNum) randNum = Random.Range(1, 7);
-
+                int randNum = Random.Range(1, 9);
+                while(prevWave == randNum) randNum = Random.Range(1, 9);
                 yield return StartCoroutine("Wave" + randNum.ToString());
                 yield return StartCoroutine(WaveEnd());
                 yield return new WaitForSeconds(0.5f);
@@ -226,11 +225,12 @@ public class WaveManager : MonoBehaviour
         }
         Debug.Log("Wave End");
     }
-    IEnumerator Wave7()
+    IEnumerator Wave5()
     {
-        Debug.Log("Wave 9");
+        Debug.Log("Wave 5");
         tileManager.InitializeArray();
-        tileManager.MakeCircle(Random.Range(8,14));
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[4], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -245,11 +245,12 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave8()
+    IEnumerator Wave6()
     {
-        Debug.Log("Wave 2");
+        Debug.Log("Wave 6");
         tileManager.InitializeArray();
-        tileManager.MakePyramid(Random.Range(15,31));
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[5], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -264,7 +265,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave6()
+    IEnumerator Wave7()
     {
         InitializeEnemyArray();
         MakeRandomEnemyMap(7);
@@ -282,9 +283,9 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave5()
+    IEnumerator Wave8()
     {
-        Debug.Log("Wave 5");
+        Debug.Log("Wave 8");
         yield return new WaitForSeconds(1f);
 
         InitializeEnemyArray();
