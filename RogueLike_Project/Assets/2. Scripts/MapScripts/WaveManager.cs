@@ -77,9 +77,8 @@ public class WaveManager : MonoBehaviour
             int prevWave = -1;
             for(int i=0; i<5; i++)
             {
-                int randNum = Random.Range(1, 7);
-                while(prevWave == randNum) randNum = Random.Range(1, 7);
-
+                int randNum = Random.Range(1, 9);
+                while(prevWave == randNum) randNum = Random.Range(1, 9);
                 yield return StartCoroutine("Wave" + randNum.ToString());
                 yield return StartCoroutine(WaveEnd());
                 yield return new WaitForSeconds(0.5f);
@@ -108,18 +107,14 @@ public class WaveManager : MonoBehaviour
 
         nextWaveTrigger = false;
         //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
-        tileManager.MakeMapByCSV(startMapPath);
+        tileManager.MakeMapByCSV(startMapPath, 7,7);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
         startStage.SetActive(false);
-        //Tile[] tiles = startPosition.GetComponentsInChildren<Tile>();
-        //foreach(Tile t in tiles)
-        //{
-        //    t.MovePosition(0, 10);
-        //}
+        
         //yield return new WaitForSeconds(9f);
         yield return new WaitForSeconds(0.1f);
         tileManager.InitializeArray(4);
-        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 1.5f, 1, 0));
+        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 1.5f, 1, 0));
         startStage.SetActive(false);
         
         StartCoroutine(RunWaves());
@@ -226,11 +221,12 @@ public class WaveManager : MonoBehaviour
         }
         Debug.Log("Wave End");
     }
-    IEnumerator Wave7()
+    IEnumerator Wave5()
     {
-        Debug.Log("Wave 9");
+        Debug.Log("Wave 5");
         tileManager.InitializeArray();
-        tileManager.MakeCircle(Random.Range(8,14));
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[4], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -245,11 +241,12 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave8()
+    IEnumerator Wave6()
     {
-        Debug.Log("Wave 2");
+        Debug.Log("Wave 6");
         tileManager.InitializeArray();
-        tileManager.MakePyramid(Random.Range(15,31));
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(mapPaths[5], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
@@ -264,7 +261,7 @@ public class WaveManager : MonoBehaviour
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave6()
+    IEnumerator Wave7()
     {
         InitializeEnemyArray();
         MakeRandomEnemyMap(7);
@@ -274,17 +271,21 @@ public class WaveManager : MonoBehaviour
         {
             //랜덤으로 벽 생성
             tileManager.InitializeArray(4);
-            tileManager.MakeRandomWall(Random.Range(700, 900));
+            tileManager.MakeRandomWall(Random.Range(250, 400));
             yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,0));
-            yield return new WaitForSeconds(2f);//랜덤으로 벽 생성
+            yield return new WaitForSeconds(2f);
+            if (enemyCountData.enemyCount == 0) break;
+            yield return new WaitForSeconds(2f);
+            if (enemyCountData.enemyCount == 0) break;
+            yield return new WaitForSeconds(2f);
         }
 
         Debug.Log("Wave End");
     }
 
-    IEnumerator Wave5()
+    IEnumerator Wave8()
     {
-        Debug.Log("Wave 5");
+        Debug.Log("Wave 8");
         yield return new WaitForSeconds(1f);
 
         InitializeEnemyArray();

@@ -119,7 +119,7 @@ public class Tile : MonoBehaviour
         isSetActive = true;
         StartCoroutine(TileCreating(size_y, duration));
     }
-    IEnumerator TileCreating(float size_y, float duration = 2f)
+    IEnumerator TileCreating(float size_y, float duration = 1.5f)
     {
 
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
