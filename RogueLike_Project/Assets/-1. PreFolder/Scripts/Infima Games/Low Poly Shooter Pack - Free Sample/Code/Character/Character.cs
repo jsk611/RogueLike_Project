@@ -273,6 +273,10 @@ namespace InfimaGames.LowPolyShooterPack
                     if (Time.time - lastShotTime > 1.0f / equippedWeapon.GetRateOfFire())
                         Fire();
                 }
+                else if (CanPlayAnimationFire() && !equippedWeapon.HasAmmunition() && equippedWeapon.IsAutomatic())
+                {
+                    PlayReloadAnimation();
+                }
             }
 
             //Update Animator.
@@ -756,7 +760,10 @@ namespace InfimaGames.LowPolyShooterPack
                     }
                     //Fire Empty.
                     else
+                    {
                         FireEmpty();
+                        PlayReloadAnimation();
+                    }
                     break;
                 //Canceled.
                 case { phase: InputActionPhase.Canceled }:
