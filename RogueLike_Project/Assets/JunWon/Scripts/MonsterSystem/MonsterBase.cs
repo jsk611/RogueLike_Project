@@ -18,7 +18,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("NormalStats Fields")]
     [SerializeField] protected MonsterStatus monsterStatus;
-    protected float attackRange = 1.0f; // 공격 범위
+    protected float attackRange = 8.0f; // 공격 범위
     protected float detectionRange = 1.0f; // 감지 범위
     protected float attackCooldown = 1.0f; // 공격 간격
     protected float hp = 0; // 기본 체력
@@ -58,7 +58,7 @@ public abstract class MonsterBase : MonoBehaviour
         hp = monsterStatus.GetHealth(); // 기본 체력
         dmg = monsterStatus.GetAttackDamage(); // 기본 공격력
         chaseSpeed = monsterStatus.GetMovementSpeed(); // 기본 이동 속도
-        attackRange = monsterStatus.GetAttackRange(); // 기본 공격 범위
+        // attackRange = monsterStatus.GetAttackRange(); // 기본 공격 범위
 
         //def = monsterStatus.GetDefence();
 
