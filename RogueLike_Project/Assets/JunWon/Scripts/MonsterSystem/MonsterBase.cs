@@ -58,6 +58,7 @@ public abstract class MonsterBase : MonoBehaviour
         hp = monsterStatus.GetHealth(); // 기본 체력
         dmg = monsterStatus.GetAttackDamage(); // 기본 공격력
         chaseSpeed = monsterStatus.GetMovementSpeed(); // 기본 이동 속도
+        attackRange = monsterStatus.GetAttackRange(); // 기본 공격 범위
 
         //def = monsterStatus.GetDefence();
 

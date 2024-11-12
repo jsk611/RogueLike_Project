@@ -52,6 +52,10 @@ public class MonsterStatus : StatusBehaviour
     [SerializeField]
     private float AttackSpeed = 100f;
 
+    [Tooltip("Creature Attack Range")]
+    [SerializeField]
+    private float AttackRange = 1f;
+
     //[Tooltip("Creature Jump Power")]
     //[SerializeField]
     //private float JumpPower;
@@ -224,6 +228,12 @@ public class MonsterStatus : StatusBehaviour
         AttackSpeed = attackSpeed;
     }
 
+    public override void SetAttackRange(float attackRange)
+    {
+        AttackRange = attackRange;
+    }
+
+
     // Damage Alleviation
     //public override void IncreaseDamageAlleviation(float alleviation)
     //{
@@ -248,7 +258,7 @@ public class MonsterStatus : StatusBehaviour
     //    JumpPower = jumpPower; 
     //}
 
-    
+
 
 
     public override float GetHealth() => Health;
@@ -257,6 +267,7 @@ public class MonsterStatus : StatusBehaviour
     //  public override float GetDefence() => Defence;
     public override float GetAttackDamage() => Damage;
     public override float GetAttackSpeed() => AttackSpeed / 100f;
+    public override float GetAttackRange() => AttackRange;
     public override float GetCriticalDamage() => CriticalDamage;
     public override float GetCriticalRate() => CriticalRate;
     //public override float GetEffectResist() => EffectResist;

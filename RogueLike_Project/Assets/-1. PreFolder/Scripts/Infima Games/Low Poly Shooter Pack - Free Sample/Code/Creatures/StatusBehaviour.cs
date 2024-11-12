@@ -65,6 +65,11 @@ public abstract class StatusBehaviour : MonoBehaviour
     public abstract void SetAttackSpeed(float attackSpeed);
     public abstract float GetAttackSpeed();
 
+    public abstract void SetAttackRange(float attackRange);
+    public abstract float GetAttackRange();
+
+
+
     //public abstract void IncreaseJumpPower(float jumpPower);
     //public abstract void DecreaseJumpPower(float jumpPower);
     //public abstract void SetJumpPower(float jumpPower);
