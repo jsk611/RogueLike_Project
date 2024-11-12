@@ -154,7 +154,7 @@ Material:
     - Color_1313CB5F: {r: 1, g: 1, b: 1, a: 1}
     - Color_7F5D350D: {r: 1, g: 1, b: 1, a: 1}
     - Color_BE5A53D8: {r: 1, g: 1, b: 1, a: 1}
-    - GridColor: {r: 1, g: 1, b: 1, a: 1}
+    - GridColor: {r: 1, g: 1, b: 1, a: 0.7490196}
     - Vector2_2818E70A: {r: 1, g: 0.5, b: 0, a: 0}
     - Vector2_EF5B598A: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BaseColor: {r: 0.58431375, g: 0.28750044, b: 0.20784312, a: 1}
