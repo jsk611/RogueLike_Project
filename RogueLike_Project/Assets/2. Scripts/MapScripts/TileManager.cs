@@ -10,7 +10,7 @@ using static UnityEngine.EventSystems.EventTrigger;
 public class TileManager : MonoBehaviour
 {
 
-    public static int mapSize = 60;
+    public static int mapSize = 45;
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
     float[,] tileMap = new float[mapSize, mapSize];
@@ -57,7 +57,7 @@ public class TileManager : MonoBehaviour
         {
             for (int j = 0; j < mapSize; j++)
             {
-                tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0, j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
+                tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0,j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
                 tiles[i,j].gameObject.name = j.ToString() + "," + i.ToString();
                 tiles[i, j].isSetActive = false;
                 tiles[i,j].gameObject.SetActive(false);

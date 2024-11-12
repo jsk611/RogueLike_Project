@@ -107,14 +107,14 @@ public class WaveManager : MonoBehaviour
 
         nextWaveTrigger = false;
         //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
-        tileManager.MakeMapByCSV(startMapPath);
+        tileManager.MakeMapByCSV(startMapPath, 7,7);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
         startStage.SetActive(false);
         
         //yield return new WaitForSeconds(9f);
         yield return new WaitForSeconds(0.1f);
         tileManager.InitializeArray(4);
-        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(15, 12, 1.5f, 1, 0));
+        yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 1.5f, 1, 0));
         startStage.SetActive(false);
         
         StartCoroutine(RunWaves());
@@ -271,9 +271,13 @@ public class WaveManager : MonoBehaviour
         {
             //랜덤으로 벽 생성
             tileManager.InitializeArray(4);
-            tileManager.MakeRandomWall(Random.Range(700, 900));
+            tileManager.MakeRandomWall(Random.Range(250, 400));
             yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,0));
-            yield return new WaitForSeconds(2f);//랜덤으로 벽 생성
+            yield return new WaitForSeconds(2f);
+            if (enemyCountData.enemyCount == 0) break;
+            yield return new WaitForSeconds(2f);
+            if (enemyCountData.enemyCount == 0) break;
+            yield return new WaitForSeconds(2f);
         }
 
         Debug.Log("Wave End");
