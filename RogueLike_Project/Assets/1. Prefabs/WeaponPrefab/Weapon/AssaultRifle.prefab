@@ -328,7 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965555d451af4a2299927c4e3dd7ee09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammunitionTotal: 10
+  ammunitionTotal: 25
   sprite: {fileID: 0}
 --- !u!1 &7320211527090879673
 GameObject:

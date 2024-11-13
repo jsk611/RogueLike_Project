@@ -179,9 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d857d305cdbc3b5468143e1f488dfb15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  automatic: 0
-  projectileImpulse: 400
-  roundsPerSeconds: 2
+  automatic: 1
+  projectileImpulse: 600
+  roundsPerSeconds: 1.5
   pelletAmounts: 10
   mask:
     serializedVersion: 2
@@ -311,14 +311,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3591143598744822249}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 1.24, y: 121.06, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2913539807766308933}
   m_Father: {fileID: 1435865936207167943}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &8499135264629214208
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,5 +385,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 965555d451af4a2299927c4e3dd7ee09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammunitionTotal: 10
+  ammunitionTotal: 12
   sprite: {fileID: 0}
