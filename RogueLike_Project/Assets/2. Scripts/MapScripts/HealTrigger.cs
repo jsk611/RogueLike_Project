@@ -14,7 +14,7 @@ public class HealTrigger : MonoBehaviour
     private void OnEnable()
     {
         isHealed = false;
-        GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 1f);
+        GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
 
     private void OnTriggerStay(Collider other)
@@ -26,7 +26,7 @@ public class HealTrigger : MonoBehaviour
                 isHealed = true;
                 PlayerStatus ps = other.gameObject.GetComponent<PlayerStatus>();
                 ps.IncreaseHealth(ps.GetMaxHealth() * 0.3f);
-                GetComponent<MeshRenderer>().material.color *= new Color(1, 1, 1, 0.5f);
+                GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
             }
         }
     }

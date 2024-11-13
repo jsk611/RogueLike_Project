@@ -33,7 +33,7 @@ public class Tile : MonoBehaviour
     IEnumerator AlertChangingCoroutine(float time, bool isWarning)
     {
         Color alertColor = isWarning ? Color.red : Color.yellow;
-        if(isWarning) alertColor -= new Color(0, 0, 0, 0.5f);
+        alertColor -= new Color(0, 0, 0, 0.5f);
 
         if (transform.position.y >= 0)
         {
