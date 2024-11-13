@@ -19,6 +19,9 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     [Header("Delay(CoolTime)")]
     [SerializeField] protected float transitionDelay;
 
+    [Header("DropItems")]
+    [SerializeField] GameObject[] dropItems;
+
     protected MonsterStatus monsterStatus;
 
     protected Coroutine stateMachineCoroutine;
@@ -81,6 +84,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
             enemyCountData.enemyCount--;
             Debug.Log("Enemy Died, ³²Àº Àû : " + enemyCountData.enemyCount);
             isDie = true;
+            Instantiate(dropItems[0], transform.position + Vector3.up, Quaternion.identity);
         }
         Destroy(gameObject);
     }
