@@ -9,6 +9,7 @@ public class WaveManager : MonoBehaviour
     EnemyType[,] enemyMap;
     int mapSize;
 
+    [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
     [SerializeField] PlayerPositionData playerPositionData;
     bool nextWaveTrigger = false;
@@ -17,6 +18,7 @@ public class WaveManager : MonoBehaviour
         set { nextWaveTrigger = value; }
     }
 
+    [Header("Map")]
     [SerializeField] string[] mapPaths;
     [SerializeField] string startMapPath;
     [SerializeField] string jeongbiMapPath;
@@ -25,6 +27,11 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject startPosition;
     [SerializeField] GameObject jeongbiStage; 
     Vector3 sp;
+
+    [Header("Item")]
+    Queue<int> earnedItems = new Queue<int>();
+    [SerializeField] GameObject upgradeUI;
+
     void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
@@ -305,8 +312,29 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator WaveEnd()
     {
+        Item[] items = FindObjectsOfType<Item>();
+        foreach(Item item in items) { 
+            item.isChasing = true;
+            item.velocity *= 2;
+        }
         tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
+        while(earnedItems.Count > 0)
+        {
+            upgradeUI.SetActive(true);
+            earnedItems.Dequeue();
+            Debug.Log("아이템 사용");
+
+            //UI 임시로 띄우기
+            yield return new WaitForSeconds(1f);
+            upgradeUI.SetActive(false);
+            yield return new WaitForSeconds(0.15f);
+        }
         yield return new WaitForSeconds(2f);
+    }
+
+    public void AddItem(int star)
+    {
+        earnedItems.Enqueue(star);
     }
 }

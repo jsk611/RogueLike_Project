@@ -38,8 +38,8 @@ TagManager:
   - Projectile
   - Creature
   - Obstacle
-  - 
-  - 
+  - Item
+  - ItemCollider
   - 
   - 
   - 
