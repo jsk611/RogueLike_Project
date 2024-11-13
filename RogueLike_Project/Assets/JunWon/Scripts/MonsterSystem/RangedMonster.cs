@@ -7,11 +7,10 @@ using UnityEngine.Rendering.VirtualTexturing;
 public class RangedMonster : MonsterBase
 {
     [Header("settings")]
-    [SerializeField] float firerate = 2f;
+    [SerializeField] float firerate = 1.5f;
     [SerializeField] float rotationSpeed = 2f;
 
     public EnemyWeapon gun;
-    public Transform firePoint;
 
     protected override void Start() { base.Start(); }
 
@@ -23,15 +22,16 @@ public class RangedMonster : MonsterBase
 
         try
         {
-            gun.Fire(transform.rotation);
+            gun.Fire();
         }
         catch (System.Exception e)
         {
             Debug.LogError("gun fire error: " + e.Message);
         }
 
-        ChangeState(State.ATTACK);
-        yield return null;
+        ChangeState(State.CHASE);
+        yield return new WaitForSeconds(GetAnimationClipLength("Attack"));
+        yield return new WaitForSeconds(1.0f);
 
 
     }

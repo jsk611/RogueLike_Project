@@ -62,7 +62,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110725346220553371}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 23.1893, y: 4.0004015, z: 10.307561}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -213,13 +213,12 @@ MonoBehaviour:
   nmAgent: {fileID: 6717761148714445217}
   fov: {fileID: 7086458819251623239}
   playerRigidBody: {fileID: 4726898234894816896}
-  monsterStatus: {fileID: 0}
+  monsterStatus: {fileID: 3520500315718119684}
   transitionDelay: 0
   enemyCountData: {fileID: 0}
   firerate: 2
   rotationSpeed: 2
-  gun: {fileID: 0}
-  firePoint: {fileID: 0}
+  gun: {fileID: 3094230274907130470}
 --- !u!1 &256589709067956253
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,6 +895,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6113558050834159875}
   - component: {fileID: 7749517810968117054}
+  - component: {fileID: 3094230274907130470}
   m_Layer: 0
   m_Name: Robot_Soldier_Rifle
   m_TagString: Untagged
@@ -972,6 +972,22 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.2805199, y: -0.04042554, z: 0.122096196}
     m_Extent: {x: 0.52541786, y: 0.042818546, z: 0.20401202}
   m_DirtyAABB: 0
+--- !u!114 &3094230274907130470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037538515600942337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9897bd1387689a48803395ff68105f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 6113558050834159875}
+  bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
+    type: 3}
+  monsterStatus: {fileID: 3520500315718119684}
 --- !u!1 &3083242140981139468
 GameObject:
   m_ObjectHideFlags: 0
