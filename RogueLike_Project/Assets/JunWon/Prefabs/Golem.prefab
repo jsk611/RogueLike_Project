@@ -299,6 +299,7 @@ GameObject:
   - component: {fileID: 7385565905884155825}
   - component: {fileID: 34521053054305114}
   - component: {fileID: 1457070099470347993}
+  - component: {fileID: 7060945972828432246}
   m_Layer: 16
   m_Name: Upper_Leg_L
   m_TagString: Untagged
@@ -372,6 +373,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &7060945972828432246
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4644248850744652897}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 39.357933
+  m_Height: 78.71588
+  m_Direction: 1
+  m_Center: {x: -2.5450478, y: 0.00001734831, z: -36.312786}
 --- !u!1 &4739141897551265880
 GameObject:
   m_ObjectHideFlags: 0
@@ -536,6 +560,7 @@ GameObject:
   - component: {fileID: 5266449347478749467}
   - component: {fileID: 5407671808089421235}
   - component: {fileID: 5152150415338884019}
+  - component: {fileID: 594921379378772637}
   m_Layer: 16
   m_Name: Golem
   m_TagString: Untagged
@@ -699,6 +724,29 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &594921379378772637
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698881975617418477}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2.82869
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.222223, z: 0}
 --- !u!1 &6784086843725728512
 GameObject:
   m_ObjectHideFlags: 0
