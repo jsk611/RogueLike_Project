@@ -6,13 +6,11 @@ public class EnemyWeapon : MonoBehaviour
 {
     [SerializeField] Transform firePoint; //발사 위치;
     public GameObject bulletPrefab;
-    public SkinnedMeshRenderer smRenderer;
     public MonsterStatus monsterStatus;
 
     // Start is called before the first frame update
     void Start()
     {
-        firePoint = smRenderer.GetComponent<SkinnedMeshRenderer>().bones[0].transform;
     }
 
     // Update is called once per frame
