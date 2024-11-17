@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.LowLevel;
+using static UnityEngine.GraphicsBuffer;
 
 
 public abstract class MonsterBase : MonoBehaviour
@@ -19,9 +22,9 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("NormalStats Fields")]
     [SerializeField] protected MonsterStatus monsterStatus;
-    protected float attackRange = 3.0f; // 공격 범위
-    protected float detectionRange = 1.0f; // 감지 범위
-    protected float attackCooldown = 1.0f; // 공격 간격
+    [SerializeField] protected float attackRange = 5.0f; // 공격 범위
+    [SerializeField] protected float attackCooldown = 3.0f; // 공격 간격
+    protected float attackTimer = 0.0f; // 공격 타이머
     protected float hp = 0; // 기본 체력
     protected float dmg = 0; // 기본 데미지
     protected float chaseSpeed; // 추적 속도
@@ -31,7 +34,18 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("Delay(CoolTime)")]
     [SerializeField] protected float transitionDelay;
 
-    protected Coroutine stateMachineCoroutine;
+
+
+    [Header("HitVariable")]
+    [SerializeField] private float hitCooldown = 1.0f; // 피격 쿨타임 (초 단위)
+    private float lastHitTime = 0.0f; // 마지막으로 피격된 시간
+    private float hitTimer = 0f;
+    private float hitDuration = 0.8f; // 피격 애니메이션 길이
+
+    [Header("DieVariable")]
+    private float dieTimer = 0f;
+    private float dieDuration = 5.0f; // 죽음 애니메이션 길이
+
 
     protected enum State
     {
@@ -45,12 +59,28 @@ public abstract class MonsterBase : MonoBehaviour
         KILL,
     }
 
+
     protected State state;
+    protected Coroutine stateMachineCoroutine;
+    private Dictionary<State, Action> stateActions;
+
 
     [SerializeField] EnemyCountData enemyCountData;
     bool isDie = false;
     protected virtual void Start()
     {
+        stateActions = new Dictionary<State, Action> 
+        {
+
+            { State.IDLE, UpdateIdle },
+            { State.CHASE, UpdateChase },
+            { State.ATTACK, UpdateAttack },
+            { State.HIT, UpdateHit },
+            { State.DIE, UpdateDie },
+            { State.AIM, UpdateAim },
+
+        };
+
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
         monsterStatus = GetComponent<MonsterStatus>();
@@ -286,7 +316,14 @@ public abstract class MonsterBase : MonoBehaviour
     {
         if (anim != null)
         {
-            anim.SetInteger("State", (int)state);
+            if (state == State.HIT)
+            {
+                anim.Play("GetHit", 0, 0f); // 트리거를 사용해 애니메이션 강제 재생
+            }
+            else
+            {
+                anim.SetInteger("State", (int)state); // 다른 상태는 Integer로 처리
+            }
         }
     }
     protected float GetAnimationClipLength(string clipname)
@@ -319,49 +356,49 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void Update()
     {
         Debug.Log(name + " current state = " + state);
-        switch (state)
+        Debug.Log(attackTimer + " attack Timer = " + attackTimer);
+        if (state == State.IDLE) CheckPlayer();
+        if (state == State.AIM || state == State.CHASE || state == State.ATTACK)
         {
-            case State.IDLE:
-                UpdateIdle();
-                break;
-            case State.CHASE:
-                UpdateChase();
-                break;
-            case State.ATTACK:
-                UpdateAttack();
-                break;
-            case State.HIT:
-                UpdateHit();
-                break;
-            case State.DIE:
-                UpdateDie();
-                break;
-                // 나머지 상태들도 추가
+            RotateTowardsTarget();
         }
+        PlayAction(state);
+    }
 
-        if (target != null && (state == State.AIM || state == State.CHASE))
+    private void PlayAction(State state)
+    {
+        if (stateActions.TryGetValue(state, out var action))
         {
-            Vector3 direction = (target.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+            action?.Invoke();
+        }
+        else
+        {
+            Debug.LogWarning($"State {state}에 대한 액션이 정의되지 않았습니다.");
         }
     }
 
-    protected virtual void UpdateIdle()
+    private void CheckPlayer()
     {
-        SetAnimatorState(state);
-
         if (fov.visibleTargets.Count > 0)
         {
             target = fov.visibleTargets[0];
-            ChangeState(State.CHASE);
+            if (state != State.ATTACK || state != State.HIT) ChangeState(State.CHASE);
         }
+    }
+
+    private void RotateTowardsTarget()
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+    }
+    protected virtual void UpdateIdle()
+    {
     }
 
     protected virtual void UpdateChase()
     {
-        SetAnimatorState(state);
 
         if (target == null)
         {
@@ -373,7 +410,7 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent.speed = chaseSpeed;
         nmAgent.SetDestination(target.position);
 
-        if (!nmAgent.pathPending && nmAgent.remainingDistance <= attackRange)
+        if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {
             if (this is RangedMonster)
                 ChangeState(State.AIM);
@@ -382,58 +419,43 @@ public abstract class MonsterBase : MonoBehaviour
         }
     }
 
-    private float attackTimer = 0f;
     protected virtual void UpdateAttack()
     {
-        SetAnimatorState(state);
+
         nmAgent.isStopped = true;
         nmAgent.speed = 0f;
 
-        if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
-        {
-            ChangeState(State.CHASE);
-            return;
-        }
-
+        // 공격 타이머 진행
         attackTimer += Time.deltaTime;
-        if (attackTimer >= attackCooldown)
+
+        if (attackTimer >= attackCooldown) 
         {
-            // 공격 실행
-            PerformAttack();
+            // 공격 후 타겟이 범위를 벗어났다면 추적 상태로 전환
+            if (Vector3.Distance(transform.position, target.position) > attackRange) 
+                ChangeState(State.CHASE);
+
+            // 공격 타이머 초기화
             attackTimer = 0f;
         }
     }
-    public virtual void PerformAttack()
-    {
-        if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
-        {
-            target.GetComponent<PlayerStatus>().DecreaseHealth(dmg);
-        }
-    }
-
-    private float hitTimer = 0f;
-    private float hitDuration = 0.5f; // 피격 애니메이션 길이
+     
 
     protected virtual void UpdateHit()
     {
-        SetAnimatorState(state);
         nmAgent.isStopped = true;
 
         hitTimer += Time.deltaTime;
         if (hitTimer >= hitDuration)
         {
-            nmAgent.isStopped = false;
             ChangeState(State.CHASE);
             hitTimer = 0f;
         }
     }
 
 
-    private float dieTimer = 0f;
-    private float dieDuration = 1.5f; // 죽음 애니메이션 길이
+   
     protected void UpdateDie()
     {
-        SetAnimatorState(state);
         nmAgent.isStopped = true;
 
         dieTimer += Time.deltaTime;
@@ -444,13 +466,18 @@ public abstract class MonsterBase : MonoBehaviour
         }
     }
 
+    protected void UpdateAim()
+    {
+         nmAgent.isStopped = true;
+         ChangeState(State.ATTACK);
+    }
+
     protected void ChangeState(State newState)
     {
-        if (isDie) return;
-
-        if (state != newState)
+        if (state != newState || newState == State.HIT)
         {
             Debug.Log(transform.name + " 상태 변경: " + state + " → " + newState);
+            SetAnimatorState(newState);
             state = newState;
 
             // 상태별 초기화
@@ -485,14 +512,8 @@ public abstract class MonsterBase : MonoBehaviour
         {
             // 죽음 처리
             isDie = true; // 죽음 플래그 설정
-
-            // 애니메이터 파라미터 설정
-            if (anim != null)
-            {
-                anim.SetBool("isDead", true); // 또는 anim.SetTrigger("DieTrigger");
-            }
-
             ChangeState(State.DIE);
+            dieTimer = 0.0f;
         }
     }
 

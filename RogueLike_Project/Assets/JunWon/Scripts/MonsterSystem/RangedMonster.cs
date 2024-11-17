@@ -6,50 +6,39 @@ using UnityEngine.Rendering.VirtualTexturing;
 
 public class RangedMonster : MonsterBase
 {
-    //[Header("settings")]
-    //[SerializeField] float firerate = 1.5f;
-    //[SerializeField] float rotationSpeed = 2f;
+    [Header("settings")]
+    [SerializeField] float firerate = 1.5f;
+    bool isFired = false;
 
-    //public EnemyWeapon gun;
+    public EnemyWeapon gun;
 
-    //protected override void Start() { base.Start(); }
+    protected override void UpdateAttack()
+    {
+        nmAgent.isStopped = true;
+        nmAgent.speed = 0f;
 
-    //#region StateMachine
-    //protected override IEnumerator IDLE() { return base.IDLE(); }
-    //protected override IEnumerator CHASE() { return base.CHASE(); }
-    //protected override IEnumerator ATTACK() { 
-    //    yield return base.ATTACK();
+        // 공격 타이머 진행
+        if (!isFired)
+        {
+            gun.Fire();
+            isFired = true;
+        }
 
-    //    try
-    //    {
-    //        gun.Fire();
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError("gun fire error: " + e.Message);
-    //    }
+        attackTimer += Time.deltaTime;
 
-    //    ChangeState(State.CHASE);
-    //    yield return new WaitForSeconds(GetAnimationClipLength("Attack"));
-    //    yield return new WaitForSeconds(1.0f);
+        if (attackTimer >= attackCooldown)
+        {
+            // 공격 후 타겟이 범위를 벗어났다면 추적 상태로 전환
+            if (Vector3.Distance(transform.position, target.position) > attackRange)
+                ChangeState(State.CHASE);
 
-
-    //}
-    //protected override IEnumerator HIT() { return base.HIT(); }
-    //protected override IEnumerator AIM() { return base.AIM(); }
-
-    //protected override IEnumerator DIE() { return base.DIE(); }
-    //#endregion
+            // 공격 타이머 초기화
+            attackTimer = 0f;
+            isFired = false;
+        }
+      
+    }
 
 
-    //private void Update()
-    //{
-    //    if (target != null && (state == State.AIM || state == State.CHASE))
-    //    {
-    //        Vector3 direction = (target.position - transform.position).normalized;
-    //        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-    //    }
-    //}
+  
 }

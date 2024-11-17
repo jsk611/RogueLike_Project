@@ -61,7 +61,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e9623462cfb84b64d850712d377f073f,
         type: 3}
       propertyPath: m_Name
-      value: Bullet_ShotGun
+      value: SoliderBullet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -91,4 +91,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 5
-  speed: 0.05
+  speed: 1

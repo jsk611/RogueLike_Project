@@ -695,7 +695,10 @@ MonoBehaviour:
   fov: {fileID: 8380599353331853265}
   playerRigidBody: {fileID: 5152150415338884019}
   monsterStatus: {fileID: 7043160550485060466}
+  attackRange: 5
+  attackCooldown: 1
   transitionDelay: 0
+  hitCooldown: 1
   enemyCountData: {fileID: 0}
 --- !u!54 &5152150415338884019
 Rigidbody:
@@ -720,7 +723,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -743,10 +746,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2.82869
+  m_Radius: 1
+  m_Height: 4
   m_Direction: 1
-  m_Center: {x: 0, y: 2.222223, z: 0}
+  m_Center: {x: 0, y: 2, z: 0.2}
 --- !u!1 &6784086843725728512
 GameObject:
   m_ObjectHideFlags: 0
