@@ -42,7 +42,7 @@ public class Item : MonoBehaviour
 
             Vector3 dir = (playerPos.position - transform.position).normalized; 
             rb.velocity = dir * velocity;
-            if(velocity < 16) velocity *= 1.05f;
+            if(velocity < 24) velocity *= 1.05f;
         }
     }
 

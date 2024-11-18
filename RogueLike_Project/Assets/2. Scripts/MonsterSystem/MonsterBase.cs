@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -20,7 +21,8 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     [SerializeField] protected float transitionDelay;
 
     [Header("DropItems")]
-    [SerializeField] GameObject[] dropItems;
+    [SerializeField] protected GameObject[] dropItems;
+    [SerializeField] protected int[] dropProbabilites = { 50,25,0 };
 
     protected MonsterStatus monsterStatus;
 
@@ -84,7 +86,12 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
             enemyCountData.enemyCount--;
             Debug.Log("Enemy Died, ³²Àº Àû : " + enemyCountData.enemyCount);
             isDie = true;
-            Instantiate(dropItems[0], transform.position + Vector3.up, Quaternion.identity);
+            int randNum = Random.Range(1, 101), itemStar = -1;
+            if (randNum <= dropProbabilites[0]) itemStar = 0;
+            else if (randNum <= dropProbabilites[0] + dropProbabilites[1]) itemStar = 1;
+            else if (randNum <= dropProbabilites[0] + dropProbabilites[1] + dropProbabilites[2]) itemStar = 2;
+
+            if(itemStar >= 0) Instantiate(dropItems[itemStar], transform.position + Vector3.up, Quaternion.identity);
         }
         Destroy(gameObject);
     }
