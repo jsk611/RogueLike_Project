@@ -10,7 +10,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
+//using UnityEngine.WSA;
 
 
 // 게임 내 time 관리를 플레이어 쪽에서 하는 게 맞나? 게임 매니저를 만들어야 하는가?
