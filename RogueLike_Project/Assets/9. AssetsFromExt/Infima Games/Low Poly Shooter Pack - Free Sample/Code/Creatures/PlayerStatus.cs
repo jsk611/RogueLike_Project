@@ -106,6 +106,8 @@ public class PlayerStatus : StatusBehaviour
         {
             Health = 0;
             //특정 연출 진행
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("GameOverScene");
 
         }
