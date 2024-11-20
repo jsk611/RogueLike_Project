@@ -10,6 +10,10 @@ public class SettingManager : MonoBehaviour
     {
         SceneManager.LoadScene("MapScene");
     }
+    public void GoToTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
 
     public void QuitGame()
     {

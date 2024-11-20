@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
+        //DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -95,5 +95,9 @@ public class UIManager : MonoBehaviour
             deactivateImage.fillAmount = (curcool / cool);
             yield return null;
         }
+    }
+    public void Restart()
+    {
+        SceneManager.LoadScene("MapScene");
     }
 }

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerStatus : StatusBehaviour
 {
@@ -105,7 +105,9 @@ public class PlayerStatus : StatusBehaviour
         if (Health <= 0)
         {
             Health = 0;
-            Destroy(gameObject);
+            //특정 연출 진행
+            SceneManager.LoadScene("GameOverScene");
+
         }
 
         UIManager.instance.BarValueChange(0, MaxHealth, Health);

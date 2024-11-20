@@ -163,6 +163,11 @@ public class PlayerControl : MonoBehaviour
         {
             rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
             transform.SetParent(tileManager.gameObject.transform);
+
+            if(transform.position.y < -10f)
+            {
+                characterStatus.DecreaseHealth(60*Time.deltaTime);
+            }
         }
         if (isGrounded)
         {

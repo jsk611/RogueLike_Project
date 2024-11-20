@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -156,9 +157,16 @@ public class Tile : MonoBehaviour
             else 
             { 
                 isSetActive = false;
-                GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
-                if(player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
-                gameObject.SetActive(false);
+                try
+                {
+                    GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
+                    if (player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
+                    gameObject.SetActive(false);
+                }
+                catch(NullReferenceException)
+                {
+                }
+
             }
                 meshRenderer.material.SetColor("GridColor", newColor);
             yield return new WaitForSeconds(Time.deltaTime);
