@@ -153,7 +153,13 @@ public class Tile : MonoBehaviour
             
             Color newColor = meshRenderer.material.GetColor("GridColor");
             if (newColor.a > 0) newColor = newColor - new Color(0, 0, 0, 3 * Time.deltaTime / duration);
-            else { isSetActive = false; gameObject.SetActive(false); }
+            else 
+            { 
+                isSetActive = false;
+                GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
+                if(player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
+                gameObject.SetActive(false);
+            }
                 meshRenderer.material.SetColor("GridColor", newColor);
             yield return new WaitForSeconds(Time.deltaTime);
         }

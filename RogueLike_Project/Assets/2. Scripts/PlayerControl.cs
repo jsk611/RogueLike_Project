@@ -10,6 +10,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
 
 
 // 게임 내 time 관리를 플레이어 쪽에서 하는 게 맞나? 게임 매니저를 만들어야 하는가?
@@ -57,6 +58,8 @@ public class PlayerControl : MonoBehaviour
     Transform originalParent;
     Vector3 initialWorldScale;
     [SerializeField] PlayerPositionData positionData;
+
+    TileManager tileManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -78,7 +81,7 @@ public class PlayerControl : MonoBehaviour
         originalParent = transform.parent;
         initialWorldScale = transform.lossyScale;
 
-
+        tileManager = FindObjectOfType<TileManager>();  
     }
 
     // Update is called once per frame
@@ -90,6 +93,7 @@ public class PlayerControl : MonoBehaviour
         StaminaRegeneration();
         CheckGrounded();
         Jumping();
+
 
     }
 
@@ -154,8 +158,12 @@ public class PlayerControl : MonoBehaviour
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.03f,LayerMask.GetMask("Wall"));
-        
-        if (!isGrounded) rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
+
+        if (!isGrounded)
+        {
+            rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
+            transform.SetParent(tileManager.gameObject.transform);
+        }
         if (isGrounded)
         {
             rigidBody.isKinematic = true;//Vertical.y = -0.8f;
@@ -230,10 +238,8 @@ public class PlayerControl : MonoBehaviour
             string[] tilePos = hit.gameObject.name.Split(',');
             if(tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
         }
-        else if(!hit.gameObject.CompareTag("Wall"))
-        {
-            transform.SetParent(originalParent); // 원래 부모로 복원
-        }
     }
+
+
 
 }

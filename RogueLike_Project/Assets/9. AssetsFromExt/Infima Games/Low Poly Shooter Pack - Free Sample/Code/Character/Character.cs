@@ -514,7 +514,7 @@ namespace InfimaGames.LowPolyShooterPack
             Cursor.visible = !cursorLocked;
             //Update cursor lock state.
             Cursor.lockState = cursorLocked ? CursorLockMode.Locked : CursorLockMode.None;
-            MouseCursor.cursor.CursorControl(!cursorLocked);
+            //MouseCursor.cursor.CursorControl(!cursorLocked);
         }
 
         /// <summary>
