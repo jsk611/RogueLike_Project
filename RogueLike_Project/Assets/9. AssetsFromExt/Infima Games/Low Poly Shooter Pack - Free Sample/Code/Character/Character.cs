@@ -1153,6 +1153,17 @@ namespace InfimaGames.LowPolyShooterPack
         #endregion
 
         #endregion
+        public override void SetCursorState(bool state)
+        {
+            cursorLocked = state;
+            Debug.Log("cursor " + cursorLocked);
+            UpdateCursorState();
+            return;
+        }
+        public override bool GetCursorState()
+        {
+            return cursorLocked;
+        }
     }
 }
 
