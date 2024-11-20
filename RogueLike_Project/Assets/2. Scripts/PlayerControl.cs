@@ -148,7 +148,7 @@ public class PlayerControl : MonoBehaviour
         character.center = new Vector3(0, 0, 0);
 
         Movement = Movement.normalized * moveSpeed;
-        character.Move (Movement * Time.deltaTime);
+        if(playerCharacter.GetCursorState())character.Move (Movement * Time.deltaTime);
         // character.Move(Vector3.down * 0.8f * Time.deltaTime);
 
      

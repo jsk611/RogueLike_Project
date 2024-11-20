@@ -128,8 +128,11 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract Animator GetPlayerAnimator();
         public abstract Animator GetWeaponAnimator();
 
-        
+
 
         #endregion
+        public abstract void SetCursorState(bool state);
+        public abstract bool GetCursorState();
+        
     }
 }
