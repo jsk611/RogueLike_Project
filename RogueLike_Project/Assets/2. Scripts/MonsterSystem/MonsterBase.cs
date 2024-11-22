@@ -61,6 +61,9 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("Material")]
     [SerializeField] Material startMaterial;
     [SerializeField] Material BaseMaterial;
+    [SerializeField] float summonTimeVariable = 1f;
+    [SerializeField] GameObject spawnEffect;
+    [SerializeField] float spawnScale;
 
     protected enum State
     {
@@ -125,10 +128,11 @@ public abstract class MonsterBase : MonoBehaviour
     IEnumerator SummonEffect()
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
+        
         // 각 Renderer의 머티리얼 변경
         foreach (Renderer renderer in renderers)
         {
+            if (renderer.gameObject == spawnEffect) continue;
             renderer.material = startMaterial;
         }
         float currentTime = -4f;
@@ -136,16 +140,18 @@ public abstract class MonsterBase : MonoBehaviour
         {
             foreach (Renderer renderer in renderers)
             {
+                if (renderer.gameObject == spawnEffect) continue;
                 renderer.material.SetFloat("_CustomTime", currentTime);
-                currentTime += Time.deltaTime*1.5f;
+                currentTime += Time.deltaTime*summonTimeVariable;
             }
             yield return new WaitForEndOfFrame();
         }
         foreach (Renderer renderer in renderers)
         {
+            if (renderer.gameObject == spawnEffect) continue;
             renderer.material = BaseMaterial;
         }
-
+        spawnEffect.SetActive(false);
     }
 
     #region animationsettings
@@ -223,7 +229,7 @@ public abstract class MonsterBase : MonoBehaviour
 
 
     // 항상 진행중인 기능
-    private void CheckPlayer()
+    protected virtual void CheckPlayer()
     {
         if (fov.visibleTargets.Count > 0)
         {
