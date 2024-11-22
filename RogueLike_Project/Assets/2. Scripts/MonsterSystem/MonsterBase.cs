@@ -25,6 +25,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     [SerializeField] protected int[] dropProbabilites = { 50,25,0 };
 
     [SerializeField] GameObject DamagedUI;
+    [SerializeField] EnemyHPBar enemyHPBar;
 
     protected MonsterStatus monsterStatus;
 
@@ -68,6 +69,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
         UIDamage ui = Instantiate(DamagedUI, transform.position, Quaternion.identity).GetComponent<UIDamage>();
         ui.damage = damage;
 
+        enemyHPBar.SetRatio(hp, monsterStatus.GetMaxHealth());
         if (hp > 0)
         {
             ChangeState(State.CHASE);
@@ -98,7 +100,8 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
 
             if(itemStar >= 0) Instantiate(dropItems[itemStar], transform.position + Vector3.up, Quaternion.identity);
         }
-        Destroy(gameObject);
+
+        Destroy(gameObject,1f);
     }
 
     protected void ChangeState(State newState)

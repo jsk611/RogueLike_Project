@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -72,7 +73,7 @@ public class UIManager : MonoBehaviour
 
 
 
-    public Text dnaText;
+    public TMP_Text dnaText;
     public void CoinReset(int dna)
     {
         if (dna == 0)
