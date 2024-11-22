@@ -3,14 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager : MonoBehaviour
 {
     static public UpgradeManager instance = new UpgradeManager();
+    public GameObject upgradeUI;
 
     public GameObject[] commonButtons, rareButtons, epicButtons;
     public Canvas uiCanvas; // UI를 표시할 Canvas
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
+    [SerializeField] private GameObject[] buttonInstance = new GameObject[3]; 
+
+
+    private CharacterBehaviour player;
+    private bool UIenabled = false;
+
+    public int repeatNum = 2;
 
     public void UpgradeDisplay()
     {
@@ -19,7 +28,7 @@ public class UpgradeManager : MonoBehaviour
 
         for (int i = 0; i < 3; i++)
         {
-            GameObject selectedButton = null;
+            GameObject selectedButton;
             selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
 
             // 중복 체크
@@ -33,19 +42,23 @@ public class UpgradeManager : MonoBehaviour
             curUpgradeButtons[i] = selectedButton;
             selectedButtons.Add(selectedButton); // 선택된 버튼을 리스트에 추가
         }
-
+        if(!UIenabled)
+        {
+            UIenabled = !UIenabled;
+            player.SetCursorState(false);
+        }
         // 기존 UI 요소 유지
-
+        
         for (int i = 0; i < 3; i++)
         {
             if (curUpgradeButtons[i] != null)
             {
                 // Instantiate할 때 Canvas의 자식으로 설정
-                GameObject buttonInstance = Instantiate(curUpgradeButtons[i], uiCanvas.transform);
-                StartCoroutine(Typing(buttonInstance));
+                buttonInstance[i] = Instantiate(curUpgradeButtons[i], uiCanvas.transform);
+                StartCoroutine(Typing(buttonInstance[i]));
 
                 // RectTransform 설정
-                RectTransform rectTransform = buttonInstance.GetComponent<RectTransform>();
+                RectTransform rectTransform = buttonInstance[i].GetComponent<RectTransform>();
                 rectTransform.anchoredPosition = new Vector2(0, 85 - 100 * i);
             }
             else
@@ -55,8 +68,24 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    public void CompleteUpgrade()
+    {
+        if(repeatNum > 0)
+        {
+            repeatNum--;
+            for (int i = 0; i < 3; i++)
+                Destroy(buttonInstance[i]);
+            UpgradeDisplay();
+        }
+        else
+        {
+            upgradeUI.SetActive(false);
+        }
+    }
+
     private void Start()
     {
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
         UpgradeDisplay();
     }
 

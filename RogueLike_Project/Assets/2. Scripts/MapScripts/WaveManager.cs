@@ -322,13 +322,15 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
         upgradeUI.SetActive(true);
 
+        upgradeManager.repeatNum = 0;
         while (earnedItems.Count > 0)
         {
             earnedItems.Dequeue();
-            upgradeManager.UpgradeDisplay();
+            upgradeManager.repeatNum++;
         }
-        upgradeUI.SetActive(false);
-        yield return new WaitForSeconds(2f);
+        upgradeManager.UpgradeDisplay();
+
+        yield return null;
     }
 
     public void AddItem(int star)
