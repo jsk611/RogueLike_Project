@@ -24,7 +24,7 @@ public class UIDamage : MonoBehaviour
         float distance = Vector3.Distance(player.position, transform.position);
 
         // 크기 조정
-        float scale = distance * initialScale;
+        float scale = Mathf.Max(0.7f, distance * initialScale);
         transform.localScale = new Vector3(scale, scale, scale);
     }
 

@@ -161,12 +161,12 @@ public class Tile : MonoBehaviour
                 {
                     GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
                     if (player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
-                    gameObject.SetActive(false);
+                    
                 }
                 catch(NullReferenceException)
                 {
                 }
-
+                gameObject.SetActive(false);
             }
                 meshRenderer.material.SetColor("GridColor", newColor);
             yield return new WaitForSeconds(Time.deltaTime);
