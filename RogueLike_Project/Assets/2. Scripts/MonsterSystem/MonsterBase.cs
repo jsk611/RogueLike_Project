@@ -24,6 +24,8 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     [SerializeField] protected GameObject[] dropItems;
     [SerializeField] protected int[] dropProbabilites = { 50,25,0 };
 
+    [SerializeField] GameObject DamagedUI;
+
     protected MonsterStatus monsterStatus;
 
     protected Coroutine stateMachineCoroutine;
@@ -62,6 +64,9 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
     {
         monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
+
+        UIDamage ui = Instantiate(DamagedUI, transform.position, Quaternion.identity).GetComponent<UIDamage>();
+        ui.damage = damage;
 
         if (hp > 0)
         {
