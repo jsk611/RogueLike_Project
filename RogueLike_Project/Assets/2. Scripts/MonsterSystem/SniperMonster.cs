@@ -22,7 +22,7 @@ public class SniperMonster : RangedMonster
         attackTimer += Time.deltaTime;
 
         // 조준 시간 설정 (공격 간격의 일부를 조준 시간으로 사용)
-        float aimTime = attackCooldown * 0.6f; // 쿨타임의 30%를 조준 시간으로 사용
+        float aimTime = attackCooldown * 0.7f; // 쿨타임의 30%를 조준 시간으로 사용
         float attackTime = attackCooldown * 0.8f;
         if (attackTimer <= aimTime)
         {

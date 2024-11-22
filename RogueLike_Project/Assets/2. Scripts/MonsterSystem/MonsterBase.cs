@@ -11,8 +11,6 @@ using static UnityEngine.GraphicsBuffer;
 public abstract class MonsterBase : MonoBehaviour
 {
     [SerializeField] protected Transform target;
-    [SerializeField] private Transform body;        // 캐릭터 몸체 (XZ 회전)
-    [SerializeField] private Transform head;        // 머리 또는 상체 (상하좌우 회전)
     [SerializeField] private float maxVerticalAngle = 60f; // 머리가 위/아래로 회전 가능한 최대 각도
     protected float rotateSpeed = 2.0f; // 회전 속도
 
@@ -51,16 +49,10 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("DieVariable")]
     private float dieTimer = 0f;
     private float dieDuration = 1f; // 죽음 애니메이션 길이
-    [SerializeField] GameObject[] items;
-    [SerializeField] int[] itemProbability = { 50,25,0 };
 
     [Header("MonsterUI")]
     [SerializeField] EnemyHPBar HPBar;
     [SerializeField] GameObject UIDamaged;
-
-    [Header("Material")]
-    [SerializeField] Material startMaterial;
-    [SerializeField] Material BaseMaterial;
 
     protected enum State
     {
@@ -118,35 +110,9 @@ public abstract class MonsterBase : MonoBehaviour
 
 
         state = State.IDLE;
-
-        StartCoroutine(SummonEffect());
     } // 기본 몬스터 세팅
 
-    IEnumerator SummonEffect()
-    {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
-        // 각 Renderer의 머티리얼 변경
-        foreach (Renderer renderer in renderers)
-        {
-            renderer.material = startMaterial;
-        }
-        float currentTime = -4f;
-        while(currentTime < 2f)
-        {
-            foreach (Renderer renderer in renderers)
-            {
-                renderer.material.SetFloat("_CustomTime", currentTime);
-                currentTime += Time.deltaTime*1.5f;
-            }
-            yield return new WaitForEndOfFrame();
-        }
-        foreach (Renderer renderer in renderers)
-        {
-            renderer.material = BaseMaterial;
-        }
-
-    }
+  
 
     #region animationsettings
     protected void SetAnimatorState(State state)
@@ -318,18 +284,6 @@ public abstract class MonsterBase : MonoBehaviour
             // 오브젝트 파괴 또는 비활성화
             Debug.Log("죽음");
             enemyCountData.enemyCount--;
-
-            int itemGrade = -1;
-            int randNum = UnityEngine.Random.Range(1, 101);
-            if (randNum <= itemProbability[0]) itemGrade = 0;
-            else if(randNum <= itemProbability[0]+itemProbability[1]) itemGrade = 1;
-            else if(randNum <= itemProbability[0] + itemProbability[1] + itemProbability[2]) itemGrade = 2;
-            
-            if(itemGrade >= 0)
-            {
-                Instantiate(items[itemGrade], transform.position + Vector3.up, Quaternion.identity);
-            }
-
             Destroy(gameObject);
         }
     }
