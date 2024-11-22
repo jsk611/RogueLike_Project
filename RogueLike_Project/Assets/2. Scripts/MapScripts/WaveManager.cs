@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WaveManager : MonoBehaviour
 {
+    UpgradeManager upgradeManager;
     TileManager tileManager;
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
@@ -43,7 +44,7 @@ public class WaveManager : MonoBehaviour
         sp = startPosition.transform.position;
 
         StartCoroutine(StartMap());
-        //StartCoroutine(RunWaves()); //나중에 GameManager로 옮길 것
+        //StartCoroutine(RunWaves()); //?????? GameManager?? ???? ??
     }
 
 
@@ -95,7 +96,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
-    IEnumerator StartMap() //향후 게임매니저에서 관리
+    IEnumerator StartMap() //???? ?????????????? ????
     {
         yield return new WaitForSeconds(1f);
         startPosition.transform.position = sp;
@@ -104,16 +105,16 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,0,0));
         startStage.SetActive(true);
 
-        //시작 스테이지에서만 필요로 하는 코드 (영구적 업그레이드, 무기 선택, 훈련장 등등)을 작성
+        //???? ?????????????? ?????? ???? ???? (?????? ??????????, ???? ????, ?????? ????)?? ????
 
-       //플레이어가 게임 시작할때까지 무한 대기
+       //?????????? ???? ???????????? ???? ????
         while (!nextWaveTrigger)
         {
             yield return new WaitForEndOfFrame();
         }
 
         nextWaveTrigger = false;
-        //게임 시작 시 변이 선택 및 강화, 게임 시작 연출 재생
+        //???? ???? ?? ???? ???? ?? ????, ???? ???? ???? ????
         tileManager.MakeMapByCSV(startMapPath, 7,7);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
         startStage.SetActive(false);
@@ -135,7 +136,7 @@ public class WaveManager : MonoBehaviour
         jeongbiStage.SetActive(true);
         jeongbiStage.transform.position = tileManager.GetTiles[stagePos.y, stagePos.x].transform.position;
         jeongbiStage.transform.position = new Vector3(jeongbiStage.transform.position.x, 0, jeongbiStage.transform.position.z);
-        //플레이어 상호작용 코드 필요
+        //???????? ???????? ???? ????
 
         while (!nextWaveTrigger) 
         {
@@ -163,7 +164,7 @@ public class WaveManager : MonoBehaviour
         MakeRandomEnemyMap(5);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
-        //적이 다 처치될 때까지 대기
+        //???? ?? ?????? ?????? ????
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();
@@ -276,7 +277,7 @@ public class WaveManager : MonoBehaviour
 
         while (enemyCountData.enemyCount > 0)
         {
-            //랜덤으로 벽 생성
+            //???????? ?? ????
             tileManager.InitializeArray(4);
             tileManager.MakeRandomWall(Random.Range(250, 400));
             yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,0));
@@ -300,7 +301,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
         while(enemyCountData.enemyCount > 0)
         {
-            //랜덤으로 구멍 생성
+            //???????? ???? ????
             tileManager.MakeRandomHole(Random.Range(100,200));
             yield return StartCoroutine(tileManager.MoveTilesByArray());
             yield return new WaitForSeconds(5f);
@@ -319,17 +320,14 @@ public class WaveManager : MonoBehaviour
         }
         tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
-        while(earnedItems.Count > 0)
-        {
-            upgradeUI.SetActive(true);
-            earnedItems.Dequeue();
-            Debug.Log("아이템 사용");
+        upgradeUI.SetActive(true);
 
-            //UI 임시로 띄우기
-            yield return new WaitForSeconds(1f);
-            upgradeUI.SetActive(false);
-            yield return new WaitForSeconds(0.15f);
+        while (earnedItems.Count > 0)
+        {
+            earnedItems.Dequeue();
+            upgradeManager.UpgradeDisplay();
         }
+        upgradeUI.SetActive(false);
         yield return new WaitForSeconds(2f);
     }
 
