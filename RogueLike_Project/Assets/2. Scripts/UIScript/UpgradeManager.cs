@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -39,6 +40,7 @@ public class UpgradeManager : MonoBehaviour
             {
                 // Instantiate할 때 Canvas의 자식으로 설정
                 GameObject buttonInstance = Instantiate(curUpgradeButtons[i], uiCanvas.transform);
+                StartCoroutine(Typing(buttonInstance));
 
                 // RectTransform 설정
                 RectTransform rectTransform = buttonInstance.GetComponent<RectTransform>();
@@ -56,11 +58,16 @@ public class UpgradeManager : MonoBehaviour
         UpgradeDisplay();
     }
 
-    /*IEnumerator typing(Text t)
+    IEnumerator Typing(GameObject curButton)
     {
-        for(int i=0; i <= t.text.Length; i++)
+        TMP_Text tx = curButton.transform.GetChild(0).GetComponent<TMP_Text>();
+        string temptx = tx.text;
+        tx.text = "";
+
+        for(int i = 0; i <= temptx.Length; i++)
         {
-            t.text = 
+            tx.text = temptx.Substring(0, i);
+            yield return new WaitForSeconds(0.1f);
         }
-    }*/
+    }
 }
