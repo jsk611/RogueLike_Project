@@ -248,7 +248,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Throw()
         {
-            Debug.Log("Throwing!!!");
+            
             //getcamera
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
