@@ -24,9 +24,9 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1445410440676248314}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09312867, y: 0.20751932, z: -0.23439716}
-  m_LocalScale: {x: 0.08917351, y: 0.08917351, z: 0.08917351}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1365848728078007864}
@@ -217,9 +217,10 @@ GameObject:
   - component: {fileID: 1365848728078007864}
   - component: {fileID: 2901593260237118704}
   - component: {fileID: 6241405473598339616}
-  - component: {fileID: 4789897633512551702}
+  - component: {fileID: -7554242525466511579}
   - component: {fileID: 9081185346355311868}
   - component: {fileID: 3092321335762547828}
+  - component: {fileID: 7582773034773363187}
   m_Layer: 0
   m_Name: SCi-fi_Grenade 1
   m_TagString: Untagged
@@ -296,7 +297,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4789897633512551702
+--- !u!114 &-7554242525466511579
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -305,17 +306,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 7505186024657681414}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7170d51de97d79e4fb11d3321667acb0, type: 3}
+  m_Script: {fileID: 11500000, guid: ddacda442de847349a5d2352594b9cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 0
-  projectileImpulse: 400
-  roundsPerSeconds: 200
+  projectileImpulse: 35
+  roundsPerSeconds: 0.8
   mask:
     serializedVersion: 2
-    m_Bits: 0
-  maximumDistance: 500
-  socketEjection: {fileID: 0}
+    m_Bits: 1
+  maximumDistance: 200
+  socketEjection: {fileID: 4513418113324054577}
   prefabCasing: {fileID: 0}
   prefabProjectile: {fileID: 1086664671600574, guid: 9b3bc8a5825b7424db94ff597814738a,
     type: 3}
@@ -360,3 +361,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe4c405f36d24a5db61be27959609b55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &7582773034773363187
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7505186024657681414}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3f50821f7ef123c45bf544bf7626e7e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
