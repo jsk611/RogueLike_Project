@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager : MonoBehaviour
 {
+    static public UpgradeManager instance = new UpgradeManager();
+
     public GameObject[] commonButtons, rareButtons, epicButtons;
     public Canvas uiCanvas; // UI를 표시할 Canvas
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
-
-    private CharacterBehaviour player;
-    private bool UIenabled = false;
 
     public void UpgradeDisplay()
     {
@@ -37,15 +35,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
         // 기존 UI 요소 유지
-        if (!UIenabled) {
-            player.SetCursorState(false);
-            UIenabled = !UIenabled;
-        }
-        else
-        {
-            player.SetCursorState(true);
-            UIenabled = !UIenabled;
-        }
+
         for (int i = 0; i < 3; i++)
         {
             if (curUpgradeButtons[i] != null)
@@ -67,7 +57,6 @@ public class UpgradeManager : MonoBehaviour
 
     private void Start()
     {
-        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
         UpgradeDisplay();
     }
 
