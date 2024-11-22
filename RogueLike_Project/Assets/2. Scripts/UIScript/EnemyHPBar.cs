@@ -22,7 +22,7 @@ public class EnemyHPBar : MonoBehaviour
         }
         else mid.fillAmount = ratio;
 
-        if (mid.fillAmount == 0) Destroy(gameObject);
+        //if (mid.fillAmount == 0) Destroy(gameObject);
     }
 
     public void SetRatio(float current, float max)

@@ -50,8 +50,11 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("DieVariable")]
     private float dieTimer = 0f;
-    private float dieDuration = 5.0f; // 죽음 애니메이션 길이
+    private float dieDuration = 1f; // 죽음 애니메이션 길이
 
+    [Header("MonsterUI")]
+    [SerializeField] EnemyHPBar HPBar;
+    [SerializeField] GameObject UIDamaged;
 
     protected enum State
     {
@@ -281,6 +284,8 @@ public abstract class MonsterBase : MonoBehaviour
         if (dieTimer >= dieDuration)
         {
             // 오브젝트 파괴 또는 비활성화
+            Debug.Log("죽음");
+            enemyCountData.enemyCount--;
             Destroy(gameObject);
         }
     }
@@ -320,6 +325,11 @@ public abstract class MonsterBase : MonoBehaviour
         // 체력 감소 처리
         monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
+
+        UIDamage uIDamage = Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>();
+        uIDamage.damage = damage;
+
+        if(HPBar != null) HPBar.SetRatio(hp, monsterStatus.GetMaxHealth());
 
         if (hp > 0)
         {

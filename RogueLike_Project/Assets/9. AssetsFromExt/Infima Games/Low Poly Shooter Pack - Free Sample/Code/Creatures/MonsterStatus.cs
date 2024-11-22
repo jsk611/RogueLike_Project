@@ -73,7 +73,7 @@ public class MonsterStatus : StatusBehaviour
         if (Health <= 0)
         {
             Health = 0;
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
     public override void IncreaseHealth(float health)
@@ -84,7 +84,7 @@ public class MonsterStatus : StatusBehaviour
     public override void SetHealth(float health)
     {
         Health = Mathf.Clamp(health, 0, MaxHealth);
-        if (health <= 0) Destroy(gameObject);
+        //if (health <= 0) Destroy(gameObject);
     }
 
     // Max Health
