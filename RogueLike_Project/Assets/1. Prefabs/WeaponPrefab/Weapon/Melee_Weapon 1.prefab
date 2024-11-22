@@ -320,7 +320,7 @@ MonoBehaviour:
   prefabCasing: {fileID: 0}
   prefabProjectile: {fileID: 1086664671600574, guid: 376f2c736ae0b7144abee3dee0082561,
     type: 3}
-  controller: {fileID: 9100000, guid: 60425d3e21c9fc34eacaf724da93612c, type: 2}
+  controller: {fileID: 22100000, guid: 300470d8e7facb54bb4a93bff7228b7b, type: 2}
   spriteBody: {fileID: 0}
   audioClipHolster: {fileID: 8300000, guid: 8c4ede782a70c6e4b9e515d40d6e6e69, type: 3}
   audioClipUnholster: {fileID: 8300000, guid: 4aaa78b2722c0344cb0363a3980adf64, type: 3}
