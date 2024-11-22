@@ -69,7 +69,7 @@ public abstract class MonsterBase : MonoBehaviour, ICombatant
         UIDamage ui = Instantiate(DamagedUI, transform.position, Quaternion.identity).GetComponent<UIDamage>();
         ui.damage = damage;
 
-        enemyHPBar.SetRatio(hp, monsterStatus.GetMaxHealth());
+        if(enemyHPBar != null) enemyHPBar.SetRatio(hp, monsterStatus.GetMaxHealth());
         if (hp > 0)
         {
             ChangeState(State.CHASE);
