@@ -3,14 +3,7 @@ guid: 0f3a729b8fcbe734bb0236c0108d01a0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - target: {instanceID: 0}
-  - anim: {instanceID: 0}
-  - splashFx: {instanceID: 0}
-  - nmAgent: {instanceID: 0}
-  - DamagedUI: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
-      type: 3}
-  - enemyCountData: {instanceID: 0}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
