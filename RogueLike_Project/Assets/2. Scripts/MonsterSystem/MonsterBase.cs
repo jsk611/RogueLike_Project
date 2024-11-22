@@ -132,7 +132,7 @@ public abstract class MonsterBase : MonoBehaviour
         // 각 Renderer의 머티리얼 변경
         foreach (Renderer renderer in renderers)
         {
-            if (renderer.gameObject == spawnEffect) continue;
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
             renderer.material = startMaterial;
         }
         float currentTime = -2.5f;
@@ -140,7 +140,7 @@ public abstract class MonsterBase : MonoBehaviour
         {
             foreach (Renderer renderer in renderers)
             {
-                if (renderer.gameObject == spawnEffect) continue;
+                if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
                 renderer.material.SetFloat("_CustomTime", currentTime);
                 currentTime += Time.deltaTime*summonTimeVariable;
             }
@@ -148,7 +148,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
         foreach (Renderer renderer in renderers)
         {
-            if (renderer.gameObject == spawnEffect) continue;
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
             renderer.material = BaseMaterial;
         }
         spawnEffect.SetActive(false);
