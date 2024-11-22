@@ -11,72 +11,22 @@ public class UpgradeManager : MonoBehaviour
 
     public void UpgradeDisplay()
     {
-        // 버튼 배열의 길이 확인
-        if (commonButtons.Length == 0 || rareButtons.Length == 0 || epicButtons.Length == 0)
-        {
-            Debug.LogError("Button arrays must contain at least one button of each type.");
-            return;
-        }
-
         // 중복 방지를 위한 리스트
         List<GameObject> selectedButtons = new List<GameObject>();
-        int rarepoint = 94, epicpoint = 99;
 
         for (int i = 0; i < 3; i++)
         {
             GameObject selectedButton = null;
-            int point = Random.Range(0, 100);
+            selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
 
-            if (point >= epicpoint)
-            {
-                if (epicButtons.Length > 0)
-                {
-                    selectedButton = epicButtons[Random.Range(0, epicButtons.Length)];
-                }
-                epicpoint = 100; // 이후 버튼이 epic이 되지 않도록 설정
-            }
-            else if (point < epicpoint && point >= rarepoint)
-            {
-                if (rareButtons.Length > 0)
-                {
-                    selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
-                }
-                rarepoint = 100; // 이후 버튼이 rare이 되지 않도록 설정
-            }
-            else
+            // 중복 체크
+            while (selectedButton != null && selectedButtons.Contains(selectedButton))
             {
                 if (commonButtons.Length > 0)
                 {
                     selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
                 }
             }
-
-            // 중복 체크
-            while (selectedButton != null && selectedButtons.Contains(selectedButton))
-            {
-                if (point >= epicpoint)
-                {
-                    if (epicButtons.Length > 0)
-                    {
-                        selectedButton = epicButtons[Random.Range(0, epicButtons.Length)];
-                    }
-                }
-                else if (point < epicpoint && point >= rarepoint)
-                {
-                    if (rareButtons.Length > 0)
-                    {
-                        selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
-                    }
-                }
-                else
-                {
-                    if (commonButtons.Length > 0)
-                    {
-                        selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
-                    }
-                }
-            }
-
             curUpgradeButtons[i] = selectedButton;
             selectedButtons.Add(selectedButton); // 선택된 버튼을 리스트에 추가
         }
@@ -92,7 +42,7 @@ public class UpgradeManager : MonoBehaviour
 
                 // RectTransform 설정
                 RectTransform rectTransform = buttonInstance.GetComponent<RectTransform>();
-                rectTransform.anchoredPosition = new Vector2(0, 50 - 75 * i);
+                rectTransform.anchoredPosition = new Vector2(0, 85 - 100 * i);
             }
             else
             {
@@ -105,4 +55,12 @@ public class UpgradeManager : MonoBehaviour
     {
         UpgradeDisplay();
     }
+
+    /*IEnumerator typing(Text t)
+    {
+        for(int i=0; i <= t.text.Length; i++)
+        {
+            t.text = 
+        }
+    }*/
 }

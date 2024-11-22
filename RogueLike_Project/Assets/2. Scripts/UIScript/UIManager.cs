@@ -31,10 +31,10 @@ public class UIManager : MonoBehaviour
     }
 
     //Controlling bars value
-    public Slider[] Bar;
+    public Image[] Bar;
     public void BarValueChange(int i, float maxValue, float curValue)
     {
-        Bar[i].value = curValue / maxValue;
+        Bar[i].fillAmount = curValue / maxValue;
     }
 
     //Swapping Weapons
