@@ -17,6 +17,7 @@ public abstract class MonsterBase : MonoBehaviour
     protected float rotateSpeed = 2.0f; // 회전 속도
 
 
+
     [Header("Preset Fields")]
     [SerializeField] protected Animator anim;
     [SerializeField] protected GameObject splashFx;
@@ -200,25 +201,15 @@ public abstract class MonsterBase : MonoBehaviour
     {
         if (target == null) return;
 
-
         // 타겟 방향 계산
         Vector3 direction = (target.position - transform.position).normalized;
 
-        // 1. 몸체는 XZ 평면에서만 회전
-        Vector3 bodyDirection = new Vector3(direction.x, 0, direction.z);
-        Quaternion bodyRotation = Quaternion.LookRotation(bodyDirection);
-        body.rotation = Quaternion.Slerp(body.rotation, bodyRotation, Time.deltaTime * rotateSpeed);
+        // 방향 벡터를 기준으로 회전 계산
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
 
-        // 2. 머리는 타겟 방향을 따라 상하좌우 회전
-        Quaternion headRotation = Quaternion.LookRotation(direction);
-        Vector3 headEulerAngles = headRotation.eulerAngles;
+        // 부드럽게 회전
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
 
-        // 3. 머리의 상하 회전을 제한 (maxVerticalAngle 사용)
-        float verticalAngle = Mathf.Clamp(headEulerAngles.x, -maxVerticalAngle, maxVerticalAngle);
-
-        // 머리의 최종 회전 적용
-        headRotation = Quaternion.Euler(verticalAngle, headEulerAngles.y, head.eulerAngles.z);
-        head.rotation = Quaternion.Slerp(head.rotation, headRotation, Time.deltaTime * rotateSpeed);
     }
     protected virtual void UpdateIdle()
     {
