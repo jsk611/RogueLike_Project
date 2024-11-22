@@ -51,7 +51,6 @@ public class Projectile : MonoBehaviour {
 		{
 			if (collision.gameObject.GetComponent<MonsterStatus>() != null)
 			{
-				Debug.Log(transform.name + "detected");
 				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage())* shooterStatus.CalculateCriticalHit());
 			}
 			Destroy(gameObject);
