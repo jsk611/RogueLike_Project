@@ -892,7 +892,7 @@ namespace InfimaGames.LowPolyShooterPack
             }
         }
 
-        public void OnTryExchangeWeapon(WeaponBehaviour otherWeapon,Vector3 Position, Quaternion Rotation)
+        public override void OnTryExchangeWeapon(WeaponBehaviour otherWeapon,Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
             if (otherWeapon.name + "(Clone)" == inventory.GetOtherEquipped().name)

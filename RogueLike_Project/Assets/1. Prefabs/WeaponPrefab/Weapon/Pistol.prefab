@@ -321,7 +321,7 @@ MonoBehaviour:
   socketEjection: {fileID: 2403201294998550230}
   prefabCasing: {fileID: 1492315059354262, guid: b1995a53a949fac4db5722fc1df9efe4,
     type: 3}
-  prefabProjectile: {fileID: 1086664671600574, guid: 5953171a59c27394e9ad5cbb564affa8,
+  prefabProjectile: {fileID: 1086664671600574, guid: aee72f68d8dd0cc4187a720a569374d0,
     type: 3}
   controller: {fileID: 22100000, guid: 257eac322a7afde43bfa9aa9e60baa84, type: 2}
   spriteBody: {fileID: 21300000, guid: 5de2ff934a8b3ea4ebfe923a6f958686, type: 3}
