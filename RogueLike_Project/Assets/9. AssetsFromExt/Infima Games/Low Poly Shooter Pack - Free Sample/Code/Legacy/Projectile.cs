@@ -53,6 +53,10 @@ public class Projectile : MonoBehaviour {
 			{
 				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage())* shooterStatus.CalculateCriticalHit());
 			}
+			else if(collision.gameObject.GetComponent<Dummy>() != null)
+			{
+                collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage()) * shooterStatus.CalculateCriticalHit());
+            }
 			Destroy(gameObject);
 		}
 		// //Ignore collision if bullet collides with "Player" tag
