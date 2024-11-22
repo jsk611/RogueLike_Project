@@ -223,7 +223,7 @@ public abstract class MonsterBase : MonoBehaviour
 
 
     // 항상 진행중인 기능
-    private void CheckPlayer()
+    protected virtual void CheckPlayer()
     {
         if (fov.visibleTargets.Count > 0)
         {

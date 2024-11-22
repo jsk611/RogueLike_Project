@@ -3,163 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SniperMonster : MonsterBase
+public class SniperMonster : RangedMonster
 {
 
-    //[Header("Settings")]
-    //[SerializeField] float attackRange = 10f;
-    //[SerializeField] float fireRate = 2f;
-    //[SerializeField] float rotationSpeed = 2f;
+    protected override void UpdateAttack()
+    {
+        if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
+        {
+            ChangeState(State.IDLE); // 추적 상태로 전환
+            isFired = false;          // 발사 상태 초기화
+            attackTimer = 0f;         // 타이머 초기화
+            return;
+        }
 
-    //public EnemyWeapon gun;
-    //public Transform firePoint;
+        nmAgent.isStopped = true; // 이동 정지
 
-    //private FieldOfView fov;
-    //private float searchTargetDelay = 0.2f;
+        // 공격 타이머 진행
+        attackTimer += Time.deltaTime;
 
-    //private Quaternion initialWatchDirection;
+        // 조준 시간 설정 (공격 간격의 일부를 조준 시간으로 사용)
+        float aimTime = attackCooldown * 0.6f; // 쿨타임의 30%를 조준 시간으로 사용
+        float attackTime = attackCooldown * 0.8f;
+        if (attackTimer <= aimTime)
+        {
+            // 조준 동작
+            SetAnimatorState(State.ATTACK); // ATTACK 상태에서 조준 애니메이션 실행
+            return; // 아직 발사하지 않음
+        }
+        else if (attackTimer <= attackTime)
+        {
+            SetAnimatorState(State.COOLDOWN);
+        }
+        else
+        {
+            SetAnimatorState(State.AIM);
+        }
+       
 
-    //protected override void Start()
-    //{
-    //    fov = GetComponent<FieldOfView>();
-    //    initialWatchDirection = transform.rotation; // 몬스터의 초기 방향을 저장
-    //    hp = 10; // 기본 체력 설정
-    //    state = State.IDLE;
-    //    base.Start();
+        // 공격 쿨타임 완료 후 초기화
+        if (attackTimer >= attackCooldown)
+        {
+            attackTimer = 0f; // 타이머 초기화
+            isFired = false;  // 발사 상태 초기화
+        }
 
-    //    StartCoroutine(SearchForTarget());
-    //}
+    }
 
-    //protected override IEnumerator StateMachine()
-    //{
-    //    while (hp > 0)
-    //    {
-    //        yield return StartCoroutine(state.ToString());
-    //    }
-    //}
+    protected override void CheckPlayer()
+    {
+        if (fov.visibleTargets.Count > 0)
+        {
+            target = fov.visibleTargets[0];
+            if (state != State.ATTACK || state != State.HIT) ChangeState(State.ATTACK);
+        }
+    }
 
-    //private IEnumerator IDLE()
-    //{
-    //    // 타겟이 있는지 확인
-    //    if (fov.visibleTargets.Count > 0)
-    //    {
-    //        target = fov.visibleTargets[0];
-    //        ChangeState(State.ATTACK);
-    //    }
-    //    else
-    //    {
-    //        target = null;
-    //    }
-
-    //    yield return null;
-    //}
-
-    //private IEnumerator ATTACK()
-    //{
-    //    if (target != null)
-    //    {
-    //        ChangeState(State.AIMING);
-    //    }
-    //    else
-    //    {
-    //        ChangeState(State.SEARCH); // 타겟을 잃었을 때 SEARCH 상태로 전환
-    //    }
-
-    //    yield return null;
-    //}
-
-    //private IEnumerator AIMING()
-    //{
-    //    ChangeState(State.SHOT);
-    //    yield return new WaitForSeconds(fireRate);
-    //}
-
-    //private IEnumerator SHOT()
-    //{
-    //    try
-    //    {
-    //        gun.Fire(transform.rotation);
-    //    }
-    //    catch (System.Exception e)
-    //    {
-    //        Debug.LogError("Gun Fire Error: " + e.Message);
-    //    }
-
-    //    ChangeState(State.ATTACK);
-    //    yield return null;
-    //}
-
-    //private IEnumerator SEARCH()
-    //{
-    //    // SEARCH 상태에서는 일정 시간 동안 타겟을 찾으려고 시도
-    //    float searchDuration = 2f; // 탐색 지속 시간
-    //    float elapsedTime = 0f;
-
-    //    while (elapsedTime < searchDuration)
-    //    {
-    //        // 시야 내에 타겟이 있는지 확인
-    //        if (fov.visibleTargets.Count > 0)
-    //        {
-    //            target = fov.visibleTargets[0];
-    //            ChangeState(State.ATTACK);
-    //            yield break;
-    //        }
-
-    //        elapsedTime += Time.deltaTime;
-    //        yield return null;
-    //    }
-
-    //    // 타겟을 찾지 못했다면 IDLE 상태로 전환
-    //    ChangeState(State.IDLE);
-    //}
-
-    //private IEnumerator KILLED()
-    //{
-    //    yield return null;
-    //}
-
-    //private void Update()
-    //{
-    //    if (target != null)
-    //    {
-    //        // 타겟을 향해 회전
-    //        Vector3 direction = (target.position - transform.position).normalized;
-    //        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
-
-    //        // 만약 타겟이 시야에서 벗어났다면
-    //        if (!fov.visibleTargets.Contains(target))
-    //        {
-    //            target = null;
-    //            ChangeState(State.SEARCH); // SEARCH 상태로 전환
-    //        }
-    //    }
-    //    else if (state == State.SEARCH || state == State.IDLE)
-    //    {
-    //        // SEARCH 또는 IDLE 상태일 때 초기 감시 방향으로 회전
-    //        transform.rotation = Quaternion.Slerp(transform.rotation, initialWatchDirection, Time.deltaTime * rotationSpeed);
-    //    }
-    //}
-
-    //private IEnumerator SearchForTarget()
-    //{
-    //    while (hp > 0)
-    //    {
-    //        // 일정 시간마다 시야를 스캔
-    //        yield return new WaitForSeconds(searchTargetDelay);
-
-    //        if (fov.visibleTargets.Count > 0 && state != State.ATTACK && state != State.AIMING && state != State.SHOT)
-    //        {
-    //            target = fov.visibleTargets[0];
-    //            ChangeState(State.ATTACK);
-    //        }
-    //        else if (fov.visibleTargets.Count == 0 && target != null)
-    //        {
-    //            // 타겟을 잃었을 때, SEARCH 상태로 전환
-    //            target = null;
-    //            ChangeState(State.SEARCH);
-    //        }
-    //    }
-    //}
 }

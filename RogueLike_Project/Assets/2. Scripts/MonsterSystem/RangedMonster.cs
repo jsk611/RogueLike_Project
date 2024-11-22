@@ -8,7 +8,7 @@ public class RangedMonster : MonsterBase
 {
     [Header("settings")]
     [SerializeField] float firerate = 1.5f;
-    bool isFired = false;
+    protected bool isFired = false;
 
     public EnemyWeapon gun;
 
