@@ -135,7 +135,7 @@ public abstract class MonsterBase : MonoBehaviour
             if (renderer.gameObject == spawnEffect) continue;
             renderer.material = startMaterial;
         }
-        float currentTime = -4f;
+        float currentTime = -2.5f;
         while(currentTime < 2f)
         {
             foreach (Renderer renderer in renderers)
