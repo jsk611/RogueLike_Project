@@ -17,6 +17,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private CharacterBehaviour playerCharacter;
 
+
 		#endregion
 
 		#region UNITY
@@ -99,6 +100,7 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private void OnAnimationEndedGrenadeThrow()
 		{
+			playerCharacter.GetInventory().GetEquipped().Throw();
 		}
 		/// <summary>
 		/// Melee Animation Ended. This function is called from an Animation Event.
