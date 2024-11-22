@@ -218,6 +218,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1504981713932161579, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
         type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: ae09728dbc3b9e64eb1f5e780985b7e4,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e134861261e1f204ea95fae0275a545b, type: 2}
@@ -337,6 +342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scopeDefaultShow: 1
   scopeDefaultBehaviour: {fileID: 7693764937909400911}
+  zoomScope: {fileID: 0}
   muzzleIndex: 0
   muzzleArray:
   - {fileID: 5860475484947837996}
