@@ -311,7 +311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   automatic: 0
   projectileImpulse: 400
-  roundsPerSeconds: 9
+  roundsPerSeconds: 4
   mask:
     serializedVersion: 2
     m_Bits: 0

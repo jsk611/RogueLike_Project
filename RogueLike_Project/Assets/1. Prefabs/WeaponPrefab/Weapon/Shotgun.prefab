@@ -180,7 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 1
-  projectileImpulse: 600
+  projectileImpulse: 500
   roundsPerSeconds: 1.5
   pelletAmounts: 10
   mask:
