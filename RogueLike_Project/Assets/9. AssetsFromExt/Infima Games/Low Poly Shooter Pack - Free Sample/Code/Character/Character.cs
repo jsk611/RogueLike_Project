@@ -216,6 +216,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         private static readonly int HashCrouch = Animator.StringToHash("Crouching");
 
+
         #endregion
 
         #region UNITY
@@ -262,6 +263,7 @@ namespace InfimaGames.LowPolyShooterPack
             running = holdingButtonRun && CanRun();
 
             crouching = characterAnimator.GetBool("Crouch");
+
 
             //Holding the firing button.
             if (holdingButtonFire)
@@ -341,7 +343,6 @@ namespace InfimaGames.LowPolyShooterPack
             characterAnimator.SetFloat(HashAimingAlpha, Convert.ToSingle(aiming), 0.25f / 1.0f * dampTimeAiming, Time.deltaTime);
 
             characterAnimator.SetFloat(HashCrouch, Convert.ToSingle(crouching), 0.25f / 1.0f * dampTimeCrouching, Time.deltaTime);
-
 
             //Update Animator Aiming.
             const string boolNameAim = "Aim";
@@ -1163,6 +1164,11 @@ namespace InfimaGames.LowPolyShooterPack
         public override bool GetCursorState()
         {
             return cursorLocked;
+        }
+
+        public override bool GetHoldingFire()
+        {
+            return holdingButtonFire;
         }
     }
 }

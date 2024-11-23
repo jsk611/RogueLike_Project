@@ -67,6 +67,9 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private void OnGrenade()
 		{
+			playerCharacter.GetPlayerAnimator().speed = 0f;
+			//new WaitForSeconds(8);
+			//playerCharacter.GetPlayerAnimator().speed = 1f;
 		}
 		/// <summary>
 		/// Sets the equipped weapon's magazine to be active or inactive! This function is called from an Animation Event.

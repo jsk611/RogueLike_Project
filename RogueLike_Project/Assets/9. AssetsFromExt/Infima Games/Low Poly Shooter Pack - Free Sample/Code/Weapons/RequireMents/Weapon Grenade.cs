@@ -1,8 +1,12 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
+using System.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -227,8 +231,9 @@ namespace InfimaGames.LowPolyShooterPack
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
-            
-       
+            characterBehaviour.GetPlayerAnimator().SetBool("OnGrenade", true);
+            projectileImpulse = 10;
+            StartCoroutine(standby());
         }
 
         public override void FillAmmunition(int amount)
@@ -248,7 +253,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Throw()
         {
-            
+        
             //getcamera
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
@@ -287,6 +292,27 @@ namespace InfimaGames.LowPolyShooterPack
 
             muzzleBehaviour.Effect();
         }
+
+        IEnumerator standby()
+        {
+    //        while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
+     
+            while (characterBehaviour.GetHoldingFire())
+            {
+         
+                projectileImpulse += Time.deltaTime*20;
+      
+         
+                yield return null;
+            }
+            Debug.Log("shoot");
+            while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
+            characterBehaviour.GetPlayerAnimator().speed = 1.0f;
+
+
+         
+        }
+
 
         #endregion
     }
