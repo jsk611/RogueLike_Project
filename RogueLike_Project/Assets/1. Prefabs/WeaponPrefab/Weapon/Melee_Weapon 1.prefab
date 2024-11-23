@@ -310,12 +310,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 0
-  projectileImpulse: 400
-  roundsPerSeconds: 4
+  projectileImpulse: 40
+  roundsPerSeconds: 2
   mask:
     serializedVersion: 2
-    m_Bits: 0
-  maximumDistance: 500
+    m_Bits: 1
+  maximumDistance: 5
   socketEjection: {fileID: 6008227564718394596}
   prefabCasing: {fileID: 0}
   prefabProjectile: {fileID: 1086664671600574, guid: 376f2c736ae0b7144abee3dee0082561,
