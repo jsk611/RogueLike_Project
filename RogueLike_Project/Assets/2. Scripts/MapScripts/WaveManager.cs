@@ -320,7 +320,6 @@ public class WaveManager : MonoBehaviour
         }
         tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
-        upgradeUI.SetActive(true);
 
         upgradeManager.repeatNum = 0;
         while (earnedItems.Count > 0)
