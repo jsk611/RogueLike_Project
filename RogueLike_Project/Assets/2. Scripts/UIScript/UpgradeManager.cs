@@ -8,21 +8,20 @@ using InfimaGames.LowPolyShooterPack;
 public class UpgradeManager : MonoBehaviour
 {
     static public UpgradeManager instance = new UpgradeManager();
-    public GameObject upgradeUI;
+    [SerializeField] GameObject upgradeUI;
 
-    public GameObject[] commonButtons, rareButtons, epicButtons;
-    public Canvas uiCanvas; // UI를 표시할 Canvas
+    [SerializeField] GameObject[] commonButtons, rareButtons, epicButtons;
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
-    [SerializeField] private GameObject[] buttonInstance = new GameObject[3]; 
-
 
     private CharacterBehaviour player;
     private bool UIenabled = false;
 
-    public int repeatNum = 2;
+    public int repeatNum;
 
     public void UpgradeDisplay()
     {
+        upgradeUI.SetActive(true);
+
         // 중복 방지를 위한 리스트
         List<GameObject> selectedButtons = new List<GameObject>();
 
@@ -53,13 +52,8 @@ public class UpgradeManager : MonoBehaviour
         {
             if (curUpgradeButtons[i] != null)
             {
-                // Instantiate할 때 Canvas의 자식으로 설정
-                buttonInstance[i] = Instantiate(curUpgradeButtons[i], uiCanvas.transform);
-                StartCoroutine(Typing(buttonInstance[i]));
-
-                // RectTransform 설정
-                RectTransform rectTransform = buttonInstance[i].GetComponent<RectTransform>();
-                rectTransform.anchoredPosition = new Vector2(0, 85 - 100 * i);
+                curUpgradeButtons[i].SetActive(true);
+                StartCoroutine(Typing(curUpgradeButtons[i]));
             }
             else
             {
@@ -70,16 +64,16 @@ public class UpgradeManager : MonoBehaviour
 
     public void CompleteUpgrade()
     {
-        if(repeatNum > 0)
+        for(int i = 0; i < 3; i++)
+        {
+            curUpgradeButtons[i].SetActive(false);
+        }
+        upgradeUI.SetActive(false);
+
+        if (repeatNum > 0)
         {
             repeatNum--;
-            for (int i = 0; i < 3; i++)
-                Destroy(buttonInstance[i]);
             UpgradeDisplay();
-        }
-        else
-        {
-            upgradeUI.SetActive(false);
         }
     }
 
@@ -91,7 +85,7 @@ public class UpgradeManager : MonoBehaviour
 
     IEnumerator Typing(GameObject curButton)
     {
-        TMP_Text tx = curButton.transform.GetChild(0).GetComponent<TMP_Text>();
+        TMP_Text tx = curButton.transform.GetChild(1).GetComponent<TMP_Text>();
         string temptx = tx.text;
         tx.text = "";
 
