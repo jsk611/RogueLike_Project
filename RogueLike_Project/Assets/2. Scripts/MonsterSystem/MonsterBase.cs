@@ -30,7 +30,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] protected MonsterStatus monsterStatus;
     [SerializeField] protected float attackRange = 5.0f; // 공격 범위
     [SerializeField] protected float attackCooldown = 3.0f; // 공격 간격
-    protected float attackTimer = 0.5f; // 공격 타이머
+    [SerializeField] protected float attackTimer = 0.0f; // 공격 타이머
     protected float hp = 0; // 기본 체력
     protected float dmg = 0; // 기본 데미지
     protected float chaseSpeed; // 추적 속도

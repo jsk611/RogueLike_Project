@@ -6,12 +6,20 @@ using UnityEngine.AI;
 public class SniperMonster : RangedMonster
 {
 
+
+    protected override void Start()
+    {
+        base.Start();
+        isHitScan = true;
+    }
+
+    protected override void UpdateIdle() { nmAgent.isStopped = true; }
+    protected override void UpdateChase() { return; }
     protected override void UpdateAttack()
     {
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
             ChangeState(State.IDLE); // 추적 상태로 전환
-            isFired = false;          // 발사 상태 초기화
             attackTimer = 0f;         // 타이머 초기화
             return;
         }
@@ -26,17 +34,14 @@ public class SniperMonster : RangedMonster
         float attackTime = attackCooldown * 0.8f;
         if (attackTimer <= aimTime)
         {
+            if (aimTime - attackCooldown < 0.00001f) Debug.Log("AimTime: " +  attackTimer);
             // 조준 동작
-            SetAnimatorState(State.ATTACK); // ATTACK 상태에서 조준 애니메이션 실행
+            SetAnimatorState(State.AIM); // ATTACK 상태에서 조준 애니메이션 실행
             return; // 아직 발사하지 않음
         }
         else if (attackTimer <= attackTime)
         {
-            SetAnimatorState(State.COOLDOWN);
-        }
-        else
-        {
-            SetAnimatorState(State.AIM);
+            SetAnimatorState(State.ATTACK);
         }
        
 
@@ -44,7 +49,6 @@ public class SniperMonster : RangedMonster
         if (attackTimer >= attackCooldown)
         {
             attackTimer = 0f; // 타이머 초기화
-            isFired = false;  // 발사 상태 초기화
         }
 
     }
@@ -56,6 +60,14 @@ public class SniperMonster : RangedMonster
             target = fov.visibleTargets[0];
             if (state != State.ATTACK || state != State.HIT) ChangeState(State.ATTACK);
         }
+    }
+
+    public void  SetAim()
+    {
+        if (gun == null) return;
+        
+        gun.AimReady();
+        Debug.Log("Get Ready?");
     }
 
 }

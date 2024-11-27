@@ -8,9 +8,11 @@ public class RangedMonster : MonsterBase
 {
     [Header("settings")]
     [SerializeField] float firerate = 1.5f;
-    protected bool isFired = false;
+    [SerializeField] protected bool isHitScan = false;
 
     public EnemyWeapon gun;
+    
+   
 
     protected override void UpdateChase()
     {
@@ -37,7 +39,6 @@ public class RangedMonster : MonsterBase
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
             ChangeState(State.CHASE); // 추적 상태로 전환
-            isFired = false;          // 발사 상태 초기화
             attackTimer = 0f;         // 타이머 초기화
             return;
         }
@@ -65,27 +66,31 @@ public class RangedMonster : MonsterBase
             SetAnimatorState(State.AIM);
         }
 
-        // 공격 동작
-        //if (!isFired)
-        //{
-        //    gun.Fire();   // 발사
-        //    isFired = true; // 발사 상태 설정
-        //}
-
         // 공격 쿨타임 완료 후 초기화
         if (attackTimer >= attackCooldown)
         {
             attackTimer = 0f; // 타이머 초기화
-            isFired = false;  // 발사 상태 초기화
         }
     }
 
     public void FireEvent()
     {
-        if (gun != null)
+        if (gun == null)
+        {
+            return;
+        }
+
+        if (!isHitScan)
         {
             gun.Fire(); // 총 발사
             Debug.Log("Gun fired via Animation Event!");
         }
+        else
+        {
+            gun.FireLaser();
+            Debug.Log("Hit scan Activated");
+        }
+
+        
     }
 }
