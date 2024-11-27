@@ -53,7 +53,7 @@ public class SniperMonster : RangedMonster
         }
     }
 
-    private void HandleAim()
+    public void HandleAim()
     {
         SetAnimatorState(State.AIM); // 조준 상태 애니메이션
         gun?.AimReady(); // 무기 조준 준비
@@ -73,6 +73,17 @@ public class SniperMonster : RangedMonster
     {
         attackTimer = 0f;
         isFired = false;
+    }
+
+    protected override void CheckPlayer()
+    {
+        if (fov.visibleTargets.Count > 0)
+        {
+            target = fov.visibleTargets[0];
+            ChangeState(State.ATTACK);
+            // `State.CHASE`로 상태를 변경하지 않음
+            Debug.Log($"{name} has detected a player, but won't chase.");
+        }
     }
 
 }

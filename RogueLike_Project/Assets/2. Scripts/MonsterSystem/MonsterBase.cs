@@ -159,7 +159,7 @@ public abstract class MonsterBase : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
     }
 
-    private void CheckPlayer()
+    protected virtual void CheckPlayer()
     {
         if (fov.visibleTargets.Count > 0)
         {
