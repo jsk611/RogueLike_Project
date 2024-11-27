@@ -7,16 +7,31 @@ using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager : MonoBehaviour
 {
-    static public UpgradeManager instance = new UpgradeManager();
+    public static UpgradeManager instance;
     [SerializeField] GameObject upgradeUI;
 
     [SerializeField] GameObject[] commonButtons, rareButtons, epicButtons;
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
 
     private CharacterBehaviour player;
-    private bool UIenabled = false;
+    public bool UIenabled = false;
 
-    public int repeatNum;
+    private int repeatNum = 0;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
+    private void Start()
+    {
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+    }
+
+    public void RepeatNumSet(int n)
+    {
+        repeatNum = n;
+    }
 
     public void UpgradeDisplay()
     {
@@ -75,12 +90,11 @@ public class UpgradeManager : MonoBehaviour
             repeatNum--;
             UpgradeDisplay();
         }
-    }
-
-    private void Start()
-    {
-        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
-        UpgradeDisplay();
+        else
+        {
+            UIenabled = !UIenabled;
+            player.SetCursorState(true);
+        }
     }
 
     IEnumerator Typing(GameObject curButton)
