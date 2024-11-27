@@ -5,70 +5,74 @@ using UnityEngine.AI;
 
 public class SniperMonster : RangedMonster
 {
-    bool isFired = false;
+    private bool isFired = false;
+
     protected override void Start()
     {
         base.Start();
-        isHitScan = true;
+        isHitScan = true; // 스나이퍼는 즉시 타격 방식 사용
     }
 
-    protected override void UpdateIdle() { nmAgent.isStopped = true; }
-    protected override void UpdateChase() { return; }
+    protected override void UpdateIdle()
+    {
+        nmAgent.isStopped = true; // 정지 상태
+    }
+
+    protected override void UpdateChase()
+    {
+        // 스나이퍼는 추적하지 않음
+    }
+
     protected override void UpdateAttack()
     {
         if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
         {
-            ChangeState(State.IDLE); // 추적 상태로 전환
-            attackTimer = 0f;         // 타이머 초기화
+            ChangeState(State.IDLE); // 공격 범위를 벗어나면 대기 상태로 전환
+            ResetAttackTimer();
             return;
         }
 
         nmAgent.isStopped = true; // 이동 정지
+        attackTimer += Time.deltaTime; // 공격 타이머 진행
 
-        // 공격 타이머 진행
-        attackTimer += Time.deltaTime;
+        float aimTime = attackCooldown * 0.7f; // 공격 쿨타임의 70%를 조준 시간으로 사용
+        float fireTime = attackCooldown * 0.8f; // 공격 쿨타임의 80%를 발사 시간으로 사용
 
-        // 조준 시간 설정 (공격 간격의 일부를 조준 시간으로 사용)
-        float aimTime = attackCooldown * 0.7f; // 쿨타임의 30%를 조준 시간으로 사용
-        float attackTime = attackCooldown * 0.8f;
         if (attackTimer <= aimTime)
         {
-            // 조준 동작
-            SetAnimatorState(State.AIM); // ATTACK 상태에서 조준 애니메이션 실행
-            return; // 아직 발사하지 않음
+            HandleAim(); // 조준 처리
         }
-        else if (attackTimer <= attackTime)
+        else if (attackTimer <= fireTime)
         {
-            if (!isFired) Debug.Log("FireTime: " + attackTimer);
-            SetAnimatorState(State.ATTACK);
-            isFired = true;
+            HandleFire(); // 발사 처리
         }
 
-
-        // 공격 쿨타임 완료 후 초기화
         if (attackTimer >= attackCooldown)
         {
-            attackTimer = 0f; // 타이머 초기화
-            isFired = false;
+            ResetAttackTimer(); // 쿨타임 완료 후 초기화
         }
-
     }
 
-    protected override void CheckPlayer()
+    private void HandleAim()
     {
-        if (fov.visibleTargets.Count > 0)
+        SetAnimatorState(State.AIM); // 조준 상태 애니메이션
+        gun?.AimReady(); // 무기 조준 준비
+    }
+
+    private void HandleFire()
+    {
+        if (!isFired)
         {
-            target = fov.visibleTargets[0];
-            if (state != State.ATTACK || state != State.HIT) ChangeState(State.ATTACK);
+            Debug.Log("FireTime: " + attackTimer);
+            SetAnimatorState(State.ATTACK); // 발사 애니메이션
+            isFired = true;
         }
     }
 
-    public void  SetAim()
+    private void ResetAttackTimer()
     {
-        if (gun == null) return;
-        
-        gun.AimReady();
-        Debug.Log("Get Ready?");
+        attackTimer = 0f;
+        isFired = false;
     }
 
 }

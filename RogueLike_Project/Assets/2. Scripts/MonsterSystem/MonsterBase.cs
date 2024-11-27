@@ -10,61 +10,62 @@ using static UnityEngine.GraphicsBuffer;
 
 public abstract class MonsterBase : MonoBehaviour
 {
+    #region Serialized Fields
+    [Header("General Settings")]
     [SerializeField] protected Transform target;
-    [SerializeField] private Transform body;        // 캐릭터 몸체 (XZ 회전)
-    [SerializeField] private Transform head;        // 머리 또는 상체 (상하좌우 회전)
-    [SerializeField] private float maxVerticalAngle = 60f; // 머리가 위/아래로 회전 가능한 최대 각도
-    protected float rotateSpeed = 2.0f; // 회전 속도
+    [SerializeField] private Transform body; // Character body (XZ rotation)
+    [SerializeField] private Transform head; // Head or torso (vertical rotation)
+    [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
+    [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
 
 
-
-    [Header("Preset Fields")]
+    [Header("Components")]
     [SerializeField] protected Animator anim;
-    [SerializeField] protected GameObject splashFx;
     [SerializeField] protected NavMeshAgent nmAgent;
     [SerializeField] protected FieldOfView fov;
+    [SerializeField] protected MonsterStatus monsterStatus;
     [SerializeField] private Rigidbody playerRigidBody;
 
 
-    [Header("NormalStats Fields")]
-    [SerializeField] protected MonsterStatus monsterStatus;
-    [SerializeField] protected float attackRange = 5.0f; // 공격 범위
-    [SerializeField] protected float attackCooldown = 3.0f; // 공격 간격
-    [SerializeField] protected float attackTimer = 0.0f; // 공격 타이머
-    protected float hp = 0; // 기본 체력
-    protected float dmg = 0; // 기본 데미지
-    protected float chaseSpeed; // 추적 속도
+    [Header("Stats")]
+    [SerializeField] protected float attackRange = 5.0f;
+    [SerializeField] protected float attackCooldown = 3.0f;
 
+    [Header("Effects")]
+    [SerializeField] private GameObject splashFx;
+    [SerializeField] private GameObject spawnEffect;
+    [SerializeField] private Material startMaterial;
+    [SerializeField] private Material baseMaterial;
+    [SerializeField] private GameObject[] items;
+    [SerializeField] private int[] itemProbability = { 50, 25, 0 };
 
-    [Header("Delay(CoolTime)")]
-    private float lastTransitionTime = 0f;
-    private float transitionCooldown = 0.3f;
+    [Header("UI")]
+    [SerializeField] private EnemyHPBar HPBar;
+    [SerializeField] private GameObject UIDamaged;
 
+    [Header("Timings")]
+    [SerializeField] private float hitCooldown = 1.0f;
+    [SerializeField] private float hitDuration = 0.8f;
+    [SerializeField] private float dieDuration = 1f;
+    [SerializeField] private float summonTimeVariable = 1f;
+    [SerializeField] private float transitionCooldown = 0.3f;
 
+    [Header("External Data")]
+    [SerializeField] private EnemyCountData enemyCountData;
+    #endregion
 
-    [Header("HitVariable")]
-    [SerializeField] private float hitCooldown = 1.0f; // 피격 쿨타임 (초 단위)
-    private float lastHitTime = 0.0f; // 마지막으로 피격된 시간
-    private float hitTimer = 0f;
-    private float hitDuration = 0.8f; // 피격 애니메이션 길이
+    #region Private Fields
+    protected float hp;
+    protected float dmg;
+    protected float chaseSpeed;
+    protected float attackTimer = 0f;
+    protected float hitTimer = 0f;
+    protected float dieTimer = 0f;
+    protected float lastTransitionTime = 0f;
+    protected bool isDie = false;
+    #endregion
 
-    [Header("DieVariable")]
-    private float dieTimer = 0f;
-    private float dieDuration = 1f; // 죽음 애니메이션 길이
-    [SerializeField] GameObject[] items;
-    [SerializeField] int[] itemProbability = { 50,25,0 };
-
-    [Header("MonsterUI")]
-    [SerializeField] EnemyHPBar HPBar;
-    [SerializeField] GameObject UIDamaged;
-
-    [Header("Material")]
-    [SerializeField] Material startMaterial;
-    [SerializeField] Material BaseMaterial;
-    [SerializeField] float summonTimeVariable = 1f;
-    [SerializeField] GameObject spawnEffect;
-    [SerializeField] float spawnScale;
-
+    #region State Management
     protected enum State
     {
         IDLE,
@@ -78,144 +79,66 @@ public abstract class MonsterBase : MonoBehaviour
         COOLDOWN,
     }
 
-
     protected State state;
     protected Coroutine stateMachineCoroutine;
     private Dictionary<State, Action> stateActions;
-    private Dictionary<State, float> stateDurations;
+    #endregion
 
-
-    [SerializeField] EnemyCountData enemyCountData;
-    bool isDie = false;
     protected virtual void Start()
     {
-        stateActions = new Dictionary<State, Action> 
-        {
+        InitializeComponents();
+        InitializeStateMachine();
+        InitializeStats();
 
+        state = State.IDLE;
+        StartCoroutine(SummonEffect());
+    }
+
+    #region Initialization
+
+    private void InitializeComponents()
+    {
+        anim = GetComponent<Animator>();
+        nmAgent = GetComponent<NavMeshAgent>();
+        monsterStatus = GetComponent<MonsterStatus>();
+        fov = GetComponent<FieldOfView>();
+    }
+
+    private void InitializeStateMachine()
+    {
+        stateActions = new Dictionary<State, Action>
+        {
             { State.IDLE, UpdateIdle },
             { State.CHASE, UpdateChase },
             { State.ATTACK, UpdateAttack },
             { State.HIT, UpdateHit },
             { State.DIE, UpdateDie },
         };
-
-        stateDurations = new Dictionary<State, float>
-        {
-            { State.IDLE, 0.3f },
-            { State.CHASE, 0f }, // 타이머가 필요 없으면 0으로 설정
-            { State.ATTACK, 1.0f }, // 애니메이션 길이에 맞게 설정
-            { State.HIT, 0.8f }, // Hit 애니메이션 길이
-            { State.DIE, 5.0f }, // 죽음 애니메이션 길이
-        };
-
-        anim = GetComponent<Animator>();
-        nmAgent = GetComponent<NavMeshAgent>();
-        monsterStatus = GetComponent<MonsterStatus>();
-        fov = GetComponent<FieldOfView>();
-
-
-        hp = monsterStatus.GetHealth(); // 기본 체력
-        dmg = monsterStatus.GetAttackDamage(); // 기본 공격력
-        chaseSpeed = monsterStatus.GetMovementSpeed(); // 기본 이동 속도
-        // attackRange = monsterStatus.GetAttackRange(); // 기본 공격 범위
-
-
-        state = State.IDLE;
-
-        StartCoroutine(SummonEffect());
-    } // 기본 몬스터 세팅
-
-    IEnumerator SummonEffect()
-    {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
-        
-        // 각 Renderer의 머티리얼 변경
-        foreach (Renderer renderer in renderers)
-        {
-            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
-            renderer.material = startMaterial;
-        }
-        float currentTime = -2.5f;
-        while(currentTime < 2f)
-        {
-            foreach (Renderer renderer in renderers)
-            {
-                if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
-                renderer.material.SetFloat("_CustomTime", currentTime);
-                currentTime += Time.deltaTime*summonTimeVariable;
-            }
-            yield return new WaitForEndOfFrame();
-        }
-        foreach (Renderer renderer in renderers)
-        {
-            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
-            renderer.material = BaseMaterial;
-        }
-        spawnEffect.SetActive(false);
     }
 
-    #region animationsettings
-    protected void SetAnimatorState(State state)
+    private void InitializeStats()
     {
-        if (anim != null)
-        {
-            if (state == State.HIT)
-            {
-                anim.Play("GetHit", 0, 0f); // 트리거를 사용해 애니메이션 강제 재생
-            }
-            else
-            {
-                anim.SetInteger("State", (int)state); // 다른 상태는 Integer로 처리
-            }
-        }
-    }
-    protected float GetAnimationClipLength(string clipname)
-    {
-        if (anim != null && anim.runtimeAnimatorController != null)
-        {
-            AnimationClip[] clips = anim.runtimeAnimatorController.animationClips;
-            foreach (AnimationClip clip in clips)
-            {
-                if (clip.name == clipname)
-                {
-                    return clip.length;
-                }
-            }
-        }
-        // 기본값 설정 (애니메이션 클립을 찾지 못한 경우)
-        return 1.0f; // 필요에 따라 조정
+        hp = monsterStatus.GetHealth();
+        dmg = monsterStatus.GetAttackDamage();
+        chaseSpeed = monsterStatus.GetMovementSpeed();
     }
     #endregion
 
-
-    //protected IEnumerator Crowd_Control(Transform target)
-    //{
-    //    target.GetComponent<PlayerControl>().enabled = false;
-    //    yield return new WaitForSeconds(0.5f);
-    //    target.GetComponent <PlayerControl>().enabled = true;
-    //}
-
-
-    protected virtual void Update()
+    private void Update()
     {
-        Debug.Log(name + " current state = " + state);
+        Debug.Log($"{name} current state = {state}");
         if (state == State.IDLE) CheckPlayer();
-        if (state == State.CHASE || state == State.ATTACK)
-        {
-            RotateTowardsTarget();
-        }
-        PlayAction(state);
+        if (state == State.CHASE || state == State.ATTACK) RotateTowardsTarget();
+        ExecuteStateAction();
     }
 
-    protected virtual void LateUpdate()
+    private void LateUpdate()
     {
-        if (state == State.CHASE || state == State.ATTACK)
-        {
-            RotateTowardsTarget();
-        }
+        if (state == State.CHASE || state == State.ATTACK) RotateTowardsTarget();
     }
 
-    private void PlayAction(State state)
+    #region UpdateFunc
+    private void ExecuteStateAction()
     {
         if (stateActions.TryGetValue(state, out var action))
         {
@@ -223,18 +146,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"State {state}에 대한 액션이 정의되지 않았습니다.");
-        }
-    }
-
-
-    // 항상 진행중인 기능
-    protected virtual void CheckPlayer()
-    {
-        if (fov.visibleTargets.Count > 0)
-        {
-            target = fov.visibleTargets[0];
-            if (state != State.ATTACK || state != State.HIT) ChangeState(State.CHASE);
+            Debug.LogWarning($"State {state} does not have a defined action.");
         }
     }
 
@@ -242,23 +154,26 @@ public abstract class MonsterBase : MonoBehaviour
     {
         if (target == null) return;
 
-        // 타겟 방향 계산
         Vector3 direction = (target.position - transform.position).normalized;
-
-        // 방향 벡터를 기준으로 회전 계산
         Quaternion lookRotation = Quaternion.LookRotation(direction);
-
-        // 부드럽게 회전
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotateSpeed);
+    }
 
-    }
-    protected virtual void UpdateIdle()
+    private void CheckPlayer()
     {
+        if (fov.visibleTargets.Count > 0)
+        {
+            target = fov.visibleTargets[0];
+            ChangeState(State.CHASE);
+        }
     }
+    #endregion
+
+    #region State Update Methods
+    protected virtual void UpdateIdle() => ChangeState(State.CHASE);
 
     protected virtual void UpdateChase()
     {
-
         if (target == null)
         {
             ChangeState(State.IDLE);
@@ -277,28 +192,20 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void UpdateAttack()
     {
-
         nmAgent.isStopped = true;
-        nmAgent.speed = 0f;
 
-        // 공격 타이머 진행
         attackTimer += Time.deltaTime;
-
-        if (attackTimer >= attackCooldown) 
+        if (attackTimer >= attackCooldown)
         {
-            // 공격 후 타겟이 범위를 벗어났다면 추적 상태로 전환
             if (Vector3.Distance(transform.position, target.position) > attackRange)
             {
                 ChangeState(State.CHASE);
                 return;
             }
 
-            // 공격 타이머 초기화
             attackTimer = 0f;
-            ChangeState(State.ATTACK);
         }
     }
-     
 
     protected virtual void UpdateHit()
     {
@@ -312,8 +219,6 @@ public abstract class MonsterBase : MonoBehaviour
         }
     }
 
-
-   
     protected void UpdateDie()
     {
         nmAgent.isStopped = true;
@@ -321,79 +226,136 @@ public abstract class MonsterBase : MonoBehaviour
         dieTimer += Time.deltaTime;
         if (dieTimer >= dieDuration)
         {
-            // 오브젝트 파괴 또는 비활성화
-            Debug.Log("죽음");
-            enemyCountData.enemyCount--;
-
-            int itemGrade = -1;
-            int randNum = UnityEngine.Random.Range(1, 101);
-            if (randNum <= itemProbability[0]) itemGrade = 0;
-            else if(randNum <= itemProbability[0]+itemProbability[1]) itemGrade = 1;
-            else if(randNum <= itemProbability[0] + itemProbability[1] + itemProbability[2]) itemGrade = 2;
-            
-            if(itemGrade >= 0)
-            {
-                Instantiate(items[itemGrade], transform.position + Vector3.up, Quaternion.identity);
-            }
-
-            Destroy(gameObject);
+            HandleDeath();
         }
     }
+    #endregion
 
+    #region State Management
     protected void ChangeState(State newState)
     {
-
-        if (Time.time - lastTransitionTime < transitionCooldown)
-            return;
+        if (Time.time - lastTransitionTime < transitionCooldown) return;
 
         lastTransitionTime = Time.time;
 
-        if (state != newState || newState == State.HIT || newState == State.ATTACK)
+        if (state != newState || newState == State.HIT)
         {
-            Debug.Log(transform.name + " 상태 변경: " + state + " → " + newState);
+            Debug.Log($"{transform.name} state change: {state} → {newState}");
             SetAnimatorState(newState);
             state = newState;
 
-            // 상태별 초기화
-            switch (state)
-            {
-                case State.ATTACK:
-                    attackTimer = 0f;
-                    break;
-                case State.HIT:
-                    hitTimer = 0f;
-                    break;
-                case State.DIE:
-                    dieTimer = 0f;
-                    break;
-            }
+            ResetStateTimers();
         }
     }
 
-    public virtual void TakeDamage(float damage)
+    private void ResetStateTimers()
     {
-        // 체력 감소 처리
-        monsterStatus.DecreaseHealth(damage);
-        hp = monsterStatus.GetHealth();
-
-        UIDamage uIDamage = Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>();
-        uIDamage.damage = damage;
-
-        if(HPBar != null) HPBar.SetRatio(hp, monsterStatus.GetMaxHealth());
-
-        if (hp > 0)
+        switch (state)
         {
-            // 피격 상태로 전환
-            ChangeState(State.HIT);
-            target = FindObjectOfType<PlayerStatus>().transform;
+            case State.ATTACK:
+                attackTimer = 0f;
+                break;
+            case State.HIT:
+                hitTimer = 0f;
+                break;
+            case State.DIE:
+                dieTimer = 0f;
+                break;
+        }
+    }
+
+    protected virtual void SetAnimatorState(State state)
+    {
+        if (anim == null) return;
+
+        if (state == State.HIT)
+        {
+            anim.Play("GetHit", 0, 0f);
+        }
+        else if (state == State.DIE)
+        {
+            anim.SetTrigger("DIE");
         }
         else
         {
-            // 죽음 처리
-            isDie = true; // 죽음 플래그 설정
-            ChangeState(State.DIE);
-            dieTimer = 0.0f;
+            anim.SetInteger("State", (int)state);
         }
     }
+    #endregion
+
+    #region Damage and Death
+    public virtual void TakeDamage(float damage)
+    {
+        if (state == State.DIE) return;
+
+        monsterStatus.DecreaseHealth(damage);
+        hp = monsterStatus.GetHealth();
+
+        Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
+
+        if (hp > 0)
+        {
+            ChangeState(State.HIT);
+        }
+        else
+        {
+            anim.SetTrigger("DieTrigger");
+            ChangeState(State.DIE);
+        }
+    }
+
+    private void HandleDeath()
+    {
+        enemyCountData.enemyCount--;
+        SpawnItem();
+        Destroy(gameObject);
+    }
+
+    private void SpawnItem()
+    {
+        int randNum = UnityEngine.Random.Range(1, 101);
+        int itemGrade = Array.FindIndex(itemProbability, prob => (randNum -= prob) <= 0);
+
+        if (itemGrade >= 0)
+        {
+            Instantiate(items[itemGrade], transform.position + Vector3.up, Quaternion.identity);
+        }
+    }
+    #endregion
+
+    #region Summon Effect
+    private IEnumerator SummonEffect()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+            renderer.material = startMaterial;
+        }
+
+        float currentTime = -2.5f;
+        while (currentTime < 2f)
+        {
+            foreach (Renderer renderer in renderers)
+            {
+                if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+                renderer.material.SetFloat("_CustomTime", currentTime);
+            }
+
+            currentTime += Time.deltaTime * summonTimeVariable;
+            yield return null;
+        }
+
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+            renderer.material = baseMaterial;
+        }
+
+        spawnEffect.SetActive(false);
+    }
+    #endregion
 
 }
