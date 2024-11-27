@@ -12,7 +12,10 @@ public class Tile : MonoBehaviour
     public bool isSetActive = true;
 
     [SerializeField] SpriteRenderer minimapTile;
+    [SerializeField] GameObject spike;
     public float maxHeight;
+    bool isSpike = false;
+
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -27,13 +30,22 @@ public class Tile : MonoBehaviour
     {
         StartCoroutine(MoveCoroutine(pos_y, duration));
     }
-    public void AlertChanging(float time = 1.6f, bool isWarning = false)
+    public void AlertChanging(float time = 1.6f, int warningMode = 0)
     {
-        if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, isWarning));
+        // 0: no warning 1: 주의 2: 가시주의 3: 낙사주의
+        if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, warningMode));
     }
-    IEnumerator AlertChangingCoroutine(float time, bool isWarning)
+    IEnumerator AlertChangingCoroutine(float time, int warningMode)
     {
-        Color alertColor = isWarning ? Color.red : Color.yellow;
+        Color alertColor = Color.white;
+        switch (warningMode)
+        {
+            case 0: yield break;
+            case 1: alertColor = Color.yellow; break;
+            case 2: alertColor = new Color(1,0.5f,1); break;
+            case 3: alertColor = Color.red; break;
+        }
+
         alertColor -= new Color(0, 0, 0, 0.5f);
 
         if (transform.position.y >= 0)
@@ -80,6 +92,9 @@ public class Tile : MonoBehaviour
         Color tmp2 = minimapTile.color;
         tmp2.a = 0.6f;
         minimapTile.color = tmp2;
+
+        yield return new WaitForSeconds(1f);
+        ChangeSpikeMode(false);
     }
     public void ChangeHeight(float size_y, float duration = 2f)
     {
@@ -175,8 +190,9 @@ public class Tile : MonoBehaviour
         //isSetActive = false;
     }
 
-    public void ChangeHeightWithFixedBase(float size_y, float duration = 3f)
+    public void ChangeHeightWithFixedBase(float size_y, float duration = 3f, bool isSpike = false)
     {
+        ChangeSpikeMode(isSpike);
         StartCoroutine(MoveCoroutine(size_y/2f, duration));
         StartCoroutine(ChangeSizeCoroutine(size_y, duration));
     }
@@ -216,6 +232,12 @@ public class Tile : MonoBehaviour
         yield return new WaitForSeconds(durationPerLoop / 2f);
 
 
+    }
+
+    public void ChangeSpikeMode(bool isSpike)
+    {
+        this.isSpike = isSpike;
+        spike.SetActive(isSpike);
     }
 
 }
