@@ -35,6 +35,7 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
+        upgradeManager = FindObjectOfType<UpgradeManager>();
         tileManager = FindObjectOfType<TileManager>();
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
@@ -321,11 +322,10 @@ public class WaveManager : MonoBehaviour
         tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
-        upgradeManager.repeatNum = 0;
+        upgradeManager.RepeatNumSet(earnedItems.Count);
         while (earnedItems.Count > 0)
         {
             earnedItems.Dequeue();
-            upgradeManager.repeatNum++;
         }
         upgradeManager.UpgradeDisplay();
 
