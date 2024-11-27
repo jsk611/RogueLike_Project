@@ -323,12 +323,13 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
         upgradeManager.RepeatNumSet(earnedItems.Count);
-        while (earnedItems.Count > 0)
-        {
-            earnedItems.Dequeue();
-        }
         upgradeManager.UpgradeDisplay();
-
+        yield return null;
+        while (upgradeManager.UIenabled)
+        {
+            yield return null;
+        }
+        earnedItems = null;
         yield return null;
     }
 

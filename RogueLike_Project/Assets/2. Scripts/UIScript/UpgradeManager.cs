@@ -14,7 +14,7 @@ public class UpgradeManager : MonoBehaviour
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
 
     private CharacterBehaviour player;
-    private bool UIenabled = false;
+    public bool UIenabled = false;
 
     private int repeatNum = 0;
 
