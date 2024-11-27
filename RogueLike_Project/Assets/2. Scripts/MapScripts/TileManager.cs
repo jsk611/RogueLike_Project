@@ -194,16 +194,26 @@ public class TileManager : MonoBehaviour
     public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1.25f, float durationAboutTile = 1f, float alertTime = 1f)
     {
         float maxTileHeight = GetMaxTileHeight();
+
         //경고 표시
         for (int i = 0; i < mapSize; i++)
         {
             for (int j = 0; j < mapSize; j++)
             {
+                bool isTooHigh = false;
+                //높은 맵 생성 시  경고 후 가시 설치 
+                if (j - 1 >= 0 && (tileMap[i, j] - tileMap[i, j - 1]) >= 4) isTooHigh = true;
+                else if (j + 1 < mapSize && (tileMap[i, j] - tileMap[i, j + 1]) >= 4) isTooHigh = true;
+                else if (i - 1 >= 0 && (tileMap[i, j] - tileMap[i - 1, j]) >= 4) isTooHigh = true;
+                else if (i + 1 < mapSize && (tileMap[i, j] - tileMap[i + 1, j]) >= 4) isTooHigh = true;
+
+
                 tiles[i,j].maxHeight = maxTileHeight;
                 if (tileMap[i, j]/2f != tiles[i, j].transform.position.y)
                 {
-                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
-                    else tiles[i, j].AlertChanging(alertTime);
+                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, 3);
+                    else if (isTooHigh) tiles[i, j].AlertChanging(alertTime, 2);
+                    else tiles[i, j].AlertChanging(alertTime, 1);
                 }
             }
         }
@@ -224,7 +234,15 @@ public class TileManager : MonoBehaviour
                     else 
                     {
                         if (tiles[i, j].transform.position.y == tileMap[i, j]/2) continue;
-                        tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile);
+
+                        bool isTooHigh = false;
+                        //높은 맵 생성 시  경고 후 가시 설치 
+                        if (j - 1 >= 0 && (tileMap[i, j] - tileMap[i, j - 1]) >= 4) isTooHigh = true;
+                        else if (j + 1 < mapSize && (tileMap[i, j] - tileMap[i, j + 1]) >= 4) isTooHigh = true;
+                        else if (i - 1 >= 0 && (tileMap[i, j] - tileMap[i - 1, j]) >= 4) isTooHigh = true;
+                        else if (i + 1 < mapSize && (tileMap[i, j] - tileMap[i + 1, j]) >= 4) isTooHigh = true;
+
+                        tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
                     } 
                 }
             }
@@ -242,8 +260,8 @@ public class TileManager : MonoBehaviour
             {
                 if (tileMap[i, j] / 2f != tiles[i, j].transform.position.y)
                 {
-                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, true);
-                    else tiles[i, j].AlertChanging(alertTime);
+                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, 3);
+                    else tiles[i, j].AlertChanging(alertTime,1);
                 }
             }
         }
