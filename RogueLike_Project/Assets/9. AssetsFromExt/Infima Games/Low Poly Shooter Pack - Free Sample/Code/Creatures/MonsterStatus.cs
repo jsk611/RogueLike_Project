@@ -279,6 +279,7 @@ public class MonsterStatus : StatusBehaviour
 
     public IEnumerator Shocked(float effect, float duration, float interval, float shockTime)
     {
+ 
         float startTime = Time.time;
         float latest = 0;
         float currentSpeed;
@@ -286,6 +287,7 @@ public class MonsterStatus : StatusBehaviour
         {
             if (latest >= interval)
             {
+                latest = 0;
                 Debug.Log("shock!!!!!");
                 monsterBase.TakeDamage(0);
                 currentSpeed = GetMovementSpeed();
@@ -297,6 +299,7 @@ public class MonsterStatus : StatusBehaviour
                 latest += shockTime;
             }
             latest += Time.deltaTime;
+            yield return null;
         }
     }
 

@@ -127,6 +127,7 @@ public abstract class StatusBehaviour : MonoBehaviour
     }
     public IEnumerator Blazed(float effect, float duration,float interval)
     {
+        if (currentCon == Condition.Shocked) yield break;
         currentCon = Condition.Blazed;
         float startTime = Time.time;
         while(Time.time-startTime < duration)
@@ -138,6 +139,7 @@ public abstract class StatusBehaviour : MonoBehaviour
     }
     public IEnumerator Frozen(float duration)
     {
+        if (currentCon == Condition.Frozen) yield break;
         currentCon = Condition.Frozen;
         currentCC = CC.entangled;
         float currentSpeed = GetMovementSpeed();
@@ -150,6 +152,7 @@ public abstract class StatusBehaviour : MonoBehaviour
 
     public IEnumerator Poisoned(float effect, float duration,float interval)
     {
+        if (currentCon == Condition.Poisoned) yield break;
         currentCon = Condition.Poisoned;
         float startTime = Time.time;   
         while(Time.time - startTime < duration)
