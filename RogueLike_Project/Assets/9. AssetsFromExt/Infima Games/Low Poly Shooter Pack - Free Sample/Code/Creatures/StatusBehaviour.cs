@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using UnityEditorInternal;
 using UnityEngine;
 
 public abstract class StatusBehaviour : MonoBehaviour
@@ -70,6 +71,24 @@ public abstract class StatusBehaviour : MonoBehaviour
     //public abstract void SetJumpPower(float jumpPower);
     //public abstract float GetJumpPower();
 
+    //¼Ó¹Ú
+    public enum CC
+    {
+        normal,
+        entangled,
+        frozen,
+    }
+
+    public enum Condition{
+        normal,
+        Blazed,
+        Shocked,
+        Frozen,
+        Poisoned
+    }
+    public CC currentCC;
+    public Condition currentCon;
+
     public IEnumerator Slow(float effect, float duration)
     {
         Debug.Log("slow");
@@ -85,6 +104,76 @@ public abstract class StatusBehaviour : MonoBehaviour
         DecreaseMovementSpeed(effect);
     }
    
+    public IEnumerator Shocked(float effect, float duration,float interval,float shockTime)
+    {
+        float time = 0;
+        float currentSpeed;
+        while (time <= duration)
+        {
+            
+            currentSpeed = GetMovementSpeed();
+            SetMovementSpeed(0);
+            currentCC = CC.entangled;
+            yield return new WaitForSeconds(shockTime);
+            currentCC = CC.normal;
+            SetMovementSpeed(currentSpeed);
+            time += interval;
+        }
+    }
+    public IEnumerator Blazed(float effect, float duration,float interval)
+    {
+        currentCon = Condition.Blazed;
+        float startTime = Time.time;
+        while(Time.time-startTime < duration)
+        {
+            DecreaseHealth(effect);
+            yield return new WaitForSeconds(interval);
+        }
+        currentCon = Condition.normal;
+    }
+    public IEnumerator Frozen(float effect, float duration)
+    {
+        currentCon = Condition.Frozen;
+        currentCC = CC.entangled;
+        float currentSpeed = GetMovementSpeed();
+        SetMovementSpeed(0);
+        yield return new WaitForSeconds(duration);
+        SetMovementSpeed(currentSpeed);
+        currentCC = CC.normal;
+        currentCon = Condition.normal;
+    }
 
+    public IEnumerator Poisoned(float effect, float duration,float interval)
+    {
+        currentCon = Condition.Poisoned;
+        float startTime = Time.time;   
+        while(Time.time - startTime < duration)
+        {
+            DecreaseHealth(effect);
+            yield return new WaitForSeconds(interval);
+        }
+        currentCon = Condition.normal;
+    }
+
+    public void ConditionOverload(Condition con,float effect, float duration, float interval,float shockTime = 0.5f)
+    {
+        currentCon = con;
+        switch(currentCon)
+        {
+            case Condition.Poisoned:
+                StartCoroutine(Frozen(effect, duration));
+                break;
+            case Condition.Blazed:
+                StartCoroutine(Blazed(effect,duration,interval));  
+                break;
+            case Condition.Frozen:
+                StartCoroutine(Frozen(effect, duration));
+                break;
+            case Condition.Shocked:
+                StartCoroutine(Shocked(effect,duration,interval,shockTime));
+                break;
+        }
+        return;
+    }
 
 }

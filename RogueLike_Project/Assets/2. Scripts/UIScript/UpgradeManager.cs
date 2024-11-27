@@ -90,6 +90,11 @@ public class UpgradeManager : MonoBehaviour
             repeatNum--;
             UpgradeDisplay();
         }
+        else
+        {
+            UIenabled = !UIenabled;
+            player.SetCursorState(true);
+        }
     }
 
     IEnumerator Typing(GameObject curButton)
