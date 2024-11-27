@@ -55,6 +55,9 @@ public class MonsterStatus : StatusBehaviour
     //[Tooltip("Creature Jump Power")]
     //[SerializeField]
     //private float JumpPower;
+    private MonsterBase monsterBase;
+    
+    private EnemyHPBar HPBar;
 
 
 
@@ -64,28 +67,35 @@ public class MonsterStatus : StatusBehaviour
     private void Start()
     {
             monsterAnimator = GetComponent<Animator>();
+        monsterBase = GetComponent<MonsterBase>();
+        HPBar = monsterBase.HPBar;
     }
 
     // Current Health
-    public override void DecreaseHealth(float damage)
-    {
+    public override void DecreaseHealth(float damage) {
         Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
+        
         if (Health <= 0)
         {
             Health = 0;
             //Destroy(gameObject);
         }
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void IncreaseHealth(float health)
     {
         Health += health;
         if (Health > MaxHealth) Health = MaxHealth;
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void SetHealth(float health)
     {
         Health = Mathf.Clamp(health, 0, MaxHealth);
         //if (health <= 0) Destroy(gameObject);
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
+
+
 
     // Max Health
     public override void IncreaseMaxHealth(float maxHealth)
@@ -165,7 +175,7 @@ public class MonsterStatus : StatusBehaviour
     //    EffectResist = Mathf.Clamp(EffectResist, 0, 100);
     //}
 
-    // Movement Speed
+    // Movement Speeds
     public override void IncreaseMovementSpeed(float moveSpeed)
     { MoveSpeed += moveSpeed; }
     public override void DecreaseMovementSpeed(float moveSpeed)
@@ -265,9 +275,30 @@ public class MonsterStatus : StatusBehaviour
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
 
+   
 
-
-
+    public IEnumerator Shocked(float effect, float duration, float interval, float shockTime)
+    {
+        float startTime = Time.time;
+        float latest = 0;
+        float currentSpeed;
+        while (Time.time - startTime < duration)
+        {
+            if (latest >= interval)
+            {
+                Debug.Log("shock!!!!!");
+                monsterBase.TakeDamage(0);
+                currentSpeed = GetMovementSpeed();
+                SetMovementSpeed(0);
+                currentCC = CC.entangled;
+                yield return new WaitForSeconds(shockTime);
+                currentCC = CC.normal;
+                SetMovementSpeed(currentSpeed);
+                latest += shockTime;
+            }
+            latest += Time.deltaTime;
+        }
+    }
 
 }
 

@@ -55134,7 +55134,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.16666667
-    functionName: SetAim
+    functionName: HandleAim
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: 89fa4fd0e683e5a419e4642b803a38ff,
       type: 3}

@@ -6,91 +6,106 @@ using UnityEngine.Rendering.VirtualTexturing;
 
 public class RangedMonster : MonsterBase
 {
-    [Header("settings")]
-    [SerializeField] float firerate = 1.5f;
-    [SerializeField] protected bool isHitScan = false;
-
+    [Header("Settings")]
+    [SerializeField] private float fireRate = 1.5f; // 발사 속도
+    [SerializeField] protected bool isHitScan = false; // 히트 스캔 여부
     public EnemyWeapon gun;
-    
-   
 
     protected override void UpdateChase()
     {
         if (target == null)
         {
-            ChangeState(State.IDLE);
+            ChangeState(State.IDLE); // 타겟이 없으면 대기 상태로 전환
             return;
         }
 
-        nmAgent.isStopped = false;
+        nmAgent.isStopped = false; // 이동 활성화
         nmAgent.speed = chaseSpeed;
         nmAgent.SetDestination(target.position);
 
         if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {
-            ChangeState(State.ATTACK);
+            ChangeState(State.ATTACK); // 공격 범위 안에 들어오면 공격 상태로 전환
         }
-
     }
 
     protected override void UpdateAttack()
     {
-        // 타겟이 없거나 공격 범위를 벗어난 경우 상태 전환
-        if (target == null || Vector3.Distance(transform.position, target.position) > attackRange)
+        if (!IsTargetValid())
         {
-            ChangeState(State.CHASE); // 추적 상태로 전환
-            attackTimer = 0f;         // 타이머 초기화
+            ChangeState(State.CHASE); // 타겟이 없거나 범위를 벗어나면 추적 상태로 전환
+            ResetAttackTimer();
             return;
         }
 
         nmAgent.isStopped = true; // 이동 정지
+        attackTimer += Time.deltaTime; // 공격 타이머 진행
 
-        // 공격 타이머 진행
-        attackTimer += Time.deltaTime;
+        HandleAttackPhases();
 
-        // 조준 시간 설정 (공격 간격의 일부를 조준 시간으로 사용)
-        float aimTime = attackCooldown * 0.6f; // 쿨타임의 30%를 조준 시간으로 사용
-        float attackTime = attackCooldown * 0.8f;
+        if (attackTimer >= attackCooldown)
+        {
+            ResetAttackTimer(); // 쿨타임 완료 후 타이머 초기화
+        }
+    }
+
+    private void HandleAttackPhases()
+    {
+        float aimTime = attackCooldown * 0.6f; // 조준 시간: 쿨타임의 60%
+        float fireTime = attackCooldown * 0.8f; // 발사 시간: 쿨타임의 80%
+
         if (attackTimer <= aimTime)
         {
-            // 조준 동작
-            SetAnimatorState(State.ATTACK); // ATTACK 상태에서 조준 애니메이션 실행
-            return; // 아직 발사하지 않음
+            HandleAim(); // 조준 처리
         }
-        else if (attackTimer <= attackTime)
+        else if (attackTimer <= fireTime)
         {
-            SetAnimatorState(State.COOLDOWN);
+            HandleFirePreparation(); // 발사 준비
         }
         else
         {
-            SetAnimatorState(State.AIM);
+            HandleFire(); // 실제 발사
         }
+    }
 
-        // 공격 쿨타임 완료 후 초기화
-        if (attackTimer >= attackCooldown)
-        {
-            attackTimer = 0f; // 타이머 초기화
-        }
+    private void HandleAim()
+    {
+        SetAnimatorState(State.AIM); // AIM 상태 애니메이션
+    }
+
+    private void HandleFirePreparation()
+    {
+        SetAnimatorState(State.COOLDOWN); // 발사 준비 애니메이션
+    }
+
+    private void HandleFire()
+    {
+        SetAnimatorState(State.ATTACK); // ATTACK 상태 애니메이션
     }
 
     public void FireEvent()
     {
-        if (gun == null)
-        {
-            return;
-        }
+        if (gun == null) return; // 무기가 없으면 실행하지 않음
 
         if (!isHitScan)
         {
-            gun.Fire(); // 총 발사
+            gun.Fire(); // 총알 발사
             Debug.Log("Gun fired via Animation Event!");
         }
         else
         {
-            gun.FireLaser();
+            gun.FireLaser(); // 히트 스캔 방식으로 발사
             Debug.Log("Hit scan Activated");
         }
+    }
 
-        
+    private bool IsTargetValid()
+    {
+        return target != null && Vector3.Distance(transform.position, target.position) <= attackRange;
+    }
+
+    private void ResetAttackTimer()
+    {
+        attackTimer = 0f;
     }
 }
