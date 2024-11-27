@@ -5,8 +5,7 @@ using UnityEngine.AI;
 
 public class SniperMonster : RangedMonster
 {
-
-
+    bool isFired = false;
     protected override void Start()
     {
         base.Start();
@@ -34,21 +33,23 @@ public class SniperMonster : RangedMonster
         float attackTime = attackCooldown * 0.8f;
         if (attackTimer <= aimTime)
         {
-            if (aimTime - attackCooldown < 0.00001f) Debug.Log("AimTime: " +  attackTimer);
             // 조준 동작
             SetAnimatorState(State.AIM); // ATTACK 상태에서 조준 애니메이션 실행
             return; // 아직 발사하지 않음
         }
         else if (attackTimer <= attackTime)
         {
+            if (!isFired) Debug.Log("FireTime: " + attackTimer);
             SetAnimatorState(State.ATTACK);
+            isFired = true;
         }
-       
+
 
         // 공격 쿨타임 완료 후 초기화
         if (attackTimer >= attackCooldown)
         {
             attackTimer = 0f; // 타이머 초기화
+            isFired = false;
         }
 
     }
