@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Freeze : MonoBehaviour
 {
-    public float effect;
+    private float effect;
     public float duration;
-    public float interval;
+    private float interval;
     // Start is called before the first frame update
 
 

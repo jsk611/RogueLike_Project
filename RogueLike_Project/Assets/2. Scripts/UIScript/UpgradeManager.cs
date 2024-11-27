@@ -8,12 +8,15 @@ using InfimaGames.LowPolyShooterPack;
 public class UpgradeManager : MonoBehaviour
 {
     public static UpgradeManager instance;
+
     [SerializeField] GameObject upgradeUI;
 
     [SerializeField] GameObject[] commonButtons, rareButtons, epicButtons;
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
 
     private CharacterBehaviour player;
+    private StatusBehaviour status;
+
     public bool UIenabled = false;
 
     private int repeatNum = 0;
@@ -26,6 +29,7 @@ public class UpgradeManager : MonoBehaviour
     private void Start()
     {
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+        status = player.GetComponent<StatusBehaviour>();
     }
 
     public void RepeatNumSet(int n)
