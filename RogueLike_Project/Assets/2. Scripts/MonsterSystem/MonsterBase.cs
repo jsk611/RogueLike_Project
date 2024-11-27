@@ -40,7 +40,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private int[] itemProbability = { 50, 25, 0 };
 
     [Header("UI")]
-    [SerializeField] private EnemyHPBar HPBar;
+    [SerializeField] public EnemyHPBar HPBar;
     [SerializeField] private GameObject UIDamaged;
 
     [Header("Timings")]
@@ -287,12 +287,11 @@ public abstract class MonsterBase : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         if (state == State.DIE) return;
-
-        monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
+        monsterStatus.DecreaseHealth(damage);
 
         Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>().damage = damage;
-        HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
+       // HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
 
         if (hp > 0)
         {

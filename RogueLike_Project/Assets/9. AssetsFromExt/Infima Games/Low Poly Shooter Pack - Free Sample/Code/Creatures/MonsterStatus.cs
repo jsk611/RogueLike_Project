@@ -57,6 +57,7 @@ public class MonsterStatus : StatusBehaviour
     //private float JumpPower;
     private MonsterBase monsterBase;
     
+    private EnemyHPBar HPBar;
 
 
 
@@ -67,28 +68,34 @@ public class MonsterStatus : StatusBehaviour
     {
             monsterAnimator = GetComponent<Animator>();
         monsterBase = GetComponent<MonsterBase>();
+        HPBar = monsterBase.HPBar;
     }
 
     // Current Health
-    public override void DecreaseHealth(float damage)
-    {
+    public override void DecreaseHealth(float damage) {
         Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
+        
         if (Health <= 0)
         {
             Health = 0;
             //Destroy(gameObject);
         }
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void IncreaseHealth(float health)
     {
         Health += health;
         if (Health > MaxHealth) Health = MaxHealth;
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void SetHealth(float health)
     {
         Health = Mathf.Clamp(health, 0, MaxHealth);
         //if (health <= 0) Destroy(gameObject);
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
+
+
 
     // Max Health
     public override void IncreaseMaxHealth(float maxHealth)

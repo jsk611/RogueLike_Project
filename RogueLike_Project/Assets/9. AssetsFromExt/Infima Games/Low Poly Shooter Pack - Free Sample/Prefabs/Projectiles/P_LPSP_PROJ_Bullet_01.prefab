@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 65871565580582628}
   - component: {fileID: 96448838451407516}
   - component: {fileID: 114243545424532484}
-  - component: {fileID: 1844136601754604012}
+  - component: {fileID: 6981073298978412849}
   m_Layer: 15
   m_Name: P_LPSP_PROJ_Bullet_01
   m_TagString: Untagged
@@ -225,7 +225,7 @@ MonoBehaviour:
   - {fileID: 4587651611338842, guid: 5e02303289b3c494e8e185be0fbbd405, type: 3}
   concreteImpactPrefabs:
   - {fileID: 4587651611338842, guid: 5e02303289b3c494e8e185be0fbbd405, type: 3}
---- !u!114 &1844136601754604012
+--- !u!114 &6981073298978412849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,12 +234,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1086664671600574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abc226593fb82d5449174623315edc06, type: 3}
+  m_Script: {fileID: 11500000, guid: ff27db2daca3c96408c7808d837c20b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effect: 2
+  effect: 10
   duration: 5
-  interval: 0
+  interval: 0.5
 --- !u!1 &1231345400216816
 GameObject:
   m_ObjectHideFlags: 0
