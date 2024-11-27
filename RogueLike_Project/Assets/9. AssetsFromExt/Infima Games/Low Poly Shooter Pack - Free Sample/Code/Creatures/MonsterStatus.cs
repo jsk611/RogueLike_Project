@@ -55,6 +55,8 @@ public class MonsterStatus : StatusBehaviour
     //[Tooltip("Creature Jump Power")]
     //[SerializeField]
     //private float JumpPower;
+    private MonsterBase monsterBase;
+    
 
 
 
@@ -64,6 +66,7 @@ public class MonsterStatus : StatusBehaviour
     private void Start()
     {
             monsterAnimator = GetComponent<Animator>();
+        monsterBase = GetComponent<MonsterBase>();
     }
 
     // Current Health
@@ -165,7 +168,7 @@ public class MonsterStatus : StatusBehaviour
     //    EffectResist = Mathf.Clamp(EffectResist, 0, 100);
     //}
 
-    // Movement Speed
+    // Movement Speeds
     public override void IncreaseMovementSpeed(float moveSpeed)
     { MoveSpeed += moveSpeed; }
     public override void DecreaseMovementSpeed(float moveSpeed)
@@ -265,9 +268,30 @@ public class MonsterStatus : StatusBehaviour
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
 
+   
 
-
-
+    public IEnumerator Shocked(float effect, float duration, float interval, float shockTime)
+    {
+        float startTime = Time.time;
+        float latest = 0;
+        float currentSpeed;
+        while (Time.time - startTime < duration)
+        {
+            if (latest >= interval)
+            {
+                Debug.Log("shock!!!!!");
+                monsterBase.TakeDamage(0);
+                currentSpeed = GetMovementSpeed();
+                SetMovementSpeed(0);
+                currentCC = CC.entangled;
+                yield return new WaitForSeconds(shockTime);
+                currentCC = CC.normal;
+                SetMovementSpeed(currentSpeed);
+                latest += shockTime;
+            }
+            latest += Time.deltaTime;
+        }
+    }
 
 }
 

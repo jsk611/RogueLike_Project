@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class Shock : MonoBehaviour
 {
-    public float effect;
+    private float effect;
     public float duration;
     public float interval;
+    public float shockTime;
     // Start is called before the first frame update
 
 
@@ -15,7 +16,8 @@ public class Shock : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
-            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Shocked, effect, duration, interval);
+     
+            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Shocked, effect, duration, interval,shockTime);
         }
     }
 }

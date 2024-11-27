@@ -104,20 +104,25 @@ public abstract class StatusBehaviour : MonoBehaviour
         DecreaseMovementSpeed(effect);
     }
    
-    public IEnumerator Shocked(float effect, float duration,float interval,float shockTime)
+    public virtual IEnumerator Shocked(float duration,float interval,float shockTime)
     {
-        float time = 0;
+        float startTime = Time.time;
+        float latest = 0;
         float currentSpeed;
-        while (time <= duration)
+        while (Time.time-startTime<duration)
         {
-            
-            currentSpeed = GetMovementSpeed();
-            SetMovementSpeed(0);
-            currentCC = CC.entangled;
-            yield return new WaitForSeconds(shockTime);
-            currentCC = CC.normal;
-            SetMovementSpeed(currentSpeed);
-            time += interval;
+            if (latest >= interval)
+            {
+                Debug.Log("shock!!!!!");
+                currentSpeed = GetMovementSpeed();
+                SetMovementSpeed(0);
+                currentCC = CC.entangled;
+                yield return new WaitForSeconds(shockTime);
+                currentCC = CC.normal;
+                SetMovementSpeed(currentSpeed);
+                latest += shockTime;
+            }
+            latest += Time.deltaTime;
         }
     }
     public IEnumerator Blazed(float effect, float duration,float interval)
@@ -131,7 +136,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         }
         currentCon = Condition.normal;
     }
-    public IEnumerator Frozen(float effect, float duration)
+    public IEnumerator Frozen(float duration)
     {
         currentCon = Condition.Frozen;
         currentCC = CC.entangled;
@@ -155,22 +160,22 @@ public abstract class StatusBehaviour : MonoBehaviour
         currentCon = Condition.normal;
     }
 
-    public void ConditionOverload(Condition con,float effect, float duration, float interval,float shockTime = 0.5f)
+    public void ConditionOverload(Condition con,float effect=1, float duration = 1, float interval = 1,float shockTime = 0.5f)
     {
         currentCon = con;
         switch(currentCon)
         {
             case Condition.Poisoned:
-                StartCoroutine(Frozen(effect, duration));
+                StartCoroutine(Poisoned(effect, duration,interval));
                 break;
             case Condition.Blazed:
                 StartCoroutine(Blazed(effect,duration,interval));  
                 break;
             case Condition.Frozen:
-                StartCoroutine(Frozen(effect, duration));
+                StartCoroutine(Frozen(duration));
                 break;
             case Condition.Shocked:
-                StartCoroutine(Shocked(effect,duration,interval,shockTime));
+                StartCoroutine(Shocked(duration,interval,shockTime));
                 break;
         }
         return;

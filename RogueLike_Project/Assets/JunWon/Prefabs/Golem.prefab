@@ -648,6 +648,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentCC: 0
+  currentCon: 0
   Health: 400
   MaxHealth: 400
   CriticalRate: 0
@@ -694,15 +696,18 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   maxVerticalAngle: 60
+  rotateSpeed: 2
   anim: {fileID: 9121877531147584107}
-  splashFx: {fileID: 0}
   nmAgent: {fileID: 5266449347478749467}
   fov: {fileID: 8380599353331853265}
-  playerRigidBody: {fileID: 5152150415338884019}
   monsterStatus: {fileID: 7043160550485060466}
+  playerRigidBody: {fileID: 5152150415338884019}
   attackRange: 5
   attackCooldown: 1
-  hitCooldown: 1
+  splashFx: {fileID: 0}
+  spawnEffect: {fileID: 4616477468070435456}
+  startMaterial: {fileID: 2100000, guid: d70587f08473fc14f83ae0d6c286fdee, type: 2}
+  baseMaterial: {fileID: 2100000, guid: 957781e2e64d0264f970dde36a30bd93, type: 2}
   items:
   - {fileID: 8021822854330241990, guid: 982b8077848b5ff4e88bc60f5a86e4d4, type: 3}
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
@@ -711,11 +716,11 @@ MonoBehaviour:
   HPBar: {fileID: 2748797969568635363}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
-  startMaterial: {fileID: 2100000, guid: d70587f08473fc14f83ae0d6c286fdee, type: 2}
-  BaseMaterial: {fileID: 2100000, guid: 957781e2e64d0264f970dde36a30bd93, type: 2}
+  hitCooldown: 1
+  hitDuration: 0.8
+  dieDuration: 1
   summonTimeVariable: 1.5
-  spawnEffect: {fileID: 4616477468070435456}
-  spawnScale: 0
+  transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
 --- !u!54 &5152150415338884019
 Rigidbody:
