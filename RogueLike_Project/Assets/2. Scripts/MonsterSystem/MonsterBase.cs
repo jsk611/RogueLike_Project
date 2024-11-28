@@ -38,6 +38,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Material baseMaterial;
     [SerializeField] private GameObject[] items;
     [SerializeField] private int[] itemProbability = { 50, 25, 0 };
+    [SerializeField] private float height = 5f;
 
     [Header("UI")]
     [SerializeField] public EnemyHPBar HPBar;
@@ -47,7 +48,6 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private float hitCooldown = 1.0f;
     [SerializeField] private float hitDuration = 0.8f;
     [SerializeField] private float dieDuration = 1f;
-    [SerializeField] private float summonTimeVariable = 1f;
     [SerializeField] private float transitionCooldown = 0.3f;
 
     [Header("External Data")]
@@ -334,16 +334,17 @@ public abstract class MonsterBase : MonoBehaviour
             renderer.material = startMaterial;
         }
 
-        float currentTime = -2.5f;
-        while (currentTime < 2f)
+        float currentYPos = transform.position.y - height/2 - 1f;
+        float maxYPos = transform.position.y + height/2 + 1f;
+        while (currentYPos < maxYPos)
         {
             foreach (Renderer renderer in renderers)
             {
                 if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
-                renderer.material.SetFloat("_CustomTime", currentTime);
+                renderer.material.SetFloat("_CustomTime", currentYPos);
             }
 
-            currentTime += Time.deltaTime * summonTimeVariable;
+            currentYPos += Time.deltaTime * (height+2)/2.5f;
             yield return null;
         }
 

@@ -7,7 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class Dummy : MonoBehaviour
 {
     [SerializeField] GameObject UIDamaged;
-    public virtual void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         // 체력 감소 처리
         UIDamage uIDamage = Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>();

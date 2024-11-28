@@ -811,13 +811,13 @@ MonoBehaviour:
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
   - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
+  height: 3
   HPBar: {fileID: 8375895850562548690}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
   hitCooldown: 1
   hitDuration: 0.8
   dieDuration: 1
-  summonTimeVariable: 0.25
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   fireRate: 1.5
