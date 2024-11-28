@@ -224,7 +224,7 @@ namespace InfimaGames.LowPolyShooterPack
         public override void Reload()
         {
             //Play Reload Animation.
-            animator.Play(HasAmmunition() ? "Reload" : "Reload Empty", 0, 0.0f);
+        //    animator.Play(HasAmmunition() ? "Reload" : "Reload Empty", 0, 0.0f);
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
@@ -241,7 +241,7 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Play the firing animation.
             const string stateName = "Fire";
-            animator.Play(stateName, 0, 0.0f);
+          //  animator.Play(stateName, 0, 0.0f);
             //Reduce ammunition! We just shot, so we need to get rid of one!
             ammunitionCurrent = Mathf.Clamp(ammunitionCurrent - 1, 0, magazineBehaviour.GetAmmunitionTotal());
 

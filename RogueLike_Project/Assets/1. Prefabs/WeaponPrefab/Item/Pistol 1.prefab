@@ -204,7 +204,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.1, y: 0, z: 90.5}
-  m_LocalScale: {x: 0.01014961, y: 0.011937383, z: 0.01014961}
+  m_LocalScale: {x: 0.01014961, y: 0.011937384, z: 0.010149609}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1392696354821279565}
@@ -282,7 +282,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 12.070801, y: 77.07724, z: 45.02646}
+  m_Size: {x: 273, y: 237.7, z: 259.4}
   m_Center: {x: 1.2052989, y: 22.582855, z: 7.9077115}
 --- !u!114 &-5183548110028852832
 MonoBehaviour:
@@ -297,5 +297,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weapon: {fileID: 7752497038355584434, guid: a14b8b355bb13a04dacb319b1e07ab74, type: 3}
-  Position: {x: -0.007, y: 0.017, z: -0.046}
-  Rotation: {x: 0.6492067, y: 0.00018746825, z: -0.0025190203, w: 0.7606077}
+  Position: {x: -0.004, y: 0.025, z: -0.047}
+  Rotation: {x: -0.68553025, y: -0.00006545335, z: 0.0025500301, w: -0.7280398}

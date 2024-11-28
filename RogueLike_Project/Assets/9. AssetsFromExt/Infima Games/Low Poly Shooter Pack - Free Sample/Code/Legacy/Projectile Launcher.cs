@@ -68,8 +68,6 @@ public class ProjectileLauncher : MonoBehaviour {
 		{
 			if (hit.gameObject.GetComponent<MonsterStatus>() != null)
 				hit.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage()) * shooterStatus.CalculateCriticalHit());
-			else if (hit.gameObject.GetComponent<CharacterBehaviour>() != null)
-				hit.gameObject.GetComponent<PlayerStatus>().DecreaseHealth((bulletDamage + shooterStatus.GetAttackDamage() * shooterStatus.CalculateCriticalHit()));
 			
 		}
 			//Destroy(gameObject);

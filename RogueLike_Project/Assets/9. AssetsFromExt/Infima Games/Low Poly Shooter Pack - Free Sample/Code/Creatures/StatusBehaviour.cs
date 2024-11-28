@@ -113,14 +113,15 @@ public abstract class StatusBehaviour : MonoBehaviour
         {
             if (latest >= interval)
             {
-                Debug.Log("shock!!!!!");
+              
+                latest = 0;
                 currentSpeed = GetMovementSpeed();
                 SetMovementSpeed(0);
                 currentCC = CC.entangled;
                 yield return new WaitForSeconds(shockTime);
                 currentCC = CC.normal;
                 SetMovementSpeed(currentSpeed);
-                latest += shockTime;
+              
             }
             latest += Time.deltaTime;
         }
@@ -137,16 +138,18 @@ public abstract class StatusBehaviour : MonoBehaviour
         }
         currentCon = Condition.normal;
     }
-    public IEnumerator Frozen(float duration)
+    public virtual IEnumerator Frozen(float duration)
     {
         if (currentCon == Condition.Frozen) yield break;
         currentCon = Condition.Frozen;
+        SetMovementSpeed(0);
         currentCC = CC.entangled;
         float currentSpeed = GetMovementSpeed();
-        SetMovementSpeed(0);
+        
         yield return new WaitForSeconds(duration);
-        SetMovementSpeed(currentSpeed);
+        
         currentCC = CC.normal;
+        SetMovementSpeed(currentSpeed);
         currentCon = Condition.normal;
     }
 
@@ -163,7 +166,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         currentCon = Condition.normal;
     }
 
-    public void ConditionOverload(Condition con,float effect=1, float duration = 1, float interval = 1,float shockTime = 0.5f)
+    public virtual void ConditionOverload(Condition con,float effect=1, float duration = 1, float interval = 1,float shockTime = 0.5f)
     {
         currentCon = con;
         switch(currentCon)
