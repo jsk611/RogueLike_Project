@@ -742,6 +742,7 @@ namespace InfimaGames.LowPolyShooterPack
                 case { phase: InputActionPhase.Started }:
                     //Hold.
                     holdingButtonFire = true;
+                    weaponExchangeLocked = true;
                     break;
                 //Performed.
                 case { phase: InputActionPhase.Performed }:
@@ -771,6 +772,7 @@ namespace InfimaGames.LowPolyShooterPack
                 case { phase: InputActionPhase.Canceled }:
                     //Stop Hold.
                     holdingButtonFire = false;
+                    weaponExchangeLocked = false;
                     break;
             }
         }
@@ -893,22 +895,22 @@ namespace InfimaGames.LowPolyShooterPack
             }
         }
 
-        public override void OnTryExchangeWeapon(WeaponBehaviour otherWeapon,Vector3 Position, Quaternion Rotation)
+        public override void OnTryExchangeWeapon(GameObject otherWeapon,Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
-            if (otherWeapon.name + "(Clone)" == inventory.GetOtherEquipped().name)
+            if (otherWeapon.name + "(Clone)" == inventory.GetOtherEquipped().gameObject.name)
             {
                 Debug.Log("Already have same weapon");
                 return;
             }
             weaponExchangeLocked = true;
+            int indexToSwitch = inventory.GetEquippedIndex();
             GameObject weaponToSwitch = Instantiate(otherWeapon.gameObject, inventory.transform);
             weaponToSwitch.SetActive(false);
             weaponToSwitch.transform.localPosition = Position;
             weaponToSwitch.transform.localRotation = Rotation;
-            int indexToSwitch = inventory.GetEquippedIndex();
             weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
-            StartCoroutine(ExchangeEquip(otherWeapon));
+            StartCoroutine(ExchangeEquip(otherWeapon.GetComponent<WeaponBehaviour>()));
         }
         /// <summary>
         /// Run. 

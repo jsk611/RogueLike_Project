@@ -134,7 +134,7 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract void SetCursorState(bool state);
         public abstract bool GetCursorState();
 
-        public abstract void OnTryExchangeWeapon(WeaponBehaviour otherWeapon, Vector3 Position, Quaternion Rotation);
+        public abstract void OnTryExchangeWeapon(GameObject otherWeapon, Vector3 Position, Quaternion Rotation);
 
         public abstract bool GetHoldingFire();
     }

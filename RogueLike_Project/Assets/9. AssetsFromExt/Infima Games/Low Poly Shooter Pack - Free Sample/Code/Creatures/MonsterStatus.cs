@@ -177,16 +177,22 @@ public class MonsterStatus : StatusBehaviour
 
     // Movement Speeds
     public override void IncreaseMovementSpeed(float moveSpeed)
-    { MoveSpeed += moveSpeed; }
+    { if(currentCC == CC.normal)MoveSpeed += moveSpeed; }
     public override void DecreaseMovementSpeed(float moveSpeed)
     {
-        MoveSpeed -= moveSpeed;
-        if (MoveSpeed < 0) MoveSpeed = 0;
+        if (currentCC == CC.normal)
+        {
+            MoveSpeed -= moveSpeed;
+            if (MoveSpeed < 0) MoveSpeed = 0;
+        }
     }
     public override void SetMovementSpeed(float moveSpeed)
     {
-        MoveSpeed = moveSpeed;
-        if (MoveSpeed < 0) MoveSpeed = 0;
+        if (currentCC == CC.normal)
+        {
+            MoveSpeed = moveSpeed;
+            if (MoveSpeed < 0) MoveSpeed = 0;
+        }
     }
 
     // Reload Speed
@@ -277,9 +283,10 @@ public class MonsterStatus : StatusBehaviour
 
    
 
-    public IEnumerator Shocked(float effect, float duration, float interval, float shockTime)
+    public override IEnumerator Shocked(float duration, float interval, float shockTime)
     {
- 
+        Debug.Log("shock!!!!!");
+        if (currentCon == Condition.Shocked) yield break;
         float startTime = Time.time;
         float latest = 0;
         float currentSpeed;
@@ -288,8 +295,8 @@ public class MonsterStatus : StatusBehaviour
             if (latest >= interval)
             {
                 latest = 0;
-                Debug.Log("shock!!!!!");
-                monsterBase.TakeDamage(0);
+               
+                monsterBase.TakeDamage(1);
                 currentSpeed = GetMovementSpeed();
                 SetMovementSpeed(0);
                 currentCC = CC.entangled;
@@ -302,6 +309,41 @@ public class MonsterStatus : StatusBehaviour
             yield return null;
         }
     }
+    public override IEnumerator Frozen(float duration)
+    {
+        if (currentCon == Condition.Frozen) yield break;
+        monsterBase.TakeDamage(0);
+        currentCon = Condition.Frozen;
+        float currentSpeed = GetMovementSpeed();
+        SetMovementSpeed(0);
+        currentCC = CC.entangled;
+       
 
+        yield return new WaitForSeconds(duration);
+
+        currentCC = CC.normal;
+        SetMovementSpeed(currentSpeed);
+        currentCon = Condition.normal;
+    }
+    public override void ConditionOverload(Condition con, float effect = 1, float duration = 1, float interval = 1, float shockTime = 0.5f)
+    {
+        currentCon = con;
+        switch (currentCon)
+        {
+            case Condition.Poisoned:
+                StartCoroutine(Poisoned(effect, duration, interval));
+                break;
+            case Condition.Blazed:
+                StartCoroutine(Blazed(effect, duration, interval));
+                break;
+            case Condition.Frozen:
+                StartCoroutine(Frozen(duration));
+                break;
+            case Condition.Shocked:
+                StartCoroutine(Shocked(duration, interval, shockTime));
+                break;
+        }
+        return;
+    }
 }
 

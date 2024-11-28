@@ -223,16 +223,12 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Reload()
         {
-            //Play Reload Animation.
-            if (!HasAmmunition())
-            {
-                characterBehaviour.OnTryExchangeWeapon(exchangeWeapon,new Vector3(0.017f, -0.006f,0.004f),quaternion.Euler(new Vector3(355.811f, 118.78f, 182.29f)));
-            }
+            ;
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
             characterBehaviour.GetPlayerAnimator().SetBool("OnGrenade", true);
-            projectileImpulse = 10;
+            projectileImpulse = 20;
             StartCoroutine(standby());
         }
 
@@ -269,7 +265,7 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Play the firing animation.
             const string stateName = "Fire";
-            animator.Play(stateName, 0, 0.0f);
+   //         animator.Play(stateName, 0, 0.0f);
             //Reduce ammunition! We just shot, so we need to get rid of one!
             ammunitionCurrent = Mathf.Clamp(ammunitionCurrent - 1, 0, magazineBehaviour.GetAmmunitionTotal());
 
@@ -300,7 +296,8 @@ namespace InfimaGames.LowPolyShooterPack
             while (characterBehaviour.GetHoldingFire())
             {
          
-                projectileImpulse += Time.deltaTime*20;
+                projectileImpulse += Time.deltaTime*30;
+                Mathf.Clamp(projectileImpulse, 0, 100);
       
          
                 yield return null;

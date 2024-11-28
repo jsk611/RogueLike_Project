@@ -126,7 +126,8 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"{name} current state = {state}");
+        chaseSpeed = monsterStatus.GetMovementSpeed();
+    //    Debug.Log($"{name} current state = {state}");
         if (state == State.IDLE) CheckPlayer();
         if (state == State.CHASE || state == State.ATTACK) RotateTowardsTarget();
         ExecuteStateAction();
@@ -287,8 +288,9 @@ public abstract class MonsterBase : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         if (state == State.DIE) return;
-        hp = monsterStatus.GetHealth();
+       
         monsterStatus.DecreaseHealth(damage);
+        hp = monsterStatus.GetHealth();
 
         Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>().damage = damage;
        // HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());

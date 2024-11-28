@@ -31,7 +31,10 @@ public class ItemWeapon : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.tag == "Player" && character.CanExchangeWeapon())
-            StartCoroutine("ExchangeWeapon");
+        {
+            if (Input.GetKey(KeyCode.F)) character.OnTryExchangeWeapon(weapon,Position,Rotation);
+        }
+           // StartCoroutine("ExchangeWeapon");
     }
     
     private void OnTriggerExit(Collider other)
@@ -42,7 +45,7 @@ public class ItemWeapon : MonoBehaviour
     private IEnumerator ExchangeWeapon()
     {
             if (Input.GetKey(KeyCode.F))
-                character.OnTryExchangeWeapon(weapon.GetComponent<WeaponBehaviour>(),Position,Rotation);
+                character.OnTryExchangeWeapon(weapon,Position,Rotation);
             
             yield return null;
     }

@@ -114,9 +114,8 @@ namespace InfimaGames.LowPolyShooterPack
         public override int GetNextIndex()
         {
             //Get next index with wrap around.
-            int newIndex = equippedIndex + 1;
-            if (newIndex > maxInventorySize - 1)
-                newIndex = 0;
+            int newIndex = (equippedIndex + 1)%maxInventorySize;
+            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
 
             //Return.
             return newIndex;
@@ -131,16 +130,21 @@ namespace InfimaGames.LowPolyShooterPack
             {
                 weapon.gameObject.SetActive(false);
             }
-            Destroy(deletedWeapon.gameObject);
-
             Equip(currentindex);
+            new WaitForEndOfFrame(); 
+            if(deletedWeapon != null) Destroy(deletedWeapon.gameObject);
+           
+            weapons = GetComponentsInChildren<WeaponBehaviour>(true);
         }
 
 
         public override WeaponBehaviour GetEquipped() => equipped;
         public override int GetEquippedIndex() => equippedIndex;
 
-        public override WeaponBehaviour GetOtherEquipped() => weapons[GetNextIndex()];
+        public override WeaponBehaviour GetOtherEquipped()
+        {
+                        return weapons[GetNextIndex()];
+        }
 
 
         #endregion
