@@ -59,15 +59,16 @@ public class MonsterStatus : StatusBehaviour
     
     private EnemyHPBar HPBar;
 
-
+    private MonsterAnimationEventHandler eventHandler;
 
     private Animator monsterAnimator;
 
 
     private void Start()
     {
-            monsterAnimator = GetComponent<Animator>();
         monsterBase = GetComponent<MonsterBase>();
+        monsterAnimator = GetComponent<Animator>();
+        eventHandler = GetComponent<MonsterAnimationEventHandler>();
         HPBar = monsterBase.HPBar;
     }
 
@@ -196,11 +197,7 @@ public class MonsterStatus : StatusBehaviour
     }
 
     // Reload Speed
-    public override void IncreaseReloadSpeed(float reloadSpeed)
-    {
-        ReloadSpeed += reloadSpeed;
-
-    }
+    public override void IncreaseReloadSpeed(float reloadSpeed) { ReloadSpeed += reloadSpeed; }
     public override void DecreaseReloadSpeed(float reloadSpeed)
     {
         ReloadSpeed -= reloadSpeed;
@@ -285,50 +282,61 @@ public class MonsterStatus : StatusBehaviour
 
     public override IEnumerator Shocked(float duration, float interval, float shockTime)
     {
+       
         Debug.Log("shock!!!!!");
         if (currentCon == Condition.Shocked) yield break;
+        eventHandler.SetShockTime(shockTime);
         float startTime = Time.time;
         float latest = 0;
-        float currentSpeed;
+ 
+        currentCon = Condition.Shocked;
         while (Time.time - startTime < duration)
         {
             if (latest >= interval)
             {
                 latest = 0;
-               
                 monsterBase.TakeDamage(1);
-                currentSpeed = GetMovementSpeed();
-                SetMovementSpeed(0);
-                currentCC = CC.entangled;
-                yield return new WaitForSeconds(shockTime);
-                currentCC = CC.normal;
-                SetMovementSpeed(currentSpeed);
-                latest += shockTime;
             }
             latest += Time.deltaTime;
             yield return null;
         }
     }
+    public override IEnumerator Poisoned(float effect, float duration, float interval)
+    {
+        if (currentCon == Condition.Poisoned) yield break;
+        currentCon = Condition.Poisoned;
+        float startTime = Time.time;
+        while (Time.time - startTime < duration)
+        {
+            DecreaseHealth(effect);
+            yield return new WaitForSeconds(interval);
+        }
+        currentCon = Condition.normal;
+    }
     public override IEnumerator Frozen(float duration)
     {
         if (currentCon == Condition.Frozen) yield break;
-        monsterBase.TakeDamage(0);
+        eventHandler.SetFrozenTime(duration);
         currentCon = Condition.Frozen;
-        float currentSpeed = GetMovementSpeed();
-        SetMovementSpeed(0);
-        currentCC = CC.entangled;
-       
 
-        yield return new WaitForSeconds(duration);
+        monsterBase.TakeDamage(1);
 
-        currentCC = CC.normal;
-        SetMovementSpeed(currentSpeed);
+    }
+    public override IEnumerator Blazed(float effect, float duration, float interval)
+    {
+     //   if (currentCon == Condition.Blazed) yield break;
+        currentCon = Condition.Blazed;
+        float startTime = Time.time;
+        while (Time.time - startTime < duration)
+        {
+            DecreaseHealth(effect);
+            yield return new WaitForSeconds(interval);
+        }
         currentCon = Condition.normal;
     }
     public override void ConditionOverload(Condition con, float effect = 1, float duration = 1, float interval = 1, float shockTime = 0.5f)
     {
-        currentCon = con;
-        switch (currentCon)
+        switch (con)
         {
             case Condition.Poisoned:
                 StartCoroutine(Poisoned(effect, duration, interval));

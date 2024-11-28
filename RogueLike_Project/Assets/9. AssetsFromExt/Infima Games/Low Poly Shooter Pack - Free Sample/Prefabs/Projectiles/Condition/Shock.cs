@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Shock : MonoBehaviour
 {
-    private float effect;
+    private float effect = 0;
     public float duration;
     public float interval;
     public float shockTime;

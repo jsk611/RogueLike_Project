@@ -898,7 +898,8 @@ namespace InfimaGames.LowPolyShooterPack
         public override void OnTryExchangeWeapon(GameObject otherWeapon,Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
-            if (otherWeapon.name + "(Clone)" == inventory.GetOtherEquipped().gameObject.name)
+            string temp = inventory.GetOtherEquipped().gameObject.name;
+            if (otherWeapon.name + "(Clone)" == temp)
             {
                 Debug.Log("Already have same weapon");
                 return;

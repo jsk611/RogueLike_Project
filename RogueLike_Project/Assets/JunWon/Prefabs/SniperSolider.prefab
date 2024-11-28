@@ -588,6 +588,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 7871438274881930008}
+    - targetCorrespondingSourceObject: {fileID: 100066, guid: 860793eb3324391468f1c120a75ec049,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2532680700027459383}
     - targetCorrespondingSourceObject: {fileID: 100012, guid: 860793eb3324391468f1c120a75ec049,
         type: 3}
       insertIndex: -1
@@ -943,6 +947,18 @@ MonoBehaviour:
   fireRate: 1.5
   isHitScan: 0
   gun: {fileID: 2074620927758514575}
+--- !u!114 &-2532680700027459383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7822874171110180717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &7822874171110480689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400062, guid: 860793eb3324391468f1c120a75ec049,

@@ -1080,6 +1080,7 @@ GameObject:
   - component: {fileID: -2065518948123284308}
   - component: {fileID: 6457701999628894636}
   - component: {fileID: 5320706516522039668}
+  - component: {fileID: -6059677270203467067}
   m_Layer: 0
   m_Name: SwordMan
   m_TagString: Untagged
@@ -1229,13 +1230,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  body: {fileID: 0}
+  head: {fileID: 0}
+  maxVerticalAngle: 60
+  rotateSpeed: 2
   anim: {fileID: 6720718864485838084}
-  splashFx: {fileID: 0}
   nmAgent: {fileID: 5320706516522039668}
   fov: {fileID: -6106823019354387175}
-  playerRigidBody: {fileID: 0}
   monsterStatus: {fileID: 6457701999628894636}
-  transitionDelay: 0
+  playerRigidBody: {fileID: 0}
+  attackRange: 5
+  attackCooldown: 3
+  splashFx: {fileID: 0}
+  spawnEffect: {fileID: 0}
+  startMaterial: {fileID: 0}
+  baseMaterial: {fileID: 0}
+  items: []
+  itemProbability: 320000001900000000000000
+  height: 5
+  HPBar: {fileID: 0}
+  UIDamaged: {fileID: 0}
+  hitCooldown: 1
+  hitDuration: 0.8
+  dieDuration: 1
+  transitionCooldown: 0.3
   enemyCountData: {fileID: 0}
 --- !u!54 &-2065518948123284308
 Rigidbody:
@@ -1276,6 +1294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentCC: 0
+  currentCon: 0
   Health: 100
   MaxHealth: 0
   CriticalRate: 0
@@ -1306,6 +1326,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-6059677270203467067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859946921660404819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &861490586908741900
 GameObject:
   m_ObjectHideFlags: 0

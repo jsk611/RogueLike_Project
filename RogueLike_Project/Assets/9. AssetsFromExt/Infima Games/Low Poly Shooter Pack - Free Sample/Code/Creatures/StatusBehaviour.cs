@@ -126,9 +126,9 @@ public abstract class StatusBehaviour : MonoBehaviour
             latest += Time.deltaTime;
         }
     }
-    public IEnumerator Blazed(float effect, float duration,float interval)
+    public virtual IEnumerator Blazed(float effect, float duration,float interval)
     {
-        if (currentCon == Condition.Shocked) yield break;
+        if (currentCon == Condition.Blazed) yield break;
         currentCon = Condition.Blazed;
         float startTime = Time.time;
         while(Time.time-startTime < duration)
@@ -153,12 +153,12 @@ public abstract class StatusBehaviour : MonoBehaviour
         currentCon = Condition.normal;
     }
 
-    public IEnumerator Poisoned(float effect, float duration,float interval)
+    public virtual IEnumerator Poisoned(float effect, float duration,float interval)
     {
         if (currentCon == Condition.Poisoned) yield break;
         currentCon = Condition.Poisoned;
-        float startTime = Time.time;   
-        while(Time.time - startTime < duration)
+        float startTime = Time.time;
+        while (Time.time - startTime < duration)
         {
             DecreaseHealth(effect);
             yield return new WaitForSeconds(interval);

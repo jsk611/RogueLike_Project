@@ -227,7 +227,6 @@ namespace InfimaGames.LowPolyShooterPack
         }
         public override void Fire(float spreadMultiplier = 1.0f)
         {
-            characterBehaviour.GetPlayerAnimator().SetBool("OnGrenade", true);
             projectileImpulse = 20;
             StartCoroutine(standby());
         }
@@ -302,7 +301,6 @@ namespace InfimaGames.LowPolyShooterPack
          
                 yield return null;
             }
-            Debug.Log("shoot");
             while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
             characterBehaviour.GetPlayerAnimator().speed = 1.0f;
 
