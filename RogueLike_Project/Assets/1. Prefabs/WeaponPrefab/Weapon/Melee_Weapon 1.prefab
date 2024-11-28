@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   socket: {fileID: 6350139315606865299}
   sprite: {fileID: 0}
-  audioClipFire: {fileID: 8300000, guid: 7e9ee6dc04a5d40d1a5dfc4beb9865e7, type: 3}
+  audioClipFire: {fileID: 8300000, guid: 7053294e066eb1945baa4d9cc9194f15, type: 3}
   prefabFlashParticles: {fileID: 0}
   flashParticlesCount: 5
   prefabFlashLight: {fileID: 0}
