@@ -68,8 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 9999999
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 44492a5d84586b647bdacc4dd1dbfbaf, type: 2}
-  m_sharedMaterial: {fileID: -4208989021222996064, guid: 44492a5d84586b647bdacc4dd1dbfbaf,
+  m_fontAsset: {fileID: 11400000, guid: 1ff9ad2d982bc6a4ca03a6a7d2c95116, type: 2}
+  m_sharedMaterial: {fileID: 365304042518214101, guid: 1ff9ad2d982bc6a4ca03a6a7d2c95116,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -94,8 +94,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.7
-  m_fontSizeBase: 0.7
+  m_fontSize: 0.8
+  m_fontSizeBase: 0.8
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -244,7 +244,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &8799376749532931575
 MonoBehaviour:
   m_ObjectHideFlags: 0

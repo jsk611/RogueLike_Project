@@ -73,7 +73,7 @@ public class WaveManager : MonoBehaviour
                 continue;
             }
 
-            int randNum = Random.Range(1, 4);
+            int randNum = Random.Range(1, 6);
             enemyMap[y,x] = (EnemyType)randNum;
         }
     }

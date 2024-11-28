@@ -96,7 +96,7 @@ PrefabInstance:
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
@@ -118,11 +118,103 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdf0c3564b562af4cb4d83e786a3ee7b, type: 3}
+--- !u!114 &5118538308084480613 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7044700580445288877, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2795467230798103496}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a882bf97c15de47419d357320658bc4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6255042304150006548 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
     type: 3}
   m_PrefabInstance: {fileID: 2795467230798103496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6450973658768488792
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7822874171110480717}
+    m_Modifications:
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_Name
+      value: SpawnEffect
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d00c08351fab3b940bc257c13bc4f68e, type: 3}
+--- !u!1 &2343519533481988450 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6450973658768488792}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7824050367944250928 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6450973658768488792}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7822874171110080911
 PrefabInstance:
@@ -470,6 +562,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 400066, guid: 860793eb3324391468f1c120a75ec049,
         type: 3}
       insertIndex: 0
+      addedObject: {fileID: 7824050367944250928}
+    - targetCorrespondingSourceObject: {fileID: 400066, guid: 860793eb3324391468f1c120a75ec049,
+        type: 3}
+      insertIndex: 1
       addedObject: {fileID: 6255042304150006548}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100066, guid: 860793eb3324391468f1c120a75ec049,
@@ -746,6 +842,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentCC: 0
+  currentCon: 0
   Health: 200
   MaxHealth: 200
   CriticalRate: 0
@@ -819,26 +917,30 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   maxVerticalAngle: 60
+  rotateSpeed: 2
   anim: {fileID: 7822874171100673263}
-  splashFx: {fileID: 0}
   nmAgent: {fileID: 6331770368663035288}
   fov: {fileID: 5040080202300145526}
-  playerRigidBody: {fileID: 0}
   monsterStatus: {fileID: 9018077404518988307}
+  playerRigidBody: {fileID: 0}
   attackRange: 15
   attackCooldown: 3
-  hitCooldown: 1
+  splashFx: {fileID: 0}
+  spawnEffect: {fileID: 2343519533481988450}
+  startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
+  baseMaterial: {fileID: 2100000, guid: b1c5cc39fad6535439a9c2641326f277, type: 2}
   items: []
   itemProbability: 320000001900000000000000
-  HPBar: {fileID: 0}
-  UIDamaged: {fileID: 0}
-  startMaterial: {fileID: 0}
-  BaseMaterial: {fileID: 0}
-  summonTimeVariable: 1
-  spawnEffect: {fileID: 0}
-  spawnScale: 0
-  enemyCountData: {fileID: 0}
-  firerate: 1.5
+  height: 3
+  HPBar: {fileID: 5118538308084480613}
+  UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
+    type: 3}
+  hitCooldown: 1
+  hitDuration: 0.8
+  dieDuration: 1
+  transitionCooldown: 0.3
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  fireRate: 1.5
   isHitScan: 0
   gun: {fileID: 2074620927758514575}
 --- !u!4 &7822874171110480689 stripped
