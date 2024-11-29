@@ -126,16 +126,20 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Update()
     {
+        if (monsterStatus.currentCon == MonsterStatus.Condition.Frozen) return;
+        //chaseSpeed를 실시간으로 반영
         chaseSpeed = monsterStatus.GetMovementSpeed();
-    //    Debug.Log($"{name} current state = {state}");
+        Debug.Log($"{name} current state = {state}");
         if (state == State.IDLE) CheckPlayer();
-        if (state == State.CHASE || state == State.ATTACK) RotateTowardsTarget();
+        // 빙결 상태에서 회전 불가
+        if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
         ExecuteStateAction();
     }
 
     private void LateUpdate()
     {
-        if (state == State.CHASE || state == State.ATTACK) RotateTowardsTarget();
+        // 빙결 상태에서 회전 불가
+        if ((state == State.CHASE || state == State.ATTACK) && monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
     }
 
     #region UpdateFunc
@@ -360,4 +364,9 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
+    //CC기 적용 후 state 초기화용 메소드
+    public void UpdateStateFromAnimationEvent()
+    {
+        state = State.CHASE;
+    }
 }
