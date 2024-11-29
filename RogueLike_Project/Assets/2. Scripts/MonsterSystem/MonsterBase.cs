@@ -126,7 +126,6 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Update()
     {
-        if (monsterStatus.currentCon == MonsterStatus.Condition.Frozen) return;
         //chaseSpeed를 실시간으로 반영
         chaseSpeed = monsterStatus.GetMovementSpeed();
         Debug.Log($"{name} current state = {state}");
@@ -367,6 +366,6 @@ public abstract class MonsterBase : MonoBehaviour
     //CC기 적용 후 state 초기화용 메소드
     public void UpdateStateFromAnimationEvent()
     {
-        state = State.CHASE;
+       // ChangeState(State.CHASE);
     }
 }
