@@ -73,7 +73,14 @@ public class WaveManager : MonoBehaviour
                 continue;
             }
 
-            int randNum = Random.Range(1, 6);
+            int randNum;
+            if (tileManager.IsHighPos(y, x))
+            {
+                randNum = Random.Range(4, 6);
+            }
+            else randNum = Random.Range(1, 5);
+
+
             enemyMap[y,x] = (EnemyType)randNum;
         }
     }

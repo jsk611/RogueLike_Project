@@ -23,7 +23,7 @@ public class Spike : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerStatus>().DecreaseHealth(Time.deltaTime * 20);
+            other.gameObject.GetComponent<PlayerStatus>().DecreaseHealth(Time.deltaTime * 25);
         }
     }
 

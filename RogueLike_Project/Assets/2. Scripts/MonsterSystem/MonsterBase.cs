@@ -295,7 +295,7 @@ public abstract class MonsterBase : MonoBehaviour
         monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
 
-        Instantiate(UIDamaged, transform.position, Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        Instantiate(UIDamaged, transform.position + new Vector3(0,UnityEngine.Random.Range(0f,height/2),0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
        // HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
 
         if (hp > 0)
@@ -332,10 +332,11 @@ public abstract class MonsterBase : MonoBehaviour
     private IEnumerator SummonEffect()
     {
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
-
+        Queue<Material> materials = new Queue<Material>();
         foreach (Renderer renderer in renderers)
         {
             if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+            materials.Enqueue(renderer.material);
             renderer.material = startMaterial;
         }
 
@@ -356,7 +357,7 @@ public abstract class MonsterBase : MonoBehaviour
         foreach (Renderer renderer in renderers)
         {
             if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
-            renderer.material = baseMaterial;
+            renderer.material = materials.Dequeue();
         }
 
         spawnEffect.SetActive(false);
