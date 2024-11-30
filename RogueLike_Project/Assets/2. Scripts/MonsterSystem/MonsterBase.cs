@@ -363,7 +363,7 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
-    //CC기 적용 후 state 초기화용 메소드
+    //CC기 적용 후 state 초기화?용 메소드
     public void UpdateStateFromAnimationEvent()
     {
        // ChangeState(State.CHASE);

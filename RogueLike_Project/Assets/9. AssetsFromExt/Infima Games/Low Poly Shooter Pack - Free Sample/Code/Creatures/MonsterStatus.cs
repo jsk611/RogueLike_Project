@@ -320,7 +320,6 @@ public class MonsterStatus : StatusBehaviour
         currentCon = Condition.Frozen;
 
         monsterBase.TakeDamage(1);
-
     }
     public override IEnumerator Blazed(float effect, float duration, float interval)
     {
@@ -349,6 +348,9 @@ public class MonsterStatus : StatusBehaviour
                 break;
             case Condition.Shocked:
                 StartCoroutine(Shocked(duration, interval, shockTime));
+                break;
+            case Condition.Iced:
+                StartCoroutine(Iced(effect, duration, interval));
                 break;
         }
         return;

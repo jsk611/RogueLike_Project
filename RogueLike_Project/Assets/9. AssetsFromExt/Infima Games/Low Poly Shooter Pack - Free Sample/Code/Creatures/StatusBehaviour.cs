@@ -77,6 +77,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         normal,
         entangled,
         frozen,
+      
     }
 
     public enum Condition{
@@ -84,6 +85,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         Blazed,
         Shocked,
         Frozen,
+        Iced,
         Poisoned
     }
     public CC currentCC;
@@ -152,6 +154,17 @@ public abstract class StatusBehaviour : MonoBehaviour
         SetMovementSpeed(currentSpeed);
         currentCon = Condition.normal;
     }
+    public virtual IEnumerator Iced(float effect,float duration,float interval)
+    {
+        //예외적으로 interval을 둔화율로 판단하겠음
+        float currentAtk = GetAttackSpeed();
+        float currentMv = GetMovementSpeed();
+        DecreaseAttackSpeed(effect);
+        DecreaseMovementSpeed(interval);
+        yield return new WaitForSeconds(duration);
+        SetAttackSpeed(currentAtk);
+        SetMovementSpeed(currentMv);
+    }
 
     public virtual IEnumerator Poisoned(float effect, float duration,float interval)
     {
@@ -182,6 +195,9 @@ public abstract class StatusBehaviour : MonoBehaviour
                 break;
             case Condition.Shocked:
                 StartCoroutine(Shocked(duration,interval,shockTime));
+                break;
+            case Condition.Iced:
+                StartCoroutine(Iced(effect,duration,interval));
                 break;
         }
         return;

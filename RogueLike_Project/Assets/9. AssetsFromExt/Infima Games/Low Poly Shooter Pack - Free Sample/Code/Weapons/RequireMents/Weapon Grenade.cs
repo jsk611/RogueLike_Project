@@ -145,6 +145,12 @@ namespace InfimaGames.LowPolyShooterPack
 
         private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
         private static readonly int HashAtackSpeed = Animator.StringToHash("Fire Speed");
+
+
+
+        private LineRenderer lineRenderer;
+        private Quaternion rotation;
+      
         #endregion
 
         #region UNITY
@@ -164,6 +170,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache the character status
             playerStatus = characterBehaviour.GetComponent<PlayerStatus>();
 
+            lineRenderer = GetComponent<LineRenderer>();   
         }
         protected override void Start()
         {
@@ -248,7 +255,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Throw()
         {
-        
+            lineRenderer.enabled = false;
             //getcamera
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
@@ -272,7 +279,7 @@ namespace InfimaGames.LowPolyShooterPack
 
 
             //Determine the rotation that we want to shoot our projectile in.
-            Quaternion rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleSocket.position);
+            rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleSocket.position);
 
             //If there's something blocking, then we can aim directly at that thing, which will result in more accurate shooting.
             if (Physics.Raycast(new Ray(playerCamera.position, playerCamera.forward),
@@ -290,14 +297,16 @@ namespace InfimaGames.LowPolyShooterPack
 
         IEnumerator standby()
         {
-    //        while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
-     
+            //        while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
+            lineRenderer.enabled = true;
+            Transform upperBody = gameModeService.GetPlayerCharacter().GetComponentInChildren<CameraLook>().transform;
+          
             while (characterBehaviour.GetHoldingFire())
             {
-         
                 projectileImpulse += Time.deltaTime*30;
                 Mathf.Clamp(projectileImpulse, 0, 100);
-      
+             //   rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleBehaviour.GetSocket().position);
+                drawTrace(upperBody, projectileImpulse);
          
                 yield return null;
             }
@@ -307,8 +316,35 @@ namespace InfimaGames.LowPolyShooterPack
 
          
         }
+        private void drawTrace(Transform upperBody,float V)
+        {
+            Debug.Log(-characterBehaviour.transform.localEulerAngles.y);
+            float G = -Physics.gravity.y;
+            float sin = Mathf.Sin(-upperBody.localEulerAngles.x*Mathf.Deg2Rad);
+            float cos = Mathf.Cos(-upperBody.localEulerAngles.x*Mathf.Deg2Rad);
+            lineRenderer.SetPosition(0, gameObject.transform.position);
+            float t = (projectileImpulse * sin + Mathf.Pow((Mathf.Pow(projectileImpulse * sin, 2) + 2 * G*gameObject.transform.position.y), 0.5f)) / G;
+            float temp = 0;
+            for (int i = 1; i<lineRenderer.positionCount;i++)
+            {
+                temp += t / lineRenderer.positionCount;
+                float x = CalX(temp, projectileImpulse, cos);
+                lineRenderer.SetPosition(i, new Vector3(x , CalY(temp, projectileImpulse, sin, G), transform.position.z));//CalZ(temp, projectileImpulse, cos)*Mathf.Cos(characterBehaviour.transform.localEulerAngles.y)));
+            }
+        }
 
-
+        private float CalX(float t,float v,float cos)
+        {
+            return v * cos * t+gameObject.transform.position.x;
+        }
+        private float CalY(float t,float v,float sin,float g)
+        {
+            return v * sin * t - 0.5f * g * t * t + gameObject.transform.position.y;
+        }
+        private float CalZ(float t, float v, float cos)
+        {
+            return v*cos*t+gameObject.transform.position.z;
+        }
         #endregion
     }
 }
