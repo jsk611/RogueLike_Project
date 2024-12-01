@@ -312,7 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   automatic: 0
   projectileImpulse: 35
-  roundsPerSeconds: 0.8
+  roundsPerSeconds: 1
   mask:
     serializedVersion: 2
     m_Bits: 1
@@ -406,7 +406,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 58b750726dac8ee42a0286e006c609ac, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -485,8 +485,8 @@ LineRenderer:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.024143219
-        value: 0.13924026
+        time: 0
+        value: 0.119628906
         inSlope: 0
         outSlope: 0
         tangentMode: 0
