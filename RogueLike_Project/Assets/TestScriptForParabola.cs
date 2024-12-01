@@ -38,9 +38,10 @@ public class TestScriptForParabola : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(S.eulerAngles.y);
         t = (v * sin + Mathf.Pow((Mathf.Pow(v * sin, 2) + 2 * g), 0.5f)) / g;
         sin = Mathf.Sin(S.eulerAngles.y*Mathf.Deg2Rad);
-        cos = Mathf.Cos(S.eulerAngles.x*Mathf.Deg2Rad);
+        cos = Mathf.Cos(S.eulerAngles.y*Mathf.Deg2Rad);
         y = v * sin * t - 0.5f * g * t * t + 1;
         x = v * cos * t;
        
@@ -51,7 +52,7 @@ public class TestScriptForParabola : MonoBehaviour
         for (int i = 1; i < line.positionCount; i++)
         {
             temp += t / line.positionCount;
-            line.SetPosition(i, new Vector3(calx(temp),caly(temp),0));
+            line.SetPosition(i, new Vector3(calx(temp)*Mathf.Cos(Mathf.Abs(transform.eulerAngles.y)*Mathf.Deg2Rad),caly(temp),-calx(temp)*Mathf.Sin(Mathf.Abs(transform.eulerAngles.y)*Mathf.Deg2Rad)));
         }
     }
     float calx(float t)

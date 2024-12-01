@@ -19,6 +19,7 @@ TagManager:
   - wall
   - Floor
   - Obstacle
+  - UpperBody
   layers:
   - Default
   - TransparentFX

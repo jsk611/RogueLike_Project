@@ -255,7 +255,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Throw()
         {
-            lineRenderer.enabled = false;
+         
             //getcamera
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
@@ -293,6 +293,7 @@ namespace InfimaGames.LowPolyShooterPack
             projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
 
             muzzleBehaviour.Effect();
+   lineRenderer.enabled = false;
         }
 
         IEnumerator standby()
@@ -304,7 +305,7 @@ namespace InfimaGames.LowPolyShooterPack
             while (characterBehaviour.GetHoldingFire())
             {
                 projectileImpulse += Time.deltaTime*30;
-                Mathf.Clamp(projectileImpulse, 0, 100);
+                Mathf.Clamp(projectileImpulse, 0, 60);
              //   rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleBehaviour.GetSocket().position);
                 drawTrace(upperBody, projectileImpulse);
          
@@ -318,10 +319,10 @@ namespace InfimaGames.LowPolyShooterPack
         }
         private void drawTrace(Transform upperBody,float V)
         {
-            Debug.Log(-characterBehaviour.transform.localEulerAngles.y);
+            Debug.Log(upperBody.eulerAngles.y);
             float G = -Physics.gravity.y;
-            float sin = Mathf.Sin(-upperBody.localEulerAngles.x*Mathf.Deg2Rad);
-            float cos = Mathf.Cos(-upperBody.localEulerAngles.x*Mathf.Deg2Rad);
+            float sin = Mathf.Sin(-upperBody.eulerAngles.x*Mathf.Deg2Rad);
+            float cos = Mathf.Cos(-upperBody.eulerAngles.x*Mathf.Deg2Rad);
             lineRenderer.SetPosition(0, gameObject.transform.position);
             float t = (projectileImpulse * sin + Mathf.Pow((Mathf.Pow(projectileImpulse * sin, 2) + 2 * G*gameObject.transform.position.y), 0.5f)) / G;
             float temp = 0;
@@ -329,13 +330,16 @@ namespace InfimaGames.LowPolyShooterPack
             {
                 temp += t / lineRenderer.positionCount;
                 float x = CalX(temp, projectileImpulse, cos);
-                lineRenderer.SetPosition(i, new Vector3(x , CalY(temp, projectileImpulse, sin, G), transform.position.z));//CalZ(temp, projectileImpulse, cos)*Mathf.Cos(characterBehaviour.transform.localEulerAngles.y)));
+                float z = CalZ(temp, projectileImpulse, cos);
+                lineRenderer.SetPosition(i, new Vector3(x , CalY(temp, projectileImpulse, sin, G), z ));//CalZ(temp, projectileImpulse, cos)*Mathf.Cos(characterBehaviour.transform.localEulerAngles.y)));
+
+                lineRenderer.SetPosition(i, new Vector3(x *Mathf.Sin(Mathf.Abs(characterBehaviour.transform.eulerAngles.y)*Mathf.Deg2Rad)+transform.position.x, CalY(temp, projectileImpulse, sin, G),z*Mathf.Cos(Mathf.Abs(characterBehaviour.transform.eulerAngles.y)*Mathf.Deg2Rad) + gameObject.transform.position.z));//CalZ(temp, projectileImpulse, cos)*Mathf.Cos(characterBehaviour.transform.localEulerAngles.y)));
             }
         }
 
         private float CalX(float t,float v,float cos)
         {
-            return v * cos * t+gameObject.transform.position.x;
+            return v * cos * t;
         }
         private float CalY(float t,float v,float sin,float g)
         {
@@ -343,7 +347,7 @@ namespace InfimaGames.LowPolyShooterPack
         }
         private float CalZ(float t, float v, float cos)
         {
-            return v*cos*t+gameObject.transform.position.z;
+            return v*cos*t;
         }
         #endregion
     }
