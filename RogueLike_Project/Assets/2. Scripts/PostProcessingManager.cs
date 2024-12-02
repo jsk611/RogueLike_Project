@@ -9,7 +9,7 @@ public class PostProcessingManager : MonoBehaviour
     Volume volume;
     Vignette vignette;
     ChromaticAberration chromatic;
-    ColorAdjustments colorAdjustments;
+    bool isCritical = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,11 +24,7 @@ public class PostProcessingManager : MonoBehaviour
         {
             chromatic = tmp1;
         }
-        ColorAdjustments tmp2;
-        if (volume.profile.TryGet<ColorAdjustments>(out tmp2))
-        {
-            colorAdjustments = tmp2;
-        }
+
 
         StartCoroutine(VignetteAnimation());
     }
@@ -37,16 +33,26 @@ public class PostProcessingManager : MonoBehaviour
     {
         while (true)
         {
-
-            while(vignette.intensity.value < 0.4f)
+            if (isCritical)
             {
-                vignette.intensity.value += Time.deltaTime * 0.2f;
-                yield return null;
+                while (vignette.intensity.value < 0.4f)
+                {
+                    vignette.intensity.value += Time.deltaTime * 0.2f;
+                    yield return null;
+                }
+                while (vignette.intensity.value > 0.2f)
+                {
+                    vignette.intensity.value -= Time.deltaTime * 0.2f;
+                    yield return null;
+                }
             }
-            while (vignette.intensity.value > 0.2f)
+            else
             {
-                vignette.intensity.value -= Time.deltaTime * 0.2f;
-                yield return null;
+                while (vignette.intensity.value > 0f)
+                {
+                    vignette.intensity.value -= Time.deltaTime * 0.2f;
+                    yield return null;
+                }
             }
 
             yield return null;
@@ -61,25 +67,16 @@ public class PostProcessingManager : MonoBehaviour
     public void ChangeChromaticAberrationActive(bool active)
     {
         chromatic.active = active;
+        isCritical = active;
     }
 
-    Coroutine coroutine;
-    public void DamagedEffect()
+    public void DamagedEffect(float intensity)
     {
-        if(coroutine != null) StopCoroutine(coroutine);
-        coroutine = StartCoroutine(DamagedEffectCoroutine());
-    }
-
-    IEnumerator DamagedEffectCoroutine()
-    {
-        float colorVal = 0.8f;
-        colorAdjustments.colorFilter.value = new Color(1, colorVal, colorVal);
-
-        while(colorVal < 1)
+        if (vignette.color.value == Color.white)
         {
-            colorVal += Time.deltaTime*0.8f;
-            colorAdjustments.colorFilter.value = new Color(1, colorVal, colorVal);
-            yield return null;
+            vignette.color.value = new Color(1f, 0.3f, 0.3f);
         }
+        if (vignette.intensity.value <= 0.6f) vignette.intensity.value += intensity;
     }
+
 }

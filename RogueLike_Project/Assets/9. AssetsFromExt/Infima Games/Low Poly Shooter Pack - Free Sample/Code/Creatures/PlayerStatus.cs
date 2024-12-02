@@ -118,7 +118,7 @@ public class PlayerStatus : StatusBehaviour
 
         }
 
-        postProcessingManager.DamagedEffect();
+        postProcessingManager.DamagedEffect(damage/MaxHealth);
         if(Health/MaxHealth < 0.25f)
         {
             postProcessingManager.ChangeVignetteColor(new Color(1f, 0.3f, 0.3f));
