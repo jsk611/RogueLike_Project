@@ -1110,6 +1110,7 @@ GameObject:
   - component: {fileID: 3095557521766637868}
   - component: {fileID: 8991597118104028276}
   - component: {fileID: 3745496708373635735}
+  - component: {fileID: 2633594184378361070}
   m_Layer: 0
   m_Name: HammerMan
   m_TagString: Untagged
@@ -1152,7 +1153,12 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'Spine01'\n\tTransform 'Spine02'\n\tTransform
+    'Index02_L'\n\tTransform 'Spine03'\n\tTransform 'Pinky02_L'\n\tTransform 'Index01_L'\n\tTransform
+    'Mid01_L'\n\tTransform 'Thumb01_R'\n\tTransform 'Spine01'\n\tTransform 'UpperArm_R'\n\tand
+    more ...\n\tFrom animation clip 'IdleNormal'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -1175,7 +1181,7 @@ MonoBehaviour:
   MaxHealth: 0
   CriticalRate: 0
   CriticalDamage: 0
-  MoveSpeed: 3.5
+  MoveSpeed: 0
   ReloadSpeed: 100
   Damage: 0
   AttackSpeed: 100
@@ -1197,7 +1203,7 @@ MonoBehaviour:
   maxVerticalAngle: 60
   rotateSpeed: 2
   anim: {fileID: 4325502948305491921}
-  nmAgent: {fileID: 0}
+  nmAgent: {fileID: 2633594184378361070}
   fov: {fileID: 3564155486099621860}
   monsterStatus: {fileID: 4670054622375643492}
   playerRigidBody: {fileID: 0}
@@ -1220,9 +1226,6 @@ MonoBehaviour:
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   monsterParts: []
   jumpForce: 10
-  jumpCooldown: 2
-  shockwaveRadius: 5
-  shockwaveDamage: 20
   groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -1280,7 +1283,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &8991597118104028276
 CapsuleCollider:
@@ -1317,6 +1320,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!195 &2633594184378361070
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3848184072437923404}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &3895835360067326018
 GameObject:
   m_ObjectHideFlags: 0
