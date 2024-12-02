@@ -559,7 +559,7 @@ Transform:
   - {fileID: 6436679974440156512}
   - {fileID: 8342795036229288071}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 51.201546, y: -32.613438, z: 104.31409}
 --- !u!1 &755965472862346864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1406,7 @@ Transform:
   - {fileID: 439537732812851932}
   - {fileID: 293510562826488415}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -44.49165, y: -72.58152, z: 56.241512}
 --- !u!1 &1751352733312315132
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,7 +2592,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8608053457814370040}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 39.55637, y: 92.60565, z: 64.70534}
 --- !u!1 &3096841207055135056
 GameObject:
   m_ObjectHideFlags: 0
@@ -2989,7 +2989,7 @@ Transform:
   - {fileID: 6396650212475869737}
   - {fileID: 4251395382698341559}
   m_Father: {fileID: 7507755839795944126}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 10.539184, y: -90, z: 0}
 --- !u!1 &3414913175642445378
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4416,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2506771786322330250}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -61.15445, y: -65.90116, z: 115.398865}
 --- !u!1 &5930224978831692869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6119,7 +6119,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 5
   ReloadSpeed: 100
-  Damage: 0
+  Damage: 10
   AttackSpeed: 100
 --- !u!195 &5956197097378150369
 NavMeshAgent:
@@ -6215,7 +6215,7 @@ MonoBehaviour:
   fov: {fileID: 8320135992065216559}
   monsterStatus: {fileID: 1508268718791618267}
   playerRigidBody: {fileID: 1041920953890708533}
-  attackRange: 3
+  attackRange: 5
   attackCooldown: 3
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 4734613887287955740}

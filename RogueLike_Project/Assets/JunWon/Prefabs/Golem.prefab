@@ -817,7 +817,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 3.5
   ReloadSpeed: 100
-  Damage: 0
+  Damage: 30
   AttackSpeed: 100
 --- !u!195 &5266449347478749467
 NavMeshAgent:
@@ -863,7 +863,7 @@ MonoBehaviour:
   fov: {fileID: 8380599353331853265}
   monsterStatus: {fileID: 7043160550485060466}
   playerRigidBody: {fileID: 5152150415338884019}
-  attackRange: 5
+  attackRange: 7
   attackCooldown: 1
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 4616477468070435456}

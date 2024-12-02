@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Pipes;
@@ -15,6 +16,8 @@ public class EnemyWeapon : MonoBehaviour
     Vector3 fireDirection; // 발사 방향: 적의 정면 기준
     float laserRange = 100f; // 레이저 사거리
 
+    private PlayerStatus player;
+
     void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -24,6 +27,9 @@ public class EnemyWeapon : MonoBehaviour
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
         lineRenderer.enabled = false;
+
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
+        Debug.Log(player.name);
     }
 
 
