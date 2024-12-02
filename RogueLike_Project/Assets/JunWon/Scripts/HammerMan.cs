@@ -15,7 +15,7 @@ public class HammerMan : MonsterBase
 
     private NavMeshPath navPath; // NavMesh 경로
     private Rigidbody rb;
-    private bool isJumping = false; // 점프 중인지 확인
+    [Serialprivate bool isJumping = false; // 점프 중인지 확인
     private bool canJump = true; // 점프 가능 상태 확인
 
     protected override void Start()
