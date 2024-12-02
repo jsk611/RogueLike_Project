@@ -118,6 +118,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdf0c3564b562af4cb4d83e786a3ee7b, type: 3}
+--- !u!114 &4625816678750217054 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7044700580445288877, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 2446015454936177395}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a882bf97c15de47419d357320658bc4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &5905590682101723695 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
@@ -764,26 +776,27 @@ MonoBehaviour:
   attackCooldown: 3
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 0}
-  startMaterial: {fileID: 0}
-  baseMaterial: {fileID: 0}
+  startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
+  baseMaterial: {fileID: 2100000, guid: b1c5cc39fad6535439a9c2641326f277, type: 2}
   items: []
   itemProbability: 320000001900000000000000
-  height: 5
-  HPBar: {fileID: 0}
-  UIDamaged: {fileID: 5558746215060415400}
+  height: 3
+  HPBar: {fileID: 4625816678750217054}
+  UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
+    type: 3}
   hitCooldown: 1
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
-  enemyCountData: {fileID: 0}
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   monsterParts: []
   jumpForce: 15
-  jumpCooldown: 2
-  shockwaveRadius: 5
-  shockwaveDamage: 20
   groundLayer:
     serializedVersion: 2
     m_Bits: 0
+  shockwavePrefab: {fileID: 0}
+  isJumping: 0
+  jumpCooldown: 2
 --- !u!4 &5558746215060782984 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400066, guid: 860793eb3324391468f1c120a75ec049,
