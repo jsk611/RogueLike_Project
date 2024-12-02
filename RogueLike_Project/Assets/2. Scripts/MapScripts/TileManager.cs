@@ -190,10 +190,10 @@ public class TileManager : MonoBehaviour
     {
         bool isTooHigh = false;
         //높은 맵 생성 시  경고 후 가시 설치 
-        if (j - 1 >= 0 && (tileMap[i, j] - tileMap[i, j - 1]) >= 4) isTooHigh = true;
-        else if (j + 1 < mapSize && (tileMap[i, j] - tileMap[i, j + 1]) >= 4) isTooHigh = true;
-        else if (i - 1 >= 0 && (tileMap[i, j] - tileMap[i - 1, j]) >= 4) isTooHigh = true;
-        else if (i + 1 < mapSize && (tileMap[i, j] - tileMap[i + 1, j]) >= 4) isTooHigh = true;
+        if (j - 1 >= 0 && (tileMap[i, j] - tileMap[i, j - 1]) >= 4 && tileMap[i, j - 1] > 0) isTooHigh = true;
+        else if (j + 1 < mapSize && (tileMap[i, j] - tileMap[i, j + 1]) >= 4 && tileMap[i, j + 1] > 0) isTooHigh = true;
+        else if (i - 1 >= 0 && (tileMap[i, j] - tileMap[i - 1, j]) >= 4 && tileMap[i-1, j] > 0) isTooHigh = true;
+        else if (i + 1 < mapSize && (tileMap[i, j] - tileMap[i + 1, j]) >= 4 && tileMap[i+1, j] > 0) isTooHigh = true;
 
         return isTooHigh;
     }

@@ -312,6 +312,7 @@ public abstract class MonsterBase : MonoBehaviour
     private void HandleDeath()
     {
         enemyCountData.enemyCount--;
+        Debug.LogWarning("적 카운트 --");
         SpawnItem();
         Destroy(gameObject);
     }

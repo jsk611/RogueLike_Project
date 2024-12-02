@@ -18,7 +18,7 @@ public class EnemyHPBar : MonoBehaviour
         
         if(mid.fillAmount > ratio )
         {
-            mid.fillAmount -= Time.deltaTime*0.3f;
+            mid.fillAmount -= Time.deltaTime*0.6f;
         }
         else mid.fillAmount = ratio;
 

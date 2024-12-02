@@ -287,11 +287,11 @@ public class WaveManager : MonoBehaviour
         {
             //???????? ?? ????
             tileManager.InitializeArray(4);
-            tileManager.MakeRandomWall(Random.Range(250, 400));
-            yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,0));
-            yield return new WaitForSeconds(2f);
+            tileManager.MakeRandomWall(Random.Range(200, 300));
+            yield return StartCoroutine(tileManager.MoveTilesByArray(0,1,1));
+            yield return new WaitForSeconds(2.5f);
             if (enemyCountData.enemyCount == 0) break;
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(2.5f);
             if (enemyCountData.enemyCount == 0) break;
             yield return new WaitForSeconds(2f);
         }
@@ -336,7 +336,7 @@ public class WaveManager : MonoBehaviour
         {
             yield return null;
         }
-        earnedItems = null;
+        earnedItems = new Queue<int>();
         yield return null;
     }
 
