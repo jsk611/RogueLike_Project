@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class MonsterAnimationEventHandler : MonoBehaviour
     private MonsterBase monsterBase;
     private Animator animator;
     private StatusBehaviour statusBehaviour;
+
+    private PlayerStatus player;
     
 
     private float FrozenTime;
@@ -19,6 +22,19 @@ public class MonsterAnimationEventHandler : MonoBehaviour
         monsterBase = GetComponent<MonsterBase>(); 
         animator = GetComponent<Animator>();
         statusBehaviour = GetComponent<StatusBehaviour>();
+
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
+    }
+
+    void MeleeAttack()
+    {
+        //  Debug.Log("try melee attack "+Vector3.Distance(transform.position,player.transform.position));
+
+        if (Vector3.Distance(transform.position, player.transform.position) <= monsterBase.GetRange())
+        {
+            Debug.Log("melee hit!");
+            player.DecreaseHealth(statusBehaviour.GetAttackDamage());
+        }
     }
     void CCbyCondition()
     {

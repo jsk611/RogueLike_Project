@@ -369,4 +369,5 @@ public abstract class MonsterBase : MonoBehaviour
     {
        // ChangeState(State.CHASE);
     }
+    public float GetRange() => attackRange;
 }
