@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class HammerMan : MonsterBase
 {
-
     [Header("HammerMan Settings")]
     [SerializeField] private float jumpForce = 15f; // 점프 힘
     [SerializeField] private float jumpCooldown = 2f; // 점프 쿨타임
@@ -13,21 +12,16 @@ public class HammerMan : MonsterBase
     [SerializeField] private float shockwaveDamage = 20f; // 충격파 데미지
     [SerializeField] private LayerMask groundLayer; // 충격파 데미지를 받을 레이어
 
-    private NavMeshPath navPath; // NavMesh 경로
-    private Rigidbody rb;
-    [SerializeField] bool isJumping = false; // 점프 중인지 확인
-    private bool canJump = true; // 점프 가능 상태 확인
+    [SerializeField]  private NavMeshPath navPath; // NavMesh 경로
+    private Rigidbody rb; // Rigidbody
+    [SerializeField] private bool isJumping = false; // 점프 상태 확인
+    [SerializeField] private bool canJump = true; // 점프 가능 여부
 
     protected override void Start()
     {
         base.Start();
         rb = GetComponent<Rigidbody>();
         navPath = new NavMeshPath();
-    }
-
-    protected override void UpdateIdle()
-    {
-        CheckPlayer();
     }
 
     protected override void UpdateChase()
@@ -40,7 +34,7 @@ public class HammerMan : MonsterBase
 
         if (!isJumping && canJump)
         {
-            JumpTowardsTarget();
+            JumpTowardsNextPoint();
         }
     }
 
@@ -54,25 +48,34 @@ public class HammerMan : MonsterBase
 
         if (!isJumping && canJump)
         {
-            JumpTowardsTarget();
+            JumpTowardsNextPoint();
         }
     }
 
-    private void JumpTowardsTarget()
+    private void JumpTowardsNextPoint()
     {
-        if (NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, navPath))
+        if (!NavMesh.CalculatePath(transform.position, target.position, NavMesh.AllAreas, navPath))
         {
-            if (navPath.corners.Length > 1) // 유효한 경로가 있는 경우
-            {
-                Vector3 nextJumpPoint = navPath.corners[1];
-                Vector3 jumpDirection = (nextJumpPoint - transform.position).normalized;
+            Debug.LogError("Failed to calculate path to target.");
+            return;
+        }
 
-                rb.AddForce(new Vector3(jumpDirection.x, 1, jumpDirection.z) * jumpForce, ForceMode.Impulse);
-                isJumping = true;
-                canJump = false;
+        if (navPath.corners.Length > 1)
+        {
+            // 다음 점프 지점 설정
+            Vector3 nextJumpPoint = navPath.corners[1];
+            Vector3 jumpDirection = (nextJumpPoint - transform.position).normalized;
 
-                StartCoroutine(JumpCooldown());
-            }
+            // Rigidbody 점프
+            rb.AddForce(new Vector3(jumpDirection.x, 1, jumpDirection.z) * jumpForce, ForceMode.Impulse);
+            isJumping = true;
+            canJump = false;
+
+            StartCoroutine(JumpCooldown());
+        }
+        else
+        {
+            Debug.LogWarning("No valid path corners found.");
         }
     }
 
@@ -84,12 +87,14 @@ public class HammerMan : MonsterBase
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isJumping && collision.collider.CompareTag("Wall"))
+        if (isJumping && collision.collider.CompareTag("Floor"))
         {
             isJumping = false;
 
+            // 충격파 생성
             CreateShockWave();
 
+            // 상태 전환
             if (target != null && Vector3.Distance(transform.position, target.position) <= attackRange)
             {
                 ChangeState(State.ATTACK);

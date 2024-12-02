@@ -55,6 +55,7 @@ public abstract class MonsterBase : MonoBehaviour
     #endregion
 
     #region Private Fields
+    [SerializeField] protected MonsterPart[] monsterParts; // 부위 리스트
     protected float hp;
     protected float dmg;
     protected float chaseSpeed;
@@ -84,11 +85,14 @@ public abstract class MonsterBase : MonoBehaviour
     private Dictionary<State, Action> stateActions;
     #endregion
 
+   
+
     protected virtual void Start()
     {
         InitializeComponents();
         InitializeStateMachine();
         InitializeStats();
+        InitializeColliderManager();
 
         state = State.IDLE;
         StartCoroutine(SummonEffect());
@@ -122,7 +126,25 @@ public abstract class MonsterBase : MonoBehaviour
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
     }
+
+    private void InitializeColliderManager()
+    {
+        foreach (var part in monsterParts)
+        {
+            if (part.Collider == null)
+            {
+                Debug.LogWarning($"Collider for {part.PartName} is missing. Ensure it is assigned.");
+                continue;
+            }
+
+            // 각 Collider에 CollisionHandler 추가 및 초기화
+            var collisionHandler = part.Collider.gameObject.AddComponent<CollisionHandler>();
+            collisionHandler.Initialize(this, part.PartName, part.DamageMultiplier);
+        }
+    }
     #endregion
+
+
 
     private void Update()
     {
@@ -291,6 +313,7 @@ public abstract class MonsterBase : MonoBehaviour
             Debug.Log("Already dead!");
             return;
         }
+      
 
         monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();

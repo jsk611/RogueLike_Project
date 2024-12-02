@@ -43,6 +43,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2895085759114763145}
+  - component: {fileID: 8540880111988780611}
+  - component: {fileID: 5787784742296623408}
+  - component: {fileID: 8022389325826458917}
   m_Layer: 16
   m_Name: Upper_Arm_R
   m_TagString: Untagged
@@ -66,6 +69,56 @@ Transform:
   - {fileID: 534804099175484809}
   m_Father: {fileID: 2481483904934681212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &8540880111988780611
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434837077397912259}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 80
+  m_Height: 200
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5787784742296623408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434837077397912259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partName: Arm_R
+  collider: {fileID: 8540880111988780611}
+  damageMultiplier: 1
+--- !u!114 &8022389325826458917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434837077397912259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1612447650527975128
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,6 +223,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3646226346073560867}
+  - component: {fileID: 4390176125711727608}
+  - component: {fileID: 3127205569980411684}
+  - component: {fileID: 8213294005406802135}
   m_Layer: 16
   m_Name: Hand_L
   m_TagString: Untagged
@@ -193,6 +249,56 @@ Transform:
   - {fileID: 805289145448768511}
   m_Father: {fileID: 7868093674706946012}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &4390176125711727608
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053345036679609824}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 65
+  m_Height: 220
+  m_Direction: 0
+  m_Center: {x: 0, y: -10, z: 0}
+--- !u!114 &3127205569980411684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053345036679609824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partName: Hand_L
+  collider: {fileID: 4390176125711727608}
+  damageMultiplier: 1
+--- !u!114 &8213294005406802135
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4053345036679609824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4252488823047736134
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,6 +511,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4050527311769281771}
+  - component: {fileID: 5692162832260050045}
+  - component: {fileID: 5887194163140354597}
+  - component: {fileID: 2785151434826064490}
   m_Layer: 16
   m_Name: Hand_R
   m_TagString: Untagged
@@ -428,6 +537,56 @@ Transform:
   - {fileID: 2823339968810278220}
   m_Father: {fileID: 534804099175484809}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &5692162832260050045
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739141897551265880}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 65
+  m_Height: 220
+  m_Direction: 0
+  m_Center: {x: 0, y: -15, z: 0}
+--- !u!114 &5887194163140354597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739141897551265880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2785151434826064490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739141897551265880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partName: Hand_R
+  collider: {fileID: 5692162832260050045}
+  damageMultiplier: 1
 --- !u!1 &4946825654495284085
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,6 +721,7 @@ GameObject:
   - component: {fileID: 5152150415338884019}
   - component: {fileID: 594921379378772637}
   - component: {fileID: 5128283943808585932}
+  - component: {fileID: 4649702839008637074}
   m_Layer: 16
   m_Name: Golem
   m_TagString: Untagged
@@ -634,7 +794,7 @@ MonoBehaviour:
     m_Bits: 1152
   upClear: 0
   downClear: 0
-  leftClear: 0
+  leftClear: 1
   rightClear: 0
   visibleTargets: []
 --- !u!114 &7043160550485060466
@@ -723,6 +883,11 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  monsterParts:
+  - {fileID: 5813964866238241729}
+  - {fileID: 3127205569980411684}
+  - {fileID: 5787784742296623408}
+  - {fileID: 2785151434826064490}
 --- !u!54 &5152150415338884019
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -785,6 +950,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4649702839008637074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698881975617418477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partName: Body
+  collider: {fileID: 594921379378772637}
+  damageMultiplier: 1
 --- !u!1 &6784086843725728512
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,6 +1142,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 221910189654632464}
+  - component: {fileID: 1160385391919870412}
+  - component: {fileID: 5813964866238241729}
+  - component: {fileID: 4926619121868600910}
   m_Layer: 16
   m_Name: Upper_Arm_L
   m_TagString: Untagged
@@ -985,6 +1168,56 @@ Transform:
   - {fileID: 7868093674706946012}
   m_Father: {fileID: 2481483904934681212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1160385391919870412
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7850826132500413798}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 80
+  m_Height: 200
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5813964866238241729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7850826132500413798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partName: Arm_L
+  collider: {fileID: 1160385391919870412}
+  damageMultiplier: 1
+--- !u!114 &4926619121868600910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7850826132500413798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7966588088707139056
 GameObject:
   m_ObjectHideFlags: 0
