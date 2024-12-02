@@ -308,13 +308,14 @@ public class MonsterStatus : StatusBehaviour
         float startTime = Time.time;
         while (Time.time - startTime < duration)
         {
-            DecreaseHealth(effect);
+            monsterBase.TakeDamage(effect);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;
     }
     public override IEnumerator Frozen(float duration)
     {
+        Debug.Log("Get Frozened");
         if (currentCon == Condition.Frozen) yield break;
         eventHandler.SetFrozenTime(duration);
         currentCon = Condition.Frozen;
@@ -328,7 +329,8 @@ public class MonsterStatus : StatusBehaviour
         float startTime = Time.time;
         while (Time.time - startTime < duration)
         {
-            DecreaseHealth(effect);
+            Debug.Log("Get Blazed");
+            monsterBase.TakeDamage(effect);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;

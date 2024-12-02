@@ -238,7 +238,7 @@ public abstract class MonsterBase : MonoBehaviour
     #region State Management
     protected void ChangeState(State newState)
     {
-        if (Time.time - lastTransitionTime < transitionCooldown) return;
+        if (newState != State.DIE && Time.time - lastTransitionTime < transitionCooldown) return;
 
         lastTransitionTime = Time.time;
 
@@ -276,10 +276,6 @@ public abstract class MonsterBase : MonoBehaviour
         {
             anim.Play("GetHit", 0, 0f);
         }
-        else if (state == State.DIE)
-        {
-            anim.SetTrigger("DIE");
-        }
         else
         {
             anim.SetInteger("State", (int)state);
@@ -290,8 +286,12 @@ public abstract class MonsterBase : MonoBehaviour
     #region Damage and Death
     public virtual void TakeDamage(float damage)
     {
-        if (state == State.DIE) return;
-       
+        if (state == State.DIE)
+        {
+            Debug.Log("Already dead!");
+            return;
+        }
+
         monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
 
@@ -302,7 +302,7 @@ public abstract class MonsterBase : MonoBehaviour
         {
             ChangeState(State.HIT);
         }
-        else
+        else if (state != State.DIE)
         {
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
