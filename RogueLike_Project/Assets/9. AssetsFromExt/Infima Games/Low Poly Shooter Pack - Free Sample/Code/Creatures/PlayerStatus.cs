@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerStatus : StatusBehaviour
 {
@@ -82,6 +84,8 @@ public class PlayerStatus : StatusBehaviour
     private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
     private static readonly int HashAttackSpeed = Animator.StringToHash("Fire Speed");
 
+    private PostProcessingManager postProcessingManager;
+
     private void Start()
     {
             character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
@@ -89,6 +93,8 @@ public class PlayerStatus : StatusBehaviour
             playerControl = character.GetComponent<PlayerControl>();
             characterAnimator = character.GetPlayerAnimator();
             weaponAnimator = character.GetWeaponAnimator();
+
+        postProcessingManager = FindObjectOfType<PostProcessingManager>();
     }
 
     private void Update()
@@ -112,13 +118,24 @@ public class PlayerStatus : StatusBehaviour
 
         }
 
+        postProcessingManager.DamagedEffect();
+        if(Health/MaxHealth < 0.25f)
+        {
+            postProcessingManager.ChangeVignetteColor(new Color(1f, 0.3f, 0.3f));
+            postProcessingManager.ChangeChromaticAberrationActive(true);
+        }
+
         UIManager.instance.BarValueChange(0, MaxHealth, Health);
     }
     public override void IncreaseHealth(float health)
     {
         Health += health;
         if (Health > MaxHealth) Health = MaxHealth;
-
+        if (Health / MaxHealth > 0.25f)
+        {
+            postProcessingManager.ChangeVignetteColor(Color.white);
+            postProcessingManager.ChangeChromaticAberrationActive(false);
+        }
         UIManager.instance.BarValueChange(0, MaxHealth, Health);
     }
     public override void SetHealth(float health)
