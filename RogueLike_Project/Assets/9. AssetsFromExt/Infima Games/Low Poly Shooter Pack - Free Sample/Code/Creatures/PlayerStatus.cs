@@ -119,9 +119,9 @@ public class PlayerStatus : StatusBehaviour
         }
 
         postProcessingManager.DamagedEffect(damage/MaxHealth);
-        if(Health/MaxHealth < 0.25f)
+        if(Health/MaxHealth < 0.33f)
         {
-            postProcessingManager.ChangeVignetteColor(new Color(1f, 0.3f, 0.3f));
+            postProcessingManager.ChangeVignetteColor(Color.red);
             postProcessingManager.ChangeChromaticAberrationActive(true);
         }
 
@@ -131,7 +131,7 @@ public class PlayerStatus : StatusBehaviour
     {
         Health += health;
         if (Health > MaxHealth) Health = MaxHealth;
-        if (Health / MaxHealth > 0.25f)
+        if (Health / MaxHealth > 0.33f)
         {
             postProcessingManager.ChangeVignetteColor(Color.white);
             postProcessingManager.ChangeChromaticAberrationActive(false);
