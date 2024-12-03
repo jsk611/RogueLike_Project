@@ -89,6 +89,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void Start()
     {
+        target = GameObject.FindWithTag("Player").transform;
         InitializeComponents();
         InitializeStateMachine();
         InitializeStats();
