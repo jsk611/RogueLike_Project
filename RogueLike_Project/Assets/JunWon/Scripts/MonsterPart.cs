@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class MonsterPart : MonoBehaviour
 {
-    [SerializeField] private string partName; // ºÎÀ§ ÀÌ¸§
-    [SerializeField] private Collider collider; // ºÎÀ§ÀÇ Collider
-    [SerializeField] private float damageMultiplier = 1.0f; // µ¥¹ÌÁö ¹èÀ²
+    [SerializeField] private MonsterStatus mStat;
+    [SerializeField] private MonsterBase mBase;
+    [SerializeField] private string partName; // ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½
+    [SerializeField] private float damageMultiplier = 1.0f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    public string PartName => partName;
-    public Collider Collider => collider;
-    public float DamageMultiplier => damageMultiplier;
+    private void Start()
+    {
+        mStat = GetComponentInParent<MonsterStatus>();
+        mBase = GetComponentInParent<MonsterBase>();
+    }
+
 }

@@ -45,7 +45,6 @@ GameObject:
   - component: {fileID: 2895085759114763145}
   - component: {fileID: 8540880111988780611}
   - component: {fileID: 5787784742296623408}
-  - component: {fileID: 8022389325826458917}
   m_Layer: 16
   m_Name: Upper_Arm_R
   m_TagString: Untagged
@@ -104,21 +103,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
   partName: Arm_R
-  collider: {fileID: 8540880111988780611}
   damageMultiplier: 1
---- !u!114 &8022389325826458917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1434837077397912259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1612447650527975128
 GameObject:
   m_ObjectHideFlags: 0
@@ -225,7 +213,6 @@ GameObject:
   - component: {fileID: 3646226346073560867}
   - component: {fileID: 4390176125711727608}
   - component: {fileID: 3127205569980411684}
-  - component: {fileID: 8213294005406802135}
   m_Layer: 16
   m_Name: Hand_L
   m_TagString: Untagged
@@ -284,21 +271,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
   partName: Hand_L
-  collider: {fileID: 4390176125711727608}
   damageMultiplier: 1
---- !u!114 &8213294005406802135
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4053345036679609824}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &4252488823047736134
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,7 +488,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4050527311769281771}
   - component: {fileID: 5692162832260050045}
-  - component: {fileID: 5887194163140354597}
   - component: {fileID: 2785151434826064490}
   m_Layer: 16
   m_Name: Hand_R
@@ -560,18 +535,6 @@ CapsuleCollider:
   m_Height: 220
   m_Direction: 0
   m_Center: {x: 0, y: -15, z: 0}
---- !u!114 &5887194163140354597
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4739141897551265880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &2785151434826064490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -584,8 +547,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
   partName: Hand_R
-  collider: {fileID: 5692162832260050045}
   damageMultiplier: 1
 --- !u!1 &4946825654495284085
 GameObject:
@@ -628,7 +592,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2481483904934681212}
   - component: {fileID: 1363190425776045628}
-  - component: {fileID: 1238685543125529412}
+  - component: {fileID: 5092286795402201558}
   m_Layer: 16
   m_Name: Spine
   m_TagString: Untagged
@@ -674,36 +638,25 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 135
-  m_Height: 10
-  m_Direction: 1
-  m_Center: {x: -100, y: 0, z: 0}
---- !u!54 &1238685543125529412
-Rigidbody:
+  m_Height: 400
+  m_Direction: 0
+  m_Center: {x: -25, y: 0, z: 0}
+--- !u!114 &5092286795402201558
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5471541057245217575}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
+  partName: 
+  damageMultiplier: 1
 --- !u!1 &5698881975617418477
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,11 +836,6 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
-  monsterParts:
-  - {fileID: 5813964866238241729}
-  - {fileID: 3127205569980411684}
-  - {fileID: 5787784742296623408}
-  - {fileID: 2785151434826064490}
 --- !u!54 &5152150415338884019
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -962,8 +910,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
   partName: Body
-  collider: {fileID: 594921379378772637}
   damageMultiplier: 1
 --- !u!1 &6784086843725728512
 GameObject:
@@ -1144,7 +1093,6 @@ GameObject:
   - component: {fileID: 221910189654632464}
   - component: {fileID: 1160385391919870412}
   - component: {fileID: 5813964866238241729}
-  - component: {fileID: 4926619121868600910}
   m_Layer: 16
   m_Name: Upper_Arm_L
   m_TagString: Untagged
@@ -1203,21 +1151,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5192b30c15f05b647b22946c98326f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mStat: {fileID: 0}
+  mBase: {fileID: 0}
   partName: Arm_L
-  collider: {fileID: 1160385391919870412}
   damageMultiplier: 1
---- !u!114 &4926619121868600910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7850826132500413798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32d87ee9c823f4747a3607f6fba2b839, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7966588088707139056
 GameObject:
   m_ObjectHideFlags: 0
