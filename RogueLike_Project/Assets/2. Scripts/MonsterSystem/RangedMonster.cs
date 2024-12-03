@@ -83,7 +83,7 @@ public class RangedMonster : MonsterBase
         SetAnimatorState(State.ATTACK); // ATTACK 상태 애니메이션
     }
 
-    public void FireEvent()
+    public virtual void FireEvent()
     {
         if (gun == null) return; // 무기가 없으면 실행하지 않음
 
