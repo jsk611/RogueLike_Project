@@ -80,6 +80,7 @@ public class MonsterStatus : StatusBehaviour
         {
             Health = 0;
             //Destroy(gameObject);
+            monsterBase.TakeDamage(1000,false);
         }
         HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
@@ -308,7 +309,7 @@ public class MonsterStatus : StatusBehaviour
         float startTime = Time.time;
         while (Time.time - startTime < duration)
         {
-            monsterBase.TakeDamage(effect);
+            DecreaseHealth(effect);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;
@@ -330,7 +331,7 @@ public class MonsterStatus : StatusBehaviour
         while (Time.time - startTime < duration)
         {
             Debug.Log("Get Blazed");
-            monsterBase.TakeDamage(effect);
+            DecreaseHealth(effect);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;

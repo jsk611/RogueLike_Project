@@ -306,7 +306,7 @@ public abstract class MonsterBase : MonoBehaviour
     #endregion
 
     #region Damage and Death
-    public virtual void TakeDamage(float damage)
+    public virtual void TakeDamage(float damage,bool isAlive=true)
     {
         if (state == State.DIE)
         {
@@ -315,7 +315,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
       
 
-        monsterStatus.DecreaseHealth(damage);
+        if (isAlive) monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
 
         Instantiate(UIDamaged, transform.position + new Vector3(0,UnityEngine.Random.Range(0f,height/2),0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
