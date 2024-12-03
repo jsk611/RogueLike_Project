@@ -50,7 +50,7 @@ public class PostProcessingManager : MonoBehaviour
             {
                 while (vignette.intensity.value > 0f)
                 {
-                    vignette.intensity.value -= Time.deltaTime * 0.2f;
+                    vignette.intensity.value -= Time.deltaTime * 0.3f;
                     yield return null;
                 }
             }
@@ -74,8 +74,9 @@ public class PostProcessingManager : MonoBehaviour
     {
         if (vignette.color.value == Color.white)
         {
-            vignette.color.value = new Color(1f, 0.3f, 0.3f);
+            vignette.color.value = Color.red;
         }
+        if (vignette.intensity.value <= 0.02f) vignette.intensity.value = 0.3f;
         if (vignette.intensity.value <= 0.6f) vignette.intensity.value += intensity;
     }
 

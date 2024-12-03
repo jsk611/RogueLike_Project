@@ -159,7 +159,7 @@ public class Tile : MonoBehaviour
     }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
-        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.3f));
+        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.1f));
         StartCoroutine(MoveCoroutine(-20f, duration));
 
         float tmp = duration;
