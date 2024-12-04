@@ -459,10 +459,7 @@ namespace InfimaGames.LowPolyShooterPack
             RefreshWeaponSetup();
 
             yield return new WaitForEndOfFrame();
-            UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
-
-           
-
+            UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
         
 
@@ -895,7 +892,7 @@ namespace InfimaGames.LowPolyShooterPack
             }
         }
 
-        public override void OnTryExchangeWeapon(GameObject otherWeapon,Vector3 Position, Quaternion Rotation)
+        public override void OnTryExchangeWeapon(GameObject otherWeapon, Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
             string temp = inventory.GetOtherEquipped().gameObject.name;
@@ -912,6 +909,8 @@ namespace InfimaGames.LowPolyShooterPack
             weaponToSwitch.transform.localRotation = Rotation;
             weaponToSwitch.transform.SetSiblingIndex(indexToSwitch);
             StartCoroutine(ExchangeEquip(otherWeapon.GetComponent<WeaponBehaviour>()));
+
+            UIManager.instance.WeaponImageSwap(otherWeapon);
         }
         /// <summary>
         /// Run. 

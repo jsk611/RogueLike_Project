@@ -38,12 +38,17 @@ public class UIManager : MonoBehaviour
     }
 
     //Swapping Weapons
- 
+    public Image[] UIWeaponImages;
+    Image curImage;
+    public Sprite[] weaponImages;
+
     public void Swapping(int index)
     {
         
         curammo = curAmmo[index];
         maxammo = maxAmmo[index];
+        curImage = UIWeaponImages[index];
+
         for (int i = 0; i < 2; i++)
         {
             if (index == i)
@@ -56,7 +61,21 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void AmmoTextReset(bool knifeActive,int cur, int max)
+    public void WeaponImageSwap(GameObject weapon)
+    {
+        string[] weapons = { "Melee_Weapon 1", "SniperRifle", "Pistol", "Shotgun", "AssaultRifle", "SCi-fi_Grenade 1" };
+
+        for(int i=0; i<6; i++)
+        {
+            if (weapon.ToString() == weapons[i] + " (UnityEngine.GameObject)") 
+            {
+                curImage.sprite = weaponImages[i];
+                break;
+            }
+        }
+    }
+
+    public void AmmoTextReset(bool knifeActive, int cur, int max)
     {
         if (!knifeActive)
         {
@@ -70,6 +89,7 @@ public class UIManager : MonoBehaviour
         }    
 
     }
+    
 
 
 

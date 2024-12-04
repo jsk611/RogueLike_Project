@@ -73,7 +73,7 @@ namespace InfimaGames.LowPolyShooterPack
             return equipped;
         }
 
-        public WeaponBehaviour ExcahngeEquip(int index)
+        public WeaponBehaviour ExchangeEquip(int index)
         {
             //If we have no weapons, we can't really equip anything.
             if (weapons == null)
