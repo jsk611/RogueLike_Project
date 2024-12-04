@@ -735,7 +735,7 @@ MonoBehaviour:
   CriticalDamage: 0
   MoveSpeed: 3.5
   ReloadSpeed: 100
-  Damage: 3
+  Damage: 5
   AttackSpeed: 100
 --- !u!195 &2833706319071092294
 NavMeshAgent:

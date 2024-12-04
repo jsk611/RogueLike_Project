@@ -48,6 +48,8 @@ public class PlayerStatus : StatusBehaviour
     [SerializeField]
     private float MoveSpeed;
 
+    private float OriginMoveSpeed;
+
     [Tooltip("Creature Reload Speed")]
     [SerializeField]
     private float ReloadSpeed = 100f;
@@ -93,6 +95,7 @@ public class PlayerStatus : StatusBehaviour
             playerControl = character.GetComponent<PlayerControl>();
             characterAnimator = character.GetPlayerAnimator();
             weaponAnimator = character.GetWeaponAnimator();
+        OriginMoveSpeed = MoveSpeed;
 
         postProcessingManager = FindObjectOfType<PostProcessingManager>();
     }
@@ -265,6 +268,7 @@ public class PlayerStatus : StatusBehaviour
             if (MoveSpeed < 0) MoveSpeed = 0;
         }
     }
+   
 
     // Reload Speed
     public override void IncreaseReloadSpeed(float reloadSpeed)
@@ -368,6 +372,7 @@ public class PlayerStatus : StatusBehaviour
     //public override float GetEffectResist() => EffectResist;
    // public override float GetDamageAlleviation() => DamageAlleviation;
     public override float GetMovementSpeed() => MoveSpeed;
+    public float GetMoveSpeedOrigin() => OriginMoveSpeed;
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
     public int GetCoin() => Coins;

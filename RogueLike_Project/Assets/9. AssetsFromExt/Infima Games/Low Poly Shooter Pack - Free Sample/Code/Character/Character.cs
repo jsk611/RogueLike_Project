@@ -102,7 +102,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// <summary>
         /// Status Manager of the Character
         /// </summary>
-        private StatusBehaviour characterStatus;
+        private PlayerStatus characterStatus;
         /// <summary>
         /// Character Kinematics. Handles all the IK stuff.
         /// </summary>
@@ -251,7 +251,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache a reference to the overlay layer's index.
             layerOverlay = characterAnimator.GetLayerIndex("Layer Overlay");
 
-            characterStatus = GetComponent<StatusBehaviour>();
+            characterStatus = GetComponent<PlayerStatus>();
             //UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
         }
         
