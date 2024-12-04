@@ -15,6 +15,7 @@ public class Blaze : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
+            if (collision.gameObject.GetComponent<StatusBehaviour>() == null) return;
             collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Blazed,effect,duration,interval);
         }
     }

@@ -15,7 +15,7 @@ public class UIDamage : MonoBehaviour
     void Start()
     {
         //text = GetComponentInChildren<TMP_Text>();
-        text.text = damage.ToString();
+        text.text = ((int)damage).ToString();
         Destroy(gameObject, 1f);
         player = FindObjectOfType<PlayerControl>().gameObject.transform;
     }

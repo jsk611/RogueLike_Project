@@ -51,11 +51,11 @@ public class Projectile : MonoBehaviour {
 		{
 			if (collision.gameObject.GetComponent<MonsterStatus>() != null)
 			{
-				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage())* shooterStatus.CalculateCriticalHit());
+				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage())* shooterStatus.CalculateCriticalHit());
 			}
 			else if(collision.gameObject.GetComponent<Dummy>() != null)
 			{
-                collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage + shooterStatus.GetAttackDamage()) * shooterStatus.CalculateCriticalHit());
+                collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage()) * shooterStatus.CalculateCriticalHit());
             }
 			Destroy(gameObject);
 		}

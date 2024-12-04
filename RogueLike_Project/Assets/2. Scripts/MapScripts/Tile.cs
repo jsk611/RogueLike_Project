@@ -93,7 +93,7 @@ public class Tile : MonoBehaviour
         tmp2.a = 0.6f;
         minimapTile.color = tmp2;
 
-        yield return new WaitForSeconds(1f);
+        if(pos_y > 0) yield return new WaitForSeconds(1f);
         ChangeSpikeMode(false);
     }
     public void ChangeHeight(float size_y, float duration = 2f)
@@ -159,7 +159,7 @@ public class Tile : MonoBehaviour
     }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
-        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.1f));
+        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.3f));
         StartCoroutine(MoveCoroutine(-20f, duration));
 
         float tmp = duration;

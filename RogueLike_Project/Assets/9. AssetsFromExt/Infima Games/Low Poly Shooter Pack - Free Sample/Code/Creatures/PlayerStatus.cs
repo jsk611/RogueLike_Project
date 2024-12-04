@@ -292,7 +292,7 @@ public class PlayerStatus : StatusBehaviour
 
     // Attack Damage
     public override void IncreaseAttackDamage(float attackDamage)
-    { Damage += attackDamage; }
+    { Damage *= 1 + attackDamage/100; }
     public override void DecreaseAttackDamage(float attackDamage)
     {
         Damage -= attackDamage;
