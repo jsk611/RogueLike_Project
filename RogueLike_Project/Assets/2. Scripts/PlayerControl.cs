@@ -143,17 +143,38 @@ public class PlayerControl : MonoBehaviour
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
         
-        Dash();
+    //    Dash();
         character.height = 1.8f;
         character.center = new Vector3(0, 0, 0);
 
         Movement = Movement.normalized * moveSpeed;
-        if(playerCharacter.GetCursorState())character.Move (Movement * Time.deltaTime);
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >= 100f && Movement.magnitude > Mathf.Epsilon) StartCoroutine( Dashdd(Movement));
+
+        if (playerCharacter.GetCursorState())character.Move (Movement * Time.deltaTime);
         // character.Move(Vector3.down * 0.8f * Time.deltaTime);
 
      
         // character.Move(Vertical * Time.deltaTime
         return;
+    }
+
+    IEnumerator Dashdd(Vector3 Movement)
+    {
+        if (dashCool > 1f)
+        {
+            dashOver = false;
+            Stamina = 0;
+            dashCool = 0;
+            float t = 0;
+            playerCharacter.AnimationCancelReload();
+            while (t <= 0.15f)
+            {
+                character.Move(Movement * 4 * Time.deltaTime);
+                t += Time.deltaTime;
+                yield return null;
+            }
+        }
+        dashOver = true;
     }
     public bool CheckGrounded()
     {
@@ -180,7 +201,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (dashCool > 0.15f && !dashOver)
         {
-            characterStatus.SetMovementSpeed(moveSpeed_origin);
+            characterStatus.SetMovementSpeed(characterStatus.GetMoveSpeedOrigin());
             dashOver = true;
         }
         if (Input.GetKey(KeyCode.LeftShift) && Stamina >= 100f && Movement.magnitude > Mathf.Epsilon && crawlOver)
@@ -188,7 +209,6 @@ public class PlayerControl : MonoBehaviour
             if (dashCool > 1f)
             {
                 playerCharacter.AnimationCancelReload();
-                moveSpeed_origin = characterStatus.GetMovementSpeed();
                 Stamina = 0f;
                 characterStatus.SetMovementSpeed(moveSpeed * 4f);
                 dashCool = 0;
