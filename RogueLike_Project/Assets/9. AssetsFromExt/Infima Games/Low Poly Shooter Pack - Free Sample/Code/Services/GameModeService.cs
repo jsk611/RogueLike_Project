@@ -13,6 +13,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// The Player Character.
         /// </summary>
         private CharacterBehaviour playerCharacter;
+        private UpgradeManager upgradeManager;
         
         #endregion
         
@@ -26,6 +27,13 @@ namespace InfimaGames.LowPolyShooterPack
             
             //Return.
             return playerCharacter;
+        }
+        public UpgradeManager GetUpgradeManager()
+        {
+            if (upgradeManager == null)
+                upgradeManager = UnityEngine.Object.FindObjectOfType<UpgradeManager>();
+
+            return upgradeManager;
         }
         
         #endregion

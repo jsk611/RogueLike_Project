@@ -7,7 +7,7 @@ using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager : MonoBehaviour
 {
-    public static UpgradeManager instance;
+   // public static UpgradeManager instance;
 
     [SerializeField] GameObject upgradeUI;
 
@@ -21,9 +21,20 @@ public class UpgradeManager : MonoBehaviour
 
     private int repeatNum = 0;
 
+    public enum Upgrade
+    {
+        Damage,
+        AttackSpeed,
+        ReloadSpeed,
+        CriticalRate,
+        CriticalDamage,
+        MoveSpeed,
+        Heath
+    }
+
     private void Awake()
     {
-        instance = this;
+       // instance = this;
     }
 
     private void Start()
@@ -81,8 +92,33 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    public void CompleteUpgrade()
+    public void CompleteUpgrade(Upgrade type,float degree)
     {
+        switch(type)
+        {
+            case Upgrade.AttackSpeed:
+                status.IncreaseAttackSpeed(degree);
+                break;
+            case Upgrade.ReloadSpeed:
+                status.IncreaseReloadSpeed(degree);
+                break;
+            case Upgrade.MoveSpeed:
+                status.IncreaseMovementSpeed(degree);
+                break;
+            case Upgrade.CriticalRate:
+                status.IncreaseCriticalRate(degree);
+                break;
+            case Upgrade.CriticalDamage:
+                status.IncreaseCriticalDamage(degree);
+                break;
+            case Upgrade.Damage:
+                status.IncreaseAttackDamage(degree);
+                break;
+            case Upgrade.Heath:
+                status.IncreaseMaxHealth(degree);
+                status.IncreaseHealth(degree);
+                break;
+        }
         for(int i = 0; i < 3; i++)
         {
             curUpgradeButtons[i].SetActive(false);

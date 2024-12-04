@@ -1,13 +1,17 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CompleteUpgrade : MonoBehaviour
 {
-    UpgradeManager upgradeManager = new UpgradeManager();
+    public UpgradeManager upgradeManager;
+    
+    public UpgradeManager.Upgrade type;
+    public float degree;
 
     public void UpgradeDone()
     {
-        upgradeManager.CompleteUpgrade(); 
+        upgradeManager.CompleteUpgrade(type,degree);//CompleteUpgrade(UpgradeManager.Upgrade.AttackSpeed,2); 
     }
 }
