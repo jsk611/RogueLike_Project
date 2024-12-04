@@ -94,6 +94,7 @@ public class UpgradeManager : MonoBehaviour
 
     public void CompleteUpgrade(Upgrade type,float degree)
     {
+        Debug.Log("실행1");
         switch(type)
         {
             case Upgrade.AttackSpeed:
@@ -124,11 +125,14 @@ public class UpgradeManager : MonoBehaviour
             curUpgradeButtons[i].SetActive(false);
         }
         upgradeUI.SetActive(false);
+        Debug.Log("실행2");
 
         if (repeatNum > 0)
         {
             repeatNum--;
             UpgradeDisplay();
+            Debug.Log("실행3");
+
         }
         else
         {
