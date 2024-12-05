@@ -119,11 +119,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3833415478891e4d8ff57a9947db665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fieldPrefab: {fileID: 0}
+  fieldPrefab: {fileID: 4061503500606719347, guid: edc30e9b8d86987428a129a4850d36da,
+    type: 3}
   explosionRadius: 3
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
+  fireFieldDuration: 5
 --- !u!54 &3153301240402748831
 Rigidbody:
   m_ObjectHideFlags: 0

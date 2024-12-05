@@ -9,8 +9,17 @@ public class RangedMonster : MonsterBase
     [Header("Settings")]
     [SerializeField] private float fireRate = 1.5f; // 발사 속도
     [SerializeField] protected bool isHitScan = false; // 히트 스캔 여부
+
+    [SerializeField] protected float aimTime; // 조준 시간: 쿨타임의 60%
+    [SerializeField] protected float attackTime;
     public EnemyWeapon gun;
 
+    protected override void Start()
+    {
+        base.Start();
+        aimTime = attackCooldown * 0.6f;
+        attackTime = attackCooldown * 0.8f;
+    }
     protected override void UpdateChase()
     {
         if (target == null)
