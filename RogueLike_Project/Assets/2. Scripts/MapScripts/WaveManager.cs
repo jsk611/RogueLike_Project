@@ -309,8 +309,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
         while(enemyCountData.enemyCount > 0)
         {
-            //???????? ???? ????
-            tileManager.MakeRandomHole(Random.Range(100,200));
+            tileManager.MakeRandomHole(Random.Range(75,100));
             yield return StartCoroutine(tileManager.MoveTilesByArray());
             yield return new WaitForSeconds(5f);
         }

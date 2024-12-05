@@ -93,7 +93,7 @@ public class Tile : MonoBehaviour
         tmp2.a = 0.6f;
         minimapTile.color = tmp2;
 
-        if(pos_y > 0) yield return new WaitForSeconds(1f);
+        if(isSpike) yield return new WaitForSeconds(1f);
         ChangeSpikeMode(false);
     }
     public void ChangeHeight(float size_y, float duration = 2f)

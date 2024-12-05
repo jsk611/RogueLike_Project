@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 9036666279645293602}
   m_Layer: 8
   m_Name: Tile
-  m_TagString: Wall
+  m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 18

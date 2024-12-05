@@ -169,6 +169,7 @@ public class TileManager : MonoBehaviour
     }
     public void MakeRandomHole(int numOfChanging)
     {
+        int cnt = 0;
         for (int i = 0; i < numOfChanging; i++)
         {
             int randomX = Random.Range(0, mapSize);
@@ -177,6 +178,8 @@ public class TileManager : MonoBehaviour
             if (tileMap[randomY, randomX] <= 0)
             {
                 i--;
+                cnt++;
+                if (cnt >= 50) return;
                 continue;
             }
             else
