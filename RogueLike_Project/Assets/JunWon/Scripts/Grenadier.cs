@@ -10,6 +10,12 @@ public class Grenadier : RangedMonster
     [SerializeField] private float throwForce = 5f; // 투척 힘
     [SerializeField] private float arcHeight = 3f; // 포물선의 최고점 높이
 
+    protected override void Start()
+    {
+        base.Start();
+        aimTime = attackCooldown * 0.2f;
+        aimTime = attackCooldown * 0.4f;
+    }
     public override void FireEvent()
     {
         if (throwablePrefab != null && target != null)
@@ -18,7 +24,7 @@ public class Grenadier : RangedMonster
 
             // 투척 무기 사용
             Throw(targetPosition);
-            Debug.Log($"Grenade thrown at {targetPosition}");
+            //Debug.Log($"Grenade thrown at {targetPosition}");
         }
     }
 
