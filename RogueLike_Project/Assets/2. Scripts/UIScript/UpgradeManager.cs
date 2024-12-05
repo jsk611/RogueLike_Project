@@ -94,7 +94,6 @@ public class UpgradeManager : MonoBehaviour
 
     public void CompleteUpgrade(Upgrade type,float degree)
     {
-        Debug.Log("실행1");
         switch(type)
         {
             case Upgrade.AttackSpeed:
@@ -125,13 +124,12 @@ public class UpgradeManager : MonoBehaviour
             curUpgradeButtons[i].SetActive(false);
         }
         upgradeUI.SetActive(false);
-        Debug.Log("실행2");
 
         if (repeatNum > 0)
         {
+            StopAllCoroutines();
             repeatNum--;
             UpgradeDisplay();
-            Debug.Log("실행3");
 
         }
         else
@@ -139,18 +137,19 @@ public class UpgradeManager : MonoBehaviour
             UIenabled = !UIenabled;
             player.SetCursorState(true);
         }
+
     }
 
     IEnumerator Typing(GameObject curButton)
     {
         TMP_Text tx = curButton.transform.GetChild(1).GetComponent<TMP_Text>();
-        string temptx = tx.text;
+        string temptx = curButton.GetComponent<CompleteUpgrade>().baseText;
         tx.text = "";
 
         for(int i = 0; i <= temptx.Length; i++)
         {
             tx.text = temptx.Substring(0, i);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.06f);
         }
     }
 }

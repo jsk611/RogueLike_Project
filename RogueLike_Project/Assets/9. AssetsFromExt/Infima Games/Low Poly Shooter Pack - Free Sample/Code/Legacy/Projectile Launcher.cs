@@ -67,7 +67,7 @@ public class ProjectileLauncher : MonoBehaviour {
 		foreach (Collider hit in hits)
 		{
 			if (hit.gameObject.GetComponent<MonsterStatus>() != null)
-				hit.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage()) * shooterStatus.CalculateCriticalHit());
+				hit.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
 			
 		}
 			//Destroy(gameObject);
