@@ -7,7 +7,7 @@ using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager : MonoBehaviour
 {
-   // public static UpgradeManager instance;
+    //public static UpgradeManager instance;
 
     [SerializeField] GameObject upgradeUI;
 
