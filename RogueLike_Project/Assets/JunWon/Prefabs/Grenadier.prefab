@@ -219,7 +219,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7989540866381794128}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8702377262667262310}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a882bf97c15de47419d357320658bc4a, type: 3}
@@ -228,12 +228,6 @@ MonoBehaviour:
 --- !u!224 &2226375123453535116 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
-    type: 3}
-  m_PrefabInstance: {fileID: 7989540866381794128}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8702377262667262310 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1595825769350734390, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
     type: 3}
   m_PrefabInstance: {fileID: 7989540866381794128}
   m_PrefabAsset: {fileID: 0}
@@ -807,16 +801,20 @@ MonoBehaviour:
   spawnEffect: {fileID: 5822751101920687727}
   startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
   baseMaterial: {fileID: 2100000, guid: b1c5cc39fad6535439a9c2641326f277, type: 2}
-  items: []
+  items:
+  - {fileID: 8021822854330241990, guid: 982b8077848b5ff4e88bc60f5a86e4d4, type: 3}
+  - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
+  - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
   height: 5
   HPBar: {fileID: 1090786780028515069}
-  UIDamaged: {fileID: 8702377262667262310}
+  UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
+    type: 3}
   hitCooldown: 1
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
-  enemyCountData: {fileID: 0}
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   fireRate: 1.5
   isHitScan: 0
   gun: {fileID: 0}

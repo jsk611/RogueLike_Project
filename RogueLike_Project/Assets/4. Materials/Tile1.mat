@@ -157,7 +157,7 @@ Material:
     - GridColor: {r: 1, g: 1, b: 1, a: 0.7490196}
     - Vector2_2818E70A: {r: 1, g: 0.5, b: 0, a: 0}
     - Vector2_EF5B598A: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _BaseColor: {r: 0.58431375, g: 0.28750044, b: 0.20784312, a: 1}
+    - _BaseColor: {r: 0.6084906, g: 0.29264474, b: 0.20952742, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0.6037736, g: 0.19935921, b: 0.35636726, a: 1}
     - _GridColor: {r: 1, g: 1, b: 1, a: 1}

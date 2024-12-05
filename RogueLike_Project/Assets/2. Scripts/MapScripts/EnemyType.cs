@@ -4,5 +4,6 @@ public enum EnemyType{
     Golem,
     HammerMan,
     RangedSoldier,
+    Grenadier,
     Sniper,
 }
