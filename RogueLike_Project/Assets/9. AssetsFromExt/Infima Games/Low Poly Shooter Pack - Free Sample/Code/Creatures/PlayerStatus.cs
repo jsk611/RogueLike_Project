@@ -90,11 +90,11 @@ public class PlayerStatus : StatusBehaviour
 
     private void Start()
     {
-            character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+        character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
 
-            playerControl = character.GetComponent<PlayerControl>();
-            characterAnimator = character.GetPlayerAnimator();
-            weaponAnimator = character.GetWeaponAnimator();
+        playerControl = character.GetComponent<PlayerControl>();
+        characterAnimator = character.GetPlayerAnimator();
+        weaponAnimator = character.GetWeaponAnimator();
         OriginMoveSpeed = MoveSpeed;
 
         postProcessingManager = FindObjectOfType<PostProcessingManager>();
@@ -114,7 +114,7 @@ public class PlayerStatus : StatusBehaviour
         if (Health <= 0)
         {
             Health = 0;
-            //특정 연출 진행
+            //???? ???? ????
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadScene("GameOverScene");

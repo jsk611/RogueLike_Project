@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     {
         BarValueChange(0, 100, 100);
         BarValueChange(1, 100, 100);
-        CoinReset(0);
+        DNAReset(0);
         Swapping(0);
     }
 
@@ -90,11 +90,8 @@ public class UIManager : MonoBehaviour
 
     }
     
-
-
-
     public TMP_Text dnaText;
-    public void CoinReset(int dna)
+    public void DNAReset(int dna)
     {
         if (dna == 0)
             dnaText.text = "0";
@@ -106,6 +103,7 @@ public class UIManager : MonoBehaviour
         return string.Format("{0:#,###}", data);
     }
 
+    /*
     public Image deactivateImage;
     public IEnumerator OnCooltime(float cool)
     {
@@ -117,6 +115,8 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
     }
+    */
+
     public void Restart()
     {
         SceneManager.LoadScene("MapScene");
