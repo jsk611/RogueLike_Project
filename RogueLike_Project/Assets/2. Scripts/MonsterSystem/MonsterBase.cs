@@ -132,18 +132,18 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Update()
     {
-        //chaseSpeed를 실시간으로 반영
+        //chaseSpeed?? ?????????? ????
         chaseSpeed = monsterStatus.GetMovementSpeed();
         Debug.Log($"{name} current state = {state}");
         if (state == State.IDLE) CheckPlayer();
-        // 빙결 상태에서 회전 불가
+        // ???? ???????? ???? ????
         if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
         ExecuteStateAction();
     }
 
     private void LateUpdate()
     {
-        // 빙결 상태에서 회전 불가
+        // ???? ???????? ???? ????
         if ((state == State.CHASE || state == State.ATTACK) && monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
     }
 
@@ -250,7 +250,7 @@ public abstract class MonsterBase : MonoBehaviour
 
         if (state != newState || newState == State.HIT)
         {
-            Debug.Log($"{transform.name} state change: {state} → {newState}");
+            Debug.Log($"{transform.name} state change: {state} ?? {newState}");
             SetAnimatorState(newState);
             state = newState;
 
@@ -319,7 +319,7 @@ public abstract class MonsterBase : MonoBehaviour
     private void HandleDeath()
     {
         enemyCountData.enemyCount--;
-        Debug.LogWarning("적 카운트 --");
+        Debug.LogWarning("?? ?????? --");
         SpawnItem();
         Destroy(gameObject);
     }
@@ -372,7 +372,7 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
-    //CC기 적용 후 state 초기화?용 메소드
+    //CC?? ???? ?? state ????????? ??????
     public void UpdateStateFromAnimationEvent()
     {
        // ChangeState(State.CHASE);

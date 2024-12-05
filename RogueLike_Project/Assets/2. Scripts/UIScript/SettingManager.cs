@@ -23,11 +23,4 @@ public class SettingManager : MonoBehaviour
             Application.Quit();
         #endif
     }
-
-    public GameObject PauseCanvas;
-    public void PauseGame()
-    {
-        PauseCanvas.SetActive(true);
-    }
-
 }

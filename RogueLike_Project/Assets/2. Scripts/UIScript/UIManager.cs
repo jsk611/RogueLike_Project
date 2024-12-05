@@ -117,6 +117,12 @@ public class UIManager : MonoBehaviour
     }
     */
 
+    public GameObject PauseUI;
+    public void PauseGame()
+    {
+        PauseUI.SetActive(true);
+    }
+
     public void Restart()
     {
         SceneManager.LoadScene("MapScene");
