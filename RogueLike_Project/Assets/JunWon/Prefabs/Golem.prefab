@@ -1438,6 +1438,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 550419027739694129}
     m_Modifications:
+    - target: {fileID: 489949579207227846, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1595825769350734390, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_Name
@@ -1451,7 +1456,7 @@ PrefabInstance:
     - target: {fileID: 6500396886648702505, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 500
+      value: 492
       objectReference: {fileID: 0}
     - target: {fileID: 6978457331180637462, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
