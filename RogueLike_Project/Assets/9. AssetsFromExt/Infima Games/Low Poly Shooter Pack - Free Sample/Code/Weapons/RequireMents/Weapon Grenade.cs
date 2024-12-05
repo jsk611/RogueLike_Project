@@ -258,7 +258,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override void Throw()
         {
-         
+            ServiceLocator.Current.Get<IAudioManagerService>().PlayOneShotDelayed(GetAudioClipFireEmpty(),new AudioSettings(1,0,true),0);
             //getcamera
             playerCamera = characterBehaviour.GetCameraWorld().transform;
             //We need a muzzle in order to fire this weapon!
