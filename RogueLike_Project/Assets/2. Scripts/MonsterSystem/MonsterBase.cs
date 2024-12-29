@@ -39,6 +39,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private GameObject[] items;
     [SerializeField] private int[] itemProbability = { 50, 25, 0 };
     [SerializeField] private float height = 5f;
+    [SerializeField] private int DNADrop = 0;
 
     [Header("UI")]
     [SerializeField] public EnemyHPBar HPBar;
@@ -321,6 +322,7 @@ public abstract class MonsterBase : MonoBehaviour
         enemyCountData.enemyCount--;
         Debug.LogWarning("?? ?????? --");
         SpawnItem();
+        UIManager.instance.dnaIncrease(DNADrop);
         Destroy(gameObject);
     }
 

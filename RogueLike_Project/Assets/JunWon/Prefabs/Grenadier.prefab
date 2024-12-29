@@ -807,6 +807,7 @@ MonoBehaviour:
   - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
   height: 5
+  DNADrop: 83
   HPBar: {fileID: 1090786780028515069}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
@@ -817,6 +818,8 @@ MonoBehaviour:
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   fireRate: 1.5
   isHitScan: 0
+  aimTime: 0
+  attackTime: 0
   gun: {fileID: 0}
   throwPoint: {fileID: 8788629424251833307}
   throwablePrefab: {fileID: 7367227017500463239, guid: c0566a570bf75264c82c6241a746e673,

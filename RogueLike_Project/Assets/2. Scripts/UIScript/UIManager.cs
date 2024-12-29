@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
+using System;
 
 public class UIManager : MonoBehaviour
 {
@@ -98,6 +100,13 @@ public class UIManager : MonoBehaviour
         else
             dnaText.text = GetThousandCommaText(dna).ToString();
     }   
+    public void dnaIncrease(int amount)
+    {
+        Debug.Log("dna increased");
+        int dna = int.Parse(dnaText.text);
+        dna += amount;
+        DNAReset(dna);
+    }
     public string GetThousandCommaText(int data)
     {
         return string.Format("{0:#,###}", data);
