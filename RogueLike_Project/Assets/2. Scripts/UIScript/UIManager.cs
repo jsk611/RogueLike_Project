@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
         }    
 
     }
-    
+    int dna;
     public TMP_Text dnaText;
     public void DNAReset(int dna)
     {
@@ -102,8 +102,6 @@ public class UIManager : MonoBehaviour
     }   
     public void dnaIncrease(int amount)
     {
-        Debug.Log("dna increased");
-        int dna = int.Parse(dnaText.text);
         dna += amount;
         DNAReset(dna);
     }
