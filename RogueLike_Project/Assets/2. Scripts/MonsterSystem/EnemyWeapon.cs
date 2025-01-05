@@ -15,10 +15,10 @@ public class EnemyWeapon : MonoBehaviour
     RaycastHit hitInfo;
     Vector3 fireDirection; // 발사 방향: 적의 정면 기준
     float laserRange = 100f; // 레이저 사거리
-
+    Vector3 playerPos;
     private PlayerStatus player;
 
-    void Awake()
+    void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null) return;
@@ -28,17 +28,20 @@ public class EnemyWeapon : MonoBehaviour
         lineRenderer.endWidth = 0.1f;
         lineRenderer.enabled = false;
 
-        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
-        Debug.Log(player.name);
+        player = FindObjectOfType<PlayerStatus>();
+        Debug.Log(player.transform.position);
+        
+
     }
 
 
 
     public void Fire()
     {
-
+        playerPos = GameObject.Find("Player").transform.position;
+        Quaternion spawnRotation = Quaternion.LookRotation(playerPos - firePoint.position);
         // 지정된 회전으로 총알 생성
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, transform.rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, spawnRotation);
         bullet.GetComponent<MProjectile>().SetBulletDamage(monsterStatus.GetAttackDamage()*monsterStatus.CalculateCriticalHit());
     }
 
