@@ -16,7 +16,7 @@ public class CoinTrigger : MonoBehaviour
     private void OnEnable()
     {
         gotCoin = false;
-        GetComponentInChildren<PlatformIcon>().gameObject.SetActive(true);
+        GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
 

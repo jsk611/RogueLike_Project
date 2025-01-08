@@ -16,7 +16,7 @@ public class UpgradeTrigger : MonoBehaviour
     private void OnEnable()
     {
         isUpgraded = false;
-        GetComponentInChildren<PlatformIcon>().gameObject.SetActive(true);
+        GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
 
@@ -30,7 +30,7 @@ public class UpgradeTrigger : MonoBehaviour
                 UpgradeManager.RepeatNumSet(0);
                 UpgradeManager.UpgradeDisplay();
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
-                GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
+                GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(false);
             }
         }
     }

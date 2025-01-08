@@ -34,8 +34,9 @@ public class MProjectile : MonoBehaviour
                 playerHealth.DecreaseHealth(damage);
             }
 
-            Destroy(gameObject);
+            
         }
+        Destroy(gameObject);
     }
 
     void UpdateBullet()
