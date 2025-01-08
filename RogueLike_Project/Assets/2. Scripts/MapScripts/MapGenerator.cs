@@ -49,6 +49,9 @@ public class MapGenerator : MonoBehaviour
     {
         
         tiles = new GameObject[mapSizeY, mapSizeX];
+        Color32[,] baseColors = LoadColorGrid(mapPaths[currentMapIndex] + "_basecolor");
+        Color32[,] emissionColors = LoadColorGrid(mapPaths[currentMapIndex] + "_emissioncolor");
+        Color32[,] gridColors = LoadColorGrid(mapPaths[currentMapIndex] + "_gridcolor");
         for (int i = 0; i < mapSizeY; i++)
         {
             for (int j = 0; j < mapSizeX; j++)
@@ -59,6 +62,10 @@ public class MapGenerator : MonoBehaviour
                 Vector3 newPosition = new Vector3(tiles[i,j].transform.position.x, tileMap[i, j]/2, tiles[i, j].transform.position.z);
                 tiles[i,j].transform.position = newPosition;
                 tiles[i,j].transform.localScale = newSize;
+                MeshRenderer mr = tiles[i, j].GetComponent<MeshRenderer>();
+                if(baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
+                if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
+                if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
             }
         }
     }
@@ -78,17 +85,20 @@ public class MapGenerator : MonoBehaviour
     {
         //각 타일별 머테리얼 색 저장하기
         Color32[,] baseColorArray = new Color32[mapSizeY, mapSizeX];
+        Color32[,] gridColorArray = new Color32[mapSizeY, mapSizeX];
         Color32[,] emissionColorArray = new Color32[mapSizeY, mapSizeX];
         for (int i = 0; i < mapSizeY; i++)
         {
             for (int j = 0; j < mapSizeX; j++)
             {
                 baseColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("_BaseColor");
+                gridColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("GridColor");
                 emissionColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
             }
         }
 
         SaveColorGrid(baseColorArray, Application.dataPath + "/8. Maps/Resources/" + mapPaths[currentMapIndex] + "_basecolor.csv");
+        SaveColorGrid(gridColorArray, Application.dataPath + "/8. Maps/Resources/" + mapPaths[currentMapIndex] + "_gridcolor.csv");
         SaveColorGrid(emissionColorArray, Application.dataPath + "/8. Maps/Resources/" + mapPaths[currentMapIndex] + "_emissioncolor.csv");
     }
     public void SaveColorGrid(Color32[,] colorArray, string path)
@@ -113,6 +123,40 @@ public class MapGenerator : MonoBehaviour
         }
         Debug.Log("2차원 색상 배열 CSV로 저장 완료: " + path);
     }
+    Color32[,] LoadColorGrid(string path)
+    {
+        TextAsset csvFile = Resources.Load<TextAsset>(path);
+
+        if (csvFile == null)
+        {
+            Debug.LogError("Cannot Find CSV File");
+            return null;
+        }
+        string csvData = csvFile.text;
+        string[] lines = csvData.Split('\n');
+        int rows = lines.Length - 1;
+        int cols = lines[0].Split(',').Length;
+
+        Color32[,] dataArray = new Color32[rows, cols];
+
+        for (int i = 0; i < rows; i++)
+        {
+            string[] values = lines[i].Split(',');
+
+            for (int j = 0; j < cols; j++)
+            {
+                string[] color = values[j].Split("-");
+                byte r = byte.Parse(color[0]);
+                byte g = byte.Parse(color[1]);
+                byte b = byte.Parse(color[2]);
+                byte a = byte.Parse(color[3]);
+                dataArray[i, j] = new Color32(r,g,b,a);
+            }
+        }
+        return dataArray;
+    }
+
+
     void CheckCommand(string command)
     {
         if (command[0] != '/') return;
@@ -124,9 +168,9 @@ public class MapGenerator : MonoBehaviour
         else if(int.TryParse(command, out int mapNum))
         {
             DestroyAllTiles();
+            currentMapIndex = mapNum;
             MakeMapByCSV(mapPaths[mapNum]);
             Make();
-            currentMapIndex = mapNum;
         }
     }
 }
