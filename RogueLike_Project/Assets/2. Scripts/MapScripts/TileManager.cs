@@ -14,6 +14,10 @@ public class TileManager : MonoBehaviour
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
     float[,] tileMap = new float[mapSize, mapSize];
+    Color32[,] baseColors = new Color32[mapSize,mapSize];
+    Color32[,] emissionColors = new Color32[mapSize, mapSize];
+    Color32[,] gridColors = new Color32[mapSize, mapSize];
+    [SerializeField] Color32[] defaultColor;
     CSVToArray CTA;
     public int GetMapSize
     {
@@ -72,6 +76,9 @@ public class TileManager : MonoBehaviour
             for(int j=0; j < mapSize; j++)
             {
                 tileMap[i,j] = initialValue;
+                baseColors[i, j] = defaultColor[0];
+                gridColors[i, j] = defaultColor[1];
+                emissionColors[i, j] = defaultColor[2];
             }
         }
     }
@@ -119,6 +126,9 @@ public class TileManager : MonoBehaviour
     public void MakeMapByCSV(string path, int start_x = 0, int start_y = 0)
     {
         float[,] csvMap = CTA.CSVFileToArray(path);
+        Color32[,] bc = CTA.LoadColorGrid(path + "_basecolor");
+        Color32[,] ec = CTA.LoadColorGrid(path + "_emissioncolor");
+        Color32[,] gc = CTA.LoadColorGrid(path + "_gridcolor");
         int csvMapSizeX = csvMap.GetLength(1);
         int csvMapSizeY = csvMap.GetLength(0);
         for(int x = 0; x<csvMapSizeX; x++)
@@ -126,9 +136,11 @@ public class TileManager : MonoBehaviour
             for (int y = 0; y < csvMapSizeY; y++)
             {
                 tileMap[start_y + y,start_x + x] = csvMap[y,x];
+                if (bc != null) baseColors[start_y + y,start_x + x] = bc[y,x];
+                if (ec != null) emissionColors[start_y + y,start_x + x] = ec[y,x];
+                if (gc != null) gridColors[start_y + y,start_x + x] = gc[y,x];
             }
         }
-
     }
 
     public Vector2Int MakeCenteredMapFromCSV(string path, int player_x, int player_y)
@@ -251,9 +263,12 @@ public class TileManager : MonoBehaviour
 
                         bool isTooHigh = IsHighPos(i,j);
           
-
                         tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
-                    } 
+                    }
+                    MeshRenderer mr = tiles[i, j].gameObject.GetComponent<MeshRenderer>();
+                    if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
+                    if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
+                    if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
                 }
             }
             yield return new WaitForSeconds((float)durationAboutCoroutine / (mapSize) );
@@ -305,6 +320,10 @@ public class TileManager : MonoBehaviour
                             if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile();
                             tiles[i, j].WaveToChange(height*(1-radius/maxRadius), 0.75f, tileMap[i,j]);
                         }
+                        MeshRenderer mr = tiles[i, j].gameObject.GetComponent<MeshRenderer>();
+                        if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
+                        if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
+                        if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
                     }
 
                 }
