@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using InfimaGames.LowPolyShooterPack;
+using Unity.VisualScripting;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -15,21 +16,41 @@ public class UpgradeManager : MonoBehaviour
     private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
 
     private CharacterBehaviour player;
-    private StatusBehaviour status;
+    private PlayerStatus status;
 
     public bool UIenabled = false;
 
     private int repeatNum = 0;
 
-    public enum Upgrade
+    public enum CommonUpgrade
     {
+        Default,
         Damage,
         AttackSpeed,
         ReloadSpeed,
         CriticalRate,
         CriticalDamage,
         MoveSpeed,
-        Heath
+        Heath,
+        CoinAcquisitonRate,
+        PermanentCoinAcquisitionRate
+    }
+    public enum RareUpgrade
+    {
+        Default,
+        ApplyBlaze,
+        ApplyFreeze,
+        ApplyPoisonous,
+        ApplyShock,
+    }
+    public enum EpicUpgrade
+    {
+        Default,
+        Berserk,
+        Cavity_System_Model,
+        
+        K_Ampule_Activation,
+
     }
 
     private void Awake()
@@ -40,7 +61,7 @@ public class UpgradeManager : MonoBehaviour
     private void Start()
     {
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
-        status = player.GetComponent<StatusBehaviour>();
+        status = player.GetComponent<PlayerStatus>();
     }
 
     public void RepeatNumSet(int n)
@@ -58,14 +79,14 @@ public class UpgradeManager : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             GameObject selectedButton;
-            selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
+            selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
 
             // 중복 체크
             while (selectedButton != null && selectedButtons.Contains(selectedButton))
             {
-                if (commonButtons.Length > 0)
+                if (rareButtons.Length > 0)
                 {
-                    selectedButton = commonButtons[Random.Range(0, commonButtons.Length)];
+                    selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
                 }
             }
             curUpgradeButtons[i] = selectedButton;
@@ -92,31 +113,39 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    public void CompleteUpgrade(Upgrade type,float degree)
+    public void CompleteCommonUpgrade(CommonUpgrade type,float degree)
     {
         switch(type)
         {
-            case Upgrade.AttackSpeed:
+            case CommonUpgrade.AttackSpeed:
                 status.IncreaseAttackSpeed(degree);
                 break;
-            case Upgrade.ReloadSpeed:
+            case CommonUpgrade.ReloadSpeed:
                 status.IncreaseReloadSpeed(degree);
                 break;
-            case Upgrade.MoveSpeed:
+            case CommonUpgrade.MoveSpeed:
                 status.IncreaseMovementSpeed(degree);
                 break;
-            case Upgrade.CriticalRate:
+            case CommonUpgrade.CriticalRate:
                 status.IncreaseCriticalRate(degree);
                 break;
-            case Upgrade.CriticalDamage:
+            case CommonUpgrade.CriticalDamage:
                 status.IncreaseCriticalDamage(degree);
                 break;
-            case Upgrade.Damage:
+            case CommonUpgrade.Damage:
                 status.IncreaseAttackDamage(degree);
                 break;
-            case Upgrade.Heath:
+            case CommonUpgrade.Heath:
                 status.IncreaseMaxHealth(degree);
                 status.IncreaseHealth(degree);
+                break;
+            case CommonUpgrade.CoinAcquisitonRate:
+                status.IncreaseAcquisitionRate(degree);
+                break;
+            case CommonUpgrade.PermanentCoinAcquisitionRate:
+                status.IncreasePermanentAcquisitionRate(degree);
+                break;
+            default:
                 break;
         }
         for(int i = 0; i < 3; i++)
@@ -130,13 +159,51 @@ public class UpgradeManager : MonoBehaviour
             StopAllCoroutines();
             repeatNum--;
             UpgradeDisplay();
-
         }
         else
         {
             UIenabled = !UIenabled;
             player.SetCursorState(true);
         }
+    }
+    public void CompleteRareUpgrade(RareUpgrade type, float degree)
+    {
+        switch (type)
+        {
+            case RareUpgrade.ApplyBlaze:
+           //     player.GetInventory().GetEquipped(). AddComponent<Blaze>();   탄환에 적용해야 함
+                break;
+            case RareUpgrade.ApplyFreeze:
+               
+                break;
+            case RareUpgrade.ApplyPoisonous:
+
+                break;
+            case RareUpgrade.ApplyShock:
+    
+            default:
+                break;
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            curUpgradeButtons[i].SetActive(false);
+        }
+        upgradeUI.SetActive(false);
+
+        if (repeatNum > 0)
+        {
+            StopAllCoroutines();
+            repeatNum--;
+            UpgradeDisplay();
+        }
+        else
+        {
+            UIenabled = !UIenabled;
+            player.SetCursorState(true);
+        }
+    }
+    public void CompleteEpicUpgrade(EpicUpgrade type, float degree)
+    {
 
     }
 

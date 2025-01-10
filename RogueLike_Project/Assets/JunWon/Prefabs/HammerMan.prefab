@@ -1198,15 +1198,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  body: {fileID: 0}
-  head: {fileID: 0}
+  body: {fileID: 6653918507616483876}
+  head: {fileID: 6476374187044824731}
   maxVerticalAngle: 60
   rotateSpeed: 2
   anim: {fileID: 4325502948305491921}
   nmAgent: {fileID: 2633594184378361070}
   fov: {fileID: 3564155486099621860}
   monsterStatus: {fileID: 4670054622375643492}
-  playerRigidBody: {fileID: 0}
+  playerRigidBody: {fileID: 3095557521766637868}
   attackRange: 5
   attackCooldown: 3
   splashFx: {fileID: 0}

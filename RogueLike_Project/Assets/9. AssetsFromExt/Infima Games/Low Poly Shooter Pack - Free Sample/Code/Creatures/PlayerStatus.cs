@@ -66,6 +66,8 @@ public class PlayerStatus : StatusBehaviour
     //[SerializeField]
     //private float JumpPower;
 
+    [Header("Coins")]
+
     [Tooltip("Coin Owned")]
     [SerializeField]
     private int Coins;
@@ -73,6 +75,14 @@ public class PlayerStatus : StatusBehaviour
     [Tooltip("Permanent Coin Owned")]
     [SerializeField]
     private int PermanentCoins;
+
+    [Tooltip("Coin Acquisition Rate")]
+    [SerializeField]
+    private float CoinAcquisitionRate;
+
+    [Tooltip("Permanent Coin Acquisition Rate")]
+    [SerializeField]
+    private float PermanentCoinAcquisitionRate; 
 
     [Header("Player Stamina")]
     [SerializeField] [Range(0,100)] float Stamina;
@@ -361,6 +371,20 @@ public class PlayerStatus : StatusBehaviour
     public void SetPermanentCoin(int coin)
     { PermanentCoins = coin; }
 
+    public void IncreaseAcquisitionRate(float rate)
+    { CoinAcquisitionRate += rate; }
+    public void DecreaseAcquisitionRate(float rate)
+    { CoinAcquisitionRate -= rate; }
+    public void SetAcquisitionRate(float rate)
+    { CoinAcquisitionRate = rate; }
+
+    public void IncreasePermanentAcquisitionRate(float rate)
+    { PermanentCoinAcquisitionRate += rate; }
+    public void DecreasePermanentAcquisitionRate(float rate)
+    { PermanentCoinAcquisitionRate -= rate; }
+    public void SetPermanentAcquisitionRate(float rate)
+    { PermanentCoinAcquisitionRate = rate; }
+
     public override float GetHealth() => Health;
     public override float GetMaxHealth() => MaxHealth;
     public float GetStaminaRegen() => StaminaRegen;
@@ -377,8 +401,10 @@ public class PlayerStatus : StatusBehaviour
     //public override float GetJumpPower() => JumpPower;
     public int GetCoin() => Coins;
     public int GetPermanentCoin() => PermanentCoins;
+    public float GetAcquisitionRate() => CoinAcquisitionRate;
+    public float GetPermanentAcquisitionRate() => PermanentCoinAcquisitionRate;
 
-
+    
 
     private void StatusAnimatorChange(int Id, float value)
     {

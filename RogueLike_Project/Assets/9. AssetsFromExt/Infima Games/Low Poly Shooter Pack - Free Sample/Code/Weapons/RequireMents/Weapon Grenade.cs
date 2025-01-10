@@ -312,9 +312,6 @@ namespace InfimaGames.LowPolyShooterPack
                 projectileImpulse += Time.deltaTime*30;
                 projectileImpulse = Mathf.Clamp(projectileImpulse, 0, 60);
                 //   rotation = Quaternion.LookRotation(playerCamera.forward * 10000000.0f - muzzleBehaviour.GetSocket().position);
-   
-             
-         
                 yield return null;
             }
             while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;

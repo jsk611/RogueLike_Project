@@ -8,12 +8,23 @@ public class CompleteUpgrade : MonoBehaviour
 {
     public UpgradeManager upgradeManager;
     
-    public UpgradeManager.Upgrade type;
+    public UpgradeManager.CommonUpgrade commontype;
+    public UpgradeManager.RareUpgrade raretype;
+    public UpgradeManager.EpicUpgrade epictype;
+
     public float degree;
     public string baseText;
 
-    public void UpgradeDone()
+    public void CommonUpgradeDone()
     {
-        upgradeManager.CompleteUpgrade(type,degree);//CompleteUpgrade(UpgradeManager.Upgrade.AttackSpeed,2); 
+        upgradeManager.CompleteCommonUpgrade(commontype,degree);//CompleteUpgrade(UpgradeManager.Upgrade.AttackSpeed,2); 
+    }
+    public void RareUpgradeDone()
+    {
+        upgradeManager.CompleteRareUpgrade(raretype, degree);
+    }
+    public void EpicUpgradeDone()
+    {
+        upgradeManager.CompleteEpicUpgrade(epictype,degree);
     }
 }
