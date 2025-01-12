@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor.Rendering;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -111,6 +112,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private int ammunitionCurrent;
 
+        private GameObject projectile;
+
         #region Attachment Behaviours
 
         /// <summary>
@@ -212,6 +215,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override AudioClip GetAudioClipFire() => muzzleBehaviour.GetAudioClipFire();
 
+        public override GameObject GetBulletPrefab() => prefabProjectile;
 
 
         public override int GetAmmunitionCurrent() => ammunitionCurrent;
@@ -290,8 +294,9 @@ namespace InfimaGames.LowPolyShooterPack
                 rotation = Quaternion.LookRotation(hit.point - muzzleSocket.position);
 
             //Spawn projectile from the projectile spawn point.
-            GameObject projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation);
-
+            projectile = Instantiate(prefabProjectile, muzzleSocket.position, rotation);
+            ApplyConditionOverload(projectile);
+           
             //Add velocity to the projectile.
             projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * projectileImpulse;
 
@@ -299,6 +304,27 @@ namespace InfimaGames.LowPolyShooterPack
 
             StopCoroutine(drawLine);
             lineRenderer.enabled = false;
+        }
+        public override void ApplyConditionOverload(GameObject projectile)
+        {
+            switch(GetComponent<WeaponCondition>())
+            {
+                case null:
+                    return;
+                case Blaze:
+                    projectile.AddComponent<Blaze>();
+                    break;
+                case Freeze:
+                    projectile.AddComponent<Freeze>();
+                    break;
+                case Poison:
+                    projectile.AddComponent<Poison>();
+                    break;
+                case Shock:
+                    projectile.AddComponent<Shock>();
+                    break;
+            }
+            GetComponent<WeaponCondition>().Succession(projectile.GetComponent<WeaponCondition>());
         }
 
         IEnumerator standby()
@@ -316,9 +342,6 @@ namespace InfimaGames.LowPolyShooterPack
             }
             while(characterBehaviour.GetPlayerAnimator().speed > 0) yield return null;
             characterBehaviour.GetPlayerAnimator().speed = 1.0f;
-
-
-         
         }
         private IEnumerator drawTrace()
         {

@@ -111,6 +111,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         public abstract WeaponAttachmentManagerBehaviour GetAttachmentManager();
 
+        public abstract GameObject GetBulletPrefab();
+
         #endregion
 
         #region METHODS
@@ -120,6 +122,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         /// <param name="spreadMultiplier">Value to multiply the weapon's spread by. Very helpful to account for aimed spread multipliers.</param>
         public abstract void Fire(float spreadMultiplier = 1.0f);
+
+        public abstract void ApplyConditionOverload(GameObject projectile);
         /// <summary>
         /// Reloads the weapon.
         /// </summary>
@@ -134,6 +138,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// Ejects a casing from the weapon. This is commonly called from animation events, but can be called from anywhere.
         /// </summary>
         public abstract void EjectCasing();
+
+       
 
         public virtual void Throw() { }
         #endregion

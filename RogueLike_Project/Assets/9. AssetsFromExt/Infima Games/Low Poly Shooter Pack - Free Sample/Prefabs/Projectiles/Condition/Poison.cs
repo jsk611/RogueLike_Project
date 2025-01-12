@@ -2,12 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Poison : MonoBehaviour
+public class Poison : WeaponCondition
 {
-    public float effect;
-    public float duration;
-    public float interval;
-    // Start is called before the first frame update
 
 
     // Update is called once per frame

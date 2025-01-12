@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using InfimaGames.LowPolyShooterPack;
 using Unity.VisualScripting;
+using UnityEditor.SceneManagement;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -168,22 +169,30 @@ public class UpgradeManager : MonoBehaviour
     }
     public void CompleteRareUpgrade(RareUpgrade type, float degree)
     {
+        WeaponBehaviour weapon = player.GetInventory().GetEquipped();
+        if (weapon.GetComponent<Blaze>() != null) { Destroy(weapon.GetComponent<Blaze>()); status.IncreaseCoin(375); }
+        if (weapon.GetComponent<Freeze>() != null) { Destroy(weapon.GetComponent<Freeze>()); status.IncreaseCoin(375); }
+        if (weapon.GetComponent<Poison>() != null) { Destroy(weapon.GetComponent<Poison>()); status.IncreaseCoin(375); }
+        if (weapon.GetComponent<Shock>() != null) { Destroy(weapon.GetComponent<Shock>()); status.IncreaseCoin(375); }
+
         switch (type)
         {
             case RareUpgrade.ApplyBlaze:
-           //     player.GetInventory().GetEquipped(). AddComponent<Blaze>();   탄환에 적용해야 함
+                weapon.AddComponent<Blaze>().StateInitializer(100,10,1);
                 break;
             case RareUpgrade.ApplyFreeze:
-               
+                weapon.AddComponent<Freeze>().StateInitializer(100,10,1);
                 break;
             case RareUpgrade.ApplyPoisonous:
-
+                weapon.AddComponent<Poison>().StateInitializer(100, 10, 1);
                 break;
             case RareUpgrade.ApplyShock:
-    
+                weapon.AddComponent<Shock>().StateInitializer(100, 10, 1);
+                break;
             default:
                 break;
         }
+        
         for (int i = 0; i < 3; i++)
         {
             curUpgradeButtons[i].SetActive(false);

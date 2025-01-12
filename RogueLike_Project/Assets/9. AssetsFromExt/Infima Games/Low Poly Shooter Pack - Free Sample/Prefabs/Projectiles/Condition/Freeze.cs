@@ -2,13 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Freeze : MonoBehaviour
+public class Freeze : WeaponCondition
 {
-    private float effect;
-    public float duration;
-    private float interval;
-    // Start is called before the first frame update
-
 
     // Update is called once per frame
     private void OnCollisionEnter(Collision collision)
