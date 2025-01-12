@@ -30,7 +30,9 @@ public class WaveManager : MonoBehaviour
     Vector3 sp;
 
     [Header("Item")]
-    Queue<int> earnedItems = new Queue<int>();
+    Queue<int> earnedCommonItems = new Queue<int>();
+    Queue<int> earnedRareItems = new Queue<int>();
+    Queue<int> earnedEpicItems = new Queue<int>();
     [SerializeField] GameObject upgradeUI;
 
     void Start()
@@ -321,19 +323,29 @@ public class WaveManager : MonoBehaviour
         tileManager.InitializeArray(4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
-        upgradeManager.RepeatNumSet(earnedItems.Count);
-        upgradeManager.UpgradeDisplay();
+        upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
+        if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);
+        else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
+        else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
+
         yield return null;
         while (upgradeManager.UIenabled)
         {
             yield return null;
         }
-        earnedItems = new Queue<int>();
+        earnedCommonItems = new Queue<int>();
+        earnedRareItems = new Queue<int>();
+        earnedEpicItems = new Queue<int>();
         yield return null;
     }
 
     public void AddItem(int star)
     {
-        earnedItems.Enqueue(star);
+        if (star == 1)
+            earnedCommonItems.Enqueue(star);
+        else if (star == 2)
+            earnedRareItems.Enqueue(star);
+        else if (star == 3)
+            earnedEpicItems.Enqueue(star);
     }
 }

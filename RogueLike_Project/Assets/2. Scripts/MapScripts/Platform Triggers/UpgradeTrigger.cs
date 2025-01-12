@@ -27,7 +27,7 @@ public class UpgradeTrigger : MonoBehaviour
             if (!isUpgraded && Input.GetKeyDown(KeyCode.F))
             {
                 isUpgraded = true;
-                UpgradeManager.RepeatNumSet(0);
+                UpgradeManager.RepeatNumSet(1,0,0);
                 UpgradeManager.UpgradeDisplay();
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(false);

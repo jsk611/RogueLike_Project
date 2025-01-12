@@ -6,6 +6,7 @@ using TMPro;
 using InfimaGames.LowPolyShooterPack;
 using Unity.VisualScripting;
 using UnityEditor.SceneManagement;
+using UnityEditor.Experimental.GraphView;
 
 public class UpgradeManager : MonoBehaviour
 {
@@ -21,7 +22,9 @@ public class UpgradeManager : MonoBehaviour
 
     public bool UIenabled = false;
 
-    private int repeatNum = 0;
+    private int repeatCommon = 0;
+    private int repeatRare = 0;
+    private int repeatEpic = 0;
 
     public enum CommonUpgrade
     {
@@ -65,29 +68,35 @@ public class UpgradeManager : MonoBehaviour
         status = player.GetComponent<PlayerStatus>();
     }
 
-    public void RepeatNumSet(int n)
+    public void RepeatNumSet(int common,int rare,int epic)
     {
-        repeatNum = n;
+        repeatCommon = common;
+        repeatRare = rare;
+        repeatEpic = epic;
     }
 
-    public void UpgradeDisplay()
+    public void UpgradeDisplay(int upgradeLevel = 1)
     {
         upgradeUI.SetActive(true);
 
         // 중복 방지를 위한 리스트
         List<GameObject> selectedButtons = new List<GameObject>();
+        GameObject[] selectList = commonButtons;
+        if (upgradeLevel == 2) selectList = rareButtons;
+        else if (upgradeLevel == 3) selectList = epicButtons;
+        
 
         for (int i = 0; i < 3; i++)
         {
             GameObject selectedButton;
-            selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
+            selectedButton = selectList[Random.Range(0, selectList.Length)];
 
             // 중복 체크
             while (selectedButton != null && selectedButtons.Contains(selectedButton))
             {
-                if (rareButtons.Length > 0)
+                if (selectList.Length > 0)
                 {
-                    selectedButton = rareButtons[Random.Range(0, rareButtons.Length)];
+                    selectedButton = selectList[Random.Range(0, rareButtons.Length)];
                 }
             }
             curUpgradeButtons[i] = selectedButton;
@@ -155,14 +164,20 @@ public class UpgradeManager : MonoBehaviour
         }
         upgradeUI.SetActive(false);
 
-        if (repeatNum > 0)
+        if (repeatCommon > 0)
         {
             StopAllCoroutines();
-            repeatNum--;
+            repeatCommon--;
             UpgradeDisplay();
         }
         else
         {
+            if(repeatRare > 0 || repeatEpic > 0)
+            {
+                StopAllCoroutines();
+                UpgradeDisplay(2);
+                return;
+            }
             UIenabled = !UIenabled;
             player.SetCursorState(true);
         }
@@ -199,14 +214,20 @@ public class UpgradeManager : MonoBehaviour
         }
         upgradeUI.SetActive(false);
 
-        if (repeatNum > 0)
+        if (repeatRare > 0)
         {
             StopAllCoroutines();
-            repeatNum--;
-            UpgradeDisplay();
+            repeatRare--;
+            UpgradeDisplay(2);
         }
         else
         {
+            if(repeatEpic > 0)
+            {
+                StopAllCoroutines();
+                UpgradeDisplay(3);
+                return;
+            }
             UIenabled = !UIenabled;
             player.SetCursorState(true);
         }
