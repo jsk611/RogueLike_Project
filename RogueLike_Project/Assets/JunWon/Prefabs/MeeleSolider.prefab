@@ -559,7 +559,7 @@ Transform:
   - {fileID: 6436679974440156512}
   - {fileID: 8342795036229288071}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: 51.201546, y: -32.613438, z: 104.31409}
+  m_LocalEulerAnglesHint: {x: -13.784799, y: 82.42296, z: -22.04479}
 --- !u!1 &755965472862346864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1406,7 @@ Transform:
   - {fileID: 439537732812851932}
   - {fileID: 293510562826488415}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: -44.49165, y: -72.58152, z: 56.241512}
+  m_LocalEulerAnglesHint: {x: 8.381007, y: -135.9632, z: -32.901478}
 --- !u!1 &1751352733312315132
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,7 +2592,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8608053457814370040}
-  m_LocalEulerAnglesHint: {x: 39.55637, y: 92.60565, z: 64.70534}
+  m_LocalEulerAnglesHint: {x: 16.702312, y: 106.66004, z: 99.89507}
 --- !u!1 &3096841207055135056
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4416,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2506771786322330250}
-  m_LocalEulerAnglesHint: {x: -61.15445, y: -65.90116, z: 115.398865}
+  m_LocalEulerAnglesHint: {x: -26.289345, y: -44.636578, z: 58.270836}
 --- !u!1 &5930224978831692869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6195,8 +6195,8 @@ MonoBehaviour:
   MaxHealth: 200
   CriticalRate: 0
   CriticalDamage: 0
-  MoveSpeed: 5
-  ReloadSpeed: 100
+  MoveSpeed: 12
+  ReloadSpeed: 101.6
   Damage: 10
   AttackSpeed: 100
 --- !u!195 &5956197097378150369
@@ -6209,10 +6209,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 5
+  m_Acceleration: 50
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 720
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -6287,14 +6287,14 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   maxVerticalAngle: 60
-  rotateSpeed: 2
+  rotateSpeed: 20
   anim: {fileID: 2403159443009841261}
   nmAgent: {fileID: 5956197097378150369}
   fov: {fileID: 8320135992065216559}
   monsterStatus: {fileID: 1508268718791618267}
   playerRigidBody: {fileID: 1041920953890708533}
   attackRange: 5
-  attackCooldown: 3
+  attackCooldown: 1
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 4734613887287955740}
   startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
