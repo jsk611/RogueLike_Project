@@ -50,11 +50,11 @@ public class UpgradeManager : MonoBehaviour
     public enum EpicUpgrade
     {
         Default,
+        Pain_Stress,
         Berserk,
-        Cavity_System_Model,
-        
         K_Ampule_Activation,
-
+        Cavity_System_Model,
+        Havel_The_Rock
     }
 
     private void Awake()

@@ -34,8 +34,7 @@ public class PlayerControl : MonoBehaviour
     float dashCool;
     public bool isGrounded = true;
 
-    bool dashOver = true;
-    bool crawlOver = true;
+    public bool dashOver = false;
 
 
     Animator playerAnimator;
@@ -156,9 +155,8 @@ public class PlayerControl : MonoBehaviour
 
     IEnumerator Dashdd(Vector3 Movement)
     {
-        if (dashCool > 1f)
+        if (dashCool > 1f && !dashOver)
         {
-            dashOver = false;
             Stamina = 0;
             dashCool = 0;
             float t = 0;
@@ -170,7 +168,6 @@ public class PlayerControl : MonoBehaviour
                 yield return null;
             }
         }
-        dashOver = true;
     }
     public bool CheckGrounded()
     {
@@ -193,25 +190,7 @@ public class PlayerControl : MonoBehaviour
         }
         return isGrounded;
     }
-    private void Dash()
-    {
-        if (dashCool > 0.15f && !dashOver)
-        {
-            characterStatus.SetMovementSpeed(characterStatus.GetMoveSpeedOrigin());
-            dashOver = true;
-        }
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >= 100f && Movement.magnitude > Mathf.Epsilon && crawlOver)
-        {
-            if (dashCool > 1f)
-            {
-                playerCharacter.AnimationCancelReload();
-                Stamina = 0f;
-                characterStatus.SetMovementSpeed(moveSpeed * 4f);
-                dashCool = 0;
-                dashOver = false;
-            }
-        }
-    }
+ 
 
     private void Jumping()
     {
@@ -242,14 +221,6 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    private void isCrawling()
-    {
-
-                // transform.Translate(new Vector3(transform.position.x, transform.position.y + 10, transform.position.z), Space.World);
-        
-    }
-
-    // ?????? ?????? ??
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log(hit.gameObject.name);

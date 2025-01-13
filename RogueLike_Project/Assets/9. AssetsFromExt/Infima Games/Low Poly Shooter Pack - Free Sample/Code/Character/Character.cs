@@ -409,11 +409,10 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private void PlayAnimationSkill()
         {
-            if (equippedWeaponSkill != null) equippedWeaponSkill.DecreaseSkillCount();
-            equippedWeaponSkill.FireSkill();
-            const string stateName = "Skill";
+           // GetComponent<Skills>().activateSkill();
 
-            characterAnimator.CrossFade(stateName, 0.3f, layerOverlay, 0f);
+
+        //    characterAnimator.CrossFade(stateName, 0.3f, layerOverlay, 0f);
 
         }
 

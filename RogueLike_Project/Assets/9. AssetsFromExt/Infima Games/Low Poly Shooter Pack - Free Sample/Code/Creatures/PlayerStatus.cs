@@ -121,6 +121,7 @@ public class PlayerStatus : StatusBehaviour
     public override void DecreaseHealth(float damage)
     {
         Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
+        new WaitForEndOfFrame();
         if (Health <= 0)
         {
             Health = 0;
