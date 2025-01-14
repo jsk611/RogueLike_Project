@@ -1,9 +1,10 @@
 public enum EnemyType{
-    None,
-    MeeleeSoldier,
-    Golem,
-    HammerMan,
-    RangedSoldier,
-    Grenadier,
-    Sniper,
+    None,               //0
+    MeeleeSoldier,      //1
+    Golem,              //2
+    HammerMan,          //3
+    RangedSoldier,      //4
+    Bat,                //5
+    Grenadier,          //6
+    Sniper,             //7
 }
