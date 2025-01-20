@@ -6421,6 +6421,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnEffect
       objectReference: {fileID: 0}
+    - target: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

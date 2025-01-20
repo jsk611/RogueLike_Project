@@ -5,6 +5,7 @@ public enum EnemyType{
     HammerMan,          //3
     RangedSoldier,      //4
     Bat,                //5
-    Grenadier,          //6
-    Sniper,             //7
+    Turret,             //6
+    Grenadier,          //7
+    Sniper,             //8
 }
