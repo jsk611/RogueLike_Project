@@ -78,11 +78,12 @@ public abstract class MonsterBase : MonoBehaviour
         AIM,
         KILL,
         COOLDOWN,
+        CAST,
     }
 
     protected State state;
     protected Coroutine stateMachineCoroutine;
-    private Dictionary<State, Action> stateActions;
+    protected Dictionary<State, Action> stateActions;
     #endregion
 
    

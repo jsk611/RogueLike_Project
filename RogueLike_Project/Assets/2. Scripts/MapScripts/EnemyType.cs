@@ -8,4 +8,5 @@ public enum EnemyType{
     Turret,             //6
     Grenadier,          //7
     Sniper,             //8
+    FieldMage,          //9
 }
