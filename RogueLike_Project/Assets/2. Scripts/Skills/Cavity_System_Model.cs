@@ -8,6 +8,8 @@ public class Cavity_System_Model : SkillBehaviour
     // Start is called before the first frame update
     CharacterBehaviour character;
     PlayerStatus status;
+    float IncreaseCriticalRate = 16f;
+    float ConsumeCoinRate = 100f;
     private void Start()
     {
         character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
@@ -16,7 +18,11 @@ public class Cavity_System_Model : SkillBehaviour
     public override void SkillActivation()
     {
         if (!CanActivateSkill()) return;
-        StartCoroutine(Critititical());
+        recentSKillUsed = Time.time;
+       // StartCoroutine(Critititical());
+        
+        status.IncreaseCriticalDamage((int)(status.GetCoin()/ConsumeCoinRate*IncreaseCriticalRate));
+        status.SetCoin(0);
     }
 
     IEnumerator Critititical()

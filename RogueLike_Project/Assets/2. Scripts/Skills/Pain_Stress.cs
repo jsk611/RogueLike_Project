@@ -12,6 +12,9 @@ public class Pain_Stress : SkillBehaviour
     PlayerStatus status;
     CharacterBehaviour character;
 
+    [SerializeField]
+    float additionalAttackDamage = 38;
+
     private float BasicHealth = 100;
     private void Start()
     {
@@ -21,21 +24,24 @@ public class Pain_Stress : SkillBehaviour
     public override void SkillActivation()
     {
         if (!CanActivateSkill()) return;
-        if (status.GetHealth() <= BasicHealth) return;
+        
+        if (status.GetMaxHealth() <= BasicHealth) return;
+        
+        recentSKillUsed = Time.time;
         StartCoroutine(Pain());
 
     }
 
     IEnumerator Pain()
     {
-        status.IncreaseAttackDamage(status.GetHealth() - BasicHealth);
+        status.IncreaseAttackDamage(status.GetMaxHealth() - BasicHealth + additionalAttackDamage);
         float StartHealth = status.GetMaxHealth();
-        status.SetHealth(BasicHealth);
         while(StartHealth>BasicHealth)
         {
             status.DecreaseMaxHealth(1);
             StartHealth -= 1;
             yield return new WaitForSeconds(0.1f);
         }
+        
     }
 }

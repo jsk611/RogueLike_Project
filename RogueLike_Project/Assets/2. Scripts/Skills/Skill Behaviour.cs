@@ -5,10 +5,10 @@ using UnityEngine;
 
 public abstract class SkillBehaviour : MonoBehaviour
 {
-    float recentSKillUsed;
+    protected float recentSKillUsed;
     [Tooltip("CoolTime of Skill")]
     [SerializeField]
-    float skillCoolTime;
+    protected float skillCoolTime = 10f;
 
     bool canUseSkill;
 
@@ -23,6 +23,10 @@ public abstract class SkillBehaviour : MonoBehaviour
     {
         float currentSkillUsed = Time.time;
         if (currentSkillUsed - recentSKillUsed >= skillCoolTime) return true;
-        else return false;
+        else
+        {
+            Debug.Log("CoolTime : "+(skillCoolTime-(currentSkillUsed-recentSKillUsed)));
+            return false;
+        }
     }
 }

@@ -9,7 +9,12 @@ public class K_Ampule : SkillBehaviour
     PlayerStatus status;
     CharacterBehaviour character;
 
+    [SerializeField]
     float ExtraHealth = 100;
+    [SerializeField]
+    float duration = 7f;
+    [SerializeField]
+
     private void Start()
     {
         character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
@@ -18,17 +23,26 @@ public class K_Ampule : SkillBehaviour
     public override void SkillActivation()
     {
         if (!CanActivateSkill()) return;
+        recentSKillUsed = Time.time;
         StartCoroutine(AmpuleActivation());
+        StartCoroutine(LifeBoost());
     }
 
+    IEnumerator LifeBoost()
+    {
+        yield return new WaitForSeconds(duration);
+        status.DecreaseMaxHealth(ExtraHealth);
+    }
     IEnumerator AmpuleActivation()
     {
         status.IncreaseMaxHealth(ExtraHealth);
-        float StartHealth = status.GetHealth();
-        while(StartHealth < status.GetMaxHealth())
+        float StartHealth = ExtraHealth;
+        while(StartHealth>0)
         {
-            status.IncreaseHealth(1);
-            yield return null;
+            float healthIncrease = (int)(StartHealth * 0.1f) + 1;
+            status.IncreaseHealth(healthIncrease);
+            StartHealth -= healthIncrease;
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }

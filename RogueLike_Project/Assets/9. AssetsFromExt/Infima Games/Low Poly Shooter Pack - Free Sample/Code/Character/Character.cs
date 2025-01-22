@@ -409,11 +409,11 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private void PlayAnimationSkill()
         {
-           // GetComponent<Skills>().activateSkill();
+           GetComponent<SkillBehaviour>().SkillActivation();
 
 
-        //    characterAnimator.CrossFade(stateName, 0.3f, layerOverlay, 0f);
-
+            //    characterAnimator.CrossFade(stateName, 0.3f, layerOverlay, 0f);
+            usingSkill = false;
         }
 
         /// <summary>
@@ -609,10 +609,6 @@ namespace InfimaGames.LowPolyShooterPack
                 return false;
 
             //Block.
-            if (reloading)
-                return false;
-
-            //Block.
             if (inspecting)
                 return false;
 
@@ -664,11 +660,7 @@ namespace InfimaGames.LowPolyShooterPack
             if (usingSkill)
                 return false;
 
-            if (equippedWeaponSkill != null)
-            {
-                return equippedWeaponSkill.CanActivateSkill();
-            }
-            else return false;
+            return true;
 
         }
         /// <summary>
@@ -969,6 +961,7 @@ namespace InfimaGames.LowPolyShooterPack
                     //Make sure we're allowed to change, and also that we're not using the same index, otherwise weird things happen!
                     if (CanChangeWeapon() && (indexCurrent != indexNext))
                     {
+                        AnimationCancelReload();
                         UIManager.instance.Swapping(indexNext);
                         StartCoroutine(nameof(Equip), indexNext);
                     }
@@ -987,6 +980,7 @@ namespace InfimaGames.LowPolyShooterPack
 
                     if (CanChangeWeapon() && (nextIndex != inventory.GetEquippedIndex()))
                     {
+                        AnimationCancelReload();
                         UIManager.instance.Swapping(nextIndex);
                         StartCoroutine(nameof(Equip), nextIndex);
                     }

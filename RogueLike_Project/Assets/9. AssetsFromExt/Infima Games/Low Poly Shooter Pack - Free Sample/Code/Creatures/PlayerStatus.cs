@@ -171,7 +171,7 @@ public class PlayerStatus : StatusBehaviour
     { 
         MaxHealth -= maxHealth;
         if (MaxHealth < 0) MaxHealth = 0;
-        if (MaxHealth < Health) Health = maxHealth;
+        if (MaxHealth < Health) Health = MaxHealth;
 
         UIManager.instance.BarValueChange(0, MaxHealth, Health);
     }

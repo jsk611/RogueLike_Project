@@ -21,6 +21,8 @@ public class Havel_The_Rock : SkillBehaviour
     public override void SkillActivation()
     {
         if (!CanActivateSkill()) return;
+        recentSKillUsed = Time.time;
+        StartCoroutine(KnightofHavel());
     }
 
     IEnumerator KnightofHavel()
