@@ -243,10 +243,10 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.18403107
-  m_TransitionOffset: 1.0564739
-  m_ExitTime: 0.8803948
-  m_HasExitTime: 1
+  m_TransitionDuration: 0.49090827
+  m_TransitionOffset: 0.9854685
+  m_ExitTime: 0.8212243
+  m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 2
   m_OrderedInterruption: 1
@@ -362,7 +362,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cast
-  m_Speed: 1
+  m_Speed: 0.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 405459208306033459}
