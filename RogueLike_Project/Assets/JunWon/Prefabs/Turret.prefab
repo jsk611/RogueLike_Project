@@ -542,7 +542,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 119.433685, y: 0, z: 75.93403}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5844727, y: 1.5844727, z: 1.5844727}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3721482401684316268}
@@ -730,7 +730,7 @@ MonoBehaviour:
   monsterStatus: {fileID: 2325090481492472559}
   playerRigidBody: {fileID: 1618767469269076740}
   attackRange: 10
-  attackCooldown: 3
+  attackCooldown: 1
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 64163850734135073}
   startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
@@ -750,7 +750,8 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
-  fireRate: 1.5
+  state: 0
+  fireRate: 1
   isHitScan: 0
   aimTime: 0
   attackTime: 0
