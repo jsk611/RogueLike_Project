@@ -91,19 +91,33 @@ public class UIManager : MonoBehaviour
         }    
 
     }
-    int dna;
+
+    int dna, packet;
+    public TMP_Text packetText;
     public TMP_Text dnaText;
-    public void DNAReset(int dna)
+    public void DNAReset(int curDNA)
     {
-        if (dna == 0)
+        if (curDNA == 0)
             dnaText.text = "0";
         else
-            dnaText.text = GetThousandCommaText(dna).ToString();
-    }   
+            dnaText.text = GetThousandCommaText(curDNA).ToString();
+    }
+    public void PacketReset(int curpacket)
+    {
+        if (curpacket == 0)
+            packetText.text = "0";
+        else
+            packetText.text = GetThousandCommaText(curpacket).ToString();
+    }
     public void dnaIncrease(int amount)
     {
         dna += amount;
         DNAReset(dna);
+    }
+    public void packetIncrease(int amount)
+    {
+        packet += amount;
+        PacketReset(packet);
     }
     public string GetThousandCommaText(int data)
     {
