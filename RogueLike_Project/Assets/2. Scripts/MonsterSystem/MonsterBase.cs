@@ -81,6 +81,7 @@ public abstract class MonsterBase : MonoBehaviour
         CAST,
     }
 
+    [SerializeField]
     protected State state;
     protected Coroutine stateMachineCoroutine;
     protected Dictionary<State, Action> stateActions;

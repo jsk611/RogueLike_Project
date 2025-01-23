@@ -6,12 +6,14 @@ using static UnityEngine.GraphicsBuffer;
 public class FieldMage : MonsterBase
 {
     [Header("Field Settings")]
-    [SerializeField] protected float maintainDistance = 20f;          // 플레이어와 유지할 최소 거리
-    [SerializeField] protected float fieldSpawnInterval = 10f;     // 필드 생성 간격(초)
+    [SerializeField] protected float maintainDistance = 10f;          // 플레이어와 유지할 최소 거리
+    [SerializeField] protected float fieldSpawnInterval = 5f;     // 필드 생성 간격(초)
     protected float fieldSpawnTimer = 0f;                          // 타이머
 
     [SerializeField] private GameObject debuffFieldPrefab;         // 플레이어 위치에 깔 디버프 필드
     [SerializeField] private GameObject buffFieldPrefab;           // 몬스터 위치에 깔 버프 필드
+
+    bool hasCast = false;
 
 
     [SerializeField]
@@ -35,42 +37,54 @@ public class FieldMage : MonsterBase
             ChangeState(State.IDLE);
             return;
         }
-        nmAgent.isStopped = false;
-        nmAgent.speed = chaseSpeed;
-        nmAgent.SetDestination(target.position);
 
         float distanceToPlayer = Vector3.Distance(transform.position, target.position);
         if (distanceToPlayer <= maintainDistance)
         {
-            ChangeState(State.CAST);
+            nmAgent.isStopped = true;
+            nmAgent.speed = 0;
         }
-    }
-
-    private void UpdateCast()
-    {
-        if (target == null)
+        else
         {
-            ChangeState(State.IDLE);
-            return;
+            nmAgent.isStopped = false;
+            nmAgent.speed = chaseSpeed;
+            nmAgent.SetDestination(target.position);
         }
-
-        nmAgent.isStopped = true;
 
         fieldSpawnTimer += Time.deltaTime;
         if (fieldSpawnTimer >= fieldSpawnInterval)
         {
-            PlaceBuffField();
-            fieldSpawnTimer = 0f;
+            ChangeState(State.CAST);
+            fieldSpawnTimer = 0;
         }
 
-        // 필요에 따라 CAST 상태에서 다른 상태로 전환하는 로직 추가
-        float distanceToPlayer = Vector3.Distance(transform.position, target.position);
-        if (distanceToPlayer > maintainDistance)
-        {
-            ChangeState(State.CHASE);
-        }
     }
 
+    private void UpdateCast()
+    {
+        nmAgent.isStopped = true;
+        nmAgent.speed = 0;
+
+        if (!hasCast)
+        {
+            if (Random.Range(0, 2) == 0) // 0 또는 1 생성 (50% 확률)
+            {
+                PlaceDebuffField();
+            }
+            else
+            {
+                PlaceBuffField();
+            }
+
+            hasCast = true;
+        }
+
+        if (Time.time - lastTransitionTime >= 1f)
+        {
+            ChangeState(State.CHASE);
+            hasCast = false; // 플래그 초기화
+        }
+    }
     protected virtual void PlaceDebuffField()
     {
         if (debuffFieldPrefab != null && target != null)
