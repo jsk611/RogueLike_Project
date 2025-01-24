@@ -11,6 +11,7 @@ public class EnemyThrowableWeapon : MonoBehaviour
 
     private bool hasExploded = false;
 
+
     private void OnCollisionEnter(Collision collision)
     {
         // 바닥과 충돌 확인

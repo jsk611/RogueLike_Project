@@ -28,6 +28,8 @@ public class FieldMage : MonsterBase
         // stateActions에 CAST 상태와 연관 메서드 등록
         stateActions[State.CAST] = UpdateCast;
         stateActions.Remove(State.ATTACK);
+
+        Physics.IgnoreLayerCollision(LayerMask.NameToLayer("Character"),LayerMask.NameToLayer("IgnorePlayerCollision"));
     }
 
     protected override void UpdateChase()

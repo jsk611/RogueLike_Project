@@ -41,7 +41,7 @@ TagManager:
   - Obstacle
   - Item
   - ItemCollider
-  - 
+  - IgnorePlayerCollision
   - 
   - 
   - 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8463170950810010115}
   - component: {fileID: 4413248818172160855}
   - component: {fileID: 3153301240402748831}
-  m_Layer: 16
+  m_Layer: 20
   m_Name: Generade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 37.81169, y: 5.18, z: 33.302483}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
