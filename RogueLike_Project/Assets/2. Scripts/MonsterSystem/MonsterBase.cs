@@ -17,7 +17,8 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
     [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
-
+    public bool summonedMonster = false;
+    public Summoner master = null;
 
     [Header("Components")]
     [SerializeField] protected Animator anim;
@@ -319,16 +320,22 @@ public abstract class MonsterBase : MonoBehaviour
         {
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
-            enemyCountData.enemyCount--;
+            
         }
     }
 
     private void HandleDeath()
     {
-        
-        Debug.LogWarning("?? ?????? --");
-        SpawnItem();
-        UIManager.instance.dnaIncrease(DNADrop);
+        if (!summonedMonster) { 
+            Debug.LogWarning("?? ?????? --");
+            SpawnItem();
+            UIManager.instance.dnaIncrease(DNADrop);
+            enemyCountData.enemyCount--;
+        }
+        else
+        {
+            master.summonDead(gameObject);
+        }
         Destroy(gameObject);
     }
 

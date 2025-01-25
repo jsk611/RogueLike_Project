@@ -78,9 +78,9 @@ public class WaveManager : MonoBehaviour
             int randNum;
             if (tileManager.IsHighPos(y, x))
             {
-                randNum = Random.Range(4, 10);
+                randNum = Random.Range(4, 11);
             }
-            else randNum = Random.Range(1, 9);
+            else randNum = Random.Range(1, 10);
 
 
             enemyMap[y,x] = (EnemyType)randNum;

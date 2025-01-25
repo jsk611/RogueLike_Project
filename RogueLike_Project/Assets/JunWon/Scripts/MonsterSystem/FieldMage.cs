@@ -62,7 +62,7 @@ public class FieldMage : MonsterBase
 
     }
 
-    private void UpdateCast()
+    protected virtual void UpdateCast()
     {
         nmAgent.isStopped = true;
         nmAgent.speed = 0;
