@@ -294,6 +294,7 @@ public abstract class MonsterBase : MonoBehaviour
     #endregion
 
     #region Damage and Death
+    public static event Action MonsterDamagedEvent;
     public virtual void TakeDamage(float damage,bool isAlive=true)
     {
         if (state == State.DIE)
@@ -301,7 +302,8 @@ public abstract class MonsterBase : MonoBehaviour
             Debug.Log("Already dead!");
             return;
         }
-      
+
+        MonsterDamagedEvent?.Invoke();
 
         if (isAlive) monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
@@ -317,12 +319,13 @@ public abstract class MonsterBase : MonoBehaviour
         {
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
+            enemyCountData.enemyCount--;
         }
     }
 
     private void HandleDeath()
     {
-        enemyCountData.enemyCount--;
+        
         Debug.LogWarning("?? ?????? --");
         SpawnItem();
         UIManager.instance.dnaIncrease(DNADrop);

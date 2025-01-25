@@ -159,7 +159,7 @@ Material:
     - Vector2_EF5B598A: {r: 0.5, g: 0.5, b: 0, a: 0}
     - _BaseColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.39110765, g: 0.25126338, b: 1.1579965, a: 1}
+    - _EmissionColor: {r: 0.7978487, g: 0.44961897, b: 1.4664495, a: 1}
     - _GridColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
