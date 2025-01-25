@@ -6,8 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class SettingManager : MonoBehaviour
 {
+    [SerializeField] GameObject continueButton;
+    private void Start()
+    {
+        if(!PlayerPrefs.HasKey("packet")) continueButton.SetActive(false);
+    }
     public void InitGame()
     {
+        SceneManager.LoadScene("MapScene");
+    }
+    public void NewGame()
+    {
+        //저장 데이터 초기화
+        PlayerPrefs.DeleteAll();
+
         SceneManager.LoadScene("MapScene");
     }
     public void GoToTitle()

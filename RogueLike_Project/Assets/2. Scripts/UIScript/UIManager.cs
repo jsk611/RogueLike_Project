@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
     public Text[] curAmmo, maxAmmo;
     Text curammo, maxammo;
 
-
+    int dna, packet;
     private void Awake()
     {
         instance = this;
@@ -26,9 +26,11 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        packet = PlayerPrefs.GetInt("packet", 0);
         BarValueChange(0, 100, 100);
         BarValueChange(1, 100, 100);
         DNAReset(0);
+        PacketReset(packet);
         Swapping(0);
     }
 
@@ -92,7 +94,7 @@ public class UIManager : MonoBehaviour
 
     }
 
-    int dna, packet;
+
     public TMP_Text packetText;
     public TMP_Text dnaText;
     public void DNAReset(int curDNA)
@@ -104,6 +106,8 @@ public class UIManager : MonoBehaviour
     }
     public void PacketReset(int curpacket)
     {
+        PlayerPrefs.SetInt("packet", curpacket);
+
         if (curpacket == 0)
             packetText.text = "0";
         else
