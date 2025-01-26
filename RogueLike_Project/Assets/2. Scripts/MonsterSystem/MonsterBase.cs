@@ -322,7 +322,10 @@ public abstract class MonsterBase : MonoBehaviour
             ServiceLocator.Current.Get<IGameModeService>().GetKillingEffect().KillingSuccess();
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
-            
+            if (!summonedMonster)
+            {
+                enemyCountData.enemyCount--;
+            }
         }
     }
 
@@ -332,7 +335,7 @@ public abstract class MonsterBase : MonoBehaviour
             Debug.LogWarning("?? ?????? --");
             SpawnItem();
             UIManager.instance.dnaIncrease(DNADrop);
-            enemyCountData.enemyCount--;
+            //enemyCountData.enemyCount--;
         }
         else
         {
