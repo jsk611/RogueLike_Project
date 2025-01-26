@@ -296,7 +296,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     #region Damage and Death
     public static event Action MonsterDamagedEvent;
-    public virtual void TakeDamage(float damage,bool isAlive=true)
+    public virtual void TakeDamage(float damage, bool showDamage = true, bool flagForExecution = false)
     {
         if (state == State.DIE)
         {
@@ -306,10 +306,10 @@ public abstract class MonsterBase : MonoBehaviour
 
         MonsterDamagedEvent?.Invoke();
 
-        if (isAlive) monsterStatus.DecreaseHealth(damage);
+        if(!flagForExecution) monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
 
-        Instantiate(UIDamaged, transform.position + new Vector3(0,UnityEngine.Random.Range(0f,height/2),0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        if(showDamage) Instantiate(UIDamaged, transform.position + new Vector3(0,UnityEngine.Random.Range(0f,height/2),0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
        // HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
 
         if (hp > 0)
@@ -320,7 +320,6 @@ public abstract class MonsterBase : MonoBehaviour
         {
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
-            enemyCountData.enemyCount--;
         }
     }
 
@@ -330,7 +329,7 @@ public abstract class MonsterBase : MonoBehaviour
             Debug.LogWarning("?? ?????? --");
             SpawnItem();
             UIManager.instance.dnaIncrease(DNADrop);
-            
+            enemyCountData.enemyCount--;
         }
         else
         {

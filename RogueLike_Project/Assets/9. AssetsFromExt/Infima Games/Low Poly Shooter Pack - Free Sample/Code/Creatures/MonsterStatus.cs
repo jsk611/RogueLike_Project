@@ -80,7 +80,7 @@ public class MonsterStatus : StatusBehaviour
         {
             Health = 0;
             //Destroy(gameObject);
-            monsterBase.TakeDamage(1000,false);
+            monsterBase.TakeDamage(1000,false,true);
         }
         HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
@@ -111,6 +111,7 @@ public class MonsterStatus : StatusBehaviour
     {
         MaxHealth = maxHealth;
         if (MaxHealth < 0) MaxHealth = 0;
+        if (Health > MaxHealth) Health = MaxHealth;
     }
 
    
@@ -321,7 +322,7 @@ public class MonsterStatus : StatusBehaviour
         eventHandler.SetFrozenTime(duration);
         currentCon = Condition.Frozen;
 
-        monsterBase.TakeDamage(1);
+        monsterBase.TakeDamage(1,false);
     }
     public override IEnumerator Blazed(float effect, float duration, float interval)
     {

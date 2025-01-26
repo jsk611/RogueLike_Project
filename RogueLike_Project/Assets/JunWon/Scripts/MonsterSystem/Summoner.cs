@@ -14,7 +14,7 @@ public class Summoner : MonsterBase
     protected float SummonTimer = 0f;                          // 타이머
 
     [SerializeField] private GameObject[] summonedEnemies;
- //   private GameObject[] totalEnemies;
+    private List<GameObject> totalEnemies = new List<GameObject>();
     private int currentSummonCount = 0;
 
     bool hasCast = false;
@@ -78,8 +78,8 @@ public class Summoner : MonsterBase
                 GameObject enemy = Instantiate(summonedEnemies[Random.Range(0, summonedEnemies.Length)], transform.position + randomPosition, Quaternion.identity);
                 enemy.GetComponent<MonsterBase>().summonedMonster = true;
                 enemy.GetComponent<MonsterStatus>().SetMaxHealth(20);
-              //  enemy.GetComponent<MonsterStatus>().SetHealth(20);
-             //   totalEnemies[currentSummonCount++] = enemy;
+                enemy.GetComponent<MonsterBase>().master = GetComponent<Summoner>();
+                totalEnemies.Add(enemy);
                 currentSummonCount++;
                 hasCast = true;
             }
@@ -92,18 +92,19 @@ public class Summoner : MonsterBase
             hasCast = false; // 플래그 초기화
         }
     }
-    //private void OnDestroy()
-    //{
-    //    foreach (GameObject enemy in totalEnemies)
-    //    {
-    //        if (enemy == null) continue;
-    //        enemy.GetComponent<MonsterBase>().TakeDamage(9999, false);
-    //    }
-    //}
+    private void OnDestroy()
+    {
+        foreach (GameObject enemy in totalEnemies)
+        {
+            if (enemy == null) continue;
+            enemy.GetComponent<MonsterBase>().TakeDamage(9999, false);
+        }
+    }
 
     public void summonDead(GameObject obj)
     {
-   //   currentSummonCount--;
+      currentSummonCount--;
+        totalEnemies.Remove(obj);
     }
 
 }
