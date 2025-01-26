@@ -320,7 +320,7 @@ public abstract class MonsterBase : MonoBehaviour
         {
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
-            
+            enemyCountData.enemyCount--;
         }
     }
 
@@ -330,7 +330,7 @@ public abstract class MonsterBase : MonoBehaviour
             Debug.LogWarning("?? ?????? --");
             SpawnItem();
             UIManager.instance.dnaIncrease(DNADrop);
-            enemyCountData.enemyCount--;
+            
         }
         else
         {

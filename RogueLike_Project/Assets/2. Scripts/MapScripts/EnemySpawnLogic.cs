@@ -41,6 +41,7 @@ public class EnemySpawnLogic : MonoBehaviour
                 SpawnEnemy(x, y, enemyMap[y,x]);
             }
         }
+        Debug.Log(enemyCountData.enemyCount);
     }
 
     GameObject GetEnemyPrefab(EnemyType enemyType)
