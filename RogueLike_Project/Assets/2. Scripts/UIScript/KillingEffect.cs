@@ -40,6 +40,6 @@ public class KillingEffect : MonoBehaviour
     private void KillingSuccess()
     {
         alpha = 0.75f;
-        length = 0.24f;
+        length = 0.34f;
     }
 }
