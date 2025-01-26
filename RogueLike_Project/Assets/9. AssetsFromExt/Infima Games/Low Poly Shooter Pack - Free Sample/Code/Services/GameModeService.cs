@@ -14,6 +14,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private CharacterBehaviour playerCharacter;
         private UpgradeManager upgradeManager;
+        private KillingEffect KillingEffect;
         
         #endregion
         
@@ -35,7 +36,13 @@ namespace InfimaGames.LowPolyShooterPack
 
             return upgradeManager;
         }
-        
+        public KillingEffect GetKillingEffect()
+        {
+            if (KillingEffect == null)
+                KillingEffect = UnityEngine.Object.FindObjectOfType<KillingEffect>();
+            return UnityEngine.Object.FindObjectOfType<KillingEffect>();
+        }
+
         #endregion
     }
 }

@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -318,8 +319,10 @@ public abstract class MonsterBase : MonoBehaviour
         }
         else if (state != State.DIE)
         {
+            ServiceLocator.Current.Get<IGameModeService>().GetKillingEffect().KillingSuccess();
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
+            
         }
     }
 

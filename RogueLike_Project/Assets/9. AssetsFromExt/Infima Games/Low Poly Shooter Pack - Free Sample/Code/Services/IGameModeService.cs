@@ -11,6 +11,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// Returns the Player Character.
         /// </summary>
         CharacterBehaviour GetPlayerCharacter();
-        UpgradeManager GetUpgradeManager(); 
+        UpgradeManager GetUpgradeManager();
+
+        KillingEffect GetKillingEffect();
     }
 }

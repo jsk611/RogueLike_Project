@@ -29,15 +29,15 @@ public class KillingEffect : MonoBehaviour
                 image.gameObject.transform.localScale = new Vector2(0.025f, length);
             }
         }
-        if (enemyCountData.enemyCount < tmp)
-        {
-            KillingSuccess();
-        }
-        tmp = enemyCountData.enemyCount;
+        //if (enemyCountData.enemyCount < tmp)
+        //{
+        //    KillingSuccess();
+        //}
+        //tmp = enemyCountData.enemyCount;
 
     }
 
-    private void KillingSuccess()
+    public void KillingSuccess()
     {
         alpha = 0.75f;
         length = 0.34f;
