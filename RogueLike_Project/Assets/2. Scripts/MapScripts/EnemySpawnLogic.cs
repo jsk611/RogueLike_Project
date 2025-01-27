@@ -41,6 +41,7 @@ public class EnemySpawnLogic : MonoBehaviour
                 SpawnEnemy(x, y, enemyMap[y,x]);
             }
         }
+        EventManager.Instance.TriggerEnemyCountReset();
         Debug.Log(enemyCountData.enemyCount);
     }
 

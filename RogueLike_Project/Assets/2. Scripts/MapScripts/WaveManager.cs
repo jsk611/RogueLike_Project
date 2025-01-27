@@ -167,7 +167,6 @@ public class WaveManager : MonoBehaviour
         MakeRandomEnemyMap(5);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
 
-        //???? ?? ?????? ?????? ????
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();

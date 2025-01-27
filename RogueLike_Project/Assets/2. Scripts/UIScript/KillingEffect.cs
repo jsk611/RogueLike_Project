@@ -37,7 +37,15 @@ public class KillingEffect : MonoBehaviour
 
     }
 
-    public void KillingSuccess()
+    private void OnEnable()
+    {
+        EventManager.Instance.MonsterKilledEvent += KillingSuccess;
+    }
+    private void OnDisable()
+    {
+        EventManager.Instance.MonsterKilledEvent -= KillingSuccess;
+    }
+    void KillingSuccess(bool tmp)
     {
         alpha = 0.75f;
         length = 0.34f;

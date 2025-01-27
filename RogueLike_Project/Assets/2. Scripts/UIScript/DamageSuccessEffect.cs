@@ -12,9 +12,12 @@ public class DamageSuccessEffect : MonoBehaviour
     void Start()
     {
         images = GetComponentsInChildren<Image>();
-        MonsterBase.MonsterDamagedEvent += DamagedSuccess;
+        EventManager.Instance.MonsterDamagedEvent += DamagedSuccess;
     }
-
+    private void OnDisable()
+    {
+        EventManager.Instance.MonsterDamagedEvent -= DamagedSuccess;
+    }
     // Update is called once per frame
     void Update()
     {

@@ -296,7 +296,7 @@ public abstract class MonsterBase : MonoBehaviour
     #endregion
 
     #region Damage and Death
-    public static event Action MonsterDamagedEvent;
+    //public static event Action MonsterDamagedEvent;
     public virtual void TakeDamage(float damage, bool showDamage = true, bool flagForExecution = false)
     {
         if (state == State.DIE)
@@ -305,7 +305,7 @@ public abstract class MonsterBase : MonoBehaviour
             return;
         }
 
-        MonsterDamagedEvent?.Invoke();
+        EventManager.Instance.TriggerMonsterDamagedEvent();
 
         if(!flagForExecution) monsterStatus.DecreaseHealth(damage);
         hp = monsterStatus.GetHealth();
@@ -319,13 +319,15 @@ public abstract class MonsterBase : MonoBehaviour
         }
         else if (state != State.DIE)
         {
-            ServiceLocator.Current.Get<IGameModeService>().GetKillingEffect().KillingSuccess();
+            //ServiceLocator.Current.Get<IGameModeService>().GetKillingEffect().KillingSuccess();
             anim.SetTrigger("DieTrigger");
             ChangeState(State.DIE);
             if (!summonedMonster)
             {
                 enemyCountData.enemyCount--;
             }
+            EventManager.Instance.TriggerMonsterKilledEvent(!summonedMonster);
+
         }
     }
 

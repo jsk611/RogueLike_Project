@@ -19,21 +19,33 @@ public class BackgroundEffect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(enemyCountData.enemyCount < tmp)
-        {
-            maxSkyHeight = 0.25f + 0.75f * (enemyCountData.enemyCount / (float)maxEnemy);
-            backgroundMT.SetFloat("_HorizonHeight", maxSkyHeight - 0.2f);
-        }
-        else if(enemyCountData.enemyCount > tmp)
-        {
-            maxEnemy = enemyCountData.enemyCount;
-        }
-
         float currentHeight = backgroundMT.GetFloat("_HorizonHeight");
         if(currentHeight < maxSkyHeight)
         {
             backgroundMT.SetFloat("_HorizonHeight", currentHeight + Time.deltaTime * speed);
         }
         tmp = enemyCountData.enemyCount;
+    }
+    private void OnEnable()
+    {
+        EventManager.Instance.MonsterKilledEvent += RealEnemyKilled;
+        EventManager.Instance.EnemyCountReset += ResetMaxEnemy;
+    }
+    private void OnDisable()
+    {
+        EventManager.Instance.MonsterKilledEvent -= RealEnemyKilled;
+        EventManager.Instance.EnemyCountReset -= ResetMaxEnemy;
+    }
+
+    void RealEnemyKilled(bool isCounted)
+    {
+        if (!isCounted) return;
+        maxSkyHeight = 0.25f + 0.6f * (enemyCountData.enemyCount / (float)maxEnemy);
+        backgroundMT.SetFloat("_HorizonHeight", maxSkyHeight - 0.2f);
+    }
+    void ResetMaxEnemy()
+    {
+        maxEnemy = enemyCountData.enemyCount;
+        maxSkyHeight = 0.25f + 0.6f * (enemyCountData.enemyCount / (float)maxEnemy);
     }
 }
