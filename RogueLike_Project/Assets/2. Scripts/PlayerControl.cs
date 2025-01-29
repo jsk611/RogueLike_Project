@@ -171,8 +171,8 @@ public class PlayerControl : MonoBehaviour
     }
     public bool CheckGrounded()
     {
-        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,1.03f,LayerMask.GetMask("Wall"));
-
+        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,0.83f,LayerMask.GetMask("Wall"));
+     
         if (!isGrounded)
         {
             rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
@@ -190,7 +190,29 @@ public class PlayerControl : MonoBehaviour
         }
         return isGrounded;
     }
- 
+    public IEnumerator AirBorne(Vector3 enemyDirection)
+    {
+        int temp = 0;
+        while (temp < 3f)
+        {
+            rigidBody.isKinematic = false;
+            rigidBody.AddForce(Vector3.up * 10+enemyDirection*2, ForceMode.Impulse);
+            jumpPower = 4.9f;//characterStatus.GetJumpPower();
+                             // Debug.Log("Jump");
+            Vertical.y = jumpPower;
+            temp++;
+            yield return null;
+        }
+        ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
+        //float velocity = 1f;
+        //while(velocity>0)
+        //{
+        //    character.Move(Vector3.up * velocity+enemyDirection);
+
+        //    velocity -= 2 * Time.deltaTime;
+        //    yield return null;
+        //}
+    }
 
     private void Jumping()
     {
@@ -209,6 +231,7 @@ public class PlayerControl : MonoBehaviour
         }
      
     }
+
 
     private void StaminaRegeneration()
     {

@@ -1179,12 +1179,12 @@ MonoBehaviour:
   currentCC: 0
   currentCon: 0
   Health: 100
-  MaxHealth: 0
+  MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 50
   ReloadSpeed: 100
-  Damage: 30
+  Damage: 50
   AttackSpeed: 100
 --- !u!114 &5165777887607683104
 MonoBehaviour:
@@ -1203,6 +1203,8 @@ MonoBehaviour:
   head: {fileID: 6476374187044824731}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
   anim: {fileID: 4325502948305491921}
   nmAgent: {fileID: 2633594184378361070}
   fov: {fileID: 3564155486099621860}
@@ -1229,6 +1231,7 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  state: 0
   jumpForce: 20
   groundLayer:
     serializedVersion: 2
@@ -1305,13 +1308,13 @@ CapsuleCollider:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_LayerOverridePriority: 0
+  m_LayerOverridePriority: 26
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.7
-  m_Height: 1.6
+  m_Height: 1.73
   m_Direction: 1
   m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!114 &3745496708373635735

@@ -394,6 +394,30 @@ public class TileManager : MonoBehaviour
 
     }
 
-
+    public IEnumerator CreateShockwave(int i,int j,int chain,float power)
+    {
+       
+        if (i>=0 && i<=mapSize && j>=0 && j<=mapSize && tiles[i,j].canShockWave && chain>0)
+        {
+            tiles[i,j].canShockWave = false;
+            float duration = 0.3f;
+            float time = 0;
+            float PI = Mathf.PI;
+            Vector3 origin = tiles[i,j].transform.position;
+            while (time < duration)
+            {
+                float y = power/chain* Mathf.Sin(PI * time / duration);
+                tiles[i,j].transform.position = origin + new Vector3(0, y, 0);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            tiles[i,j].transform.position = origin;
+            StartCoroutine(CreateShockwave(i + 1, j, chain - 1,power));
+            StartCoroutine(CreateShockwave(i-1,j, chain-1,power));
+            StartCoroutine(CreateShockwave(i,j-1,chain-1, power));
+            StartCoroutine(CreateShockwave(i,j+1,chain-1,power));
+            tiles[i,j].canShockWave = true;
+        }
+    }
 
 }

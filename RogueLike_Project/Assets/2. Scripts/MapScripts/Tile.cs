@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -15,6 +16,7 @@ public class Tile : MonoBehaviour
     [SerializeField] GameObject spike;
     public float maxHeight;
     bool isSpike = false;
+    public bool canShockWave = true;
 
     private void Start()
     {
@@ -241,5 +243,24 @@ public class Tile : MonoBehaviour
         spike.SetActive(isSpike);
     }
 
-
+    public IEnumerator CreateShockwave()
+    {
+        if (canShockWave)
+        {
+            canShockWave = false;
+            float duration = 1f;
+            float time = 0;
+            float PI = Mathf.PI;
+            Vector3 origin = transform.position;
+            while (time < duration)
+            {
+                float y = Mathf.Sin(PI * time / duration);
+                transform.position = origin + new Vector3(0, y, 0);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            transform.position = origin;
+            canShockWave = true;
+        }
+    }
 }

@@ -707,7 +707,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5558746215060415400}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -778,6 +778,8 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
   anim: {fileID: 5558746215067701290}
   nmAgent: {fileID: 0}
   fov: {fileID: 8522169939053703394}
@@ -804,6 +806,7 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  state: 0
   jumpForce: 15
   groundLayer:
     serializedVersion: 2
