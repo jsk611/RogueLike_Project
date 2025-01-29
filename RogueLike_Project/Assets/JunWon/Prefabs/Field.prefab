@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb259fb64ca09814886dac063515d392, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damagePerSecond: 10
-  damageInterval: 1
+  damagePerSecond: 5
+  damageInterval: 0.25
   player: {fileID: 0}
   damageTimer: 0
 --- !u!1 &6472193454140012340

@@ -363,4 +363,37 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    public IEnumerator ShowWarningOnTile(Vector3 spawnPos, float duration, float fieldSize)
+    {
+
+        int halfsize = (int)(fieldSize / 2);
+        int tileX = (int)(spawnPos.x / 2);
+        int tileZ = (int)(spawnPos.z / 2);
+
+        Debug.Log("Field Spawned at [" + tileX + " , " + tileZ + "]");
+        // 1. 타겟 타일이 실제로 있는지 검사
+        if (tileZ < 0 || tileZ >= mapSize || tileX < 0 || tileX >= mapSize)
+            yield break;
+
+
+        for (int i = tileX - halfsize; i <= tileX + halfsize; i++)
+        {
+            for (int j = tileZ - halfsize; j <= tileZ + halfsize; j++)
+            {
+                Tile targetTile = tiles[i, j];
+                if (targetTile == null || !targetTile.IsSetActive)
+                    continue;
+
+                targetTile.AlertChanging(duration, 4);
+            }
+
+
+        }
+
+        yield return new WaitForSeconds(duration);
+
+    }
+
+
+
 }

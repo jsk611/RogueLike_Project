@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour
     }
     public void AlertChanging(float time = 1.6f, int warningMode = 0)
     {
-        // 0: no warning 1: 주의 2: 가시주의 3: 낙사주의
+        // 0: no warning 1: 주의 2: 가시주의 3: 낙사주의 4: 마법사 디버프 필드
         if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, warningMode));
     }
     IEnumerator AlertChangingCoroutine(float time, int warningMode)
@@ -44,6 +44,7 @@ public class Tile : MonoBehaviour
             case 1: alertColor = Color.yellow; break;
             case 2: alertColor = new Color(1,0.5f,1); break;
             case 3: alertColor = Color.red; break;
+            case 4: alertColor = Color.green; break;
         }
 
         alertColor -= new Color(0, 0, 0, 0.5f);
@@ -239,5 +240,6 @@ public class Tile : MonoBehaviour
         this.isSpike = isSpike;
         spike.SetActive(isSpike);
     }
+
 
 }

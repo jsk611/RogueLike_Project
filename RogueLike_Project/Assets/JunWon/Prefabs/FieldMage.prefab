@@ -678,6 +678,8 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
   anim: {fileID: 4651061701667495703}
   nmAgent: {fileID: 6495392665463634359}
   fov: {fileID: 5700704047402082328}
@@ -707,7 +709,7 @@ MonoBehaviour:
   state: 0
   maintainDistance: 15
   fieldSpawnInterval: 5
-  debuffFieldPrefab: {fileID: 7367227017500463239, guid: c0566a570bf75264c82c6241a746e673,
+  debuffFieldPrefab: {fileID: 4061503500606719347, guid: edc30e9b8d86987428a129a4850d36da,
     type: 3}
   buffFieldPrefab: {fileID: 3714227816820220296, guid: ece150aef1d6eb2498c6c15ca878ca69,
     type: 3}

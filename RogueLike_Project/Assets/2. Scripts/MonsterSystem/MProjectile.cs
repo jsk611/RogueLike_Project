@@ -23,8 +23,6 @@ public class MProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Collided with: " + other.name);
-
         if (other.CompareTag("Player"))
         {
             Debug.Log("Player takes damage " + damage);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
@@ -92,7 +93,7 @@ public class FieldMage : MonsterBase
         if (debuffFieldPrefab != null && target != null)
         {
             // 플레이어 위치에 디버프 필드를 생성
-            Instantiate(debuffFieldPrefab, target.position, Quaternion.identity);
+            StartCoroutine(BuffFieldRoutine(target.position, debuffFieldPrefab));
         }
     }
 
@@ -102,7 +103,6 @@ public class FieldMage : MonsterBase
         {
             // 1. 주변 몬스터 탐색 (반경 10 유닛)
             Collider[] colliders = Physics.OverlapSphere(transform.position, 10f, monsterLayer); // 몬스터 레이어
-            Debug.Log("마법사 영역내에 " + colliders.Length + "마리 ");
 
             // 2. 체력이 가장 낮은 몬스터 찾기 (자신 포함)
             MonsterStatus lowestHealthMonster = null;
@@ -130,9 +130,31 @@ public class FieldMage : MonsterBase
             // 3. 찾은 몬스터 또는 자신의 위치에 버프 필드 생성
             if (lowestHealthMonster != null)
             {
-                Debug.Log("버프 생성!!");
-                Instantiate(buffFieldPrefab, lowestHealthMonster.transform.position, Quaternion.identity);
+                Vector3 spawnPos = lowestHealthMonster.transform.position;
+                StartCoroutine(BuffFieldRoutine(spawnPos, buffFieldPrefab));
             }
         }
     }
+
+
+    private IEnumerator BuffFieldRoutine(Vector3 spawnPos, GameObject field)
+    {
+
+        float fieldSize = 4; // 전조 및 필드의 반경
+        float warningDuration = 1.5f; // 전조 표시 지속 시간
+
+        TileManager tileManager = FindObjectOfType<TileManager>();
+        if (tileManager == null)
+        {
+            Debug.LogError("TileManager not found in the scene.");
+            yield break;
+        }
+
+        StartCoroutine(tileManager.ShowWarningOnTile(spawnPos, warningDuration, fieldSize));
+        yield return new WaitForSeconds(warningDuration);
+
+        Instantiate(field, spawnPos, Quaternion.identity);
+    }
 }
+
+
