@@ -13,7 +13,8 @@ public class BackgroundEffect : MonoBehaviour
      // Start is called before the first frame update
     void Start()
     {
-        
+        EventManager.Instance.MonsterKilledEvent += RealEnemyKilled;
+        EventManager.Instance.EnemyCountReset += ResetMaxEnemy;
     }
 
     // Update is called once per frame
@@ -25,11 +26,6 @@ public class BackgroundEffect : MonoBehaviour
             backgroundMT.SetFloat("_HorizonHeight", currentHeight + Time.deltaTime * speed);
         }
         tmp = enemyCountData.enemyCount;
-    }
-    private void OnEnable()
-    {
-        EventManager.Instance.MonsterKilledEvent += RealEnemyKilled;
-        EventManager.Instance.EnemyCountReset += ResetMaxEnemy;
     }
     private void OnDisable()
     {

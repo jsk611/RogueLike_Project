@@ -14,6 +14,7 @@ public class KillingEffect : MonoBehaviour
     void Start()
     {
         images = GetComponentsInChildren<Image>();
+        EventManager.Instance.MonsterKilledEvent += KillingSuccess;
     }
 
     // Update is called once per frame
@@ -37,10 +38,7 @@ public class KillingEffect : MonoBehaviour
 
     }
 
-    private void OnEnable()
-    {
-        EventManager.Instance.MonsterKilledEvent += KillingSuccess;
-    }
+
     private void OnDisable()
     {
         EventManager.Instance.MonsterKilledEvent -= KillingSuccess;
