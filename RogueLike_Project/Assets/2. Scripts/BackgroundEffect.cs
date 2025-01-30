@@ -17,6 +17,12 @@ public class BackgroundEffect : MonoBehaviour
         EventManager.Instance.EnemyCountReset += ResetMaxEnemy;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<MonsterStatus>() != null) 
+            collision.gameObject.GetComponent<MonsterBase>().TakeDamage(9999, false);
+    }
+
     // Update is called once per frame
     void Update()
     {

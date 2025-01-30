@@ -93,7 +93,7 @@ public class HammerMan : MonsterBase
                 int z = (int)transform.position.x / 2;
                 int x = (int)transform.position.z / 2;
                 Debug.Log(hit.transform.name);
-                StartCoroutine(tileManager.CreateShockwave(z, x, 4,1));
+                StartCoroutine(tileManager.CreateShockwave(z, x, 4,2));
                 Collider[] boom = Physics.OverlapSphere(transform.position, 8, LayerMask.GetMask("Character"));
                 if (boom.Length > 0)
                 {

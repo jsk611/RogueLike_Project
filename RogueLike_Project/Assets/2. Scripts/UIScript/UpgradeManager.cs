@@ -185,24 +185,25 @@ public class UpgradeManager : MonoBehaviour
     public void CompleteRareUpgrade(RareUpgrade type, float degree)
     {
         WeaponBehaviour weapon = player.GetInventory().GetEquipped();
-        if (weapon.GetComponent<Blaze>() != null) { Destroy(weapon.GetComponent<Blaze>()); status.IncreaseCoin(375); }
-        if (weapon.GetComponent<Freeze>() != null) { Destroy(weapon.GetComponent<Freeze>()); status.IncreaseCoin(375); }
-        if (weapon.GetComponent<Poison>() != null) { Destroy(weapon.GetComponent<Poison>()); status.IncreaseCoin(375); }
-        if (weapon.GetComponent<Shock>() != null) { Destroy(weapon.GetComponent<Shock>()); status.IncreaseCoin(375); }
+        //if (weapon.GetComponent<Blaze>() != null) { Destroy(weapon.GetComponent<Blaze>()); status.IncreaseCoin(375); }
+        //if (weapon.GetComponent<Freeze>() != null) { Destroy(weapon.GetComponent<Freeze>()); status.IncreaseCoin(375); }
+        //if (weapon.GetComponent<Poison>() != null) { Destroy(weapon.GetComponent<Poison>()); status.IncreaseCoin(375); }
+        //if (weapon.GetComponent<Shock>() != null) { Destroy(weapon.GetComponent<Shock>()); status.IncreaseCoin(375); }
+        if(weapon.GetComponent<WeaponCondition>() != null) { Destroy(weapon.GetComponent<WeaponCondition>()); status.IncreaseCoin(375); }
 
         switch (type)
         {
             case RareUpgrade.ApplyBlaze:
-                weapon.AddComponent<Blaze>().StateInitializer(100,10,1);
+                weapon.AddComponent<Blaze>().StateInitializer(2,2,1);
                 break;
             case RareUpgrade.ApplyFreeze:
-                weapon.AddComponent<Freeze>().StateInitializer(100,10,1);
+                weapon.AddComponent<Freeze>().StateInitializer(2,2,1);
                 break;
             case RareUpgrade.ApplyPoisonous:
-                weapon.AddComponent<Poison>().StateInitializer(100, 10, 1);
+                weapon.AddComponent<Poison>().StateInitializer(2, 2, 1);
                 break;
             case RareUpgrade.ApplyShock:
-                weapon.AddComponent<Shock>().StateInitializer(100, 10, 1);
+                weapon.AddComponent<Shock>().StateInitializer(2, 2, 1);
                 break;
             default:
                 break;
