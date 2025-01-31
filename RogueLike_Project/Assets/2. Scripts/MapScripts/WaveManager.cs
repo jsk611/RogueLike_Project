@@ -93,7 +93,9 @@ public class WaveManager : MonoBehaviour
         while (true)
         {
             int prevWave = -1;
-            for(int i=0; i<5; i++)
+            yield return StartCoroutine(Maintenance());
+            yield return new WaitForSeconds(0.5f);
+            for (int i=0; i<5; i++)
             {
                 int randNum = Random.Range(1, 9);
                 while(prevWave == randNum) randNum = Random.Range(1, 9);

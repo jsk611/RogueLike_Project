@@ -1256,6 +1256,7 @@ MonoBehaviour:
   - Map4
   - Map5
   - Map6
+  - MaintenanceStage
   tile: {fileID: 7438511172107195512, guid: 99a060d294057034f9b88ecfb2608de7, type: 3}
 --- !u!4 &2127978740
 Transform:

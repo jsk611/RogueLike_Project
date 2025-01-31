@@ -248,9 +248,9 @@ public class PlayerControl : MonoBehaviour
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
         //Debug.Log(hit.gameObject.name);
-        if (hit.gameObject.CompareTag("Wall") && hit.transform != transform.parent)
+        if (hit.gameObject.CompareTag("Floor") && hit.transform != transform.parent)
         {
-            transform.SetParent(hit.transform); // ?????????? ?????? ???????? ????
+            transform.SetParent(hit.transform); 
             string[] tilePos = hit.gameObject.name.Split(',');
             if(tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
         }

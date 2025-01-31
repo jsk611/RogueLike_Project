@@ -63,9 +63,9 @@ public class MapGenerator : MonoBehaviour
                 tiles[i,j].transform.position = newPosition;
                 tiles[i,j].transform.localScale = newSize;
                 MeshRenderer mr = tiles[i, j].GetComponent<MeshRenderer>();
-                mr.material.SetColor("_BaseColor", baseColors[j, i]);
-                mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
-                mr.material.SetColor("GridColor", gridColors[j, i]);
+                if(baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
+                if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
+                if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
             }
         }
     }

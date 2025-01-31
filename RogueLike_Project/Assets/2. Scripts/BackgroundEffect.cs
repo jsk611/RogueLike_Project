@@ -42,12 +42,12 @@ public class BackgroundEffect : MonoBehaviour
     void RealEnemyKilled(bool isCounted)
     {
         if (!isCounted) return;
-        maxSkyHeight = 0.25f + 0.6f * (enemyCountData.enemyCount / (float)maxEnemy);
+        maxSkyHeight = 0.25f + 0.4f * (enemyCountData.enemyCount / (float)maxEnemy);
         backgroundMT.SetFloat("_HorizonHeight", maxSkyHeight - 0.2f);
     }
     void ResetMaxEnemy()
     {
         maxEnemy = enemyCountData.enemyCount;
-        maxSkyHeight = 0.25f + 0.6f * (enemyCountData.enemyCount / (float)maxEnemy);
+        maxSkyHeight = 0.25f + 0.4f * (enemyCountData.enemyCount / (float)maxEnemy);
     }
 }
