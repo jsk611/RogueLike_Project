@@ -32,7 +32,7 @@ public class PlayerControl : MonoBehaviour
     [Range(0,100)] public float Stamina = 100;
 
     float dashCool;
-    public bool isGrounded = true;
+    public bool isGrounded = false;
 
     public bool dashOver = false;
 
@@ -171,8 +171,8 @@ public class PlayerControl : MonoBehaviour
     }
     public bool CheckGrounded()
     {
-        isGrounded = Physics.SphereCast(character.transform.position, character.radius - 0.05f, Vector3.down,out hitInfo ,0.83f,LayerMask.GetMask("Wall"));
-     
+        isGrounded = Physics.SphereCast(character.transform.position, character.radius, Vector3.down, out hitInfo, 0.83f, LayerMask.GetMask("Wall"));
+
         if (!isGrounded)
         {
             rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
@@ -183,7 +183,7 @@ public class PlayerControl : MonoBehaviour
         if (isGrounded)
         {
             rigidBody.isKinematic = true;//Vertical.y = -0.8f;
-            character.Move(Vector3.down * 2f * Time.deltaTime);
+            character.Move(Vector3.down * 4f * Time.deltaTime);
         }
         if (transform.position.y < -5f)
         {
@@ -222,9 +222,10 @@ public class PlayerControl : MonoBehaviour
         {
             if (isGrounded) 
             {
+                isGrounded = false;
                 rigidBody.isKinematic = false;
-                rigidBody.AddForce(Vector3.up*10, ForceMode.Impulse);
-                jumpPower = 4.9f;//characterStatus.GetJumpPower();
+                rigidBody.AddForce(Vector3.up*8, ForceMode.Impulse);
+                jumpPower = 1f;//characterStatus.GetJumpPower();
                 // Debug.Log("Jump");
                 Vertical.y = jumpPower;
                 ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
@@ -254,5 +255,6 @@ public class PlayerControl : MonoBehaviour
             string[] tilePos = hit.gameObject.name.Split(',');
             if(tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
         }
+        
     }
 }

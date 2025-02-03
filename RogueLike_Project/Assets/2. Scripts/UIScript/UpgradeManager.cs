@@ -190,6 +190,7 @@ public class UpgradeManager : MonoBehaviour
         //if (weapon.GetComponent<Poison>() != null) { Destroy(weapon.GetComponent<Poison>()); status.IncreaseCoin(375); }
         //if (weapon.GetComponent<Shock>() != null) { Destroy(weapon.GetComponent<Shock>()); status.IncreaseCoin(375); }
         if(weapon.GetComponent<WeaponCondition>() != null) { Destroy(weapon.GetComponent<WeaponCondition>()); status.IncreaseCoin(375); }
+        
 
         switch (type)
         {

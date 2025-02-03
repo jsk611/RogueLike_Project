@@ -23,6 +23,8 @@ public class BackgroundEffect : MonoBehaviour
             collision.gameObject.GetComponent<MonsterBase>().TakeDamage(9999, false);
     }
 
+
+
     // Update is called once per frame
     void Update()
     {
