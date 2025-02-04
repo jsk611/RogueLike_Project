@@ -80,7 +80,7 @@ public class WaveManager : MonoBehaviour
             {
                 randNum = Random.Range(4, 11);
             }
-            else randNum = Random.Range(1, 10);
+            else randNum =  Random.Range(1, 10);
 
 
             enemyMap[y,x] = (EnemyType)randNum;
