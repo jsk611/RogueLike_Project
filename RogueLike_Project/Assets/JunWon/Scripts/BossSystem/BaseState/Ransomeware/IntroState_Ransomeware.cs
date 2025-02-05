@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class IntroState_Ransomeware : IntroState<Ransomware>
 {
+    private float _nextAttackTime = 0f;
+    private float _attackCoolTime = 2f; 
     public IntroState_Ransomeware(Ransomware owner) : base(owner)
     {
     }
