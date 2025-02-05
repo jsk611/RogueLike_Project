@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class WormBoss : MonsterBase
 {
@@ -29,11 +30,13 @@ public class WormBoss : MonsterBase
     // Update is called once per frame
     protected override void Start()
     {
+        
         base.Start();
         wormHead = bodyList[0];
         nmAgent.updatePosition = false;
         nmAgent.updateRotation = false;
         StartCoroutine(Move());
+        
     } 
 
     protected override void UpdateChase()
