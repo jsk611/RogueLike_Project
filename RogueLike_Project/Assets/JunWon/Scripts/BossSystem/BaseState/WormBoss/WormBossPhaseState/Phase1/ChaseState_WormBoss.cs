@@ -11,16 +11,15 @@ public class ChaseState_WormBoss : BossPhaseBase<WormBossPrime>
     public override void Enter()
     {
         if (wormBodyMovement == null) wormBodyMovement = owner.GetComponent<WormBossBodyMovement>();
-        Debug.Log("ChaseState Wormboss Start");
+       // Debug.Log("ChaseState Wormboss Start");
     }
     public override void Update()
     {
-        owner.summonTimer += Time.deltaTime;
         wormBodyMovement.currentActionType = WormBossBodyMovement.actionType.Rushing;
-        Debug.Log("ChaseState Wormboss Update");
+     //   Debug.Log("ChaseState Wormboss Update");
     }
     public override void Exit()
     {
-        Debug.Log("ChaseState Wormboss Exit");
+      //  Debug.Log("ChaseState Wormboss Exit");
     }
 }

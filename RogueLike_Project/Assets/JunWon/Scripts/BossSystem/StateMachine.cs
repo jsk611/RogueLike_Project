@@ -16,6 +16,16 @@ public class StateMachine<T>
         transitions.Add(transition);
     }
 
+    public void ForcedTransition(State<T> state)
+    {
+        if(state!=null)
+        {
+            CurrentState.Exit();
+            CurrentState = state;
+            CurrentState.Enter();
+        }
+    }
+
     public void Update()
     {
         // 상위 FSM 전환 조건 확인

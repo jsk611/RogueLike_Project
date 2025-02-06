@@ -8,19 +8,20 @@ public class SummonState_WormBoss : State<WormBossPrime>
     // Start is called before the first frame update
     public override void Enter()
     {
-        owner.summonTimer = 0;
         int range = Random.Range(0, owner.minions.Count);
-        GameObject minion = GameObject.Instantiate(owner.minions[range], owner.transform.position, Quaternion.identity);
+        GameObject minion = GameObject.Instantiate(owner.minions[range], owner.Player.position, Quaternion.identity);
         owner.Summoned.Add(minion);
-        Debug.Log("Summon State Enter");
+     //   Debug.Log("Summon State Enter");
     }
     public override void Update()
     {
         owner.minions.RemoveAll(item => item == null);
-        Debug.Log("Summon State Update");
+        owner.SummonToWander();
+      //  Debug.Log("Summon State Update"); 
     }
     public override void Exit()
     {
-        Debug.Log("Summon State Exit");
+        owner.SummonToWander();
+     //   Debug.Log("Summon State Exit");
     }
 }

@@ -11,13 +11,15 @@ public class WanderingStateWormBoss : State<WormBossPrime>
     public override void Enter()
     {
        if(wormBodyMovement == null) wormBodyMovement = owner.GetComponent<WormBossBodyMovement>();
-        Debug.Log("wandering state enter");
+      //  Debug.Log("wandering state enter");
     }
     public override void Update()
     {
+      //  Debug.Log("Wandering");
         wormBodyMovement.currentActionType = WormBossBodyMovement.actionType.Wandering;
     }
     public override void Exit() 
-    { 
+    {
+      //  Debug.Log("Wandering Exit");
     }
 }

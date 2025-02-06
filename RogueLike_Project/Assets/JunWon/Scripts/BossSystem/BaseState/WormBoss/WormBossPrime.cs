@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Utilities;
 using static UnityEngine.GraphicsBuffer;
 
 public class WormBossPrime : MonoBehaviour
@@ -21,8 +22,6 @@ public class WormBossPrime : MonoBehaviour
     public Summoner master = null;
 
     [Header("Minion Settings")]
-    [SerializeField] private float summonInterval;
-    public float summonTimer = 0f;
     public List<GameObject> minions = new List<GameObject>();
     private List<GameObject> summoned = new List<GameObject>();
 
@@ -54,8 +53,16 @@ public class WormBossPrime : MonoBehaviour
 
     [Header("StateMachine")]
     [SerializeField] private StateMachine<WormBossPrime> fsm;
+    [SerializeField] private float summonInterval;
+    [SerializeField] private float attackInterval;
+    private float summonTimer = 0f;
+    private float attackTimer = 0f;
 
+    private bool SumToWanTrigger = false;
+    private bool AtkToWanTrigger = false;
     
+
+
     #endregion
 
     #region ReadOnlyFunc 
@@ -65,6 +72,8 @@ public class WormBossPrime : MonoBehaviour
     public MonsterStatus MonsterStatus => monsterStatus;
     public FieldOfView FOV => fov;
     public List<GameObject> Summoned => summoned;
+    public bool ATKTOWANDER => AtkToWanTrigger;
+    public bool SUMTOWANDER => SumToWanTrigger;
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -75,11 +84,13 @@ public class WormBossPrime : MonoBehaviour
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         fsm.Update();
         Debug.Log(fsm.CurrentState);
+
+        summonTimer += Time.deltaTime;
+        attackTimer += Time.deltaTime;
     }
 
     private void InitializeFSM()
@@ -87,31 +98,67 @@ public class WormBossPrime : MonoBehaviour
         var introState = new IntroState_WormBoss(this);
         var chaseState = new ChaseState_WormBoss(this);
         var summonState = new SummonState_WormBoss(this);
+        var wanderState = new WanderingStateWormBoss(this);
+        var shootState = new ShootState_WormBoss(this);
 
         fsm = new StateMachine<WormBossPrime>(introState);
 
-        Transition<WormBossPrime> IntroToChase = new Transition<WormBossPrime>(
+        Transition<WormBossPrime> IntroToWander;
+
+        Transition<WormBossPrime> WanderToSummon;
+        Transition<WormBossPrime> SummonToWander;
+
+        Transition<WormBossPrime> WanderToShoot;
+        Transition<WormBossPrime> ShootToWander;
+
+        Transition<WormBossPrime> WanderToChase;
+        Transition<WormBossPrime> ChaseToWander;
+
+        IntroToWander = new Transition<WormBossPrime>(
             introState,
-            chaseState,
-            () => Vector3.Distance(transform.position, target.position) <= 8
+            wanderState,
+            () =>true
         );
-        Transition<WormBossPrime> ChaseToSummon = new Transition<WormBossPrime>(
-            chaseState,
+        WanderToSummon = new Transition<WormBossPrime>(
+            wanderState,
             summonState,
             () => summonTimer >= summonInterval
         );
-        Transition<WormBossPrime> SummonToIntro = new Transition<WormBossPrime>(
+        SummonToWander = new Transition<WormBossPrime>(
             summonState,
-            introState,
-            () => summonTimer <= summonInterval
+            wanderState,
+            () => SumToWanTrigger
         );
-        fsm.AddTransition(IntroToChase);
-        fsm.AddTransition(ChaseToSummon);
-        fsm.AddTransition(SummonToIntro);
-        
+        WanderToShoot = new Transition<WormBossPrime>(
+            wanderState,
+            shootState,
+            () => attackTimer >= attackInterval
+        );
+        ShootToWander = new Transition<WormBossPrime>(
+            shootState,
+            wanderState,
+            () => AtkToWanTrigger
+        );
+        //WanderToChase = new Transition<WormBossPrime>(
+        //    wanderState,
+        //    chaseState,
+        //    () => 
+        //);
+        ChaseToWander = new Transition<WormBossPrime>(
+            chaseState,
+            wanderState,
+            () => AtkToWanTrigger
+        );
+
+
+        fsm.AddTransition(IntroToWander);
+        fsm.AddTransition(WanderToSummon);
+        fsm.AddTransition(SummonToWander);
+        fsm.AddTransition(WanderToShoot);
+        fsm.AddTransition(ShootToWander);
+     //   fsm.AddTransition(WanderToChase);
+        fsm.AddTransition(ChaseToWander);
     }
-
-
 
     private void InitializeComponent()
     {
@@ -121,5 +168,16 @@ public class WormBossPrime : MonoBehaviour
         fov = GetComponent<FieldOfView>();
     }
 
+    public void SummonToWander()
+    {
+        summonTimer = 0f;
+        SumToWanTrigger = !SumToWanTrigger;
+    }
+    public void FlyToWander()
+    {
+        attackTimer = 0f;
+        AtkToWanTrigger = !AtkToWanTrigger;
+    }
+    
     
 }
