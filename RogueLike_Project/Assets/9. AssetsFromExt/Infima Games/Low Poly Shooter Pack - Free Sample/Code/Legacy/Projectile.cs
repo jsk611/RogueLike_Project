@@ -49,14 +49,19 @@ public class Projectile : MonoBehaviour {
 
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
 		{
-			if (collision.gameObject.GetComponent<MonsterStatus>() != null)
+			if (collision.gameObject.GetComponent<MonsterBase>() != null)
 			{
-				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage()/100)* shooterStatus.CalculateCriticalHit());
+				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
 			}
-			else if(collision.gameObject.GetComponent<Dummy>() != null)
+			else if (collision.gameObject.GetComponent<BossBase>() != null)
 			{
-                collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage()/100) * shooterStatus.CalculateCriticalHit());
-            }
+				Debug.Log("Boss hit");
+				collision.gameObject.GetComponent<BossBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+			}
+			else if (collision.gameObject.GetComponent<Dummy>() != null)
+			{
+				collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+			}
 			Destroy(gameObject);
 		}
 		// //Ignore collision if bullet collides with "Player" tag
