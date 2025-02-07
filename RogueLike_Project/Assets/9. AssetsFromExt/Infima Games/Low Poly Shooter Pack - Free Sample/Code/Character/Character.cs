@@ -193,6 +193,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private bool weaponExchangeLocked;
 
+        private bool weaponChangeLocked;
+
 
 
 
@@ -223,6 +225,9 @@ namespace InfimaGames.LowPolyShooterPack
 
         protected override void Awake()
         {
+
+            weaponChangeLocked = false;
+
             #region Lock Cursor
 
             //Always make sure that our cursor is locked when the game starts!
@@ -604,6 +609,10 @@ namespace InfimaGames.LowPolyShooterPack
         /// <returns></returns>
         private bool CanChangeWeapon()
         {
+            //Block.
+            if (weaponChangeLocked)
+                return false;
+
             //Block.
             if (holstering || holstered)
                 return false;
@@ -1165,6 +1174,17 @@ namespace InfimaGames.LowPolyShooterPack
         {
             return holdingButtonFire;
         }
+
+        public void LockChangedWeapon()
+        {
+            weaponChangeLocked = true;
+        }
+
+        public void UnLockChangedWeapon()
+        {
+            weaponChangeLocked = false;
+        }
+
     }
 }
 

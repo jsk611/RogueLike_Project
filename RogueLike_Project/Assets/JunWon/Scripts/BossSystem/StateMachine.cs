@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 public class StateMachine<T>
 {
@@ -43,5 +44,6 @@ public class StateMachine<T>
 
         // 현재 상태의 Update (CompositeState라면, 내부에서 SubState도 처리)
         CurrentState.Update();
+        Debug.WriteLine(CurrentState.ToString());
     }
 }

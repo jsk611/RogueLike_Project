@@ -30,7 +30,5 @@ public class Phase1_Chase_State : BossPhaseBase<Ransomware>
         {
             Debug.LogWarning("NavMeshAgent is not on NavMesh or Player is null.");
         }
-
-        Debug.Log("[Phase1_Chase] Update");
     }
 }

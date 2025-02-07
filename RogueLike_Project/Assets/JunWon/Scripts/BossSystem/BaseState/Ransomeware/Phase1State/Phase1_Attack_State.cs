@@ -12,6 +12,7 @@ public class Phase1_Attack_State : BossPhaseBase<Ransomware>
 
     public override void Enter()
     {
+        Debug.Log("[Phase1_Attack_State] Enter");
         owner.NmAgent.isStopped = true;
         timer = 0f;
     }

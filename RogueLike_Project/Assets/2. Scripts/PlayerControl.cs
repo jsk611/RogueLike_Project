@@ -60,6 +60,7 @@ public class PlayerControl : MonoBehaviour
 
     TileManager tileManager;
     // Start is called before the first frame update
+
     void Start()
     {
         playerCharacter = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();

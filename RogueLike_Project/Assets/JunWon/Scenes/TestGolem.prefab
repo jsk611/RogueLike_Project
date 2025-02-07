@@ -905,6 +905,7 @@ GameObject:
   - component: {fileID: 7879659086934800721}
   - component: {fileID: 539599845127236806}
   - component: {fileID: 9020062919854553706}
+  - component: {fileID: -5532140609096168611}
   m_Layer: 16
   m_Name: TestGolem
   m_TagString: Untagged
@@ -1103,6 +1104,42 @@ MonoBehaviour:
   mBase: {fileID: 0}
   partName: Body
   damageMultiplier: 1
+--- !u!114 &-5532140609096168611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560706903217793330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  body: {fileID: 0}
+  head: {fileID: 0}
+  maxVerticalAngle: 60
+  rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
+  anim: {fileID: 6434661973812919963}
+  nmAgent: {fileID: 6204672887000719795}
+  fov: {fileID: 8022955817955745515}
+  monsterStatus: {fileID: 2630608389428154249}
+  playerRigidBody: {fileID: 6621682464905811628}
+  splashFx: {fileID: 0}
+  spawnEffect: {fileID: 0}
+  startMaterial: {fileID: 0}
+  baseMaterial: {fileID: 0}
+  items: []
+  itemProbability: 320000001900000000000000
+  height: 5
+  DNADrop: 0
+  HPBar: {fileID: 0}
+  UIDamaged: {fileID: 0}
+  enemyCountData: {fileID: 0}
+  IsIntroAnimFinished: 0
 --- !u!1 &8909898536846366522
 GameObject:
   m_ObjectHideFlags: 0
