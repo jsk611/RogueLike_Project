@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.VisualScripting;
 using static UnityEngine.GraphicsBuffer;
 using System;
+using InfimaGames.LowPolyShooterPack;
 
 public class WormBossBodyMovement : MonoBehaviour
 {
@@ -15,15 +16,21 @@ public class WormBossBodyMovement : MonoBehaviour
 
     private Transform wormHead;
     private WormBossPrime wormBoss;
+    private BossStatus bossStatus;
+    Transform target;
     private float chaseSpeed;
-    
+    Quaternion moveDirection;
+
+    TileManager tileManager;
+
     public enum actionType
     {
         Idle,
         Wandering,
         Flying,
         Digging,
-        Rushing
+        Rushing,
+        Inertia
     }
     public actionType currentActionType = actionType.Idle;
     Dictionary<actionType, Action> moveType;
@@ -38,7 +45,10 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         wormHead = bodyList[0];
         wormBoss = GetComponent<WormBossPrime>();
-        chaseSpeed = GetComponent<MonsterStatus>().GetMovementSpeed();
+        bossStatus = GetComponent<BossStatus>();
+        target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
+        chaseSpeed = GetComponent<BossStatus>().GetMovementSpeed();
+        tileManager = FindAnyObjectByType<TileManager>();
         
         moveType = new Dictionary<actionType, Action>
         {
@@ -46,7 +56,8 @@ public class WormBossBodyMovement : MonoBehaviour
             {actionType.Wandering,Wandering},
             {actionType.Flying, Flying},
             {actionType.Digging,Digging },
-            {actionType.Rushing,Rushing}
+            {actionType.Rushing,Rushing},
+            {actionType.Inertia,AfterRush }
         };
     }
 
@@ -55,6 +66,19 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         moveType.TryGetValue(currentActionType, out var action);
         action?.Invoke();
+    }
+    void WormMove(float speed)
+    {
+        wormHead.rotation = Quaternion.Lerp(wormHead.rotation, moveDirection, Time.deltaTime * speed);
+        wormHead.position += wormHead.forward * Time.deltaTime * speed;
+        for (int i = 1; i < bodyList.Count; i++)
+        {
+            if (Vector3.Distance(bodyList[i].position, bodyList[i - 1].position) > 2.3f)
+            {
+                bodyList[i].rotation = Quaternion.Lerp(bodyList[i].rotation, Quaternion.LookRotation(bodyList[i - 1].position - bodyList[i].position), Time.deltaTime * speed);
+                bodyList[i].position += bodyList[i].forward * Time.deltaTime * speed;
+            }
+        }
     }
     void Idle()
     {
@@ -70,20 +94,21 @@ public class WormBossBodyMovement : MonoBehaviour
             turnTimer = 0f;
             chaseTarget.position = new Vector3(UnityEngine.Random.Range(0, 90), UnityEngine.Random.Range(-8,21), UnityEngine.Random.Range(0, 90));
         }
-        wormHead.rotation = Quaternion.Lerp(wormHead.rotation, Quaternion.LookRotation(chaseTarget.position - wormHead.position), Time.deltaTime * chaseSpeed);
-        wormHead.position += wormHead.forward * Time.deltaTime * chaseSpeed;
-        for (int i = 1; i < bodyList.Count; i++)
-        {
-            if (Vector3.Distance(bodyList[i].position, bodyList[i - 1].position) > 2.3f)
-            {
-                bodyList[i].rotation = Quaternion.Lerp(bodyList[i].rotation, Quaternion.LookRotation(bodyList[i - 1].position - bodyList[i].position), Time.deltaTime * chaseSpeed);
-                bodyList[i].position += bodyList[i].forward * Time.deltaTime * chaseSpeed;
-            }
-        }
+        moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
+        WormMove(chaseSpeed);
     }
     void Flying()
-    {
-
+    { 
+        chaseTarget.position = new Vector3(wormHead.position.x,50,wormHead.position.z);
+        moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
+        float speed = Vector3.Distance(wormHead.position, chaseTarget.position);
+        speed = Mathf.Clamp(speed,6f, chaseSpeed);
+        WormMove(speed);
+        if (wormHead.position.y >= 50)
+        {
+            currentActionType = actionType.Rushing;
+            moveDirection = Quaternion.LookRotation(target.position - wormHead.position);
+        }
     }
     void Digging()
     {
@@ -91,6 +116,41 @@ public class WormBossBodyMovement : MonoBehaviour
     }
     void Rushing()
     {
+        WormMove(chaseSpeed*2);
+
+        RaycastHit hit;
+        int wallLayerMask = LayerMask.GetMask("Wall"); // "Wall" 레이어 마스크 생성
+        if (Physics.Raycast(wormHead.position, wormHead.forward, out hit, 4f, wallLayerMask) && currentActionType != actionType.Inertia)
+        {
+            Tile tile = hit.transform.GetComponent<Tile>();
+            if (tile != null)
+            {
+                int z = (int)wormHead.position.x / 2;
+                int x = (int)wormHead.position.z / 2;
+                Debug.Log(hit.transform.name);
+                StartCoroutine(tileManager.CreateShockwave(z, x, 6, 4));
+                Collider[] boom = Physics.OverlapSphere(wormHead.position, 12, LayerMask.GetMask("Character"));
+                if (boom.Length > 0)
+                {
+                    target.GetComponent<PlayerStatus>().DecreaseHealth(bossStatus.GetAttackDamage());
+                    StartCoroutine(target.GetComponent<PlayerControl>().AirBorne(target.position - wormHead.position));
+                }
+                currentActionType = actionType.Inertia;
+                //  StartCoroutine(tile.CreateShockwave());
+            }
+        }
 
     }
+    void AfterRush()
+    {
+        WormMove(chaseSpeed*2);
+    }
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if(other.tag == "Floor" && currentActionType == actionType.Rushing)
+    //    {
+    //        currentActionType = actionType.Wandering;
+
+    //    }
+    //}
 }

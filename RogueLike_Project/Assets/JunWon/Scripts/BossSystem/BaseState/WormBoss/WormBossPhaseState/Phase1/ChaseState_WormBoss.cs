@@ -8,18 +8,27 @@ public class ChaseState_WormBoss : BossPhaseBase<WormBossPrime>
     public ChaseState_WormBoss(WormBossPrime owner) : base(owner) { }
 
     WormBossBodyMovement wormBodyMovement = null;
+
+    float InertiaTimer = 0f;
+
+
     public override void Enter()
     {
         if (wormBodyMovement == null) wormBodyMovement = owner.GetComponent<WormBossBodyMovement>();
-       // Debug.Log("ChaseState Wormboss Start");
+        wormBodyMovement.currentActionType = WormBossBodyMovement.actionType.Flying;
     }
     public override void Update()
-    {
-        wormBodyMovement.currentActionType = WormBossBodyMovement.actionType.Rushing;
-     //   Debug.Log("ChaseState Wormboss Update");
+    { 
+        if (wormBodyMovement.currentActionType == WormBossBodyMovement.actionType.Inertia)
+        {
+            InertiaTimer += Time.deltaTime;
+            if (InertiaTimer > 2f)
+                owner.ChaseToWander();
+        }
     }
     public override void Exit()
     {
-      //  Debug.Log("ChaseState Wormboss Exit");
+        InertiaTimer = 0f;
+        owner.ChaseToWander();
     }
 }

@@ -8,7 +8,7 @@ public class EnemyWeapon : MonoBehaviour
 {
     [SerializeField] Transform firePoint; //발사 위치;
     public GameObject bulletPrefab;
-    public MonsterStatus monsterStatus;
+    public StatusBehaviour monsterStatus;
 
     // HitScan Method
     [SerializeField] LineRenderer lineRenderer;

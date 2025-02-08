@@ -33,9 +33,12 @@ public class MProjectile : MonoBehaviour
                 playerHealth.DecreaseHealth(damage);
             }
 
-            
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        else if (other.CompareTag("Floor"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Move()

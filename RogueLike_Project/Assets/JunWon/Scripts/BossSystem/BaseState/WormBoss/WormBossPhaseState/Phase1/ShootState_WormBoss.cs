@@ -15,7 +15,6 @@ public class ShootState_WormBoss : State<WormBossPrime>
         bodyList = owner.GetComponent<WormBossBodyMovement>().BodyList;
         attackTimer = 0f;
         attackTime = 3f;
-        Debug.Log("attack!!!");
     }
     public override void Update()
     {
@@ -29,10 +28,10 @@ public class ShootState_WormBoss : State<WormBossPrime>
                 t.GetComponent<EnemyWeapon>().Fire();
             }
         }
-        if (attackTime <= 0f) owner.FlyToWander();
+        if (attackTime <= 0f) owner.ShootToWander();
     }
     public override void Exit()
     {
-        owner.FlyToWander();
+        owner.ShootToWander();
     }
 }

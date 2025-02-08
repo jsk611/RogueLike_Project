@@ -12,12 +12,12 @@ GameObject:
   - component: {fileID: 99287227315225811}
   - component: {fileID: 7920443181925431470}
   - component: {fileID: 1646600871505692112}
-  - component: {fileID: 8441028985374382113}
   - component: {fileID: 2103789757296178000}
   - component: {fileID: 8270129263049155138}
-  m_Layer: 8
+  - component: {fileID: 2934415745432861462}
+  m_Layer: 16
   m_Name: Body_7
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,39 +103,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &8441028985374382113
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 796952372591628611}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &2103789757296178000
 LODGroup:
   m_ObjectHideFlags: 0
@@ -176,8 +149,21 @@ MonoBehaviour:
   firePoint: {fileID: 2885113941172808763}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &2934415745432861462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796952372591628611}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &823686286814597539
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,12 +176,12 @@ GameObject:
   - component: {fileID: 5325066175234163503}
   - component: {fileID: 4249288682702284236}
   - component: {fileID: 7703861277035947466}
-  - component: {fileID: 4474133316434534976}
   - component: {fileID: 9040340443626026221}
   - component: {fileID: 2576471746086730370}
-  m_Layer: 8
+  - component: {fileID: 7872593275491589230}
+  m_Layer: 16
   m_Name: Body_1
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -281,39 +267,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4474133316434534976
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 823686286814597539}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &9040340443626026221
 LODGroup:
   m_ObjectHideFlags: 0
@@ -354,8 +313,21 @@ MonoBehaviour:
   firePoint: {fileID: 8924649561069410295}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &7872593275491589230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823686286814597539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &1146035962800245910
 GameObject:
   m_ObjectHideFlags: 0
@@ -367,12 +339,12 @@ GameObject:
   - component: {fileID: 5714356761239402605}
   - component: {fileID: 8799913165374479631}
   - component: {fileID: 6258489173530735470}
-  - component: {fileID: 5466832589557886247}
+  - component: {fileID: 8855231269337352878}
   - component: {fileID: 971540742032633003}
   - component: {fileID: 7842981169947356074}
   - component: {fileID: 2496359158525686435}
   - component: {fileID: 6183731271755695427}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Worm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,14 +417,10 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
-  summonedMonster: 0
-  master: {fileID: 0}
-  minions:
-  - {fileID: 4549291608529419339, guid: 47f2dcb6c78a4de47a8cfff3ea8fb50d, type: 3}
   anim: {fileID: 8799913165374479631}
   nmAgent: {fileID: 7842981169947356074}
   fov: {fileID: 971540742032633003}
-  monsterStatus: {fileID: 5466832589557886247}
+  bossStatus: {fileID: 8855231269337352878}
   playerRigidBody: {fileID: 2496359158525686435}
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
@@ -467,9 +435,12 @@ MonoBehaviour:
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  minions:
+  - {fileID: 4549291608529419339, guid: 47f2dcb6c78a4de47a8cfff3ea8fb50d, type: 3}
   summonInterval: 8
-  attackInterval: 5
---- !u!114 &5466832589557886247
+  shootInterval: 5
+  chaseInterval: 20
+--- !u!114 &8855231269337352878
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -478,7 +449,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1146035962800245910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
+  m_Script: {fileID: 11500000, guid: 0f96cd2774fd58145870c5d18e60eccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   currentCC: 0
@@ -608,12 +579,12 @@ GameObject:
   - component: {fileID: 3589902494546892837}
   - component: {fileID: 105393304490027030}
   - component: {fileID: 6129482267785552274}
-  - component: {fileID: 2222713227254409138}
   - component: {fileID: 798688501608716148}
   - component: {fileID: 7712426747957231058}
-  m_Layer: 8
+  - component: {fileID: 1201035293316147252}
+  m_Layer: 16
   m_Name: Body_9
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -699,39 +670,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2222713227254409138
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2601507366455992300}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &798688501608716148
 LODGroup:
   m_ObjectHideFlags: 0
@@ -772,8 +716,21 @@ MonoBehaviour:
   firePoint: {fileID: 3250256428446091153}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &1201035293316147252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2601507366455992300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &3006057177852641368
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,12 +743,12 @@ GameObject:
   - component: {fileID: 8742562268655576098}
   - component: {fileID: 6628562622782694470}
   - component: {fileID: 1279140801845485094}
-  - component: {fileID: 534938313467619824}
   - component: {fileID: 4969518559457600538}
   - component: {fileID: 3708400990414951609}
-  m_Layer: 8
+  - component: {fileID: 5695768685857889160}
+  m_Layer: 16
   m_Name: Body_5
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -877,39 +834,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &534938313467619824
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3006057177852641368}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &4969518559457600538
 LODGroup:
   m_ObjectHideFlags: 0
@@ -950,8 +880,21 @@ MonoBehaviour:
   firePoint: {fileID: 4236204914654052741}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &5695768685857889160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3006057177852641368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &4214833476344561490
 GameObject:
   m_ObjectHideFlags: 0
@@ -964,13 +907,12 @@ GameObject:
   - component: {fileID: 5360629901912602063}
   - component: {fileID: 8157269339919383288}
   - component: {fileID: 3737845153426509285}
-  - component: {fileID: 2380204313612341845}
   - component: {fileID: 1536547851928196427}
   - component: {fileID: 8447538405467688596}
-  - component: {fileID: 3700953427881004626}
-  m_Layer: 8
+  - component: {fileID: 3218644056519330500}
+  m_Layer: 16
   m_Name: Head
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -985,7 +927,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.3112, y: 2.3112, z: 2.3112}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6422959424833166990}
@@ -1057,39 +999,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2380204313612341845
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4214833476344561490}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &1536547851928196427
 LODGroup:
   m_ObjectHideFlags: 0
@@ -1130,9 +1045,9 @@ MonoBehaviour:
   firePoint: {fileID: 2158317552681735019}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
---- !u!114 &3700953427881004626
+--- !u!114 &3218644056519330500
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1141,14 +1056,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4214833476344561490}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9897bd1387689a48803395ff68105f0, type: 3}
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firePoint: {fileID: 0}
-  bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
-    type: 3}
-  monsterStatus: {fileID: 0}
-  lineRenderer: {fileID: 0}
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &4503652613732100175
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,12 +1072,12 @@ GameObject:
   - component: {fileID: 3789233728570038706}
   - component: {fileID: 4129064664251488931}
   - component: {fileID: 8304297146888571037}
-  - component: {fileID: 2276874564899586760}
   - component: {fileID: 4849648653669335906}
   - component: {fileID: 4379741302273924344}
-  m_Layer: 8
+  - component: {fileID: 3174276450697161704}
+  m_Layer: 16
   m_Name: Body
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1252,39 +1163,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2276874564899586760
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4503652613732100175}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &4849648653669335906
 LODGroup:
   m_ObjectHideFlags: 0
@@ -1325,8 +1209,21 @@ MonoBehaviour:
   firePoint: {fileID: 6576120376670600970}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &3174276450697161704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503652613732100175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &5125702155730140323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,12 +1236,12 @@ GameObject:
   - component: {fileID: 5833704498224865100}
   - component: {fileID: 3165974117642885331}
   - component: {fileID: 7024409325320463500}
-  - component: {fileID: 6158050726090963263}
   - component: {fileID: 685404452636197007}
   - component: {fileID: 4101593070865314598}
-  m_Layer: 8
+  - component: {fileID: 2377453565639583520}
+  m_Layer: 16
   m_Name: Body_8
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1430,39 +1327,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6158050726090963263
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5125702155730140323}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &685404452636197007
 LODGroup:
   m_ObjectHideFlags: 0
@@ -1503,8 +1373,21 @@ MonoBehaviour:
   firePoint: {fileID: 7552200829021120737}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &2377453565639583520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5125702155730140323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &5515935107669583899
 GameObject:
   m_ObjectHideFlags: 0
@@ -1548,12 +1431,12 @@ GameObject:
   - component: {fileID: 4496220702180015991}
   - component: {fileID: 9162158412438868986}
   - component: {fileID: 9075936540419892540}
-  - component: {fileID: 4390727630835311264}
   - component: {fileID: 4136450274979464014}
   - component: {fileID: 6346558511697025499}
-  m_Layer: 8
+  - component: {fileID: 158270116035889296}
+  m_Layer: 16
   m_Name: Body_3
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1639,39 +1522,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4390727630835311264
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5884567914453944323}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &4136450274979464014
 LODGroup:
   m_ObjectHideFlags: 0
@@ -1712,8 +1568,21 @@ MonoBehaviour:
   firePoint: {fileID: 7381400140352166142}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &158270116035889296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5884567914453944323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &5943244846904921502
 GameObject:
   m_ObjectHideFlags: 0
@@ -1726,12 +1595,12 @@ GameObject:
   - component: {fileID: 8078877949205143440}
   - component: {fileID: 7418732819629009300}
   - component: {fileID: 7098533813676976763}
-  - component: {fileID: 1582592690667973833}
   - component: {fileID: 4618283129683959398}
   - component: {fileID: 6512469577851042828}
-  m_Layer: 8
+  - component: {fileID: 5249507806290666257}
+  m_Layer: 16
   m_Name: Body_2
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1817,39 +1686,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1582592690667973833
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5943244846904921502}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &4618283129683959398
 LODGroup:
   m_ObjectHideFlags: 0
@@ -1890,8 +1732,21 @@ MonoBehaviour:
   firePoint: {fileID: 5240091419331101895}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &5249507806290666257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5943244846904921502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &6486822147864767726
 GameObject:
   m_ObjectHideFlags: 0
@@ -1904,12 +1759,12 @@ GameObject:
   - component: {fileID: 1032945261493020102}
   - component: {fileID: 8605660663048749743}
   - component: {fileID: 2195139167347731884}
-  - component: {fileID: 2461599723493421752}
   - component: {fileID: 2432125984458805163}
   - component: {fileID: 6900003361893883372}
-  m_Layer: 8
+  - component: {fileID: 6653967039832368015}
+  m_Layer: 16
   m_Name: Body_6
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1995,39 +1850,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2461599723493421752
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6486822147864767726}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &2432125984458805163
 LODGroup:
   m_ObjectHideFlags: 0
@@ -2068,8 +1896,21 @@ MonoBehaviour:
   firePoint: {fileID: 3101122352918196253}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &6653967039832368015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6486822147864767726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1 &8389149613130508268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2082,12 +1923,12 @@ GameObject:
   - component: {fileID: 188716144415466349}
   - component: {fileID: 8840729947764581751}
   - component: {fileID: 7703273619920476209}
-  - component: {fileID: 6060068938821203646}
   - component: {fileID: 5356442904304492506}
   - component: {fileID: 4837792930899680646}
-  m_Layer: 8
+  - component: {fileID: 8918118138527609264}
+  m_Layer: 16
   m_Name: Body_4
-  m_TagString: Floor
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2173,39 +2014,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6060068938821203646
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8389149613130508268}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!205 &5356442904304492506
 LODGroup:
   m_ObjectHideFlags: 0
@@ -2246,8 +2060,21 @@ MonoBehaviour:
   firePoint: {fileID: 6345496157226978473}
   bulletPrefab: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
     type: 3}
-  monsterStatus: {fileID: 5466832589557886247}
+  monsterStatus: {fileID: 8855231269337352878}
   lineRenderer: {fileID: 0}
+--- !u!114 &8918118138527609264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8389149613130508268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccee06ce6afc0f34188050f2a7f707de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wormBoss: {fileID: 6258489173530735470}
 --- !u!1001 &347964018960745437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2779,17 +2606,17 @@ PrefabInstance:
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 2.208385
       objectReference: {fileID: 0}
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 2.208385
       objectReference: {fileID: 0}
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 2.208385
       objectReference: {fileID: 0}
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
