@@ -8,8 +8,9 @@ public class MProjectile : MonoBehaviour
     private float damage; // 투사체의 피해량
    
     [Header("Settings")]
-    [SerializeField] float lifetime = 5f; // 투사체의 수명
+    [SerializeField] float lifetime = 20f; // 투사체의 수명
     [SerializeField] float speed = 0.05f; // 투사체의 속도
+    [SerializeField] Vector3 dir = Vector3.zero;
 
     void Start()
     {
@@ -18,7 +19,7 @@ public class MProjectile : MonoBehaviour
 
     void Update()
     {
-        UpdateBullet();
+        Move();
     }
 
     void OnTriggerEnter(Collider other)
@@ -37,14 +38,19 @@ public class MProjectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void UpdateBullet()
+    private void Move()
     {
-        transform.Translate(Vector3.forward * speed);
+        transform.Translate(dir * speed * Time.deltaTime);
     }
 
     public void SetBulletDamage(float attackDamage)
     {
         damage = attackDamage;
         Debug.Log("Bullet damage : "+ damage);
+    }
+
+    public void SetDirection(Vector3 dir)
+    {
+        this.dir = dir; 
     }
 }

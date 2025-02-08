@@ -906,6 +906,7 @@ GameObject:
   - component: {fileID: 539599845127236806}
   - component: {fileID: 9020062919854553706}
   - component: {fileID: -5532140609096168611}
+  - component: {fileID: 8136102259909351704}
   m_Layer: 16
   m_Name: TestGolem
   m_TagString: Untagged
@@ -931,6 +932,7 @@ Transform:
   - {fileID: 5469808673267394688}
   - {fileID: 5649240107890525597}
   - {fileID: 2809916418185730106}
+  - {fileID: 2397268573487061447}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6434661973812919963
@@ -1139,7 +1141,25 @@ MonoBehaviour:
   HPBar: {fileID: 0}
   UIDamaged: {fileID: 0}
   enemyCountData: {fileID: 0}
+  abilityManger: {fileID: 8136102259909351704}
+  firePoint: {fileID: 2397268573487061447}
+  dataPacket: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
+    type: 3}
   IsIntroAnimFinished: 0
+--- !u!114 &8136102259909351704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560706903217793330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b3653b20f3bc8342b670f7918951eaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilitiesData:
+  - {fileID: 11400000, guid: 4df6051b070972f49a63e0eada83ee65, type: 2}
 --- !u!1 &8909898536846366522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1213,6 +1233,37 @@ MonoBehaviour:
   mBase: {fileID: 0}
   partName: Arm_L
   damageMultiplier: 1
+--- !u!1 &8921273434767506154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2397268573487061447}
+  m_Layer: 16
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2397268573487061447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8921273434767506154}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.41, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2152605797047502344}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9018657078911985457
 GameObject:
   m_ObjectHideFlags: 0

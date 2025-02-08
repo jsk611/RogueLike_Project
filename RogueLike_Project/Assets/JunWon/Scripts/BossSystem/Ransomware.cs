@@ -45,12 +45,25 @@ public class Ransomware : MonoBehaviour
     [SerializeField] private StateMachine<Ransomware> fsm;
     #endregion
 
+    [Header("Ability")]
+    [SerializeField] private AbilityManager abilityManger;
+
+    [Header("RangedAttackProperty")]
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private GameObject dataPacket;
+    public Transform FirePoint => firePoint;
+    public GameObject DataPacket => dataPacket;
+
+
+    
+
     #region ReadOnlyFunc 
     public Transform Player => target;
     public NavMeshAgent NmAgent => nmAgent;
     public Animator Animator => anim;
     public MonsterStatus MonsterStatus => monsterStatus;
     public FieldOfView FOV => fov;
+    public AbilityManager AbilityManger => abilityManger;
 
     #endregion
 

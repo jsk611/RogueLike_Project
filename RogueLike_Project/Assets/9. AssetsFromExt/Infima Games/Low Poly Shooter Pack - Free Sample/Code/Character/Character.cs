@@ -195,6 +195,8 @@ namespace InfimaGames.LowPolyShooterPack
 
         private bool weaponChangeLocked;
 
+        private bool dashLocked;
+
 
 
 
@@ -227,6 +229,7 @@ namespace InfimaGames.LowPolyShooterPack
         {
 
             weaponChangeLocked = false;
+            dashLocked = false;
 
             #region Lock Cursor
 
@@ -1175,6 +1178,8 @@ namespace InfimaGames.LowPolyShooterPack
             return holdingButtonFire;
         }
 
+        // LockMethod
+        
         public void LockChangedWeapon()
         {
             weaponChangeLocked = true;

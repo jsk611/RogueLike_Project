@@ -24,7 +24,11 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
     }
 
     float attackRange = 5.0f;
+    float rangedRange = 20.0f;
     float specialAttackChance = 0.2f; // 20% 확률
+    float basicRangedAttackChance = 0.4f; // 40% 확률
+    float basicMeeleAttackChance = 0.4f; // 40% 확률
+
 
     private void InitializeStats()
     {
@@ -34,51 +38,55 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
 
     private void InitializeSubFSM()
     {
-        // 페이즈 1의 서브 상태들 초기화
+        owner.AbilityManger.SetAbilityActive("BasicRangedAttack");
+        // 각 상태 초기화 (각 상태 클래스는 생성자에서 owner를 받습니다)
         var idleState = new Phase1_Idle_State(owner);
         var chaseState = new Phase1_Chase_State(owner);
-        var attackState = new Phase1_Attack_State(owner);
-        var specialAttackState = new Phase1_SpeacialAttack_State(owner);
+        var meleeAttackState = new Phase1_Attack_State(owner);                // 근접 공격
+        var rangedAttackState = new Phase1_BasicRangedAttack_State(owner);      // 원거리 공격
+        var specialAttackState = new Phase1_SpeacialAttack_State(owner);        // 특수 공격
 
         subFsm = new StateMachine<Ransomware>(idleState);
 
-        // 서브 상태 전환 조건들 설정
         subFsm.AddTransition(new Transition<Ransomware>(
             idleState,
             chaseState,
             () => Vector3.Distance(owner.transform.position, owner.Player.position) > attackRange
         ));
 
-        // chaseState에서 플레이어와의 거리가 attackRange 이하이면 먼저 특수 공격 상태로 전환을 시도
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             specialAttackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange
-                  && Random.value < specialAttackChance
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
         ));
 
-        // 만약 특수 공격 조건이 걸리지 않으면 일반 공격 상태로 전환
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
-            attackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange
+            rangedAttackState,
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= rangedRange
         ));
 
-        // 만약 특수 공격 조건이 걸리지 않으면 일반 공격 상태로 전환
+        subFsm.AddTransition(new Transition<Ransomware>(
+            chaseState,
+            meleeAttackState,
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
+        ));
+
         subFsm.AddTransition(new Transition<Ransomware>(
             specialAttackState,
             chaseState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) > attackRange
+            () => true
         ));
-
         subFsm.AddTransition(new Transition<Ransomware>(
-           attackState,
-           chaseState,
-           () => Vector3.Distance(owner.transform.position, owner.Player.position) > attackRange
-       ));
-
-
-
+            meleeAttackState,
+            chaseState,
+            () => true
+        ));
+        subFsm.AddTransition(new Transition<Ransomware>(
+            rangedAttackState,
+            chaseState,
+            () => rangedAttackState.IsAnimationFinished()
+        ));
     }
 
 
