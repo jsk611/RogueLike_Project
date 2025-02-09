@@ -5,19 +5,7 @@ using UnityEngine;
 
 public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
 {
-    private enum Phase1SubState
-    {
-        Idle,
-        Approach,
-        Attack,
-        Special
-    }
-
-    // 서브 FSM
     private StateMachine<Ransomware> subFsm;
-
-    // 서브 상태
-
 
     public Phase1State_Ransomware(Ransomware owner) : base(owner)
     {
@@ -53,24 +41,23 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
             chaseState,
             () => Vector3.Distance(owner.transform.position, owner.Player.position) > attackRange
         ));
-
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             specialAttackState,
             () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
         ));
-
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             rangedAttackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= rangedRange
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= rangedRange &&
+            owner.AbilityManger.GetAbilityRemainingCooldown("BasicRangedAttack") == 0
         ));
-
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             meleeAttackState,
             () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
         ));
+
 
         subFsm.AddTransition(new Transition<Ransomware>(
             specialAttackState,

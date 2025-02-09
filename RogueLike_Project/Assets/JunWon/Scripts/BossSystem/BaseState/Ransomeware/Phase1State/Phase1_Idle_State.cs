@@ -5,20 +5,16 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Phase1_Idle_State : BossPhaseBase<Ransomware>
 {
-    private float idleTimer = 0f;
-    private float idleDuration = 2f;
-
     public Phase1_Idle_State(Ransomware owner) : base(owner) { }
 
     public override void Enter()
     {
-        idleTimer = 0f;
-        owner.GetComponent<Animator>()?.SetTrigger("Phase1Idle");
+        owner.Animator.SetTrigger("Idle");
+        owner.NmAgent.isStopped = true;
     }
 
-    public override void Update()
+    public override void Exit()
     {
-        idleTimer += Time.deltaTime;
-        // Idle 동작 구현
+        owner.NmAgent.isStopped = false;
     }
 }

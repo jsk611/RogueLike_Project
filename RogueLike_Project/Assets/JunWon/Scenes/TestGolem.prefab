@@ -945,7 +945,7 @@ Animator:
   m_GameObject: {fileID: 8560706903217793330}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 0f2c5202b918687408ac5bc7429a03ea, type: 3}
-  m_Controller: {fileID: 9100000, guid: 6016d13d996d1804699b34f80d5c6ef1, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1273e3afd4c1c8f44a4eaf2c4edbaa29, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1118,34 +1118,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  body: {fileID: 0}
-  head: {fileID: 0}
-  maxVerticalAngle: 60
-  rotateSpeed: 2
-  summonedMonster: 0
-  master: {fileID: 0}
   anim: {fileID: 6434661973812919963}
   nmAgent: {fileID: 6204672887000719795}
   fov: {fileID: 8022955817955745515}
   monsterStatus: {fileID: 2630608389428154249}
-  playerRigidBody: {fileID: 6621682464905811628}
+  abilityManger: {fileID: 8136102259909351704}
+  target: {fileID: 0}
+  body: {fileID: 2152605797047502344}
+  head: {fileID: 0}
+  firePoint: {fileID: 2397268573487061447}
+  dataPacket: {fileID: 7417586618227507175, guid: 643ce2010a1a9024195425e0bf009c77,
+    type: 3}
+  maxVerticalAngle: 60
+  rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 0}
   startMaterial: {fileID: 0}
   baseMaterial: {fileID: 0}
+  HPBar: {fileID: 0}
+  UIDamaged: {fileID: 0}
   items: []
   itemProbability: 320000001900000000000000
   height: 5
   DNADrop: 0
-  HPBar: {fileID: 0}
-  UIDamaged: {fileID: 0}
   enemyCountData: {fileID: 0}
-  abilityManger: {fileID: 8136102259909351704}
-  firePoint: {fileID: 2397268573487061447}
-  dataPacket: {fileID: 4885926551689745218, guid: 7c572f2f04bbf0041a58ad57e0f791a6,
-    type: 3}
-  IsIntroAnimFinished: 0
 --- !u!114 &8136102259909351704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1159,6 +1157,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   abilitiesData:
+  - {fileID: 11400000, guid: c419d3f24ce6e2840bd9ca3b31a25b1e, type: 2}
   - {fileID: 11400000, guid: 4df6051b070972f49a63e0eada83ee65, type: 2}
 --- !u!1 &8909898536846366522
 GameObject:

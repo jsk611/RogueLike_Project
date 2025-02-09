@@ -6,52 +6,74 @@ using UnityEngine;
 
 public class Phase1_BasicRangedAttack_State : State<Ransomware>
 {
-    public Phase1_BasicRangedAttack_State(Ransomware owner) : base(owner) { }
+    private bool isAttackFinished = false;
 
-    Vector3 playerPos;
-    Vector3 firePos;
-    Quaternion fireRot;
-    GameObject packet;
+    public Phase1_BasicRangedAttack_State(Ransomware owner) : base(owner) {
+        owner.SetRangedAttackState(this);
+    }
+
     public override void Enter()
     {
-        playerPos = owner.Player.transform.position;
-        firePos = owner.FirePoint.transform.position;
-        fireRot = owner.FirePoint.transform.rotation;
-        packet = owner.DataPacket;
         Debug.Log("[Phase1_BasicRangedAttack_State] Enter");
+        isAttackFinished = false;
         owner.NmAgent.isStopped = true;
 
-        if (owner.AbilityManger.UseAbility("BasicRangedAttack"))
+        if (CanExecuteAttack())
         {
-            FireProjectile();
+            // 애니메이션 재생
+            owner.Animator.SetTrigger("RangedAttack");
+
+            // Ability 시스템을 통한 공격 실행
+            if (owner.AbilityManger.UseAbility("BasicRangedAttack"))
+            {
+                FireProjectile();
+            }
         }
-    }
-
-    public override void Update()
-    {
-
-    }
-
-    void FireProjectile()
-    {
-        if (playerPos != null && packet != null && firePos != null)
-        {
-            Vector3 directionToPlayer = (playerPos - firePos).normalized;
-            GameObject projectile = GameObject.Instantiate(owner.DataPacket, firePos, fireRot);
-            projectile.GetComponent<MProjectile>().SetBulletDamage(owner.AbilityManger.GetAbiltiyDmg("BasicRangedAttack")); // 몬스터 데이터에서 데미지 값 가져오도록 수정 (예시)
-            projectile.GetComponent<MProjectile>().SetDirection(directionToPlayer);
-            Debug.Log("원거리 구체 발사!");
-        }   
         else
         {
-            Debug.LogWarning("구체 발사에 필요한 프리팹 또는 발사 지점이 설정되지 않음.");
+            Debug.LogWarning("Cannot execute attack - missing components");
+            isAttackFinished = true; // 공격 불가능할 경우 바로 상태 전환
         }
     }
 
-    public bool IsAnimationFinished()
+    private bool CanExecuteAttack()
     {
-        // 예시: 애니메이터의 현재 애니메이션 상태가 "Attack" 애니메이션이 아니고, 전환 중이 아닐 때
-        return true;
-        //return !owner.Animator.GetCurrentAnimatorStateInfo(0).IsName("SpecialAttack") && !owner.Animator.IsInTransition(0);
+        return owner.Player != null &&
+               owner.DataPacket != null &&
+               owner.FirePoint != null;
     }
+
+    private void FireProjectile()
+    {
+        Vector3 firePos = owner.FirePoint.position;
+        Vector3 directionToPlayer = (owner.Player.position - firePos).normalized;
+
+        GameObject projectile = GameObject.Instantiate(
+            owner.DataPacket,
+            firePos,
+            Quaternion.LookRotation(directionToPlayer)
+        );
+
+        if (projectile.TryGetComponent<MProjectile>(out var mProjectile))
+        {
+            mProjectile.SetBulletDamage(owner.AbilityManger.GetAbiltiyDmg("BasicRangedAttack"));
+            mProjectile.SetDirection(directionToPlayer);
+            Debug.Log("Ranged attack projectile fired!");
+        }
+    }
+
+    // 애니메이션 이벤트에서 호출될 메서드
+    public void OnAttackFinished()
+    {
+        isAttackFinished = true;
+    }
+
+    public override void Exit()
+    {
+        owner.NmAgent.isStopped = false;
+        owner.Animator.ResetTrigger("RangedAttack"); 
+        isAttackFinished = false;
+    }
+
+    public bool IsAnimationFinished() => isAttackFinished;
 }

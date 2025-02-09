@@ -5,20 +5,31 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Phase1_Attack_State : BossPhaseBase<Ransomware>
 {
-    private float timer = 0f;
-    private float attackCoolTime = 2f;
-
     public Phase1_Attack_State(Ransomware owner) : base(owner) { }
 
     public override void Enter()
     {
-        Debug.Log("[Phase1_Attack_State] Enter");
+        Debug.Log("[Phase1_BasicMeeleAttack_State] Enter");
         owner.NmAgent.isStopped = true;
-        timer = 0f;
+
+        if (CanExecuteAttack())
+        {
+            owner.Animator.SetTrigger("MeeleAttack");
+            if (owner.AbilityManger.UseAbility("BasicMeeleAttack"))
+            {
+            }
+        }
     }
 
-    public override void Update()
+    private bool CanExecuteAttack()
     {
-        timer += Time.deltaTime;
+        return owner.Player != null;
+    }
+
+    public bool IsAnimationFinished()
+    {
+        // 실제 애니메이션 상태를 체크하는 것이 좋습니다
+        return !owner.Animator.GetCurrentAnimatorStateInfo(0).IsName("RangedAttack") &&
+               !owner.Animator.IsInTransition(0);
     }
 }

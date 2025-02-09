@@ -6,29 +6,35 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class Phase1_Chase_State : BossPhaseBase<Ransomware>
 {
-    private float timer = 0f;
-    private float chaseDuration = 2f;
-
     public Phase1_Chase_State(Ransomware owner) : base(owner) { }
 
     public override void Enter()
     {
         owner.NmAgent.isStopped = false;
         owner.NmAgent.speed = owner.MonsterStatus.GetMovementSpeed();
+        owner.Animator.SetBool("IsMoving", true);
         owner.NmAgent.SetDestination(owner.Player.transform.position);
-        timer = 0f;
     }
 
     public override void Update()
     {
-        timer += Time.deltaTime;
         if (owner.NmAgent.isOnNavMesh && owner.Player != null)
         {
             owner.NmAgent.SetDestination(owner.Player.transform.position);
+
+            // 이동 속도에 따른 애니메이션 파라미터 조절
+            float currentSpeed = owner.NmAgent.velocity.magnitude;
+            owner.Animator.SetFloat("MoveSpeed", currentSpeed);
         }
         else
         {
             Debug.LogWarning("NavMeshAgent is not on NavMesh or Player is null.");
         }
+    }
+
+    public override void Exit()
+    {
+        owner.Animator.SetBool("IsMoving", false);
+        owner.Animator.SetFloat("MoveSpeed", 0f);
     }
 }
