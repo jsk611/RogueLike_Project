@@ -15,8 +15,8 @@ public class WanderingStateWormBoss : State<WormBossPrime>
     }
     public override void Update()
     {
-      //  Debug.Log("Wandering");
-        wormBodyMovement.currentActionType = WormBossBodyMovement.actionType.Wandering;
+        //  Debug.Log("Wandering");
+        wormBodyMovement.ChangeState(WormBossBodyMovement.actionType.Wandering, owner.BossStatus.GetMovementSpeed());
     }
     public override void Exit() 
     {

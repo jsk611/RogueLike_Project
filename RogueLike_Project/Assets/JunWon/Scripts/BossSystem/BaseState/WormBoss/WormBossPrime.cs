@@ -22,14 +22,16 @@ public class WormBossPrime : BossBase
     [SerializeField] private float summonInterval;
     [SerializeField] private float shootInterval;
     [SerializeField] private float chaseInterval;
+    [SerializeField] private float digInterval;
     private float summonTimer = 0f;
     private float shootTimer = 0f;
     private float chaseTimer = 0f;
+    private float digTimer = 0f;
 
     private bool SumToWanTrigger = false;
     private bool ShtToWanTrigger = false;
     private bool ChsToWanTrigger = false;
-    
+    private bool DigToWanTrigger = false;
 
 
     #region ReadOnlyFunc 
@@ -59,15 +61,17 @@ public class WormBossPrime : BossBase
         summonTimer += Time.deltaTime;
         shootTimer += Time.deltaTime;
         chaseTimer += Time.deltaTime;
+        digTimer += Time.deltaTime;
     }
 
     private void InitializeFSM()
-    {  
+    {
         var introState = new IntroState_WormBoss(this);
         var chaseState = new ChaseState_WormBoss(this);
         var summonState = new SummonState_WormBoss(this);
         var wanderState = new WanderingStateWormBoss(this);
         var shootState = new ShootState_WormBoss(this);
+        var digState = new DigState_WormBoss(this);
         var dieState = new DieState_WormBoss(this);
 
         fsm = new StateMachine<WormBossPrime>(introState);
@@ -83,11 +87,14 @@ public class WormBossPrime : BossBase
         Transition<WormBossPrime> WanderToChase;
         Transition<WormBossPrime> ChaseToWander;
 
+        Transition<WormBossPrime> WanderToDig;
+        Transition<WormBossPrime> DigToWander;
+
         Transition<WormBossPrime> AnyToDeath;
         IntroToWander = new Transition<WormBossPrime>(
             introState,
             wanderState,
-            () =>true
+            () => true
         );
         WanderToSummon = new Transition<WormBossPrime>(
             wanderState,
@@ -119,6 +126,16 @@ public class WormBossPrime : BossBase
             wanderState,
             () => ChsToWanTrigger
         );
+        WanderToDig = new Transition<WormBossPrime>(
+            wanderState,
+            digState,
+            () => digTimer >= digInterval
+        );
+        DigToWander = new Transition<WormBossPrime>(
+            digState,
+            wanderState,
+            () => DigToWanTrigger
+        );
         AnyToDeath = new Transition<WormBossPrime>(
             null,
             dieState,
@@ -126,13 +143,16 @@ public class WormBossPrime : BossBase
         );
 
 
+
         fsm.AddTransition(IntroToWander);
-        fsm.AddTransition(WanderToSummon);
+     //   fsm.AddTransition(WanderToSummon);
         fsm.AddTransition(SummonToWander);
-        fsm.AddTransition(WanderToShoot);
+     //   fsm.AddTransition(WanderToShoot);
         fsm.AddTransition(ShootToWander);
-        fsm.AddTransition(WanderToChase);
+    //    fsm.AddTransition(WanderToChase);
         fsm.AddTransition(ChaseToWander);
+        fsm.AddTransition(WanderToDig);
+        fsm.AddTransition(DigToWander);
      //   fsm.AddTransition(AnyToDeath);
     }
 
@@ -158,6 +178,11 @@ public class WormBossPrime : BossBase
     {
         chaseTimer = 0f;
         ChsToWanTrigger = !ChsToWanTrigger;
+    }
+    public void DigToWander()
+    {
+        digTimer = 0f;
+        DigToWanTrigger = !DigToWanTrigger;
     }
     
     public void TakeDamage(float damage)

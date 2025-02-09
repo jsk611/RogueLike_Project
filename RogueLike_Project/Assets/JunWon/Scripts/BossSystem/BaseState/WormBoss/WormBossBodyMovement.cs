@@ -8,8 +8,9 @@ using InfimaGames.LowPolyShooterPack;
 
 public class WormBossBodyMovement : MonoBehaviour
 {
-    [SerializeField] private float turnTimer = 0f;
-    [SerializeField] private float turnInterval = 3f;
+    private float turnTimer = 0f;
+    private float turnInterval = 3f;
+    private float moveTimer = 0f;
 
     [SerializeField] List<Transform> bodyList;
     [SerializeField] Transform chaseTarget;
@@ -39,7 +40,8 @@ public class WormBossBodyMovement : MonoBehaviour
 
 
     public List<Transform> BodyList => bodyList;
-
+    public Transform WormHead => wormHead;
+    public Quaternion MoveDirection { get { return moveDirection; } set { moveDirection = value; } }
     // Start is called before the first frame update
     void Start()
     {
@@ -66,17 +68,24 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         moveType.TryGetValue(currentActionType, out var action);
         action?.Invoke();
+        WormMove();
     }
-    void WormMove(float speed)
+    public void ChangeState(actionType actionType, float speed)
     {
-        wormHead.rotation = Quaternion.Lerp(wormHead.rotation, moveDirection, Time.deltaTime * speed);
-        wormHead.position += wormHead.forward * Time.deltaTime * speed;
+        currentActionType = actionType;
+        //moveTimer = 0f;
+        chaseSpeed = speed;
+    }
+    void WormMove()
+    {
+        wormHead.rotation = Quaternion.Lerp(wormHead.rotation, moveDirection, Time.deltaTime * chaseSpeed);
+        wormHead.position += wormHead.forward * Time.deltaTime * chaseSpeed;
         for (int i = 1; i < bodyList.Count; i++)
         {
             if (Vector3.Distance(bodyList[i].position, bodyList[i - 1].position) > 2.3f)
             {
-                bodyList[i].rotation = Quaternion.Lerp(bodyList[i].rotation, Quaternion.LookRotation(bodyList[i - 1].position - bodyList[i].position), Time.deltaTime * speed);
-                bodyList[i].position += bodyList[i].forward * Time.deltaTime * speed;
+                bodyList[i].rotation = Quaternion.Lerp(bodyList[i].rotation, Quaternion.LookRotation(bodyList[i - 1].position - bodyList[i].position), Time.deltaTime * chaseSpeed);
+                bodyList[i].position += bodyList[i].forward * Time.deltaTime * chaseSpeed;
             }
         }
     }
@@ -90,34 +99,52 @@ public class WormBossBodyMovement : MonoBehaviour
         turnTimer += Time.deltaTime;
         if (turnTimer >= turnInterval || Vector3.Distance(wormHead.position,chaseTarget.position)<=1f)
         {
-            turnInterval = UnityEngine.Random.Range(1f, 5f);
+            turnInterval = UnityEngine.Random.Range(1f, 4f);
             turnTimer = 0f;
             chaseTarget.position = new Vector3(UnityEngine.Random.Range(0, 90), UnityEngine.Random.Range(-8,21), UnityEngine.Random.Range(0, 90));
         }
         moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
-        WormMove(chaseSpeed);
     }
     void Flying()
-    { 
-        chaseTarget.position = new Vector3(wormHead.position.x,50,wormHead.position.z);
+    {
+        moveTimer += Time.deltaTime;
+        chaseTarget.position = wormHead.position + Vector3.up;
         moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
-        float speed = Vector3.Distance(wormHead.position, chaseTarget.position);
-        speed = Mathf.Clamp(speed,6f, chaseSpeed);
-        WormMove(speed);
-        if (wormHead.position.y >= 50)
+
+        RaycastHit hit;
+        int wallLayerMask = LayerMask.GetMask("Wall"); // "Wall" 레이어 마스크 생성
+        if (Physics.Raycast(wormHead.position, wormHead.forward, out hit, 4f, wallLayerMask) && currentActionType != actionType.Inertia)
         {
-            currentActionType = actionType.Rushing;
-            moveDirection = Quaternion.LookRotation(target.position - wormHead.position);
+            Tile tile = hit.transform.GetComponent<Tile>();
+            if (tile != null)
+            {
+                int z = (int)wormHead.position.x / 2;
+                int x = (int)wormHead.position.z / 2;
+                Debug.Log(hit.transform.name);
+                StartCoroutine(tileManager.CreateShockwave(z, x, 6, 4));
+                Collider[] boom = Physics.OverlapSphere(wormHead.position, 12, LayerMask.GetMask("Character"));
+                if (boom.Length > 0)
+                {
+                    target.GetComponent<PlayerStatus>().DecreaseHealth(bossStatus.GetAttackDamage());
+                    StartCoroutine(target.GetComponent<PlayerControl>().AirBorne(target.position - wormHead.position));
+                }
+                currentActionType = actionType.Inertia;
+                //  StartCoroutine(tile.CreateShockwave());
+            }
         }
     }
     void Digging()
     {
-
+        chaseTarget.position = target.position - new Vector3(0, 30, 0);
+        moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
+        if (Vector3.Distance(chaseTarget.position, wormHead.position) <= 11f)
+        {
+            ChangeState(actionType.Flying, chaseSpeed*2);
+        }
     }
     void Rushing()
     {
-        WormMove(chaseSpeed*2);
-
+        chaseSpeed = wormBoss.BossStatus.GetMovementSpeed() * 2;
         RaycastHit hit;
         int wallLayerMask = LayerMask.GetMask("Wall"); // "Wall" 레이어 마스크 생성
         if (Physics.Raycast(wormHead.position, wormHead.forward, out hit, 4f, wallLayerMask) && currentActionType != actionType.Inertia)
@@ -143,14 +170,7 @@ public class WormBossBodyMovement : MonoBehaviour
     }
     void AfterRush()
     {
-        WormMove(chaseSpeed*2);
+        //dummy
     }
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if(other.tag == "Floor" && currentActionType == actionType.Rushing)
-    //    {
-    //        currentActionType = actionType.Wandering;
-
-    //    }
-    //}
+    
 }
