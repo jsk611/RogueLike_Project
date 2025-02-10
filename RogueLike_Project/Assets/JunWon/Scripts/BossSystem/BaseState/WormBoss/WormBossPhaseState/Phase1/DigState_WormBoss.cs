@@ -5,8 +5,12 @@ using UnityEngine;
 public class DigState_WormBoss : State<WormBossPrime>
 {
     public DigState_WormBoss(WormBossPrime owner) : base(owner) { }
+
+
+
     WormBossBodyMovement wormBossBodyMovement;
     Transform wormHead;
+    Transform chaseTarget;
     float thrustTimer = 0f;
     public override void Enter()
     {
@@ -14,6 +18,7 @@ public class DigState_WormBoss : State<WormBossPrime>
         {
             wormBossBodyMovement = owner.GetComponent<WormBossBodyMovement>();
             wormHead = wormBossBodyMovement.WormHead;
+            chaseTarget = wormBossBodyMovement.ChaseTarget;
         }
         thrustTimer = 0f;
         wormBossBodyMovement.ChangeState(WormBossBodyMovement.actionType.Digging, owner.BossStatus.GetMovementSpeed());
@@ -21,8 +26,10 @@ public class DigState_WormBoss : State<WormBossPrime>
     public override void Update()
     {
         thrustTimer += Time.deltaTime;
-        if(Physics.Raycast(wormHead.position,Vector3.up,80,LayerMask.GetMask("Character")) || thrustTimer >=4f)
+        if((Vector3.Distance(wormHead.position,chaseTarget.position)<=3f && thrustTimer >=3f )|| thrustTimer >=8f)
         {
+            thrustTimer = 0f;
+            Debug.Log("dfdf");
             wormBossBodyMovement.ChangeState(WormBossBodyMovement.actionType.Flying, owner.BossStatus.GetMovementSpeed()*2);
         }
  

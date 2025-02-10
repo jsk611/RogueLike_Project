@@ -41,6 +41,7 @@ public class WormBossBodyMovement : MonoBehaviour
 
     public List<Transform> BodyList => bodyList;
     public Transform WormHead => wormHead;
+    public Transform ChaseTarget => chaseTarget;
     public Quaternion MoveDirection { get { return moveDirection; } set { moveDirection = value; } }
     // Start is called before the first frame update
     void Start()
@@ -137,10 +138,6 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         chaseTarget.position = target.position - new Vector3(0, 30, 0);
         moveDirection = Quaternion.LookRotation(chaseTarget.position - wormHead.position);
-        if (Vector3.Distance(chaseTarget.position, wormHead.position) <= 11f)
-        {
-            ChangeState(actionType.Flying, chaseSpeed*2);
-        }
     }
     void Rushing()
     {
@@ -155,8 +152,8 @@ public class WormBossBodyMovement : MonoBehaviour
                 int z = (int)wormHead.position.x / 2;
                 int x = (int)wormHead.position.z / 2;
                 Debug.Log(hit.transform.name);
-                StartCoroutine(tileManager.CreateShockwave(z, x, 6, 4));
-                Collider[] boom = Physics.OverlapSphere(wormHead.position, 12, LayerMask.GetMask("Character"));
+                StartCoroutine(tileManager.CreateShockwave(z, x, 5, 4));
+                Collider[] boom = Physics.OverlapSphere(wormHead.position, 8, LayerMask.GetMask("Character"));
                 if (boom.Length > 0)
                 {
                     target.GetComponent<PlayerStatus>().DecreaseHealth(bossStatus.GetAttackDamage());
