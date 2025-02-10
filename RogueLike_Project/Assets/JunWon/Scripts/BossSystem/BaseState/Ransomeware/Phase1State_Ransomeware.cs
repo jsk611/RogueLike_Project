@@ -26,7 +26,10 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
 
     private void InitializeSubFSM()
     {
+        owner.AbilityManger.SetAbilityActive("BasicMeeleAttack");
         owner.AbilityManger.SetAbilityActive("BasicRangedAttack");
+        owner.AbilityManger.SetAbilityActive("DataExplode");
+        owner.AbilityManger.SetMaxCoolTime("DataExplode");
         // 각 상태 초기화 (각 상태 클래스는 생성자에서 owner를 받습니다)
         var idleState = new Phase1_Idle_State(owner);
         var chaseState = new Phase1_Chase_State(owner);
@@ -44,7 +47,7 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             specialAttackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
+            () => owner.AbilityManger.GetAbilityRemainingCooldown("DataExplode") == 0
         ));
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
@@ -55,7 +58,8 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             meleeAttackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange 
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= attackRange &&
+            owner.AbilityManger.GetAbilityRemainingCooldown("BasicMeeleAttack") == 0
         ));
 
 
@@ -67,7 +71,7 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             meleeAttackState,
             chaseState,
-            () => true
+            () => meleeAttackState.IsAnimationFinished()
         ));
         subFsm.AddTransition(new Transition<Ransomware>(
             rangedAttackState,

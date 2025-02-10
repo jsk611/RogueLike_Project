@@ -38,6 +38,7 @@ public class Ransomware : MonoBehaviour
     #endregion
 
     #region State References
+    private Phase1_Attack_State meeleAttackState;
     private Phase1_BasicRangedAttack_State rangedAttackState;
     private Phase1_SpeacialAttack_State specialAttackState;
     private Phase2State_Ransomeware phase2State;
@@ -45,6 +46,15 @@ public class Ransomware : MonoBehaviour
 
     #region Animation Event Handlers
     // 기본 원거리 공격 애니메이션 이벤트
+
+    public void OnMeeleAttackFinished()
+    {
+        if (meeleAttackState != null)
+        {
+            meeleAttackState.OnAttackFinished();
+        }
+    }
+
     public void OnRangedAttackFinished()
     {
         if (rangedAttackState != null)
@@ -53,20 +63,26 @@ public class Ransomware : MonoBehaviour
         }
     }
 
-   
+    
+
+
+
+
     #endregion
 
     #region State Setters
+    public void SetMeeleAttackState(Phase1_Attack_State state)
+    {
+        meeleAttackState = state;
+    }
     public void SetRangedAttackState(Phase1_BasicRangedAttack_State state)
     {
         rangedAttackState = state;
     }
-
     public void SetSpecialAttackState(Phase1_SpeacialAttack_State state)
     {
         specialAttackState = state;
     }
-
     public void SetPhase2State(Phase2State_Ransomeware state)
     {
         phase2State = state;

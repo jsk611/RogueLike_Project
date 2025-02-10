@@ -68,7 +68,6 @@ public class AbilityManager : MonoBehaviour
             abilities[abilityName].Activate();
         }
     }
-
     public float GetAbiltiyDmg(string abilityName)
     {
         if (abilities.ContainsKey(abilityName))
@@ -76,5 +75,14 @@ public class AbilityManager : MonoBehaviour
             return abilities[abilityName].GetDmg();
         }
         return 0;
+    }
+
+    public void SetMaxCoolTime(string abilityName)
+    {
+        if (abilities.ContainsKey(abilityName))
+        {
+            abilities[abilityName].InitializeWithMaxCooldown();
+        }
+
     }
 }

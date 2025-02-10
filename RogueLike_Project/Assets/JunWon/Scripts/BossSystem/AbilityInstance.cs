@@ -60,6 +60,11 @@ public class AbilityInstance : MonoBehaviour
         return remain > 0 ? remain : 0;
     }
 
+    public void InitializeWithMaxCooldown()
+    {
+        lastUsedTime = Time.unscaledTime;
+    }
+
     public float GetDmg()
     {
         return data.damage;

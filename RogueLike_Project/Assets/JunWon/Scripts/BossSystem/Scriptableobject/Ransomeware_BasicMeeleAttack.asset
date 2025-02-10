@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: BasicMeeleAttack
   abilityDescription: "\uAE30\uBCF8 \uADFC\uC811 \uACF5\uACA9"
-  cooldown: 1
+  cooldown: 3
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0

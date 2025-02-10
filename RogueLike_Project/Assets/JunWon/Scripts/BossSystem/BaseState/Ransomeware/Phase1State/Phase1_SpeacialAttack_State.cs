@@ -6,28 +6,22 @@ using UnityEngine.Rendering;
 
 public class Phase1_SpeacialAttack_State : State<Ransomware>
 {
-    float lockTimer = 0.0f;
-    float lockCoolDown = 5.0f;
-    public Phase1_SpeacialAttack_State(Ransomware owner) : base(owner) { }
+    private bool isAttackFinished = false;
+    public Phase1_SpeacialAttack_State(Ransomware owner) : base(owner) {
+        owner.SetSpecialAttackState(this);
+    }
 
 
     public override void Enter()
     {
-        // owner.Animator.SetTrigger("SpecialAttack");
-        Debug.Log("[Phase1_SpeacialAttack_State] Enter");
+        isAttackFinished = false;
+        owner.Animator.SetTrigger("DataExplode");
         LockPlayerSkill();
-        lockTimer = 0.0f;
     }
 
     public override void Update()
     {
-        lockTimer += Time.deltaTime;
-        if (lockTimer > lockCoolDown) {
-            lockTimer = 0.0f;
-            // owner.Animator.SetTrigger("SpecialAttack");
-            Debug.Log("IsWeaponExchangeLocked");
-            LockPlayerSkill();
-        }
+     
     }
 
     void LockPlayerSkill()
@@ -40,4 +34,17 @@ public class Phase1_SpeacialAttack_State : State<Ransomware>
             player.LockChangedWeapon();
         }
     }
+
+    private bool CanExecuteAttack()
+    {
+        return owner.Player != null;
+    }
+
+
+    public void OnAttackFinished()
+    {
+        isAttackFinished = true;
+    }
+
+    public bool IsAnimationFinished() => isAttackFinished;
 }

@@ -36,12 +36,7 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
         }
     }
 
-    private bool CanExecuteAttack()
-    {
-        return owner.Player != null &&
-               owner.DataPacket != null &&
-               owner.FirePoint != null;
-    }
+   
 
     private void FireProjectile()
     {
@@ -62,17 +57,25 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
         }
     }
 
-    // 애니메이션 이벤트에서 호출될 메서드
-    public void OnAttackFinished()
-    {
-        isAttackFinished = true;
-    }
+    
 
     public override void Exit()
     {
         owner.NmAgent.isStopped = false;
         owner.Animator.ResetTrigger("RangedAttack"); 
-        isAttackFinished = false;
+    }
+
+    private bool CanExecuteAttack()
+    {
+        return owner.Player != null &&
+               owner.DataPacket != null &&
+               owner.FirePoint != null;
+    }
+
+    // 애니메이션 이벤트에서 호출될 메서드
+    public void OnAttackFinished()
+    {
+        isAttackFinished = true;
     }
 
     public bool IsAnimationFinished() => isAttackFinished;
