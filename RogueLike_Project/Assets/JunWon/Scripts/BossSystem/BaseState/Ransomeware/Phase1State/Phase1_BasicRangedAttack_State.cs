@@ -20,14 +20,8 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
 
         if (CanExecuteAttack())
         {
-            // 애니메이션 재생
             owner.Animator.SetTrigger("RangedAttack");
-
-            // Ability 시스템을 통한 공격 실행
-            if (owner.AbilityManger.UseAbility("BasicRangedAttack"))
-            {
-                FireProjectile();
-            }
+            owner.AbilityManger.UseAbility("BasicRangedAttack");
         }
         else
         {
@@ -38,7 +32,7 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
 
    
 
-    private void FireProjectile()
+    public void FireProjectile()
     {
         Vector3 firePos = owner.FirePoint.position;
         Vector3 directionToPlayer = (owner.Player.position - firePos).normalized;
@@ -57,7 +51,6 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
         }
     }
 
-    
 
     public override void Exit()
     {

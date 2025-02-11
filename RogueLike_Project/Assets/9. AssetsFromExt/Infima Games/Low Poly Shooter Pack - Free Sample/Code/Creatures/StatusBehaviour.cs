@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 
 public abstract class StatusBehaviour : MonoBehaviour
 {
@@ -139,9 +140,15 @@ public abstract class StatusBehaviour : MonoBehaviour
         }
         currentCon = Condition.normal;
     }
+
+
+    
     public virtual IEnumerator Frozen(float duration)
     {
+        Debug.Log("Entered Frozen State" + duration);
         if (currentCon == Condition.Frozen) yield break;
+        Debug.Log("Go Setting");
+
         currentCon = Condition.Frozen;
         SetMovementSpeed(0);
         currentCC = CC.entangled;
@@ -150,7 +157,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         yield return new WaitForSeconds(duration);
         
         currentCC = CC.normal;
-        SetMovementSpeed(currentSpeed);
+        SetMovementSpeed(12f);
         currentCon = Condition.normal;
     }
     public virtual IEnumerator Iced(float effect,float duration,float interval)
@@ -180,7 +187,6 @@ public abstract class StatusBehaviour : MonoBehaviour
 
     public virtual void ConditionOverload(Condition con,float effect=1, float duration = 1, float interval = 1,float shockTime = 0.5f)
     {
-        currentCon = con;
         switch(currentCon)
         {
             case Condition.Poisoned:

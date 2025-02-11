@@ -80,4 +80,14 @@ public class PostProcessingManager : MonoBehaviour
         if (vignette.intensity.value <= 0.6f) vignette.intensity.value += intensity;
     }
 
+    public void DamagedEffect(float intensity, Color color)
+    {
+        if (vignette.color.value == Color.white)
+        {
+            vignette.color.value = color;
+        }
+        if (vignette.intensity.value <= 0.02f) vignette.intensity.value = 0.3f;
+        if (vignette.intensity.value <= 0.6f) vignette.intensity.value += intensity;
+    }
+
 }

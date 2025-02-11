@@ -5,7 +5,7 @@ using UnityEngine;
 public class MProjectile : MonoBehaviour
 {
     
-    private float damage; // 투사체의 피해량
+    protected float damage; // 투사체의 피해량
    
     [Header("Settings")]
     [SerializeField] float lifetime = 20f; // 투사체의 수명
@@ -43,7 +43,7 @@ public class MProjectile : MonoBehaviour
 
     private void Move()
     {
-        transform.Translate(dir * speed * Time.deltaTime);
+        transform.Translate(dir * speed * Time.deltaTime, Space.World);
     }
 
     public void SetBulletDamage(float attackDamage)

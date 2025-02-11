@@ -87576,3 +87576,11 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.8333333
+    functionName: FireProjectileFromAnimation
+    data: 
+    objectReferenceParameter: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0

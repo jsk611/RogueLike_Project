@@ -62,6 +62,22 @@ public class Ransomware : MonoBehaviour
             rangedAttackState.OnAttackFinished();
         }
     }
+    public void FireProjectileFromAnimation()
+    {
+        if (rangedAttackState != null)
+        {
+            rangedAttackState.FireProjectile();
+        }
+    }
+
+
+    public void OnSpecialAttackFinished()
+    {
+        if (specialAttackState != null)
+        {
+            specialAttackState.OnAttackFinished();
+        }
+    }
 
     
 

@@ -87,6 +87,8 @@ public class PlayerStatus : StatusBehaviour
     [Header("Player Stamina")]
     [SerializeField] [Range(0,100)] float Stamina;
 
+
+
     
     CharacterBehaviour character;
     PlayerControl playerControl;
@@ -120,27 +122,53 @@ public class PlayerStatus : StatusBehaviour
     // Current Health
     public override void DecreaseHealth(float damage)
     {
-        Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
-        new WaitForEndOfFrame();
+        Health -= damage;
+        CheckDeath();
+        UpdateUI();
+
+        float intensity = damage / MaxHealth;
+
+        // 현재 상태에 따라 다른 색상의 데미지 효과를 적용합니다.
+        if (currentCon == Condition.Frozen)
+        {
+            Debug.Log("Frozen");
+            // 예: Frozen 상태라면 cyan 색상의 깜빡임 효과를 적용
+            postProcessingManager.DamagedEffect(intensity, Color.cyan);
+        }
+        else if (currentCon == Condition.Blazed)
+        {
+            // 예: Blazed 상태일 때는 원하는 색 (예를 들어, 주황색)
+            postProcessingManager.DamagedEffect(intensity, new Color(1f, 0.5f, 0f)); // 주황색
+        }
+        else
+        {
+            // 특별한 상태가 아니라면 기존 빨간색 효과 적용 (기본 DamagedEffect)
+            postProcessingManager.DamagedEffect(intensity);
+        }
+    }
+
+    private void CheckDeath()
+    {
         if (Health <= 0)
         {
             Health = 0;
-            //???? ???? ????
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            SceneManager.LoadScene("GameOverScene");
-
+            HandleDeath();
         }
+    }
 
-        postProcessingManager.DamagedEffect(damage/MaxHealth);
-        if(Health/MaxHealth < 0.33f)
-        {
-            postProcessingManager.ChangeVignetteColor(Color.red);
-            postProcessingManager.ChangeChromaticAberrationActive(true);
-        }
+    private void HandleDeath()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("GameOverScene");
+    }
 
+    private void UpdateUI()
+    {
         UIManager.instance.BarValueChange(0, MaxHealth, Health);
     }
+
+   
     public override void IncreaseHealth(float health)
     {
         Health += health;
@@ -412,5 +440,33 @@ public class PlayerStatus : StatusBehaviour
         weaponAnimator = character.GetWeaponAnimator();
         characterAnimator.SetFloat(Id, value);
         weaponAnimator.SetFloat(Id, value);
+    }
+
+    public override void ConditionOverload(Condition con, float effect = 1, float duration = 1, float interval = 1, float shockTime = 0.5f)
+    {
+        Debug.Log("Duration " + duration);
+        switch (con)
+        {
+            case Condition.Poisoned:
+                if (currentCon != Condition.Poisoned)
+                    StartCoroutine(Poisoned(effect, duration, interval));
+                break;
+            case Condition.Blazed:
+                if (currentCon != Condition.Blazed)
+                    StartCoroutine(Blazed(effect, duration, interval));
+                break;
+            case Condition.Frozen:
+                if (currentCon != Condition.Frozen)
+                    StartCoroutine(Frozen(duration));
+                break;
+            case Condition.Shocked:
+                if (currentCon != Condition.Shocked)
+                    StartCoroutine(Shocked(duration, interval, shockTime));
+                break;
+            case Condition.Iced:
+                StartCoroutine(Iced(effect, duration, interval));
+                break;
+        }
+        return;
     }
 }

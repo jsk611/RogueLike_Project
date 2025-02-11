@@ -66,7 +66,7 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             specialAttackState,
             chaseState,
-            () => true
+            () => specialAttackState.IsAnimationFinished()
         ));
         subFsm.AddTransition(new Transition<Ransomware>(
             meleeAttackState,

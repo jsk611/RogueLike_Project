@@ -512,7 +512,7 @@ Transform:
   m_GameObject: {fileID: 5324031331373651113}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -1.67, y: 1.1, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1126,9 +1126,8 @@ MonoBehaviour:
   target: {fileID: 0}
   body: {fileID: 2152605797047502344}
   head: {fileID: 0}
-  firePoint: {fileID: 2397268573487061447}
-  dataPacket: {fileID: 7417586618227507175, guid: 643ce2010a1a9024195425e0bf009c77,
-    type: 3}
+  firePoint: {fileID: 1472911293522630302}
+  dataPacket: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
   summonedMonster: 0
@@ -1159,6 +1158,7 @@ MonoBehaviour:
   abilitiesData:
   - {fileID: 11400000, guid: c419d3f24ce6e2840bd9ca3b31a25b1e, type: 2}
   - {fileID: 11400000, guid: 4df6051b070972f49a63e0eada83ee65, type: 2}
+  - {fileID: 11400000, guid: 149539ace83ae93449add97c278aefff, type: 2}
 --- !u!1 &8909898536846366522
 GameObject:
   m_ObjectHideFlags: 0
