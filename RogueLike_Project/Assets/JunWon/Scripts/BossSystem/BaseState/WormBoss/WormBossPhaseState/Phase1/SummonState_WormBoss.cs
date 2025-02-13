@@ -12,6 +12,7 @@ public class SummonState_WormBoss : State<WormBossPrime>
         Vector3 randomPosition = new Vector3(Random.Range(0,5),0,Random.Range(0,5));
         GameObject minion = GameObject.Instantiate(owner.minions[range], owner.Player.position+randomPosition, Quaternion.identity);
         owner.Summoned.Add(minion);
+        minion.GetComponent<MonsterBase>().summonedMonster = true;
      //   Debug.Log("Summon State Enter");
     }
     public override void Update()

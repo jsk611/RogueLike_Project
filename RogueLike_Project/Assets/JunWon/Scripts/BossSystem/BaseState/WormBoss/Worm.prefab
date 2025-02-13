@@ -440,6 +440,7 @@ MonoBehaviour:
   summonInterval: 8
   shootInterval: 5
   chaseInterval: 20
+  digInterval: 10
 --- !u!114 &8855231269337352878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -454,8 +455,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCC: 0
   currentCon: 0
-  Health: 100
-  MaxHealth: 100
+  Health: 300
+  MaxHealth: 300
   CriticalRate: 5
   CriticalDamage: 100
   MoveSpeed: 20
@@ -551,8 +552,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a3ad150c3328254b9af7d773b4ba064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnTimer: 0
-  turnInterval: 3
   bodyList:
   - {fileID: 2158317552681735019}
   - {fileID: 6576120376670600970}

@@ -2,6 +2,7 @@ using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,14 +12,13 @@ using static UnityEngine.GraphicsBuffer;
 
 public class WormBossPrime : BossBase
 {
-   
+    [Header("StateMachine")]
+    [SerializeField] protected StateMachine<WormBossPrime> fsm;
 
     [Header("Minion Settings")]
     public List<GameObject> minions = new List<GameObject>();
     private List<GameObject> summoned = new List<GameObject>();
 
-
- 
     [SerializeField] private float summonInterval;
     [SerializeField] private float shootInterval;
     [SerializeField] private float chaseInterval;
@@ -33,7 +33,6 @@ public class WormBossPrime : BossBase
     private bool ChsToWanTrigger = false;
     private bool DigToWanTrigger = false;
 
-
     #region ReadOnlyFunc 
     public Transform Player => target;
     public NavMeshAgent NmAgent => nmAgent;
@@ -41,6 +40,7 @@ public class WormBossPrime : BossBase
     public BossStatus BossStatus => bossStatus;
     public FieldOfView FOV => fov;
     public List<GameObject> Summoned => summoned;
+    public EnemyCountData EnemyCountData => enemyCountData;
     public bool ATKTOWANDER => ShtToWanTrigger;
     public bool SUMTOWANDER => SumToWanTrigger;
     #endregion
@@ -72,7 +72,7 @@ public class WormBossPrime : BossBase
         var wanderState = new WanderingStateWormBoss(this);
         var shootState = new ShootState_WormBoss(this);
         var digState = new DigState_WormBoss(this);
-        var dieState = new DieState_WormBoss(this);
+        
 
         fsm = new StateMachine<WormBossPrime>(introState);
 
@@ -90,7 +90,7 @@ public class WormBossPrime : BossBase
         Transition<WormBossPrime> WanderToDig;
         Transition<WormBossPrime> DigToWander;
 
-        Transition<WormBossPrime> AnyToDeath;
+        
         IntroToWander = new Transition<WormBossPrime>(
             introState,
             wanderState,
@@ -136,24 +136,19 @@ public class WormBossPrime : BossBase
             wanderState,
             () => DigToWanTrigger
         );
-        AnyToDeath = new Transition<WormBossPrime>(
-            null,
-            dieState,
-            () => bossStatus.GetHealth() <= 0
-        );
+
 
 
 
         fsm.AddTransition(IntroToWander);
-     //   fsm.AddTransition(WanderToSummon);
+        fsm.AddTransition(WanderToSummon);
         fsm.AddTransition(SummonToWander);
-     //   fsm.AddTransition(WanderToShoot);
+        fsm.AddTransition(WanderToShoot);
         fsm.AddTransition(ShootToWander);
-    //    fsm.AddTransition(WanderToChase);
+        fsm.AddTransition(WanderToChase);
         fsm.AddTransition(ChaseToWander);
         fsm.AddTransition(WanderToDig);
         fsm.AddTransition(DigToWander);
-     //   fsm.AddTransition(AnyToDeath);
     }
 
     private void InitializeComponent()
@@ -185,8 +180,28 @@ public class WormBossPrime : BossBase
         DigToWanTrigger = !DigToWanTrigger;
     }
     
-    public void TakeDamage(float damage)
+    public override void TakeDamage(float damage, bool showDamage = true)
     {
         bossStatus.DecreaseHealth(damage);
+        
+        EventManager.Instance.TriggerMonsterDamagedEvent();
+        Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        if (bossStatus.GetHealth() <= 0)
+        {
+   
+
+            
+           
+            var dieState = new DieState_WormBoss(this);
+            Transition<WormBossPrime> AnyToDeath;
+            AnyToDeath = new Transition<WormBossPrime>(
+              null,
+              dieState,
+              () => true
+            );
+            fsm.AddTransition(AnyToDeath);
+        }
     }
+
+
 }

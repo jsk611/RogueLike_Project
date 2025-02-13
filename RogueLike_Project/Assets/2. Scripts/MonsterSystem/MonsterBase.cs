@@ -341,7 +341,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
         else
         {
-            master.summonDead(gameObject);
+            master?.summonDead(gameObject);
         }
         Destroy(gameObject);
     }

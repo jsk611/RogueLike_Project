@@ -17,6 +17,7 @@ public class WormBossBodyHitBox : MonoBehaviour
         Debug.Log("Worm hit by "+other.gameObject.name );
         if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
+            
             float bulletDamage = other.gameObject.GetComponent<Projectile>().bulletDamage;
             wormBoss.TakeDamage(bulletDamage*playerStatus.GetAttackDamage()/100*playerStatus.CalculateCriticalHit());
         }

@@ -8,11 +8,18 @@ public class DieState_WormBoss : State<WormBossPrime>
     // Start is called before the first frame update
     public override void Enter()
     {
-        base.Enter();
+        owner.Animator.SetTrigger("dieTrigger");
+        EventManager.Instance.TriggerMonsterKilledEvent(true);
+        owner.EnemyCountData.enemyCount--;
+        foreach (GameObject minion in owner.Summoned)
+        {
+            minion.GetComponent<MonsterBase>()?.TakeDamage(9999, false);
+        }
+        GameObject.Destroy(owner.gameObject);
     }
     public override void Update()
     {
-        base.Update();
+        
     }
     public override void Exit()
     {

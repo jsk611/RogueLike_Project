@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
-public class BossBase : MonoBehaviour
+public abstract class BossBase : MonoBehaviour
 {
     #region Serialized Fields
     [Header("General Settings")]
@@ -40,20 +41,11 @@ public class BossBase : MonoBehaviour
     [Header("External Data")]
     [SerializeField] protected EnemyCountData enemyCountData;
 
-    [Header("StateMachine")]
-    [SerializeField] protected StateMachine<WormBossPrime> fsm;
+
     #endregion
 
 
-    public virtual void TakeDamage(float damage, bool showDamage = true)
-    {
-        EventManager.Instance.TriggerMonsterDamagedEvent();
-
-        bossStatus.DecreaseHealth(damage);
-
-        if (showDamage) Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
-        // HPBar?.SetRatio(hp, monsterStatus.GetMaxHealth());
-
-    }
+    public abstract void TakeDamage(float damage, bool showDamage = true);
+   
 
 }
