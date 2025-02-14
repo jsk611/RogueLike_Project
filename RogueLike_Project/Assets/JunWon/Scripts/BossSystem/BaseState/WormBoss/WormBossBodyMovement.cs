@@ -11,6 +11,8 @@ public class WormBossBodyMovement : MonoBehaviour
     private float turnTimer = 0f;
     private float turnInterval = 3f;
     private float moveTimer = 0f;
+    private float deathTimer = 0f;
+    private float bodyCount = 0;
 
     [SerializeField] List<Transform> bodyList;
     [SerializeField] Transform chaseTarget;
@@ -31,7 +33,8 @@ public class WormBossBodyMovement : MonoBehaviour
         Flying,
         Digging,
         Rushing,
-        Inertia
+        Inertia,
+        Dying
     }
     public actionType currentActionType = actionType.Idle;
     Dictionary<actionType, Action> moveType;
@@ -52,6 +55,7 @@ public class WormBossBodyMovement : MonoBehaviour
         target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
         chaseSpeed = GetComponent<BossStatus>().GetMovementSpeed();
         tileManager = FindAnyObjectByType<TileManager>();
+        bodyCount = bodyList.Count;
         
         moveType = new Dictionary<actionType, Action>
         {
@@ -60,7 +64,8 @@ public class WormBossBodyMovement : MonoBehaviour
             {actionType.Flying, Flying},
             {actionType.Digging,Digging },
             {actionType.Rushing,Rushing},
-            {actionType.Inertia,AfterRush }
+            {actionType.Inertia,AfterRush },
+            {actionType.Dying, Dying},
         };
     }
 
@@ -168,6 +173,19 @@ public class WormBossBodyMovement : MonoBehaviour
     void AfterRush()
     {
         //dummy
+    }
+    void Dying()
+    {
+        deathTimer += Time.deltaTime;
+        if(deathTimer >= 6f/bodyCount)
+        {
+            deathTimer = 0;
+            bodyList[bodyList.Count - 1].gameObject.SetActive(false);
+            bodyList.Remove(bodyList[bodyList.Count-1]);
+        }
+        moveDirection = Quaternion.LookRotation(Vector3.up);
+        chaseSpeed -= Time.deltaTime;
+        Debug.Log(chaseSpeed);
     }
     
 }

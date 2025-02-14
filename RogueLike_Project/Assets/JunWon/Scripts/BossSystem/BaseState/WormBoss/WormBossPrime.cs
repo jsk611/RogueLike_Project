@@ -188,10 +188,6 @@ public class WormBossPrime : BossBase
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
         if (bossStatus.GetHealth() <= 0)
         {
-   
-
-            
-           
             var dieState = new DieState_WormBoss(this);
             Transition<WormBossPrime> AnyToDeath;
             AnyToDeath = new Transition<WormBossPrime>(

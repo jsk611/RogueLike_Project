@@ -43,6 +43,11 @@ public class MonsterAnimationEventHandler : MonoBehaviour
         else if (statusBehaviour.currentCon == StatusBehaviour.Condition.Shocked ) { StartCoroutine(Shocked()); }
 
     }
+
+    void DeathSignalConfirmed()
+    {
+
+    }
  
 
     IEnumerator Frozen()
