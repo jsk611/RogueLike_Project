@@ -14,6 +14,9 @@ public class Troy : BossBase
     [Header("Camouflage")]
     [SerializeField] List<GameObject> monsterList;
 
+
+    [SerializeField] GameObject TroyBomb;
+
     public bool ISCAMOUFLAGED { get => isCamouflaged; set => isCamouflaged = value; }
 
     private void Start()
@@ -33,10 +36,10 @@ public class Troy : BossBase
         var introState = new IntroState_Troy(this);
         var idleState = new IdleState_Troy(this);
         var chaseState = new ChaseState_Troy(this);
+   //     var summonState = new SummonState_Troy(this);
         var lurkState = new LurkState_Troy(this);
 
         fsm = new StateMachine<Troy>(introState);
-
     }
     private void InitializeComponents()
     {
@@ -46,14 +49,12 @@ public class Troy : BossBase
         bossStatus = GetComponent<BossStatus>();
     }
 
-    public void TakeDamage(float damage)
+    public override void TakeDamage(float damage, bool showDamage = true)
     {
         if (isCamouflaged) return;
 
         bossStatus.DecreaseHealth(damage);
-    }
-    public override void TakeDamage(float damage, bool showDamage = true)
-    {
-        throw new System.NotImplementedException();
+        EventManager.Instance.TriggerMonsterDamagedEvent();
+
     }
 }

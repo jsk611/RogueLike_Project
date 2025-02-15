@@ -185,7 +185,6 @@ public class WormBossBodyMovement : MonoBehaviour
         }
         moveDirection = Quaternion.LookRotation(Vector3.up);
         chaseSpeed -= Time.deltaTime;
-        Debug.Log(chaseSpeed);
     }
     
 }
