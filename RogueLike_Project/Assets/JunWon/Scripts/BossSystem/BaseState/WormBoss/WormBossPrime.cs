@@ -34,13 +34,9 @@ public class WormBossPrime : BossBase
     private bool DigToWanTrigger = false;
 
     #region ReadOnlyFunc 
-    public Transform Player => target;
-    public NavMeshAgent NmAgent => nmAgent;
-    public Animator Animator => anim;
-    public BossStatus BossStatus => bossStatus;
-    public FieldOfView FOV => fov;
+
     public List<GameObject> Summoned => summoned;
-    public EnemyCountData EnemyCountData => enemyCountData;
+    
     public bool ATKTOWANDER => ShtToWanTrigger;
     public bool SUMTOWANDER => SumToWanTrigger;
     #endregion

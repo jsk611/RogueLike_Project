@@ -8,7 +8,7 @@ public class IdleState_Troy : State<Troy>
     // Start is called before the first frame update
     public override void Enter()
     {
-
+        owner.NmAgent.ResetPath();
     }
     public override void Update()
     {
@@ -16,6 +16,6 @@ public class IdleState_Troy : State<Troy>
     }
     public override void Exit()
     {
-
+        owner.NmAgent.ResetPath();
     }
 }

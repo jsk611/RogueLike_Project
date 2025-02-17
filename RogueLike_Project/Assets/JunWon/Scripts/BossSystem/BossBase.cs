@@ -43,7 +43,12 @@ public abstract class BossBase : MonoBehaviour
 
 
     #endregion
-
+    public NavMeshAgent NmAgent => nmAgent;
+    public Animator Animator => anim;
+    public EnemyCountData EnemyCountData => enemyCountData;
+    public BossStatus BossStatus => bossStatus;
+    public Transform Player => target;
+    public FieldOfView FOV => fov;
 
     public abstract void TakeDamage(float damage, bool showDamage = true);
    
