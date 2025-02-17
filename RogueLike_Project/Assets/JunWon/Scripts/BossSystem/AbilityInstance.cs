@@ -69,4 +69,9 @@ public class AbilityInstance : MonoBehaviour
     {
         return data.damage;
     }
+
+    public GameObject GetPrefab()
+    {
+        return data.effectPrefab;
+    }
 }

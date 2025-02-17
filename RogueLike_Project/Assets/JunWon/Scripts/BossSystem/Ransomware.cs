@@ -4,28 +4,20 @@ using System.Xml;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Ransomware : MonoBehaviour
+public class Ransomware : BossBase
 {
     #region Components
     [Header("Basic Components")]
-    [SerializeField] private Animator anim;
-    [SerializeField] private NavMeshAgent nmAgent;
-    [SerializeField] private FieldOfView fov;
-    [SerializeField] private MonsterStatus monsterStatus;
-    [SerializeField] private AbilityManager abilityManger;
+    [SerializeField] private AbilityManager abilityManager;
 
     [Header("Transform References")]
-    [SerializeField] protected Transform target;
-    [SerializeField] private Transform body;
-    [SerializeField] private Transform head;
     [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform explosionPoint;
     #endregion
 
     #region Combat Settings
     [Header("Combat")]
     [SerializeField] private GameObject dataPacket;
-    [SerializeField] private float maxVerticalAngle = 60f;
-    [SerializeField] protected float rotateSpeed = 2.0f;
     private bool canRotate = true;
     #endregion
 
@@ -33,8 +25,6 @@ public class Ransomware : MonoBehaviour
     [Header("State")]
     [SerializeField] private StateMachine<Ransomware> fsm;
     public bool IsIntroAnimFinished { get; set; } = false;
-    public bool summonedMonster = false;
-    public Summoner master = null;
     #endregion
 
     #region State References
@@ -70,7 +60,6 @@ public class Ransomware : MonoBehaviour
         }
     }
 
-
     public void OnSpecialAttackFinished()
     {
         if (specialAttackState != null)
@@ -79,11 +68,13 @@ public class Ransomware : MonoBehaviour
         }
     }
 
-    
-
-
-
-
+    public void DataExplodeFromAnimation()
+    {
+        if (specialAttackState != null)
+        {
+            specialAttackState.ExplodeData();
+        }
+    }
     #endregion
 
     #region State Setters
@@ -105,38 +96,17 @@ public class Ransomware : MonoBehaviour
     }
     #endregion
 
-    #region Effects & UI
-    [Header("Visual Effects")]
-    [SerializeField] private GameObject splashFx;
-    [SerializeField] private GameObject spawnEffect;
-    [SerializeField] private Material startMaterial;
-    [SerializeField] private Material baseMaterial;
-
-    [Header("UI Elements")]
-    [SerializeField] public EnemyHPBar HPBar;
-    [SerializeField] private GameObject UIDamaged;
-    #endregion
-
-    #region Drops & External
-    [Header("Drop Settings")]
-    [SerializeField] private GameObject[] items;
-    [SerializeField] private int[] itemProbability = { 50, 25, 0 };
-    [SerializeField] private float height = 5f;
-    [SerializeField] private int DNADrop = 0;
-
-    [Header("External References")]
-    [SerializeField] private EnemyCountData enemyCountData;
-    #endregion
 
     #region Public Properties
     public Transform Player => target;
     public NavMeshAgent NmAgent => nmAgent;
     public Animator Animator => anim;
-    public MonsterStatus MonsterStatus => monsterStatus;
+    public BossStatus MonsterStatus => bossStatus;
     public FieldOfView FOV => fov;
-    public AbilityManager AbilityManger => abilityManger;
+    public AbilityManager AbilityManager => abilityManager;
     public Transform FirePoint => firePoint;
     public GameObject DataPacket => dataPacket;
+    public Transform ExplosionPoint => explosionPoint;
     #endregion
 
     #region Unity Lifecycle
@@ -166,7 +136,6 @@ public class Ransomware : MonoBehaviour
         target = GameObject.FindWithTag("Player").transform;
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
-        monsterStatus = GetComponent<MonsterStatus>();
         fov = GetComponent<FieldOfView>();
     }
 
@@ -206,12 +175,12 @@ public class Ransomware : MonoBehaviour
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase1State,
             states.phase2State,
-            () => monsterStatus.GetHealth() <= 0.5f * monsterStatus.GetMaxHealth()));
+            () => bossStatus.GetHealth() <= 0.5f * bossStatus.GetMaxHealth()));
 
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase1State,
             states.deadState,
-            () => monsterStatus.GetHealth() <= 0f));
+            () => bossStatus.GetHealth() <= 0f));
     }
     #endregion
 
@@ -264,6 +233,15 @@ public class Ransomware : MonoBehaviour
     #region Public Methods
     public void SetRotationLock(bool locked) => canRotate = !locked;
     public void SetRotationUnlock(bool locked) => canRotate = !locked;
-    public void TakeDamage(float dmg) { }
+    public override void TakeDamage(float damage, bool showDamage = true)
+    {
+        bossStatus.DecreaseHealth(damage);
+
+        EventManager.Instance.TriggerMonsterDamagedEvent();
+        Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        if (bossStatus.GetHealth() <= 0)
+        {
+        }
+    }
     #endregion
 }

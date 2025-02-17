@@ -23,4 +23,5 @@ MonoBehaviour:
   buffType: 0
   buffAmount: 0
   abilityAnimation: {fileID: 0}
-  effectPrefab: {fileID: 0}
+  effectPrefab: {fileID: 2629132165074817330, guid: 88511a099c50bc043a3386ed8b483a13,
+    type: 3}

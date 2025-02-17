@@ -899,12 +899,12 @@ GameObject:
   - component: {fileID: 2152605797047502344}
   - component: {fileID: 6434661973812919963}
   - component: {fileID: 8022955817955745515}
-  - component: {fileID: 2630608389428154249}
   - component: {fileID: 6204672887000719795}
   - component: {fileID: 6621682464905811628}
   - component: {fileID: 7879659086934800721}
   - component: {fileID: 539599845127236806}
   - component: {fileID: 9020062919854553706}
+  - component: {fileID: 3193221684165263386}
   - component: {fileID: -5532140609096168611}
   - component: {fileID: 8136102259909351704}
   m_Layer: 16
@@ -984,28 +984,6 @@ MonoBehaviour:
   leftClear: 1
   rightClear: 0
   visibleTargets: []
---- !u!114 &2630608389428154249
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8560706903217793330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentCC: 0
-  currentCon: 0
-  Health: 400
-  MaxHealth: 400
-  CriticalRate: 0
-  CriticalDamage: 0
-  MoveSpeed: 3.5
-  ReloadSpeed: 100
-  Damage: 30
-  AttackSpeed: 100
 --- !u!195 &6204672887000719795
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1106,6 +1084,28 @@ MonoBehaviour:
   mBase: {fileID: 0}
   partName: Body
   damageMultiplier: 1
+--- !u!114 &3193221684165263386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560706903217793330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f96cd2774fd58145870c5d18e60eccb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentCC: 0
+  currentCon: 0
+  Health: 400
+  MaxHealth: 400
+  CriticalRate: 0
+  CriticalDamage: 0
+  MoveSpeed: 0
+  ReloadSpeed: 100
+  Damage: 0
+  AttackSpeed: 100
 --- !u!114 &-5532140609096168611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,31 +1118,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 6434661973812919963}
-  nmAgent: {fileID: 6204672887000719795}
-  fov: {fileID: 8022955817955745515}
-  monsterStatus: {fileID: 2630608389428154249}
-  abilityManger: {fileID: 8136102259909351704}
   target: {fileID: 0}
   body: {fileID: 2152605797047502344}
   head: {fileID: 0}
-  firePoint: {fileID: 1472911293522630302}
-  dataPacket: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
-  summonedMonster: 0
-  master: {fileID: 0}
+  anim: {fileID: 6434661973812919963}
+  nmAgent: {fileID: 6204672887000719795}
+  fov: {fileID: 8022955817955745515}
+  bossStatus: {fileID: 3193221684165263386}
+  playerRigidBody: {fileID: 0}
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 0}
   startMaterial: {fileID: 0}
   baseMaterial: {fileID: 0}
-  HPBar: {fileID: 0}
-  UIDamaged: {fileID: 0}
   items: []
   itemProbability: 320000001900000000000000
   height: 5
   DNADrop: 0
+  HPBar: {fileID: 504546604379688107}
+  UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
+    type: 3}
   enemyCountData: {fileID: 0}
+  abilityManager: {fileID: 8136102259909351704}
+  firePoint: {fileID: 1472911293522630302}
+  explosionPoint: {fileID: 6264956134639678497}
+  dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
+    type: 3}
 --- !u!114 &8136102259909351704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1700,6 +1702,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bdf0c3564b562af4cb4d83e786a3ee7b, type: 3}
+--- !u!114 &504546604379688107 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7044700580445288877, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
+    type: 3}
+  m_PrefabInstance: {fileID: 7404849816116901126}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a882bf97c15de47419d357320658bc4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1641121004083355098 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,

@@ -20,7 +20,7 @@ public class Phase1_Attack_State : BossPhaseBase<Ransomware>
         if (CanExecuteAttack())
         {
             owner.Animator.SetTrigger("MeeleAttack");
-            if (owner.AbilityManger.UseAbility("BasicMeeleAttack"))
+            if (owner.AbilityManager.UseAbility("BasicMeeleAttack"))
             {
             }
         }

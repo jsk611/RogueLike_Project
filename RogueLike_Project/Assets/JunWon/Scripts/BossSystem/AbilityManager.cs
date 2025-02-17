@@ -77,6 +77,18 @@ public class AbilityManager : MonoBehaviour
         return 0;
     }
 
+    /// <summary>
+    /// 특정 스킬(어빌리티)의 프리팹을 반환
+    /// </summary>
+    public GameObject GetAbilityPrefab(string abilityName)
+    {
+        if (abilities.ContainsKey(abilityName))
+        {
+            return abilities[abilityName].GetPrefab();
+        }
+        return null;
+    }
+
     public void SetMaxCoolTime(string abilityName)
     {
         if (abilities.ContainsKey(abilityName))
@@ -85,4 +97,5 @@ public class AbilityManager : MonoBehaviour
         }
 
     }
+
 }

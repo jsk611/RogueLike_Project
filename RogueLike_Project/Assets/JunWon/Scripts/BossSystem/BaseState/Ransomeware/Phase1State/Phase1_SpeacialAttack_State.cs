@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 
 public class Phase1_SpeacialAttack_State : State<Ransomware>
 {
+    private string name = "DataExplode";
     private bool isAttackFinished = false;
     public float radius = 15.0f;
     public float damage = 50f;
@@ -25,11 +26,10 @@ public class Phase1_SpeacialAttack_State : State<Ransomware>
         if (CanExecuteAttack())
         {
             // Ability 시스템을 통한 공격 실행
-            if (owner.AbilityManger.UseAbility("DataExplode"))
+            if (owner.AbilityManager.UseAbility(name))
             {
-                owner.Animator.SetTrigger("DataExplode");
+                owner.Animator.SetTrigger(name);
                 LockPlayerSkill();
-                ExplodeData();
             }
         }
         else
@@ -78,7 +78,22 @@ public class Phase1_SpeacialAttack_State : State<Ransomware>
 
     void ShowExplosionEffect()
     {
+        GameObject explosion = owner.AbilityManager.GetAbilityPrefab(name);
         // 여기에 파티클 효과, 사운드 등 추가
+        if (explosion == null)
+        {
+            Debug.LogWarning("DataExplode 이펙트 프리팹이 없습니다.");
+            return;
+        }
+
+        // 보스의 현재 위치에서 폭발 이펙트 생성
+        GameObject effectInstance = Object.Instantiate(explosion, owner.ExplosionPoint.position, Quaternion.identity);
+
+        // AdvancedExplosion 등 커스텀 스크립트가 붙어 있다면, 파라미터 세팅
+        Explosion explosionScript = effectInstance.GetComponent<Explosion>();
+        if (explosionScript != null)
+        {
+        }
     }
 
     void LockPlayerSkill()

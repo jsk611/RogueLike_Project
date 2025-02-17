@@ -21,7 +21,7 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
         if (CanExecuteAttack())
         {
             owner.Animator.SetTrigger("RangedAttack");
-            owner.AbilityManger.UseAbility("BasicRangedAttack");
+            owner.AbilityManager.UseAbility("BasicRangedAttack");
         }
         else
         {
@@ -45,7 +45,7 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
 
         if (projectile.TryGetComponent<MProjectile>(out var mProjectile))
         {
-            mProjectile.SetBulletDamage(owner.AbilityManger.GetAbiltiyDmg("BasicRangedAttack"));
+            mProjectile.SetBulletDamage(owner.AbilityManager.GetAbiltiyDmg("BasicRangedAttack"));
             mProjectile.SetDirection(directionToPlayer);
             Debug.Log("Ranged attack projectile fired!");
         }

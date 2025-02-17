@@ -9,9 +9,20 @@ public class Phase2State_Ransomeware : State<Ransomware>
 
     private StateMachine<Ransomware> subFsm;
 
+    private void InitializeSubFSM()
+    {
+        var idleState = new Phase1_Idle_State(owner);
+
+        subFsm = new StateMachine<Ransomware>(idleState);
+    
+    }
+
+
+
     public override void Enter()
     {
-        Debug.Log("랜섬웨어 보스 페이즈2 시작");
+        Debug.Log("랜섬웨어 보스 페이즈1 시작");
+        InitializeSubFSM();
     }
 
     public override void Update()
