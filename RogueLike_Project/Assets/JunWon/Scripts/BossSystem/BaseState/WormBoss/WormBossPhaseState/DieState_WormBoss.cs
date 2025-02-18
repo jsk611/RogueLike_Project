@@ -21,12 +21,12 @@ public class DieState_WormBoss : State<WormBossPrime>
         if (deadTimer >= 6f)
         {
             EventManager.Instance.TriggerMonsterKilledEvent(true);
-           // owner.EnemyCountData.enemyCount--;
+            owner.EnemyCountData.enemyCount--;
             foreach (GameObject minion in owner.Summoned)
             {
                 minion.GetComponent<MonsterBase>()?.TakeDamage(9999, false);
             }
-            GameObject.Destroy(owner.gameObject);
+            GameObject.Destroy(GameObject.FindObjectOfType<WormBossPrime>());
         }
             
     }

@@ -8,6 +8,7 @@ public class EnemySpawnLogic : MonoBehaviour
     int mapSize;
 
     [SerializeField] GameObject[] enemyPrefabs;
+    [SerializeField] GameObject[] bossPrefabs;
 
     [SerializeField] EnemyCountData enemyCountData;
 
@@ -44,7 +45,15 @@ public class EnemySpawnLogic : MonoBehaviour
         EventManager.Instance.TriggerEnemyCountReset();
         Debug.Log(enemyCountData.enemyCount);
     }
-
+    public void SpawnBoss(int x, int y, int bossIdx)
+    {
+        Transform tileTransform = tileManager.GetTiles[y, x].transform;
+        Debug.Log(transform.name + ": " + "[" + tileTransform.position.x + " " + tileTransform.position.z + "]" + "/ height: " + tileTransform.position.y);
+        Vector3 spawnVec = tileTransform.position + new Vector3(0, tileTransform.localScale.y / 2.0f + 0.5f, 0);
+        Instantiate(bossPrefabs[bossIdx], spawnVec, Quaternion.identity, this.transform);
+        enemyCountData.enemyCount++;
+        
+    }
     GameObject GetEnemyPrefab(EnemyType enemyType)
     {
         switch (enemyType)

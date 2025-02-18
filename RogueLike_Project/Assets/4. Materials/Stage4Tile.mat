@@ -154,12 +154,12 @@ Material:
     - Color_1313CB5F: {r: 1, g: 1, b: 1, a: 1}
     - Color_7F5D350D: {r: 1, g: 1, b: 1, a: 1}
     - Color_BE5A53D8: {r: 1, g: 1, b: 1, a: 1}
-    - GridColor: {r: 1, g: 1, b: 1, a: 1}
+    - GridColor: {r: 1, g: 1, b: 1, a: 0.8}
     - Vector2_2818E70A: {r: 1, g: 0.5, b: 0, a: 0}
     - Vector2_EF5B598A: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _BaseColor: {r: 0.4509804, g: 0.27063262, b: 0.13725492, a: 1}
+    - _BaseColor: {r: 0.16981131, g: 0.079298675, b: 0.079298675, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.77574205, g: 0, b: 0.007924794, a: 1}
+    - _EmissionColor: {r: 0.5, g: 0.12523744, b: 0.09198114, a: 1}
     - _GridColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
