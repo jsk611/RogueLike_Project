@@ -15,8 +15,11 @@ public class LurkState_Troy : State<Troy>
         copyTroy = owner.TROYBOMB;
         copyState = copyTroy.GetComponent<StatusBehaviour>();
         lurkTimer = 0f;
-        GameObject.Instantiate(copyTroy, owner.transform.position, owner.transform.rotation);
+        GameObject copy = GameObject.Instantiate(copyTroy, owner.transform.position, owner.transform.rotation);
+        copy.GetComponent<Troy>().COPYCHAIN = owner.COPYCHAIN - 1;
+
         owner.GetComponent<MeshRenderer>().enabled = false;
+        owner.HPBar.GetComponent<Canvas>().enabled= false;
 
         Vector3 dir = owner.Player.position - owner.transform.position;
         dir.y = 0;
@@ -27,7 +30,7 @@ public class LurkState_Troy : State<Troy>
     public override void Update()
     {
         lurkTimer += Time.deltaTime;
-        if (lurkTimer >= 4f)
+        if (copyTroy == null || copyState.GetHealth()<=0 || lurkTimer >= 4f)
         {
             owner.IdleToLurk();
         }
@@ -36,6 +39,7 @@ public class LurkState_Troy : State<Troy>
     {
         owner.NmAgent.ResetPath();
         owner.GetComponent<MeshRenderer>().enabled = true;
+        owner.HPBar.GetComponent<Canvas>().enabled = true;
     }
 }
 

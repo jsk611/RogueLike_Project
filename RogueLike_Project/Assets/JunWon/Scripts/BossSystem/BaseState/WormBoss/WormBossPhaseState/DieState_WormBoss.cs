@@ -8,12 +8,15 @@ public class DieState_WormBoss : State<WormBossPrime>
     WormBossBodyMovement wormBossBodyMovement;
 
     float deadTimer = 0f;
+    bool deadCounted = false;
     // Start is called before the first frame update
     public override void Enter()
     {
         wormBossBodyMovement = owner.GetComponent<WormBossBodyMovement>();
         wormBossBodyMovement.ChangeState(WormBossBodyMovement.actionType.Dying, owner.BossStatus.GetMovementSpeed()/2);
-
+  
+            owner.Summoned.RemoveAll(x => x == null);
+        
     }
     public override void Update()
     {
@@ -21,12 +24,25 @@ public class DieState_WormBoss : State<WormBossPrime>
         if (deadTimer >= 6f)
         {
             EventManager.Instance.TriggerMonsterKilledEvent(true);
+<<<<<<< Updated upstream
             owner.EnemyCountData.enemyCount--;
+=======
+            
+>>>>>>> Stashed changes
             foreach (GameObject minion in owner.Summoned)
             {
-                minion.GetComponent<MonsterBase>()?.TakeDamage(9999, false);
+                minion?.GetComponent<MonsterBase>().TakeDamage(9999, false);
             }
+<<<<<<< Updated upstream
             GameObject.Destroy(GameObject.FindObjectOfType<WormBossPrime>());
+=======
+            if(!deadCounted)
+            {
+                deadCounted = true;
+                owner.EnemyCountData.enemyCount--;
+            }
+            GameObject.Destroy(owner.gameObject,0.2f);
+>>>>>>> Stashed changes
         }
             
     }

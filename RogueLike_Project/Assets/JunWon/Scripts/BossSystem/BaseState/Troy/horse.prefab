@@ -314,7 +314,13 @@ MonoBehaviour:
     type: 3}
   enemyCountData: {fileID: 0}
   monsterList: []
+  runInterval: 10
+  lurkHeathBoundary:
+  - 8
+  lurkInterval: 60
   TroyBomb: {fileID: 6081924387909584232}
+  copyChain: 3
+  isCopied: 0
 --- !u!95 &8014969182548315342
 Animator:
   serializedVersion: 5
@@ -401,7 +407,7 @@ MonoBehaviour:
   currentCC: 0
   currentCon: 0
   Health: 100
-  MaxHealth: 10
+  MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 40

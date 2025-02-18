@@ -16,17 +16,25 @@ public class CamouflageState_Troy : State<Troy>
     public override void Enter()
     {
         if (enemyManager == null) enemyManager = GameObject.FindAnyObjectByType<EnemySpawnLogic>();
-        MonsterStatus[] monsterList = enemyManager.GetComponentsInChildren<MonsterStatus>();
-        CamouflageObject = monsterList[Random.Range(0, monsterList.Length)];
-        owner.ISCAMOUFLAGED = true;
+        StatusBehaviour[] monsterList = enemyManager.GetComponentsInChildren<StatusBehaviour>();
+        CamouflageObject = (monsterList.Length>0)? monsterList[Random.Range(0, monsterList.Length)] : null;
+        owner.IdleToCamouflage();
     }
     public override void Update()
     {
-        if (CamouflageObject == null || CamouflageObject.GetHealth() <= 0)
+
+        if (CamouflageObject == null)
         {
-            owner.ISCAMOUFLAGED = false;
+            owner.IdleToCamouflage();
+            return;
+        }
+
+        else if (CamouflageObject.GetHealth() <= 0)
+        {
+            owner.IdleToCamouflage();
             owner.TakeDamage(owner.BossStatus.GetHealth() * 0.2f);
         }
+        Debug.Log(CamouflageObject.name);
     }
     public override void Exit()
     {
