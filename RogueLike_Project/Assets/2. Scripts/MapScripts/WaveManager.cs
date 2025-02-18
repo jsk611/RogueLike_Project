@@ -21,6 +21,10 @@ public class WaveManager : MonoBehaviour
 
     [Header("Map")]
     [SerializeField] string[] mapPaths;
+    [SerializeField] string[] stage1MapPath;
+    [SerializeField] string[] stage2MapPath;
+    [SerializeField] string[] stage3MapPath;
+    [SerializeField] string[] stage4MapPath;
     [SerializeField] string startMapPath;
     [SerializeField] string jeongbiMapPath;
 

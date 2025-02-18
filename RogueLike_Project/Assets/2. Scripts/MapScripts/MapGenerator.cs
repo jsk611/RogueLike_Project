@@ -12,6 +12,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] TMP_InputField input;
     [SerializeField] string[] mapPaths;
     [SerializeField] GameObject tile;
+    [SerializeField] Material[] colorSamples;
     int mapSizeX = 0, mapSizeY = 0;
     GameObject[,] tiles;
     int currentMapIndex = 0;
@@ -156,7 +157,6 @@ public class MapGenerator : MonoBehaviour
         return dataArray;
     }
 
-
     void CheckCommand(string command)
     {
         if (command[0] != '/') return;
@@ -164,6 +164,20 @@ public class MapGenerator : MonoBehaviour
         if (command.StartsWith("save"))
         {
             Save();
+        }
+        else if (command.StartsWith("color"))
+        {
+            int colorIdx = int.Parse(command.Split(' ')[1]);
+            command = command.Split(" ")[2];
+            if(command.Equals("all"))
+            {
+                foreach (GameObject tile in tiles)
+                {
+                    MeshRenderer meshRenderer = tile.GetComponent<MeshRenderer>();
+                    meshRenderer.material = colorSamples[colorIdx];
+                }
+            }
+
         }
         else if(int.TryParse(command, out int mapNum))
         {

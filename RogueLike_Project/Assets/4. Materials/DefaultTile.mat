@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MainTile
+  m_Name: DefaultTile
   m_Shader: {fileID: -6465566751694194690, guid: 19cc3618699ce6f48ace04ac9dfafb10,
     type: 3}
   m_Parent: {fileID: 0}
