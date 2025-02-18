@@ -18,6 +18,14 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
     float basicMeeleAttackChance = 0.4f; // 40% 확률
 
 
+    private void InitializeAbility()
+    {
+        owner.AbilityManager.SetAbilityActive("BasicMeeleAttack");
+        owner.AbilityManager.SetAbilityActive("BasicRangedAttack");
+        owner.AbilityManager.SetAbilityActive("DataExplode");
+        owner.AbilityManager.SetMaxCoolTime("DataExplode");
+
+    }
     private void InitializeStats()
     {
         owner.MonsterStatus.SetMovementSpeed(5.0f);
@@ -26,10 +34,7 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
 
     private void InitializeSubFSM()
     {
-        owner.AbilityManager.SetAbilityActive("BasicMeeleAttack");
-        owner.AbilityManager.SetAbilityActive("BasicRangedAttack");
-        owner.AbilityManager.SetAbilityActive("DataExplode");
-        owner.AbilityManager.SetMaxCoolTime("DataExplode");
+       
         // 각 상태 초기화 (각 상태 클래스는 생성자에서 owner를 받습니다)
         var idleState = new Phase1_Idle_State(owner);
         var chaseState = new Phase1_Chase_State(owner);
@@ -86,11 +91,44 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
     {
         Debug.Log("랜섬웨어 보스 페이즈1 시작");
         InitializeStats();
+        InitializeAbility();
         InitializeSubFSM();
     }
 
     public override void Update()
     {
+        if (isInterrupted) return;
         subFsm.Update();
     }
+
+    public override void Exit()
+    {
+        // 페이즈 종료 시 서브FSM도 정리
+        if (subFsm != null && subFsm.CurrentState != null)
+        {
+            subFsm.CurrentState.Exit();
+        }
+        subFsm = null;
+    }
+
+    public override void Interrupt()
+    {
+        if (isInterrupted) return;
+        isInterrupted = true;
+
+        // 현재 실행 중인 서브 스테이트의 Interrupt 호출
+        if (subFsm != null && subFsm.CurrentState != null)
+        {
+            subFsm.CurrentState.Interrupt();
+        }
+
+        // 페이즈1 관련 정리 작업
+        owner.AbilityManager.SetAbilityInactive("BasicMeeleAttack");
+        owner.AbilityManager.SetAbilityInactive("BasicRangedAttack");
+        owner.AbilityManager.SetAbilityInactive("DataExplode");
+
+        owner.NmAgent.isStopped = true;
+        owner.SetRotationLock(true);
+    }
+
 }

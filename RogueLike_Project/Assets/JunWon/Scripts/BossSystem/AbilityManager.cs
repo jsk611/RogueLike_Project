@@ -68,6 +68,13 @@ public class AbilityManager : MonoBehaviour
             abilities[abilityName].Activate();
         }
     }
+    public void SetAbilityInactive(string abilityName)
+    {
+        if (abilities.ContainsKey(abilityName))
+        {
+            abilities[abilityName].Deactivate();
+        }
+    }
     public float GetAbiltiyDmg(string abilityName)
     {
         if (abilities.ContainsKey(abilityName))

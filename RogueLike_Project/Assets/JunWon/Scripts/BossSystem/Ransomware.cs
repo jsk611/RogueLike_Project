@@ -32,6 +32,7 @@ public class Ransomware : BossBase
     private Phase1_BasicRangedAttack_State rangedAttackState;
     private Phase1_SpeacialAttack_State specialAttackState;
     private Phase2State_Ransomeware phase2State;
+    private Phase2_DataBlink_State blinkState;
     #endregion
 
     #region Animation Event Handlers
@@ -75,6 +76,21 @@ public class Ransomware : BossBase
             specialAttackState.ExplodeData();
         }
     }
+
+    public void OnDataBlinkFinished()
+    {
+        if (blinkState != null)
+        {
+            blinkState.OnAttackFinished();
+        }
+    }
+    public void DataBlinkFromAnimation()
+    {
+        if (blinkState != null)
+        {
+            blinkState.OnTeleport();
+        }
+    }
     #endregion
 
     #region State Setters
@@ -93,6 +109,10 @@ public class Ransomware : BossBase
     public void SetPhase2State(Phase2State_Ransomeware state)
     {
         phase2State = state;
+    }
+    public void SetDataBlinkState(Phase2_DataBlink_State state)
+    {
+        blinkState = state;
     }
     #endregion
 
@@ -239,9 +259,77 @@ public class Ransomware : BossBase
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+       
+        if (bossStatus.GetHealth() <= 0.5f * bossStatus.GetMaxHealth() && fsm.CurrentState is Phase1State_Ransomware)
+        {
+            InterruptCurrentAction(InterruptReason.PhaseTransition);
+        }
+
         if (bossStatus.GetHealth() <= 0)
         {
+            InterruptCurrentAction(InterruptReason.ForcedInterrupt);
         }
     }
+    #endregion
+
+
+    #region Interrupt Handling
+    public enum InterruptReason
+    {
+        PhaseTransition,
+        Stunned,
+        PlayerDeath,
+        ForcedInterrupt
+    }
+
+    public void InterruptCurrentAction(InterruptReason reason)
+    {
+        // 현재 State에 따른 Interrupt 처리
+        if (fsm.CurrentState is Phase1State_Ransomware phase1)
+        {
+            phase1.Interrupt();
+        }
+        else if (fsm.CurrentState is Phase2State_Ransomeware phase2)
+        {
+            phase2.Interrupt();
+        }
+
+        // 애니메이션 리셋
+        ResetAllAnimationTriggers();
+
+        // 특정 인터럽트 사유에 따른 추가 처리
+        switch (reason)
+        {
+            case InterruptReason.PhaseTransition:
+                SetRotationLock(true);
+                NmAgent.isStopped = true;
+                break;
+
+            case InterruptReason.Stunned:
+                SetRotationLock(true);
+                NmAgent.isStopped = true;
+                Animator.SetTrigger("Stunned");
+                break;
+
+            case InterruptReason.PlayerDeath:
+                SetRotationLock(true);
+                NmAgent.isStopped = true;
+                Animator.SetTrigger("PlayerDeath");
+                break;
+        }
+    }
+
+    private void ResetAllAnimationTriggers()
+    {
+        // 모든 공격 관련 트리거 리셋
+        Animator.ResetTrigger("Attack");
+        Animator.ResetTrigger("RangedAttack");
+        Animator.ResetTrigger("SpecialAttack");
+        Animator.ResetTrigger("DataBlink");
+
+        // 현재 진행중인 액션 중단
+        Animator.SetTrigger("InterruptAction");
+    }
+
     #endregion
 }
