@@ -111,9 +111,9 @@ public class Troy : BossBase
         if (copyChain < 0) return false;
 
         if (lurkTimer >= lurkInterval) return true;
-        else if (bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1])
+        else if (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1])
         {
-            while (bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1]) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
+            while (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1]) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
             return true;
         }
         return false;
