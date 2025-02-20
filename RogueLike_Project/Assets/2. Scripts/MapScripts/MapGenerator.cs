@@ -66,7 +66,7 @@ public class MapGenerator : MonoBehaviour
                 MeshRenderer mr = tiles[i, j].GetComponent<MeshRenderer>();
                 if(baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
                 if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
-                if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
+                if (gridColors != null) mr.material.SetColor("_GridColor", gridColors[j, i]);
             }
         }
     }
@@ -93,7 +93,7 @@ public class MapGenerator : MonoBehaviour
             for (int j = 0; j < mapSizeX; j++)
             {
                 baseColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("_BaseColor");
-                gridColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("GridColor");
+                gridColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("_GridColor");
                 emissionColorArray[j,i] = tiles[i, j].GetComponent<MeshRenderer>().material.GetColor("_EmissionColor");
             }
         }

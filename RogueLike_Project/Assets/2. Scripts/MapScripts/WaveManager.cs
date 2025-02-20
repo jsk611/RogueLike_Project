@@ -9,6 +9,7 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
+    int currentStage;
 
     [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
@@ -45,6 +46,7 @@ public class WaveManager : MonoBehaviour
         tileManager = FindObjectOfType<TileManager>();
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
+        currentStage = 1;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
         
@@ -112,6 +114,7 @@ public class WaveManager : MonoBehaviour
     //}
     IEnumerator RunStage1()
     {
+        currentStage = 1;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage1MapPath.Length -1;
@@ -132,6 +135,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator RunStage2()
     {
+        currentStage = 2;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage2MapPath.Length - 1;
@@ -150,6 +154,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator RunStage3() //미구현
     {
+        currentStage = 3;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage1MapPath.Length - 1;
@@ -167,6 +172,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator RunStage4() //미구현
     {
+        currentStage = 4;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage1MapPath.Length - 1;
@@ -200,7 +206,7 @@ public class WaveManager : MonoBehaviour
         nextWaveTrigger = false;
         startStage.SetActive(false);
 
-        tileManager.InitializeArray(4);
+        tileManager.InitializeArray(1,4);
         yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 0, 1, 0));
         startStage.SetActive(false);
         
@@ -208,7 +214,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator Maintenance()
     {
-        tileManager.InitializeArray(4);
+        tileManager.InitializeArray(currentStage, 4);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         Vector2Int stagePos = tileManager.MakeCenteredMapFromCSV(jeongbiMapPath, playerPos.x, playerPos.y);
         yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
@@ -222,7 +228,7 @@ public class WaveManager : MonoBehaviour
         }
 
         nextWaveTrigger= false;
-        tileManager.InitializeArray(4);
+        tileManager.InitializeArray(currentStage, 4);
         jeongbiStage.SetActive(false);
         playerPos = playerPositionData.playerTilePosition;
         yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
@@ -230,7 +236,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage1Wave(int mapIdx)
     {
         Debug.Log("Stage1_Wave");
-        tileManager.InitializeArray();
+        tileManager.InitializeArray(1);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage1MapPath[mapIdx], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -252,7 +258,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage1Boss() //미구현
     {
         Debug.Log("Stage1_Wave");
-        tileManager.InitializeArray();
+        tileManager.InitializeArray(1);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage1MapPath[stage1MapPath.Length -1], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -272,7 +278,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage2Wave(int mapIdx)
     {
         Debug.Log("Stage1_Wave");
-        tileManager.InitializeArray();
+        tileManager.InitializeArray(2);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage2MapPath[mapIdx], playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -300,7 +306,7 @@ public class WaveManager : MonoBehaviour
             item.isChasing = true;
             item.velocity *= 2;
         }
-        tileManager.InitializeArray(4);
+        tileManager.InitializeArray(currentStage,4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
         upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);

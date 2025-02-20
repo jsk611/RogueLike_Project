@@ -55,9 +55,9 @@ public class Tile : MonoBehaviour
         {
             while (time > 0)
             {
-                meshRenderer.material.SetColor("GridColor", alertColor);
+                meshRenderer.material.SetColor("_GridColor", alertColor);
                 yield return new WaitForSeconds(0.4f);
-                meshRenderer.material.SetColor("GridColor", Color.white);
+                meshRenderer.material.SetColor("_GridColor", Color.white);
                 yield return new WaitForSeconds(0.4f);
                 time -= 0.8f;
             }
@@ -150,11 +150,11 @@ public class Tile : MonoBehaviour
             while (tmp > 0f)
             {
                 tmp -= Time.deltaTime;
-                Color newColor = meshRenderer.material.GetColor("GridColor") + new Color(0, 0, 0, Time.deltaTime / duration);
-                meshRenderer.material.SetColor("GridColor", newColor);
+                Color newColor = meshRenderer.material.GetColor("_GridColor") + new Color(0, 0, 0, Time.deltaTime / duration);
+                meshRenderer.material.SetColor("_GridColor", newColor);
                 yield return new WaitForSeconds(Time.deltaTime);
             }
-            meshRenderer.material.SetColor("GridColor", new Color(1,1,1,1));
+            meshRenderer.material.SetColor("_GridColor", new Color(1,1,1,1));
             //StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
         }
         else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
@@ -170,7 +170,7 @@ public class Tile : MonoBehaviour
         {
             tmp -= Time.deltaTime;
             
-            Color newColor = meshRenderer.material.GetColor("GridColor");
+            Color newColor = meshRenderer.material.GetColor("_GridColor");
             if (newColor.a > 0) newColor = newColor - new Color(0, 0, 0, 3 * Time.deltaTime / duration);
             else 
             { 
@@ -186,7 +186,7 @@ public class Tile : MonoBehaviour
                 }
                 gameObject.SetActive(false);
             }
-                meshRenderer.material.SetColor("GridColor", newColor);
+                meshRenderer.material.SetColor("_GridColor", newColor);
             yield return new WaitForSeconds(Time.deltaTime);
         }
         //gameObject.SetActive(false);

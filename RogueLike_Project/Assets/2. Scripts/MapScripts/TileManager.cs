@@ -17,7 +17,7 @@ public class TileManager : MonoBehaviour
     Color32[,] baseColors = new Color32[mapSize,mapSize];
     Color32[,] emissionColors = new Color32[mapSize, mapSize];
     Color32[,] gridColors = new Color32[mapSize, mapSize];
-    [SerializeField] Color32[] defaultColor;
+    [SerializeField] Material[] defaultMaterials;
     CSVToArray CTA;
     public int GetMapSize
     {
@@ -69,8 +69,12 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-    public void InitializeArray(int initialValue = 0)
+    public void InitializeArray(int stage, int initialValue = 0)
     {
+        Color[] defaultColor = new Color[4];
+        defaultColor[0] = defaultMaterials[stage - 1].GetColor("_BaseColor");
+        defaultColor[1] = defaultMaterials[stage - 1].GetColor("_GridColor");
+        defaultColor[2] = defaultMaterials[stage - 1].GetColor("_EmissionColor");
         for(int i = 0;i < mapSize; i++)
         {
             for(int j=0; j < mapSize; j++)
@@ -82,47 +86,7 @@ public class TileManager : MonoBehaviour
             }
         }
     }
-    public void MakeCircle(float radius)
-    {
-        int centerX = mapSize / 2;
-        int centerY = mapSize / 2;
 
-        // Iterate over every point in the 30x30 grid
-        for (int y = 0; y < mapSize; y++)
-        {
-            for (int x = 0; x < mapSize; x++)
-            {
-                // Calculate the distance from the center
-                double distance = Mathf.Sqrt(Mathf.Pow(x - centerX, 2) + Mathf.Pow(y - centerY, 2));
-
-                // If the distance is less than or equal to the radius, mark the point as part of the circle
-                if (distance <= radius)
-                {
-                    tileMap[y, x] = 5;
-                }
-                else
-                {
-                    tileMap[y, x] = -2;
-                }
-            }
-        }
-    }
-
-    public void MakePyramid(int size)
-    {
-        InitializeArray(size-20);
-
-        for (int i = 0; i < mapSize/2; i++)
-        {
-            for(int j = i; j < mapSize-i; j++)
-            {
-                for(int k = i; k < mapSize-i; k++)
-                {
-                    tileMap[j, k] += 1;
-                }
-            }
-        }
-    }
     public void MakeMapByCSV(string path, int start_x = 0, int start_y = 0)
     {
         float[,] csvMap = CTA.CSVFileToArray(path);
@@ -256,20 +220,22 @@ public class TileManager : MonoBehaviour
                 }
                 else
                 {
+                    MeshRenderer mr = tiles[i, j].gameObject.GetComponent<MeshRenderer>();
+                    if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
+                    if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
+                    if (gridColors != null) mr.material.SetColor("_GridColor", gridColors[j, i]);
                     if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile(tileMap[i, j], durationAboutTile);
                     else 
                     {
+
                         if (tiles[i, j].transform.position.y == tileMap[i, j]/2) continue;
 
                         bool isTooHigh = IsHighPos(i,j);
           
                         tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
                     }
-                    MeshRenderer mr = tiles[i, j].gameObject.GetComponent<MeshRenderer>();
-                    if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
-                    if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
-                    if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
                 }
+                
             }
             yield return new WaitForSeconds((float)durationAboutCoroutine / (mapSize) );
         }
@@ -323,7 +289,7 @@ public class TileManager : MonoBehaviour
                         MeshRenderer mr = tiles[i, j].gameObject.GetComponent<MeshRenderer>();
                         if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
                         if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
-                        if (gridColors != null) mr.material.SetColor("GridColor", gridColors[j, i]);
+                        if (gridColors != null) mr.material.SetColor("_GridColor", gridColors[j, i]);
                     }
 
                 }

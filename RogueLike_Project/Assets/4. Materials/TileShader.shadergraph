@@ -4255,7 +4255,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "GridColor",
     "m_DefaultReferenceName": "_GridColor",
-    "m_OverrideReferenceName": "GridColor",
+    "m_OverrideReferenceName": "_GridColor",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
