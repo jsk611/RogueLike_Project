@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class WaveManager : MonoBehaviour
 {
@@ -70,6 +73,17 @@ public class WaveManager : MonoBehaviour
 
     void MakeRandomEnemyMap(int num)
     {
+        Array allEnemy = Enum.GetValues(typeof(EnemyType));
+        List<int> enemyPool1 = new List<int>(); 
+        List<int> enemyPool2 = new List<int>();
+        foreach (int enemyNum in allEnemy)
+        {
+            if(enemyNum/100 <= currentStage)
+            {
+                if(enemyNum%100/10 <= 1) enemyPool1.Add(enemyNum);
+                if(enemyNum%100/10 >= 1) enemyPool2.Add(enemyNum);
+            }
+        }
         for(int i=0; i<num; i++)
         {
             int x = Random.Range(0, mapSize);
@@ -84,9 +98,9 @@ public class WaveManager : MonoBehaviour
             int randNum;
             if (tileManager.IsHighPos(y, x))
             {
-                randNum = Random.Range(6, 10);
+                randNum = enemyPool2[Random.Range(0, enemyPool2.Count)];
             }
-            else randNum =  Random.Range(1, 10);
+            else randNum = enemyPool1[Random.Range(0, enemyPool1.Count)];
 
 
             enemyMap[y,x] = (EnemyType)randNum;

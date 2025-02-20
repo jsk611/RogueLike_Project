@@ -1,12 +1,13 @@
-public enum EnemyType{
+public enum EnemyType{  //등장시작스테이지-포지션(근접/기타:0, 원거리:1, 저격수:2)-일련번호
     None,               //0
-    MeeleeSoldier,      //1
-    Golem,              //2
-    HammerMan,          //3
-    Bat,                //4
-    RangedSoldier,      //5
-    Turret,             //6
-    FieldMage,          //7
-    Summoner,           //8
-    Sniper,             //9
+    MeeleeSoldier = 101,//101
+    Golem,              //102
+    RangedSoldier=111,  //111
+    Turret,             //112
+    Hoverbot,           //113
+    Sniper=121,         //121
+    HammerMan=201,      //201
+    Thrower=211,        //211
+    Summoner=301,       //301
+    FieldMage=311,      //311
 }

@@ -59,17 +59,17 @@ public class EnemySpawnLogic : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.None: return null;
-            default: return enemyPrefabs[(int)enemyType-1];
+            case EnemyType.MeeleeSoldier: return enemyPrefabs[0];
+            case EnemyType.Golem: return enemyPrefabs[1];
+            case EnemyType.RangedSoldier: return enemyPrefabs[2];
+            case EnemyType.Turret: return enemyPrefabs[3];
+            case EnemyType.Hoverbot: return enemyPrefabs[4];
+            case EnemyType.Sniper: return enemyPrefabs[5];
+            case EnemyType.HammerMan: return enemyPrefabs[6];
+            case EnemyType.Thrower: return enemyPrefabs[7];
+            case EnemyType.Summoner: return enemyPrefabs[8];
+            case EnemyType.FieldMage: return enemyPrefabs[9];
+            default: return null;
         }
-        //switch (enemyType)
-        //{
-        //    case EnemyType.Type1:
-        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-        //    case EnemyType.Type2:
-        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-        //    case EnemyType.Type3:
-        //        return Resources.Load<GameObject>("Assets/Prefabs/Enemy1.prefab");
-        //    default: return null;
-        //}
     }
 }
