@@ -25,6 +25,7 @@ public class Troy : BossBase
     [Range(0, 100)] List<float> lurkHeathBoundary;
     [SerializeField] float lurkInterval = 20f;
     [SerializeField] private GameObject TroyBomb;
+    [SerializeField] GameObject bombEffect;
     [SerializeField] float copyChain = 3f;
     public bool isCopied = false;
 
@@ -34,6 +35,7 @@ public class Troy : BossBase
     public bool ISLURKED { get => isLurked; set => isLurked = value; }
     public float COPYCHAIN { get => copyChain; set => copyChain = value; }
     public GameObject TROYBOMB => TroyBomb;
+    public GameObject BOMBEFFECT => bombEffect;
 
     private void Start()
     {

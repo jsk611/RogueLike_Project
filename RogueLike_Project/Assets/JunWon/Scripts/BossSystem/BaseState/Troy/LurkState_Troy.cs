@@ -16,14 +16,16 @@ public class LurkState_Troy : State<Troy>
         lurkTimer = 0f;
 
 
-        GameObject copy = GameObject.Instantiate(copyTroy, owner.transform.position, owner.transform.rotation);
+
+        GameObject copy = GameObject.Instantiate(owner.gameObject, owner.transform.position, owner.transform.rotation);
         copyState = copy.GetComponent<StatusBehaviour>();
         copy.GetComponent<Troy>().COPYCHAIN = owner.COPYCHAIN - 1;
+        copy.GetComponent<Troy>().HPBar.SetRatio(owner.BossStatus.GetHealth(), owner.BossStatus.GetMaxHealth());
 
         owner.GetComponent<MeshRenderer>().enabled = false;
         owner.HPBar.GetComponent<Canvas>().enabled= false;
         owner.GetComponent<BoxCollider>().enabled = false;
-
+        
 
         Vector3 dir = owner.Player.position - owner.transform.position;
         dir.y = 0;
