@@ -272,6 +272,7 @@ MonoBehaviour:
   minimapTile: {fileID: 6946046808946640772}
   spike: {fileID: 4723277465107756343}
   maxHeight: 0
+  canShockWave: 1
 --- !u!205 &9036666279645293602
 LODGroup:
   m_ObjectHideFlags: 0
@@ -286,7 +287,7 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.019028487
+  - screenRelativeHeight: 0.01825322
     fadeTransitionWidth: 0.05
     renderers:
     - renderer: {fileID: 7627629330283186329}
