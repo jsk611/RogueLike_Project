@@ -142,6 +142,7 @@ public class WaveManager : MonoBehaviour
             prevWave = randNum;
         }
         yield return StartCoroutine(Stage1Boss());
+        yield return StartCoroutine(WaveEnd());
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(Maintenance());
         yield return new WaitForSeconds(0.5f);
@@ -261,6 +262,7 @@ public class WaveManager : MonoBehaviour
         InitializeEnemyArray();
         MakeRandomEnemyMap(8);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+        UIManager.instance.KillingMissionStart();
 
         while (enemyCountData.enemyCount > 0)
         {
@@ -282,6 +284,7 @@ public class WaveManager : MonoBehaviour
         InitializeEnemyArray();
         enemySpawnLogic.SpawnBoss(playerPos.x, playerPos.y, 0);
         enemyCountData.enemyCount = 1;
+        UIManager.instance.KillingMissionStart();
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();
@@ -303,7 +306,7 @@ public class WaveManager : MonoBehaviour
         InitializeEnemyArray();
         MakeRandomEnemyMap(12);
         enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-
+        UIManager.instance.KillingMissionStart();
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();
@@ -315,6 +318,7 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator WaveEnd()
     {
+        UIManager.instance.MissionComplete();
         Item[] items = FindObjectsOfType<Item>();
         foreach(Item item in items) { 
             item.isChasing = true;

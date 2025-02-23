@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public Text[] curAmmo, maxAmmo;
     Text curammo, maxammo;
 
+
     int dna, packet;
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        EventManager.Instance.MonsterKilledEvent += KillingMissionUpdate;
         packet = PlayerPrefs.GetInt("packet", 0);
         BarValueChange(0, 100, 100);
         BarValueChange(1, 100, 100);
@@ -142,6 +144,28 @@ public class UIManager : MonoBehaviour
     }
     */
 
+    [SerializeField] GameObject missionUI;
+    [SerializeField] TMP_Text ProgressText;
+    [SerializeField] EnemyCountData enemyCountData;
+    int maxEnemyCount;
+    public void KillingMissionStart()
+    {
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionStart");
+        maxEnemyCount = enemyCountData.enemyCount;
+        KillingMissionUpdate(true);
+    }
+    void KillingMissionUpdate(bool tmp)
+    {
+        ProgressText.text = (maxEnemyCount-enemyCountData.enemyCount).ToString() + "/" + maxEnemyCount.ToString();
+        if (enemyCountData.enemyCount == 0) ProgressText.color = Color.green;
+        else ProgressText.color = Color.white;
+    }
+    public void MissionComplete()
+    {
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionEnd");
+    }
     public GameObject PauseUI;
     public void PauseGame()
     {
