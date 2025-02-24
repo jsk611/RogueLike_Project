@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -154,7 +155,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage2MapPath.Length - 1;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 1; i++)
         {
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
@@ -165,25 +166,26 @@ public class WaveManager : MonoBehaviour
         }
         yield return StartCoroutine(Maintenance());
         yield return new WaitForSeconds(0.5f);
-        StartCoroutine(RunStage2());
+        StartCoroutine(RunStage3());
     }
     IEnumerator RunStage3() //미구현
     {
         currentStage = 3;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
-        int mapMaxIdx = stage1MapPath.Length - 1;
+        int mapMaxIdx = stage3MapPath.Length - 1;
         for (int i = 0; i < 5; i++)
         {
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
-            yield return StartCoroutine(Stage1Wave(randNum));
+            yield return StartCoroutine(Stage3Wave(randNum));
             yield return StartCoroutine(WaveEnd());
             yield return new WaitForSeconds(0.5f);
             prevWave = randNum;
         }
         yield return StartCoroutine(Maintenance());
         yield return new WaitForSeconds(0.5f);
+        StartCoroutine(RunStage3());
     }
     IEnumerator RunStage4() //미구현
     {
@@ -225,7 +227,7 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 0, 1, 0));
         startStage.SetActive(false);
         
-        StartCoroutine(RunStage1());
+        StartCoroutine(RunStage3());
     }
     IEnumerator Maintenance()
     {
@@ -271,7 +273,7 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log("Wave End");
     }
-    IEnumerator Stage1Boss() //미구현
+    IEnumerator Stage1Boss()
     {
         Debug.Log("Stage1_Wave");
         tileManager.InitializeArray(1);
@@ -294,7 +296,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator Stage2Wave(int mapIdx)
     {
-        Debug.Log("Stage1_Wave");
+        Debug.Log("Stage2_Wave");
         tileManager.InitializeArray(2);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage2MapPath[mapIdx], playerPos.x, playerPos.y);
@@ -314,11 +316,45 @@ public class WaveManager : MonoBehaviour
 
         Debug.Log("Wave End");
     }
-    
-    
+    IEnumerator Stage3Wave(int mapIdx)
+    {
+        Debug.Log("Stage3_Wave");
+        tileManager.InitializeArray(3);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        tileManager.MakeCenteredMapFromCSV(stage3MapPath[mapIdx], playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Setting Monsters");
+
+        InitializeEnemyArray();
+        MakeRandomEnemyMap(12);
+        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
+        UIManager.instance.KillingMissionStart();
+
+        //랜덤 위기 시스템
+        int randnum = Random.Range(1, 4);
+        switch (randnum)
+        {
+            case 1: StartCoroutine(WallCrisis(6, 10f, 100)); break;
+            case 2: StartCoroutine(HoleCrisis(6, 8f, 200)); break;
+            case 3: StartCoroutine(SpikeCrisis(6, 8f, 120)); break;
+        }
+
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        Debug.Log("Wave End");
+    }
+
     IEnumerator WaveEnd()
     {
         UIManager.instance.MissionComplete();
+        StopCoroutine("WallCrisis");
+        StopCoroutine("HoleCrisis");
+        StopCoroutine("SpikeCrisis");
         Item[] items = FindObjectsOfType<Item>();
         foreach(Item item in items) { 
             item.isChasing = true;
@@ -343,6 +379,39 @@ public class WaveManager : MonoBehaviour
         yield return null;
     }
 
+    IEnumerator WallCrisis(int repeat, float cooltime, int wallCount)
+    {
+        for(int i = 0; i < repeat; i++)
+        {
+            if (enemyCountData.enemyCount <= 0) break;
+
+            tileManager.MakeRandomWall(wallCount);
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(cooltime);
+        }
+    }
+    IEnumerator HoleCrisis(int repeat, float cooltime, int holeCount)
+    {
+        for (int i = 0; i < repeat; i++)
+        {
+            if (enemyCountData.enemyCount <= 0) break;
+
+            tileManager.MakeRandomHole(holeCount);
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(cooltime);
+        }
+    }
+    IEnumerator SpikeCrisis(int repeat, float cooltime, int holeCount)
+    {
+        for (int i = 0; i < repeat; i++)
+        {
+            if (enemyCountData.enemyCount <= 0) break;
+
+            tileManager.MakeRandomSpike(holeCount);
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(cooltime);
+        }
+    }
     public void AddItem(int star)
     {
         if (star == 1)

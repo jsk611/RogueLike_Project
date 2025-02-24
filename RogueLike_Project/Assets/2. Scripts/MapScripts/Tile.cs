@@ -242,6 +242,11 @@ public class Tile : MonoBehaviour
         this.isSpike = isSpike;
         spike.SetActive(isSpike);
     }
+    public IEnumerator MakeSpike()
+    {
+        yield return StartCoroutine(AlertChangingCoroutine(1.6f, 2));
+        ChangeSpikeMode(true);
+    }
 
     public IEnumerator CreateShockwave()
     {

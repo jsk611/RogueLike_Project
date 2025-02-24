@@ -80,6 +80,7 @@ public class TileManager : MonoBehaviour
             for(int j=0; j < mapSize; j++)
             {
                 tileMap[i,j] = initialValue;
+                tiles[i, j].ChangeSpikeMode(false);
                 baseColors[i, j] = defaultColor[0];
                 gridColors[i, j] = defaultColor[1];
                 emissionColors[i, j] = defaultColor[2];
@@ -128,8 +129,13 @@ public class TileManager : MonoBehaviour
         List<Vector2> posList = new List<Vector2>();
         for(int i = 0; i < numOfChanging; i++)
         {
-            int randomX = Random.Range(0, mapSize);
-            int randomY = Random.Range(0, mapSize);
+            int randomX, randomY;
+            do
+            {
+                randomX = Random.Range(0, mapSize);
+                randomY = Random.Range(0, mapSize);
+            } while (tileMap[randomY, randomX] <= 0);
+
             Vector2 pos = new Vector2(randomX, randomY);
             if(posList.Contains(pos))
             {
@@ -139,7 +145,7 @@ public class TileManager : MonoBehaviour
             else
             {
                 posList.Add(pos);
-                tileMap[randomY,randomX] += Random.Range(1,7);
+                tileMap[randomY,randomX] = Random.Range(6,13);
             }
         }
     }
@@ -161,6 +167,31 @@ public class TileManager : MonoBehaviour
             else
             {
                 tileMap[randomY, randomX] = -2;
+            }
+        }
+    }
+    public void MakeRandomSpike(int numOfChanging)
+    {
+        List<Vector2> posList = new List<Vector2>();
+        for (int i = 0; i < numOfChanging; i++)
+        {
+            int randomX, randomY;
+            do
+            {
+                randomX = Random.Range(0, mapSize);
+                randomY = Random.Range(0, mapSize);
+            } while (tileMap[randomY, randomX] <= 0);
+
+            Vector2 pos = new Vector2(randomX, randomY);
+            if (posList.Contains(pos))
+            {
+                i--;
+                continue;
+            }
+            else
+            {
+                posList.Add(pos);
+                StartCoroutine(tiles[randomY, randomX].MakeSpike());
             }
         }
     }
