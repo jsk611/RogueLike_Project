@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class Tile : MonoBehaviour
 
     [SerializeField] SpriteRenderer minimapTile;
     [SerializeField] GameObject spike;
+    [SerializeField] GameObject warningLaser;
     public float maxHeight;
     bool isSpike = false;
     public bool canShockWave = true;
@@ -244,6 +246,8 @@ public class Tile : MonoBehaviour
     }
     public IEnumerator MakeSpike()
     {
+        GameObject laser = Instantiate(warningLaser, transform.position, quaternion.identity);
+        Destroy(laser, 2f);
         yield return StartCoroutine(AlertChangingCoroutine(1.6f, 2));
         ChangeSpikeMode(true);
     }

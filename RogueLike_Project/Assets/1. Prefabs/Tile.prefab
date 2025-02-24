@@ -271,6 +271,8 @@ MonoBehaviour:
   isSetActive: 1
   minimapTile: {fileID: 6946046808946640772}
   spike: {fileID: 4723277465107756343}
+  warningLaser: {fileID: 8241643878944597522, guid: ef421b490459d884ba925e71baaf5684,
+    type: 3}
   maxHeight: 0
   canShockWave: 1
 --- !u!205 &9036666279645293602

@@ -337,8 +337,8 @@ public class WaveManager : MonoBehaviour
         switch (randnum)
         {
             case 1: StartCoroutine(WallCrisis(6, 10f, 100)); break;
-            case 2: StartCoroutine(HoleCrisis(6, 8f, 200)); break;
-            case 3: StartCoroutine(SpikeCrisis(6, 8f, 120)); break;
+            case 2: StartCoroutine(HoleCrisis(6, 8f, 120)); break;
+            case 3: StartCoroutine(SpikeCrisis(6, 8f, 50)); break;
         }
 
         while (enemyCountData.enemyCount > 0)
