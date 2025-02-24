@@ -19,7 +19,7 @@ public class EnemySpawnLogic : MonoBehaviour
     }
 
 
-    void SpawnEnemy(int x, int y, EnemyType enemyType)
+    public void SpawnEnemy(int x, int y, EnemyType enemyType)
     {
         GameObject enemyPrefab = GetEnemyPrefab(enemyType);
         if (enemyPrefab != null)
@@ -54,7 +54,7 @@ public class EnemySpawnLogic : MonoBehaviour
         enemyCountData.enemyCount++;
         
     }
-    GameObject GetEnemyPrefab(EnemyType enemyType)
+    public GameObject GetEnemyPrefab(EnemyType enemyType)
     {
         switch (enemyType)
         {

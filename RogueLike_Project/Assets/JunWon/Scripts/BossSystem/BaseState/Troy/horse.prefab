@@ -425,15 +425,18 @@ MonoBehaviour:
   HPBar: {fileID: 7730255664801941948}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
-  enemyCountData: {fileID: 0}
-  monsterList: []
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   runInterval: 10
-  lurkHeathBoundary: []
-  lurkInterval: 10
+  enemySummonAmount: 4
+  lurkHeathBoundary:
+  - 30
+  - 60
+  lurkInterval: 165
   TroyBomb: {fileID: 6081924387909584232}
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
   copyChain: 3
   isCopied: 0
+  bomb: {fileID: 7367227017500463239, guid: c0566a570bf75264c82c6241a746e673, type: 3}
 --- !u!95 &8014969182548315342
 Animator:
   serializedVersion: 5

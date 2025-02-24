@@ -14,28 +14,34 @@ public class Troy : BossBase
     private bool isLurked = false;
 
     [Header("Camouflage")]
-    [SerializeField] List<GameObject> monsterList;
+    List<GameObject> monsterList = new List<GameObject>();
 
     [SerializeField] float runInterval = 20f;
+    [SerializeField] float enemySummonAmount = 4f;
     float runTimer = 0f;
-    float lurkTimer = 0f;
+    
+
 
     [Header("Lurk")]
     [SerializeField]
     [Range(0, 100)] List<float> lurkHeathBoundary;
     [SerializeField] float lurkInterval = 20f;
-    [SerializeField] private GameObject TroyBomb;
     [SerializeField] GameObject bombEffect;
     [SerializeField] float copyChain = 3f;
     public bool isCopied = false;
+    float lurkTimer = 0f;
 
-
+    [Header("BombThrow")]
+    [SerializeField] GameObject bomb;
 
     public bool ISCAMOUFLAGED { get => isCamouflaged; set => isCamouflaged = value; }
+    public float SUMMONAMOUNT => enemySummonAmount;
+    public List<GameObject> SUMMONEDMONSTERS => monsterList;
     public bool ISLURKED { get => isLurked; set => isLurked = value; }
     public float COPYCHAIN { get => copyChain; set => copyChain = value; }
-    public GameObject TROYBOMB => TroyBomb;
+    public GameObject TROYBOMB => bomb;
     public GameObject BOMBEFFECT => bombEffect;
+
 
     private void Start()
     {
@@ -47,7 +53,9 @@ public class Troy : BossBase
     private void Update()
     {
         runTimer += Time.deltaTime;
+
         lurkTimer += Time.deltaTime;
+
 
         Debug.Log(fsm.CurrentState);
         fsm.Update();
@@ -66,6 +74,7 @@ public class Troy : BossBase
 
         Transition<Troy> idleToLurk = new Transition<Troy>(idleState, lurkState, () => LurkStateCheck());
         Transition<Troy> lurkToIdle = new Transition<Troy>(lurkState, idleState, () => !isLurked);
+        Transition<Troy> lurkToCamouflage = new Transition<Troy>(lurkState, camouflageState, ()=> !isLurked);
 
         Transition<Troy> idleToCamouflage = new Transition<Troy>(idleState, camouflageState, () => CamouflageStateCheck());
         Transition<Troy> camouflageToIdle = new Transition<Troy>(camouflageState, idleState, () => !isCamouflaged);
@@ -82,6 +91,7 @@ public class Troy : BossBase
 
         fsm.AddTransition(idleToLurk);
         fsm.AddTransition(lurkToIdle);
+        fsm.AddTransition(lurkToCamouflage);
 
         fsm.AddTransition(idleToCamouflage);
         fsm.AddTransition(camouflageToIdle);
@@ -99,6 +109,10 @@ public class Troy : BossBase
         if (isCamouflaged || isLurked) return;
 
         bossStatus.DecreaseHealth(damage);
+
+        if(lurkHeathBoundary.Count>0)
+        bossStatus.SetHealth(Mathf.Max(bossStatus.GetHealth(), lurkHeathBoundary[lurkHeathBoundary.Count-1]/100f*bossStatus.GetMaxHealth()));
+
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
         if (bossStatus.GetHealth() <= 0)
