@@ -133,7 +133,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage1MapPath.Length -1;
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 4; i++)
         {
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
@@ -155,7 +155,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         int mapMaxIdx = stage2MapPath.Length - 1;
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 4; i++)
         {
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
@@ -227,7 +227,7 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 0, 1, 0));
         startStage.SetActive(false);
         
-        StartCoroutine(RunStage3());
+        StartCoroutine(RunStage1());
     }
     IEnumerator Maintenance()
     {
