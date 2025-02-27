@@ -174,6 +174,6 @@ public class UIManager : MonoBehaviour
 
     public void Restart()
     {
-        SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("IngameScene");
     }
 }

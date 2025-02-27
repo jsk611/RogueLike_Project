@@ -13,14 +13,14 @@ public class SettingManager : MonoBehaviour
     }
     public void InitGame()
     {
-        SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("IngameScene");
     }
     public void NewGame()
     {
         //저장 데이터 초기화
         PlayerPrefs.DeleteAll();
 
-        SceneManager.LoadScene("MapScene");
+        SceneManager.LoadScene("IngameScene");
     }
     public void GoToTitle()
     {
