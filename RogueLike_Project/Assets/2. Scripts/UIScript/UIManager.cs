@@ -143,7 +143,7 @@ public class UIManager : MonoBehaviour
         }
     }
     */
-
+    #region MissionUI
     [SerializeField] GameObject missionUI;
     [SerializeField] TMP_Text ProgressText;
     [SerializeField] EnemyCountData enemyCountData;
@@ -166,6 +166,16 @@ public class UIManager : MonoBehaviour
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionEnd");
     }
+    #endregion
+
+    #region ProgressUI
+    [SerializeField] TMP_Text waveText;
+    public void changeWaveText(string title)
+    {
+        waveText.text = title;
+    }
+
+    #endregion
     public GameObject PauseUI;
     public void PauseGame()
     {

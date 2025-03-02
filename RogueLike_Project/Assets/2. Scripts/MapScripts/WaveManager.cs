@@ -14,6 +14,7 @@ public class WaveManager : MonoBehaviour
     EnemyType[,] enemyMap;
     int mapSize;
     int currentStage;
+    int currentWave;
 
     [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
@@ -135,6 +136,7 @@ public class WaveManager : MonoBehaviour
         int mapMaxIdx = stage1MapPath.Length -1;
         for (int i = 0; i < 4; i++)
         {
+            currentWave = i + 1;
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
             yield return StartCoroutine(Stage1Wave(randNum));
@@ -157,6 +159,7 @@ public class WaveManager : MonoBehaviour
         int mapMaxIdx = stage2MapPath.Length - 1;
         for (int i = 0; i < 4; i++)
         {
+            currentWave = i + 1;
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
             yield return StartCoroutine(Stage2Wave(randNum));
@@ -176,6 +179,7 @@ public class WaveManager : MonoBehaviour
         int mapMaxIdx = stage3MapPath.Length - 1;
         for (int i = 0; i < 5; i++)
         {
+            currentWave = i + 1;
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
             yield return StartCoroutine(Stage3Wave(randNum));
@@ -195,6 +199,7 @@ public class WaveManager : MonoBehaviour
         int mapMaxIdx = stage1MapPath.Length - 1;
         for (int i = 0; i < 5; i++)
         {
+            currentWave = i + 1;
             int randNum = Random.Range(0, mapMaxIdx);
             while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
             yield return StartCoroutine(Stage1Wave(randNum));
@@ -253,6 +258,8 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage1Wave(int mapIdx)
     {
         Debug.Log("Stage1_Wave");
+        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
+
         tileManager.InitializeArray(1);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage1MapPath[mapIdx], playerPos.x, playerPos.y);
@@ -276,6 +283,8 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage1Boss()
     {
         Debug.Log("Stage1_Wave");
+        UIManager.instance.changeWaveText(currentStage.ToString() + "- <color=red>B</color>");
+
         tileManager.InitializeArray(1);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage1MapPath[stage1MapPath.Length -1], playerPos.x, playerPos.y);
@@ -297,6 +306,8 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage2Wave(int mapIdx)
     {
         Debug.Log("Stage2_Wave");
+        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
+
         tileManager.InitializeArray(2);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage2MapPath[mapIdx], playerPos.x, playerPos.y);
@@ -319,6 +330,8 @@ public class WaveManager : MonoBehaviour
     IEnumerator Stage3Wave(int mapIdx)
     {
         Debug.Log("Stage3_Wave");
+        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
+
         tileManager.InitializeArray(3);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         tileManager.MakeCenteredMapFromCSV(stage3MapPath[mapIdx], playerPos.x, playerPos.y);
