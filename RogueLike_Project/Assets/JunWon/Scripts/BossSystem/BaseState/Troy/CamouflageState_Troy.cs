@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -16,6 +17,11 @@ public class CamouflageState_Troy : State<Troy>
 
     float bombThrowInterval = 2f;
     float bombThrowTimer = 0f;
+
+    float rushTimer = 0f;
+    bool isRushing = false;
+    float rushInterval = 5f;
+    float minRushDist = 1f;
 
     // Start is called before the first frame update
     public override void Enter()
@@ -43,6 +49,17 @@ public class CamouflageState_Troy : State<Troy>
     public override void Update()
     {
         bombThrowTimer += Time.deltaTime;
+        rushTimer += Time.deltaTime;
+
+        if(rushTimer >= rushInterval)
+        {
+            if (!isRushing)
+            {
+                isRushing = true;
+                owner.CoroutineRunner(RushToPlayer());
+            }
+
+        }
         if (bombThrowTimer >= bombThrowInterval)
         {
             Debug.Log(bombThrowInterval);
@@ -64,6 +81,36 @@ public class CamouflageState_Troy : State<Troy>
     }
     public override void Exit()
     {
-
+        owner.NmAgent.SetDestination(owner.transform.position);
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        if(isRushing && collision.gameObject == owner.Player.gameObject)
+        {
+            Debug.Log("collided to player");
+        }
+    }
+    IEnumerator RushToPlayer()
+    {
+       
+        
+        float elapsedTime = 0f;
+        while(isRushing && elapsedTime <= 5f)
+        {
+            Debug.Log("remaining"+ owner.NmAgent.remainingDistance);
+            Vector3 rushDirection = owner.Player.position;
+      
+            elapsedTime += Time.deltaTime;
+            if (Vector3.Distance(owner.Player.position,owner.transform.position)<= minRushDist)
+            {
+                Debug.Log("rushTOPlayerSTOPPPPP");
+                rushDirection = owner.transform.position + (owner.Player.position - owner.transform.position)*6;
+                yield return new WaitForSeconds(2f);
+                isRushing = false;
+            }
+            owner.NmAgent.SetDestination(rushDirection);
+            yield return null;
+        }
+        rushTimer = 0f;
     }
 }

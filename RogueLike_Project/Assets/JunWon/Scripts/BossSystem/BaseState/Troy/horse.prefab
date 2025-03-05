@@ -432,7 +432,6 @@ MonoBehaviour:
   - 30
   - 60
   lurkInterval: 165
-  TroyBomb: {fileID: 6081924387909584232}
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
   copyChain: 3
   isCopied: 0

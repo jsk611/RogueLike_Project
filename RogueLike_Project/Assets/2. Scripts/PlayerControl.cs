@@ -225,7 +225,7 @@ public class PlayerControl : MonoBehaviour
             {
                 isGrounded = false;
                 rigidBody.isKinematic = false;
-                rigidBody.AddForce(Vector3.up*8, ForceMode.Impulse);
+                rigidBody.AddForce(Vector3.up*11, ForceMode.Impulse);
                 jumpPower = 1f;//characterStatus.GetJumpPower();
                 // Debug.Log("Jump");
                 Vertical.y = jumpPower;

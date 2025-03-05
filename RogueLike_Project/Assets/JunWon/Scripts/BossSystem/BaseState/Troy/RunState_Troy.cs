@@ -9,7 +9,7 @@ public class RunState_Troy : State<Troy>
     }
     public override void Enter()
     {
-        owner.NmAgent.isStopped = false;
+        Debug.Log("RUNNN");
     }
     public override void Update()
     {
@@ -18,7 +18,6 @@ public class RunState_Troy : State<Troy>
     }
     public override void Exit()
     {
-        owner.NmAgent.isStopped = true;
     }
 }
 
