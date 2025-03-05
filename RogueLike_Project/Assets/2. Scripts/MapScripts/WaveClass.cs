@@ -33,8 +33,8 @@ public class EnemyInfo
 [Serializable]
 public class Vector2Data
 {
-    public float x;
-    public float y;
+    public int x;
+    public int y;
 }
 
 [Serializable]

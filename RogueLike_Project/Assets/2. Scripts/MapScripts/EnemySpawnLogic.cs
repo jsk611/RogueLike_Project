@@ -28,7 +28,7 @@ public class EnemySpawnLogic : MonoBehaviour
             Debug.Log(transform.name + ": " + "[" + tileTransform.position.x + " " + tileTransform.position.z + "]" + "/ height: " + tileTransform.position.y);
             Vector3 spawnVec = tileTransform.position + new Vector3(0, tileTransform.localScale.y / 2.0f + 0.5f, 0); 
             Instantiate(enemyPrefab, spawnVec, Quaternion.identity, this.transform);
-            enemyCountData.enemyCount++;
+            //enemyCountData.enemyCount++;
         }
     }
 
