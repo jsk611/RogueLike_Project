@@ -1,0 +1,44 @@
+{
+  "waveIndex": 1,
+  "isMultiMap": false,
+  "maps": [
+    {
+      "file": "1_1",
+      "duration": 60
+    }
+  ],
+  "isRandomEnemy": false,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 5,
+      "spawnPoints": [
+        { "x": 2, "y": 2},
+        { "x": 20, "y": 20}
+      ],
+      "spawnDelay": 5
+    },
+    {
+      "type": 111,
+      "count": 5,
+      "spawnPoints": [
+        { "x": 10, "y": 10},
+        { "x": 30, "y": 30}
+      ],
+      "spawnDelay": 5
+    }
+  ],
+  "mission":
+  {
+    "type": "Killing",
+    "count": 10
+  },
+  
+  "isRandomEvent": true,
+  "events": [
+    {
+      "type": "Blackout",
+      "time": 30
+    }
+  ]
+}

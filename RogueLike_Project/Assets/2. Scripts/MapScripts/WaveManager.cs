@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class WaveManager : MonoBehaviour
     Queue<int> earnedEpicItems = new Queue<int>();
     [SerializeField] GameObject upgradeUI;
 
+    WaveData waveData;
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager>();
@@ -57,10 +59,50 @@ public class WaveManager : MonoBehaviour
         
         sp = startPosition.transform.position;
 
+        LoadWaveData("1-1");
+
         StartCoroutine(StartMap());
         //StartCoroutine(RunWaves()); //?????? GameManager?? ???? ??
     }
 
+    #region WaveDataSetting
+    void LoadWaveData(string fileTitle)
+    {
+        string path = Path.Combine(Application.streamingAssetsPath, $"WaveData/Wave_{fileTitle}.json");
+        if (File.Exists(path))
+        {
+            string jsonText = File.ReadAllText(path);
+            waveData = JsonUtility.FromJson<WaveData>(jsonText);
+            ApplyWaveSettings();
+        }
+        else
+        {
+            Debug.LogError("파일 찾기 실패!: " + path);
+        }
+    }
+    void ApplyWaveSettings()
+    {
+        Debug.Log($"Wave {waveData.waveIndex} Loaded.");
+
+        if (waveData.isMultiMap)
+        {
+            Debug.Log("multiple maps.");
+            foreach (var map in waveData.maps)
+            {
+                Debug.Log($"Map: {map.file}, Duration: {map.duration}");
+            }
+        }
+        else
+        {
+            Debug.Log("single map: " + waveData.maps[0].file);
+        }
+
+        foreach (var enemy in waveData.enemies)
+        {
+            Debug.Log($"Spawn {enemy.count} {enemy.type}(s) at {string.Join(", ", enemy.spawnPoints)}");
+        }
+    }
+    #endregion
 
     void InitializeEnemyArray()
     {
