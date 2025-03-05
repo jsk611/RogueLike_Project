@@ -47,6 +47,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject upgradeUI;
 
     WaveData waveData;
+    bool isMissionEnd;
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager>();
@@ -274,7 +275,8 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 0, 1, 0));
         startStage.SetActive(false);
         
-        StartCoroutine(RunStage1());
+        StartCoroutine(RunWave());
+        yield break;
     }
     IEnumerator Maintenance()
     {
@@ -321,6 +323,90 @@ public class WaveManager : MonoBehaviour
         }
 
         Debug.Log("Wave End");
+    }
+    IEnumerator RunWave()
+    {
+        //UI작업
+        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
+        //맵 불러오기
+        tileManager.InitializeArray(1);
+        Vector2Int playerPos = playerPositionData.playerTilePosition;
+        Vector2Int basePos = tileManager.MakeCenteredMapFromCSV(waveData.maps[0].file, playerPos.x, playerPos.y);
+        yield return StartCoroutine(tileManager.MoveTilesByArray());
+        yield return new WaitForSeconds(1f);
+        //적 소환
+        foreach(var enemy in waveData.enemies)
+        {
+            StartCoroutine(SummonEnemyCoroutine(basePos, enemy));
+        }
+        //임무
+        isMissionEnd = false;
+        switch (waveData.mission.type)
+        {
+            case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
+        }
+
+        //멀티 맵일시 맵 변경
+        Coroutine mapChanging = null;
+        if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(basePos));
+        //이벤트
+        foreach (var ev in waveData.events)
+        {
+            switch (ev.type)
+            {
+                case "Building": StartCoroutine(WallCrisis(6, 10f, 100)); break;
+                default: Debug.LogError("Wrong Event Type"); break;
+            }
+        }
+        //임무 완료시 초기화
+        while (!isMissionEnd) { yield return new WaitForEndOfFrame(); };
+        StopCoroutine(mapChanging);
+        StopCoroutine("SummonEnemyCoroutine");
+        StartCoroutine(WaveEnd());
+        yield break;
+    }
+
+    IEnumerator MultiMapsChangingCoroutine(Vector2Int basePos)
+    {
+        yield return new WaitForSeconds(waveData.maps[0].duration);
+        for(int i=1; i<waveData.maps.Count; i++)
+        {
+            tileManager.MakeCenteredMapFromCSV(waveData.maps[i].file, basePos.x, basePos.y);
+            yield return StartCoroutine(tileManager.MoveTilesByArray());
+            yield return new WaitForSeconds(waveData.maps[i].duration);
+        }
+    }
+    IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
+    {
+        //적 스폰 위치 표시
+        
+        List<Vector2Int> spawnPoints = new List<Vector2Int>();
+        foreach(var spawnpoint in enemy.spawnPoints)
+        {
+            spawnPoints.Add(basePos + new Vector2Int(spawnpoint.x, spawnpoint.y));
+        }
+
+        int count = enemy.count;
+        EnemyType enemyType = enemy.type;
+        while(count > 0)
+        {
+            foreach(Vector2Int spawnpoint in spawnPoints)
+            {
+                enemySpawnLogic.SpawnEnemy(spawnpoint.x, spawnpoint.y, enemyType);
+                count--;
+                if(count == 0) break;
+            }
+            yield return new WaitForSeconds(enemy.spawnDelay);
+        }
+    }
+    IEnumerator KillingMission(int count)
+    {
+        enemyCountData.enemyCount = count;
+        UIManager.instance.KillingMissionStart();
+        while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
     }
     IEnumerator Stage1Boss()
     {

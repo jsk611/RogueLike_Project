@@ -52,6 +52,7 @@ public class Troy : BossBase
 
     private void Update()
     {
+
         runTimer += Time.deltaTime;
 
         lurkTimer += Time.deltaTime;
@@ -149,5 +150,10 @@ public class Troy : BossBase
     {
         isCamouflaged = !isCamouflaged; 
         runTimer = 0f;
+    }
+
+    public void CoroutineRunner(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
     }
 }

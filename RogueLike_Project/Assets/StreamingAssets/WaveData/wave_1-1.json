@@ -37,7 +37,7 @@
   "isRandomEvent": true,
   "events": [
     {
-      "type": "Blackout",
+      "type": "Building",
       "time": 30
     }
   ]
