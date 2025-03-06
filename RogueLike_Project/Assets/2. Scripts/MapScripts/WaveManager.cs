@@ -355,6 +355,8 @@ public class WaveManager : MonoBehaviour
             switch (ev.type)
             {
                 case "Building": StartCoroutine(WallCrisis(6, 10f, 100)); break;
+                case "SinkHole": StartCoroutine(HoleCrisis(6, 8f, 120)); break;
+                case "Spike": StartCoroutine(SpikeCrisis(6, 8f, 25)); break;
                 default: Debug.LogError("Wrong Event Type"); break;
             }
         }
