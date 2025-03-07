@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using Unity.Mathematics;
 
 public class WaveManager : MonoBehaviour
 {
@@ -27,11 +28,7 @@ public class WaveManager : MonoBehaviour
     }
 
     [Header("Map")]
-    [SerializeField] string[] mapPaths;
-    [SerializeField] string[] stage1MapPath;
-    [SerializeField] string[] stage2MapPath;
-    [SerializeField] string[] stage3MapPath;
-    [SerializeField] string[] stage4MapPath;
+    [SerializeField] int[] stageMapNum;
     [SerializeField] string startMapPath;
     [SerializeField] string jeongbiMapPath;
 
@@ -152,107 +149,38 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    //IEnumerator RunWaves()
-    //{
-    //    yield return new WaitForSeconds(1f);
-    //    while (true)
-    //    {
-    //        int prevWave = -1;
-    //        for (int i=0; i<5; i++)
-    //        {
-    //            int randNum = Random.Range(0, 4);
-    //            while(prevWave == randNum) randNum = Random.Range(0, 4);
-    //            yield return StartCoroutine(Stage1Wave(randNum));
-    //            yield return StartCoroutine(WaveEnd());
-    //            yield return new WaitForSeconds(0.5f);
-    //            prevWave = randNum;
-    //        }
-    //        yield return StartCoroutine(Maintenance());
-    //        yield return new WaitForSeconds(0.5f);
-    //    }
-    //}
-    IEnumerator RunStage1()
+    IEnumerator RunStage()
     {
         currentStage = 1;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
-        int mapMaxIdx = stage1MapPath.Length -1;
-        for (int i = 0; i < 4; i++)
+        for(currentStage = 1; currentStage <= 4; currentStage++)
         {
-            currentWave = i + 1;
-            int randNum = Random.Range(0, mapMaxIdx);
-            while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
-            yield return StartCoroutine(Stage1Wave(randNum));
-            yield return StartCoroutine(WaveEnd());
+            int mapMaxIdx = stageMapNum[currentStage - 1];
+            for (int i = 0; i < 4; i++)
+            {
+                currentWave = i + 1;
+                int randNum = Random.Range(1, mapMaxIdx+1);
+                int cnt = 0;
+                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx+1);
+
+                LoadWaveData($"{currentStage}-{randNum}");
+                yield return StartCoroutine(RunWave());
+                yield return new WaitForSeconds(0.5f);
+                prevWave = randNum;
+            }
+            //보스전
+            //LoadWaveData($"{currentStage}-boss");
+            //yield return StartCoroutine(RunWave());
+            //yield return new WaitForSeconds(0.5f);
+
             yield return new WaitForSeconds(0.5f);
-            prevWave = randNum;
-        }
-        yield return StartCoroutine(Stage1Boss());
-        yield return StartCoroutine(WaveEnd());
-        yield return new WaitForSeconds(0.5f);
-        yield return StartCoroutine(Maintenance());
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(RunStage2());
-    }
-    IEnumerator RunStage2()
-    {
-        currentStage = 2;
-        yield return new WaitForSeconds(1f);
-        int prevWave = -1;
-        int mapMaxIdx = stage2MapPath.Length - 1;
-        for (int i = 0; i < 4; i++)
-        {
-            currentWave = i + 1;
-            int randNum = Random.Range(0, mapMaxIdx);
-            while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
-            yield return StartCoroutine(Stage2Wave(randNum));
-            yield return StartCoroutine(WaveEnd());
+            yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
-            prevWave = randNum;
         }
-        yield return StartCoroutine(Maintenance());
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(RunStage3());
+
     }
-    IEnumerator RunStage3() //미구현
-    {
-        currentStage = 3;
-        yield return new WaitForSeconds(1f);
-        int prevWave = -1;
-        int mapMaxIdx = stage3MapPath.Length - 1;
-        for (int i = 0; i < 5; i++)
-        {
-            currentWave = i + 1;
-            int randNum = Random.Range(0, mapMaxIdx);
-            while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
-            yield return StartCoroutine(Stage3Wave(randNum));
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(0.5f);
-            prevWave = randNum;
-        }
-        yield return StartCoroutine(Maintenance());
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(RunStage3());
-    }
-    IEnumerator RunStage4() //미구현
-    {
-        currentStage = 4;
-        yield return new WaitForSeconds(1f);
-        int prevWave = -1;
-        int mapMaxIdx = stage1MapPath.Length - 1;
-        for (int i = 0; i < 5; i++)
-        {
-            currentWave = i + 1;
-            int randNum = Random.Range(0, mapMaxIdx);
-            while (prevWave == randNum) randNum = Random.Range(0, mapMaxIdx);
-            yield return StartCoroutine(Stage1Wave(randNum));
-            yield return StartCoroutine(WaveEnd());
-            yield return new WaitForSeconds(0.5f);
-            prevWave = randNum;
-        }
-        yield return StartCoroutine(Maintenance());
-        yield return new WaitForSeconds(0.5f);
-    }
+    
     IEnumerator StartMap() 
     {
         tileManager.MakeMapByCSV(startMapPath, 7, 7);
@@ -275,7 +203,7 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArrayByWave(22, 19, 0, 1, 0));
         startStage.SetActive(false);
         
-        StartCoroutine(RunWave());
+        StartCoroutine(RunStage());
         yield break;
     }
     IEnumerator Maintenance()
@@ -299,31 +227,7 @@ public class WaveManager : MonoBehaviour
         playerPos = playerPositionData.playerTilePosition;
         yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
     }
-    IEnumerator Stage1Wave(int mapIdx)
-    {
-        Debug.Log("Stage1_Wave");
-        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
-
-        tileManager.InitializeArray(1);
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(stage1MapPath[mapIdx], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("Setting Monsters");
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(8);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-        UIManager.instance.KillingMissionStart();
-
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        Debug.Log("Wave End");
-    }
+  
     IEnumerator RunWave()
     {
         //UI작업
@@ -354,17 +258,18 @@ public class WaveManager : MonoBehaviour
         {
             switch (ev.type)
             {
-                case "Building": StartCoroutine(WallCrisis(6, 10f, 100)); break;
-                case "SinkHole": StartCoroutine(HoleCrisis(6, 8f, 120)); break;
-                case "Spike": StartCoroutine(SpikeCrisis(6, 8f, 25)); break;
+                case "Building": StartCoroutine(WallCrisis(ev.repeat, ev.delay, ev.count)); break;
+                case "SinkHole": StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.count)); break;
+                case "Spike": StartCoroutine(SpikeCrisis(ev.repeat, ev.delay, ev.count)); break;
                 default: Debug.LogError("Wrong Event Type"); break;
             }
         }
         //임무 완료시 초기화
         while (!isMissionEnd) { yield return new WaitForEndOfFrame(); };
-        StopCoroutine(mapChanging);
+        if(mapChanging != null) StopCoroutine(mapChanging);
         StopCoroutine("SummonEnemyCoroutine");
-        StartCoroutine(WaveEnd());
+        yield return new WaitForSeconds(2);
+        yield return StartCoroutine(WaveEnd());
         yield break;
     }
 
@@ -409,88 +314,32 @@ public class WaveManager : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+        isMissionEnd = true;
     }
-    IEnumerator Stage1Boss()
-    {
-        Debug.Log("Stage1_Wave");
-        UIManager.instance.changeWaveText(currentStage.ToString() + "- <color=red>B</color>");
+    //IEnumerator Stage1Boss()
+    //{
+    //    Debug.Log("Stage1_Wave");
+    //    UIManager.instance.changeWaveText(currentStage.ToString() + "- <color=red>B</color>");
 
-        tileManager.InitializeArray(1);
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(stage1MapPath[stage1MapPath.Length -1], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
+    //    tileManager.InitializeArray(1);
+    //    Vector2Int playerPos = playerPositionData.playerTilePosition;
+    //    tileManager.MakeCenteredMapFromCSV(stage1MapPath[stage1MapPath.Length -1], playerPos.x, playerPos.y);
+    //    yield return StartCoroutine(tileManager.MoveTilesByArray());
+    //    yield return new WaitForSeconds(1f);
 
-        Debug.Log("Setting Monsters");
-        InitializeEnemyArray();
-        enemySpawnLogic.SpawnBoss(playerPos.x, playerPos.y, 0);
-        enemyCountData.enemyCount = 1;
-        UIManager.instance.KillingMissionStart();
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+    //    Debug.Log("Setting Monsters");
+    //    InitializeEnemyArray();
+    //    enemySpawnLogic.SpawnBoss(playerPos.x, playerPos.y, 0);
+    //    enemyCountData.enemyCount = 1;
+    //    UIManager.instance.KillingMissionStart();
+    //    while (enemyCountData.enemyCount > 0)
+    //    {
+    //        yield return new WaitForEndOfFrame();
+    //    }
 
-        Debug.Log("Wave End");
-    }
-    IEnumerator Stage2Wave(int mapIdx)
-    {
-        Debug.Log("Stage2_Wave");
-        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
-
-        tileManager.InitializeArray(2);
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(stage2MapPath[mapIdx], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("Setting Monsters");
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(12);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-        UIManager.instance.KillingMissionStart();
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        Debug.Log("Wave End");
-    }
-    IEnumerator Stage3Wave(int mapIdx)
-    {
-        Debug.Log("Stage3_Wave");
-        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
-
-        tileManager.InitializeArray(3);
-        Vector2Int playerPos = playerPositionData.playerTilePosition;
-        tileManager.MakeCenteredMapFromCSV(stage3MapPath[mapIdx], playerPos.x, playerPos.y);
-        yield return StartCoroutine(tileManager.MoveTilesByArray());
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("Setting Monsters");
-
-        InitializeEnemyArray();
-        MakeRandomEnemyMap(12);
-        enemySpawnLogic.SpawnEnemyByArray(enemyMap);
-        UIManager.instance.KillingMissionStart();
-
-        //랜덤 위기 시스템
-        int randnum = Random.Range(1, 4);
-        switch (randnum)
-        {
-            case 1: StartCoroutine(WallCrisis(6, 10f, 100)); break;
-            case 2: StartCoroutine(HoleCrisis(6, 8f, 120)); break;
-            case 3: StartCoroutine(SpikeCrisis(6, 8f, 50)); break;
-        }
-
-        while (enemyCountData.enemyCount > 0)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        Debug.Log("Wave End");
-    }
+    //    Debug.Log("Wave End");
+    //}
+    
 
     IEnumerator WaveEnd()
     {
@@ -522,6 +371,7 @@ public class WaveManager : MonoBehaviour
         yield return null;
     }
 
+    #region CrisisEvent
     IEnumerator WallCrisis(int repeat, float cooltime, int wallCount)
     {
         for(int i = 0; i < repeat; i++)
@@ -555,6 +405,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(cooltime);
         }
     }
+    #endregion
     public void AddItem(int star)
     {
         if (star == 1)

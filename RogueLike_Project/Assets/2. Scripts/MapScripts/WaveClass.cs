@@ -41,13 +41,25 @@ public class Vector2Data
 public class MissionInfo
 {
     public string type;
-    public float time;
+
+    //처치
     public int count;
+
+    //생존or거점점령시간
+    public float time;
+
+    //거점
+    public Vector2Data strongholdPoint;
+    public float strongholdHeight;
+    public Vector2Data strongholdSize;
+   
 }
 
 [Serializable]
 public class EventInfo
 {
     public string type;
-    public float time;
+    public int repeat;
+    public float delay;
+    public int count;
 }

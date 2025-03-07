@@ -11,19 +11,19 @@
   "enemies": [
     {
       "type": 101,
-      "count": 5,
+      "count": 3,
       "spawnPoints": [
-        { "x": 2, "y": 2},
-        { "x": 20, "y": 20}
+        { "x": 13, "y": 13},
+        { "x": 15, "y": 15}
       ],
       "spawnDelay": 5
     },
     {
       "type": 111,
-      "count": 5,
+      "count": 3,
       "spawnPoints": [
-        { "x": 10, "y": 10},
-        { "x": 30, "y": 30}
+        { "x": 1, "y": 1},
+        { "x": 10, "y": 10}
       ],
       "spawnDelay": 5
     }
@@ -31,14 +31,16 @@
   "mission":
   {
     "type": "Killing",
-    "count": 10
+    "count": 6
   },
   
-  "isRandomEvent": true,
+  "isRandomEvent": false,
   "events": [
     {
       "type": "Spike",
-      "time": 30
+      "repeat": 6,
+      "delay": 8,
+      "count": 25
     }
   ]
 }
