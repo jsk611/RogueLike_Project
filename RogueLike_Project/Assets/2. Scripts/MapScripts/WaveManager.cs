@@ -230,6 +230,7 @@ public class WaveManager : MonoBehaviour
   
     IEnumerator RunWave()
     {
+        isMissionEnd = false;
         //UI작업
         UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
         //맵 불러오기
@@ -244,7 +245,6 @@ public class WaveManager : MonoBehaviour
             StartCoroutine(SummonEnemyCoroutine(basePos, enemy));
         }
         //임무
-        isMissionEnd = false;
         switch (waveData.mission.type)
         {
             case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
@@ -270,7 +270,6 @@ public class WaveManager : MonoBehaviour
 
         if(mapChanging != null) StopCoroutine(mapChanging);
         StopCoroutine("SummonEnemyCoroutine");
-
         MonsterBase[] monsterBases = FindObjectsOfType<MonsterBase>();
         foreach (MonsterBase monster in monsterBases)
         {
@@ -312,6 +311,7 @@ public class WaveManager : MonoBehaviour
         EnemyType enemyType = enemy.type;
         while(count > 0)
         {
+            if (isMissionEnd) yield break;
             foreach(Vector2Int spawnpoint in spawnPoints)
             {
                 enemySpawnLogic.SpawnEnemy(spawnpoint.x, spawnpoint.y, enemyType);
