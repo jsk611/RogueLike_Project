@@ -192,13 +192,13 @@ public class PlayerControl : MonoBehaviour
         }
         return isGrounded;
     }
-    public IEnumerator AirBorne(Vector3 enemyDirection)
+    public IEnumerator AirBorne(Vector3 enemyDirection,float upForce=10f,float normalForce = 2f)
     {
         int temp = 0;
         while (temp < 3f)
         {
             rigidBody.isKinematic = false;
-            rigidBody.AddForce(Vector3.up * 10+enemyDirection*2, ForceMode.Impulse);
+            rigidBody.AddForce(Vector3.up * upForce+enemyDirection*normalForce, ForceMode.Impulse);
             jumpPower = 4.9f;//characterStatus.GetJumpPower();
                              // Debug.Log("Jump");
             Vertical.y = jumpPower;

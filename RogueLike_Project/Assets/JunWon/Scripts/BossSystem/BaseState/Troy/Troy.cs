@@ -1,11 +1,11 @@
 using InfimaGames.LowPolyShooterPack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SocialPlatforms;
-
 public class Troy : BossBase
 {
     [Header("StateMachine")]
@@ -52,13 +52,10 @@ public class Troy : BossBase
 
     private void Update()
     {
-
         runTimer += Time.deltaTime;
 
         lurkTimer += Time.deltaTime;
 
-
-        Debug.Log(fsm.CurrentState);
         fsm.Update();
     }
 
@@ -156,4 +153,5 @@ public class Troy : BossBase
     {
         StartCoroutine(coroutine);
     }
+
 }

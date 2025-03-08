@@ -18,7 +18,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
     [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
-    public bool summonedMonster = false;
+
     public Summoner master = null;
 
     [Header("Components")]
@@ -38,9 +38,16 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private GameObject spawnEffect;
     [SerializeField] private Material startMaterial;
     [SerializeField] private Material baseMaterial;
+
+    [SerializeField] private float height = 5f;
+
+
+    [Header("Item Drop")]
+    public bool summonedMonster = false;
+    public bool dropDNA = true;
+    public bool dropItem = true;
     [SerializeField] private GameObject[] items;
     [SerializeField] private int[] itemProbability = { 50, 25, 0 };
-    [SerializeField] private float height = 5f;
     [SerializeField] private int DNADrop = 0;
 
     [Header("UI")]
@@ -333,15 +340,18 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void HandleDeath()
     {
-        if (!summonedMonster) { 
-            Debug.LogWarning("?? ?????? --");
-            SpawnItem();
-            UIManager.instance.dnaIncrease(DNADrop);
-            //enemyCountData.enemyCount--;
+        if (summonedMonster)
+        {
+            dropDNA = false;
+            dropItem = false;
+            master?.summonDead(gameObject);
         }
         else
-        {
-            master?.summonDead(gameObject);
+        { 
+            Debug.LogWarning("?? ?????? --");
+            if (dropItem) SpawnItem();
+            if (dropDNA) UIManager.instance.dnaIncrease(DNADrop);
+            //enemyCountData.enemyCount--;
         }
         Destroy(gameObject);
     }
