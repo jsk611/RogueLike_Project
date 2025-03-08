@@ -145,24 +145,63 @@ public class UIManager : MonoBehaviour
     */
     #region MissionUI
     [SerializeField] GameObject missionUI;
+    [SerializeField] TMP_Text MissionText;
     [SerializeField] TMP_Text ProgressText;
     [SerializeField] EnemyCountData enemyCountData;
     int maxEnemyCount;
+    bool isKillingMission = false;
+    bool isSurviveMission = false;
+    public float time;
     public void KillingMissionStart()
     {
+        isKillingMission = true;
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionStart");
         maxEnemyCount = enemyCountData.enemyCount;
+
+        MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
         KillingMissionUpdate(true);
     }
     void KillingMissionUpdate(bool tmp)
     {
-        ProgressText.text = (maxEnemyCount-enemyCountData.enemyCount).ToString() + "/" + maxEnemyCount.ToString();
-        if (enemyCountData.enemyCount == 0) ProgressText.color = Color.green;
-        else ProgressText.color = Color.white;
+        if(isKillingMission)
+        {
+            ProgressText.text = (maxEnemyCount-enemyCountData.enemyCount).ToString() + "/" + maxEnemyCount.ToString();
+            if (enemyCountData.enemyCount == 0) ProgressText.color = Color.green;
+            else ProgressText.color = Color.white;
+        }
+        else if(isSurviveMission)
+        {
+            time -= 5f;
+        }
+    }
+    public void SurviveMissionStart(float maxTime)
+    {
+        isSurviveMission = true;
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionStart");
+
+        time = maxTime;
+        MissionText.text = "<b><color=orange>목표: </color></b> 살아남기";
+        StartCoroutine(SurviveMissionUpdate());
+    }
+    IEnumerator SurviveMissionUpdate()
+    {
+        ProgressText.color = Color.white;
+        while(time >= 0)
+        {
+            time -= Time.deltaTime;
+            ProgressText.text = (Mathf.Floor(time * 10f) / 10f).ToString();
+            yield return null;
+        }
+        time = 0;
+        ProgressText.text = (Mathf.Floor(time * 10f) / 10f).ToString();
+        ProgressText.color = Color.green;
     }
     public void MissionComplete()
     {
+        isKillingMission = false;
+        isSurviveMission = false;
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionEnd");
     }

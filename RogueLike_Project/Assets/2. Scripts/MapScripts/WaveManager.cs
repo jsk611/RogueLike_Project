@@ -248,6 +248,7 @@ public class WaveManager : MonoBehaviour
         switch (waveData.mission.type)
         {
             case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
+            case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
         }
 
         //멀티 맵일시 맵 변경
@@ -266,9 +267,22 @@ public class WaveManager : MonoBehaviour
         }
         //임무 완료시 초기화
         while (!isMissionEnd) { yield return new WaitForEndOfFrame(); };
+
         if(mapChanging != null) StopCoroutine(mapChanging);
         StopCoroutine("SummonEnemyCoroutine");
+
+        MonsterBase[] monsterBases = FindObjectsOfType<MonsterBase>();
+        foreach (MonsterBase monster in monsterBases)
+        {
+            monster.summonedMonster = true;
+            monster.TakeDamage(9999f, false);
+        }
         yield return new WaitForSeconds(2);
+        foreach (MonsterBase monster in monsterBases)
+        {
+            monster.summonedMonster = true;
+            monster.TakeDamage(9999f, false);
+        }
         yield return StartCoroutine(WaveEnd());
         yield break;
     }
@@ -286,6 +300,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
         //적 스폰 위치 표시
+        
         
         List<Vector2Int> spawnPoints = new List<Vector2Int>();
         foreach(var spawnpoint in enemy.spawnPoints)
@@ -316,6 +331,15 @@ public class WaveManager : MonoBehaviour
         }
         isMissionEnd = true;
     }
+    IEnumerator SurviveMission(float time)
+    {
+        UIManager.instance.SurviveMissionStart(time);
+        while (UIManager.instance.time > 0f)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        isMissionEnd = true;
+    }
     //IEnumerator Stage1Boss()
     //{
     //    Debug.Log("Stage1_Wave");
@@ -339,7 +363,7 @@ public class WaveManager : MonoBehaviour
 
     //    Debug.Log("Wave End");
     //}
-    
+
 
     IEnumerator WaveEnd()
     {
@@ -347,6 +371,7 @@ public class WaveManager : MonoBehaviour
         StopCoroutine("WallCrisis");
         StopCoroutine("HoleCrisis");
         StopCoroutine("SpikeCrisis");
+
         Item[] items = FindObjectsOfType<Item>();
         foreach(Item item in items) { 
             item.isChasing = true;
@@ -376,7 +401,7 @@ public class WaveManager : MonoBehaviour
     {
         for(int i = 0; i < repeat; i++)
         {
-            if (enemyCountData.enemyCount <= 0) break;
+            if (isMissionEnd) break;
 
             tileManager.MakeRandomWall(wallCount);
             yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -387,7 +412,7 @@ public class WaveManager : MonoBehaviour
     {
         for (int i = 0; i < repeat; i++)
         {
-            if (enemyCountData.enemyCount <= 0) break;
+            if (isMissionEnd) break;
 
             tileManager.MakeRandomHole(holeCount);
             yield return StartCoroutine(tileManager.MoveTilesByArray());
@@ -398,7 +423,7 @@ public class WaveManager : MonoBehaviour
     {
         for (int i = 0; i < repeat; i++)
         {
-            if (enemyCountData.enemyCount <= 0) break;
+            if (isMissionEnd) break;
 
             tileManager.MakeRandomSpike(holeCount);
             yield return StartCoroutine(tileManager.MoveTilesByArray());

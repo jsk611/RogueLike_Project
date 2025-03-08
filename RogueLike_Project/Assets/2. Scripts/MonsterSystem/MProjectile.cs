@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MProjectile : MonoBehaviour
 {
@@ -10,10 +11,11 @@ public class MProjectile : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float lifetime = 20f; // 투사체의 수명
     [SerializeField] float speed = 0.05f; // 투사체의 속도
-    [SerializeField] Vector3 dir = Vector3.zero;
+    [SerializeField] Vector3 dir = Vector3.forward;
 
     void Start()
     {
+        SetDirection(transform.forward);
         Destroy(gameObject, lifetime); // 일정 시간 후 투사체 파괴
     }
 
