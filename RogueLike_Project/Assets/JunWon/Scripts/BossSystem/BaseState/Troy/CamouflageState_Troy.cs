@@ -21,7 +21,7 @@ public class CamouflageState_Troy : State<Troy>
     float rushTimer = 0f;
     bool isRushing = false;
     float rushInterval = 5f;
-    float minRushDist = 1f;
+    float minRushDist = 10f;
 
     // Start is called before the first frame update
     public override void Enter()
@@ -37,7 +37,9 @@ public class CamouflageState_Troy : State<Troy>
             {
                 summonEnemyCount--;
                 Vector3 randomPos = owner.transform.position + new Vector3(Random.Range(-4f,4f),0,Random.Range(-4f,4f));
-                GameObject enemy = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.MeeleeSoldier), randomPos, Quaternion.identity,enemyManager.transform);
+                 GameObject enemy = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.MeeleeSoldier), randomPos, Quaternion.identity,enemyManager.transform);
+             //   GameObject enemy = GameObject.Instantiate(owner.gameObject, randomPos, Quaternion.identity, enemyManager.transform);
+             //   enemy.transform.localScale = owner.transform.localScale * 0.5f;
                 enemy.GetComponent<MonsterBase>().summonedMonster = true;
                 owner.SUMMONEDMONSTERS.Add(enemy);
             }
@@ -92,25 +94,33 @@ public class CamouflageState_Troy : State<Troy>
     }
     IEnumerator RushToPlayer()
     {
-       
-        
+        Collider[] checkPlayer;
         float elapsedTime = 0f;
         while(isRushing && elapsedTime <= 5f)
-        {
-            Debug.Log("remaining"+ owner.NmAgent.remainingDistance);
+        { 
             Vector3 rushDirection = owner.Player.position;
-      
+            checkPlayer = Physics.OverlapBox(owner.transform.position + Vector3.up * 4, Vector3.one*12, owner.transform.rotation,LayerMask.GetMask("Character"));
             elapsedTime += Time.deltaTime;
-            if (Vector3.Distance(owner.Player.position,owner.transform.position)<= minRushDist)
+            owner.NmAgent.SetDestination(rushDirection);
+            if (checkPlayer.Length > 0)
             {
-                Debug.Log("rushTOPlayerSTOPPPPP");
-                rushDirection = owner.transform.position + (owner.Player.position - owner.transform.position)*6;
-                yield return new WaitForSeconds(2f);
+                owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(owner.BossStatus.GetAttackDamage());
+                owner.CoroutineRunner(owner.Player.GetComponent<PlayerControl>()?.AirBorne((owner.Player.position-owner.transform.position).normalized,7,6));
+                rushDirection = owner.transform.position + (owner.Player.position - owner.transform.position) * 6;
+                owner.NmAgent.SetDestination(rushDirection);
                 isRushing = false;
             }
-            owner.NmAgent.SetDestination(rushDirection);
+            else if (Vector3.Distance(owner.Player.position,owner.transform.position)<= minRushDist)
+            {
+                rushDirection = owner.transform.position + (owner.Player.position - owner.transform.position)*6;
+                owner.NmAgent.SetDestination(rushDirection);
+                isRushing = false;
+            }
+
             yield return null;
         }
+        isRushing = false;
         rushTimer = 0f;
     }
+    
 }
