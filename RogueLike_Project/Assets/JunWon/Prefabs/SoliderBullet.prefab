@@ -104,8 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 20
-  speed: 0.8
-  dir: {x: 0, y: 0, z: 0}
+  speed: 60
+  dir: {x: 0, y: 0, z: 1}
 --- !u!65 &7426135906037229406
 BoxCollider:
   m_ObjectHideFlags: 0

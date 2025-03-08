@@ -724,12 +724,14 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  summonedMonster: 0
+  master: {fileID: 0}
   anim: {fileID: 6077293130561349617}
   nmAgent: {fileID: 2429809297026969624}
   fov: {fileID: 4951477267646572840}
   monsterStatus: {fileID: 2325090481492472559}
   playerRigidBody: {fileID: 1618767469269076740}
-  attackRange: 10
+  attackRange: 35
   attackCooldown: 1
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 64163850734135073}
