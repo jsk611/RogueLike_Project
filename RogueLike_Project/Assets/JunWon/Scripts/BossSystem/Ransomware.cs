@@ -1,4 +1,5 @@
 using System.Buffers;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
@@ -33,6 +34,8 @@ public class Ransomware : BossBase
     private Phase1_SpeacialAttack_State specialAttackState;
     private Phase2State_Ransomeware phase2State;
     private Phase2_DataBlink_State blinkState;
+    private Phase2_DigitalShadow_State summonState;
+    private Phase2_RansomLock_State lockState;
     #endregion
 
     #region Animation Event Handlers
@@ -113,6 +116,16 @@ public class Ransomware : BossBase
     public void SetDataBlinkState(Phase2_DataBlink_State state)
     {
         blinkState = state;
+    }
+
+    public void SetDigitalShadowState(Phase2_DigitalShadow_State state)
+    {
+        summonState = state;
+    }
+
+    public void SetLockState(Phase2_RansomLock_State state)
+    {
+        lockState = state;
     }
     #endregion
 
@@ -272,6 +285,34 @@ public class Ransomware : BossBase
     }
     #endregion
 
+    public void ApplyVulnerability(float duration)
+    {
+        StartCoroutine(VulnerabilityRoutine(duration));
+    }
+
+    private IEnumerator VulnerabilityRoutine(float duration)
+    {
+        // Apply visual effect to show vulnerability
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        Material[] originalMaterials = new Material[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            originalMaterials[i] = renderers[i].material;
+        }
+
+
+        // Wait for duration
+        yield return new WaitForSeconds(duration);
+
+        // Restore normal state
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            renderers[i].material = originalMaterials[i];
+        }
+
+
+    }
 
     #region Interrupt Handling
     public enum InterruptReason

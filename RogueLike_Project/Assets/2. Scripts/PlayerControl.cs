@@ -2,50 +2,33 @@ using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
-//using Unity.VisualScripting.Dependencies.Sqlite;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
-//using UnityEngine.WSA;
 
-
-// ???? ?? time ?????? ???????? ?????? ???? ?? ????? ???? ???????? ???????? ???????
-
-/* WASD
- * SHIFT ??????
- * CTRL ????????
- * RIFLE, PISTOL, origin weapons...
- * 
- */
-
-
-
-public class PlayerControl : MonoBehaviour
+public class PlayerControl : MonoBehaviour, ISkillLockable
 {
     private float moveSpeed;
     private float moveSpeed_origin;
     private float jumpPower;
-    [Range(0,100)] public float Stamina = 100;
+    [Range(0, 100)] public float Stamina = 100;
 
     float dashCool;
     public bool isGrounded = false;
-
     public bool dashOver = false;
 
+    // 스킬락 관련 변수
+    private Dictionary<SkillType, bool> skillEnabledStates = new Dictionary<SkillType, bool>();
+
+    // 이벤트 정의
+    public delegate void SkillLockStateChanged(SkillType skillType, bool isEnabled);
+    public static event SkillLockStateChanged OnSkillLockStateChanged;
 
     Animator playerAnimator;
-  
     Rigidbody playerRigidbody;
     CharacterController character;
     CharacterBehaviour playerCharacter;
 
     CameraControl cameraController;
     Rigidbody rigidBody;
-    //ShootingController shootingController;
 
     PlayerStatus characterStatus;
 
@@ -59,7 +42,27 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] PlayerPositionData positionData;
 
     TileManager tileManager;
-    // Start is called before the first frame update
+
+    void Awake()
+    {
+        // 스킬 상태 초기화
+        InitializeSkillStates();
+    }
+
+    /// <summary>
+    /// 스킬 상태 초기화
+    /// </summary>
+    private void InitializeSkillStates()
+    {
+        // 모든 스킬 활성화 상태로 초기화
+        skillEnabledStates[SkillType.Running] = true;
+        skillEnabledStates[SkillType.Jumping] = true;
+        skillEnabledStates[SkillType.Dash] = true;
+        skillEnabledStates[SkillType.Movement] = true;
+        skillEnabledStates[SkillType.Shooting] = true;
+        skillEnabledStates[SkillType.WeaponSwitch] = true;
+        skillEnabledStates[SkillType.Interaction] = true;
+    }
 
     void Start()
     {
@@ -67,12 +70,10 @@ public class PlayerControl : MonoBehaviour
         playerAnimator = playerCharacter.GetPlayerAnimator();
         playerRigidbody = GetComponent<Rigidbody>();
         character = GetComponent<CharacterController>();
-       
+
         rigidBody = GetComponent<Rigidbody>();
 
         cameraController = GameObject.Find("ViewCamera").GetComponent<CameraControl>();
-        //upperBodyMovement = GameObject.Find("PBRCharacter").GetComponent<UpperBodyMovement>();
-        //shootingController = GameObject.Find("PBRCharacter").GetComponent<ShootingController>();
         characterStatus = GetComponent<PlayerStatus>();
 
         moveSpeed = characterStatus.GetMovementSpeed();
@@ -81,27 +82,39 @@ public class PlayerControl : MonoBehaviour
         originalParent = transform.parent;
         initialWorldScale = transform.lossyScale;
 
-        tileManager = FindObjectOfType<TileManager>();  
+        tileManager = FindObjectOfType<TileManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        MoveMent();
+        // 이동 기능이 활성화되었을 때만 MoveMent() 호출
+        if (IsSkillEnabled(SkillType.Movement))
+        {
+            MoveMent();
+        }
+        else
+        {
+            // 이동이 비활성화되면 Movement 벡터를 0으로 설정
+            Movement = Vector3.zero;
+        }
+
         StaminaRegeneration();
         CheckGrounded();
-        Jumping();
+
+        // 점프 기능이 활성화되었을 때만 Jumping() 호출
+        if (IsSkillEnabled(SkillType.Jumping))
+        {
+            Jumping();
+        }
     }
 
     void LateUpdate()
     {
-        if(transform.parent != null)
+        if (transform.parent != null)
         {
             Transform parentTransform = transform.parent.transform;
-            // ?????? ???????? ??????????.
             Vector3 parentScale = parentTransform.localScale;
 
-            // ?????? ?????? ?????? ???? ?????? ???? ???????? ??????????.
             Vector3 currentWorldScale = transform.lossyScale;
             Vector3 scaleRatio = new Vector3(
                 initialWorldScale.x / currentWorldScale.x,
@@ -115,22 +128,7 @@ public class PlayerControl : MonoBehaviour
                 transform.localScale.z * scaleRatio.z
             );
         }
-        
     }
-    //private void Die()
-    //{
-    //    cameraController.enabled = false;
-    //    //shootingController.enabled = false;
-    //    if (playerAnimator.GetBool("isAlive"))
-    //    {
-    //        playerAnimator.SetTrigger("dead");
-    //        playerAnimator.SetBool("isAlive", false);
-    //    }
-
-
-    //}
-
-
 
     private void MoveMent()
     {
@@ -138,20 +136,20 @@ public class PlayerControl : MonoBehaviour
         var h = Input.GetAxisRaw("Horizontal") * transform.right;
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
-        
-    //    Dash();
+
         character.height = 1.8f;
         character.center = new Vector3(0, 0, 0);
 
         Movement = Movement.normalized * moveSpeed;
-        if (Input.GetKey(KeyCode.LeftShift) && Stamina >= 100f && Movement.magnitude > Mathf.Epsilon) StartCoroutine( Dashdd(Movement));
 
-        if (playerCharacter.GetCursorState())character.Move (Movement * Time.deltaTime);
-        // character.Move(Vector3.down * 0.8f * Time.deltaTime);
+        // 달리기 능력과 대시 능력이 모두 활성화된 경우에만 대시 허용
+        if (Input.GetKey(KeyCode.LeftShift) && Stamina >= 100f && Movement.magnitude > Mathf.Epsilon &&
+            IsSkillEnabled(SkillType.Running) && IsSkillEnabled(SkillType.Dash))
+        {
+            StartCoroutine(Dashdd(Movement));
+        }
 
-     
-        // character.Move(Vertical * Time.deltaTime
-        return;
+        if (playerCharacter.GetCursorState()) character.Move(Movement * Time.deltaTime);
     }
 
     IEnumerator Dashdd(Vector3 Movement)
@@ -170,20 +168,19 @@ public class PlayerControl : MonoBehaviour
             }
         }
     }
+
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius, Vector3.down, out hitInfo, 0.83f, LayerMask.GetMask("Wall"));
 
         if (!isGrounded)
         {
-            rigidBody.isKinematic = false;//Vertical.y += Physics.gravity.y * Time.deltaTime;
+            rigidBody.isKinematic = false;
             transform.SetParent(tileManager.gameObject.transform);
-
-
         }
         if (isGrounded)
         {
-            rigidBody.isKinematic = true;//Vertical.y = -0.8f;
+            rigidBody.isKinematic = true;
             character.Move(Vector3.down * 4f * Time.deltaTime);
         }
         if (transform.position.y < -5f)
@@ -192,49 +189,35 @@ public class PlayerControl : MonoBehaviour
         }
         return isGrounded;
     }
-    public IEnumerator AirBorne(Vector3 enemyDirection,float upForce=10f,float normalForce = 2f)
+
+    public IEnumerator AirBorne(Vector3 enemyDirection, float upForce = 10f, float normalForce = 2f)
     {
         int temp = 0;
         while (temp < 3f)
         {
             rigidBody.isKinematic = false;
-            rigidBody.AddForce(Vector3.up * upForce+enemyDirection*normalForce, ForceMode.Impulse);
-            jumpPower = 4.9f;//characterStatus.GetJumpPower();
-                             // Debug.Log("Jump");
+            rigidBody.AddForce(Vector3.up * upForce + enemyDirection * normalForce, ForceMode.Impulse);
+            jumpPower = 4.9f;
             Vertical.y = jumpPower;
             temp++;
             yield return null;
         }
-        ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
-        //float velocity = 1f;
-        //while(velocity>0)
-        //{
-        //    character.Move(Vector3.up * velocity+enemyDirection);
-
-        //    velocity -= 2 * Time.deltaTime;
-        //    yield return null;
-        //}
     }
 
     private void Jumping()
     {
-
         if (Input.GetKey(KeyCode.Space))
         {
-            if (isGrounded) 
+            if (isGrounded)
             {
                 isGrounded = false;
                 rigidBody.isKinematic = false;
-                rigidBody.AddForce(Vector3.up*11, ForceMode.Impulse);
-                jumpPower = 1f;//characterStatus.GetJumpPower();
-                // Debug.Log("Jump");
+                rigidBody.AddForce(Vector3.up * 11, ForceMode.Impulse);
+                jumpPower = 1f;
                 Vertical.y = jumpPower;
-                ////playerRigidbody.AddForce(new Vector3(0, jumpPower, 0), ForceMode.Impulse);
             }
         }
-     
     }
-
 
     private void StaminaRegeneration()
     {
@@ -249,13 +232,55 @@ public class PlayerControl : MonoBehaviour
 
     void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log(hit.gameObject.name);
         if (hit.gameObject.CompareTag("Floor") && hit.transform != transform.parent)
         {
-            transform.SetParent(hit.transform); 
+            transform.SetParent(hit.transform);
             string[] tilePos = hit.gameObject.name.Split(',');
-            if(tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
+            if (tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
         }
-        
     }
+
+    #region ISkillLockable 인터페이스 구현
+    public void SetSkillEnabled(SkillType skillType, bool enabled)
+    {
+        if (skillEnabledStates.ContainsKey(skillType))
+        {
+            bool previousState = skillEnabledStates[skillType];
+            if (previousState != enabled)
+            {
+                skillEnabledStates[skillType] = enabled;
+                // 상태가 변경되었을 때만 이벤트 발생
+                OnSkillLockStateChanged?.Invoke(skillType, enabled);
+                Debug.Log($"스킬 상태 변경: {skillType} - {(enabled ? "활성화" : "비활성화")}");
+            }
+        }
+        else
+        {
+            skillEnabledStates.Add(skillType, enabled);
+            OnSkillLockStateChanged?.Invoke(skillType, enabled);
+            Debug.Log($"새 스킬 상태 설정: {skillType} - {(enabled ? "활성화" : "비활성화")}");
+        }
+    }
+
+    public bool IsSkillEnabled(SkillType skillType)
+    {
+        if (skillEnabledStates.TryGetValue(skillType, out bool enabled))
+        {
+            return enabled;
+        }
+
+        // 기본적으로 스킬은 활성화 상태
+        return true;
+    }
+
+    public void UnlockAllSkills()
+    {
+        foreach (SkillType skillType in Enum.GetValues(typeof(SkillType)))
+        {
+            SetSkillEnabled(skillType, true);
+        }
+
+        Debug.Log("모든 스킬 잠금 해제됨");
+    }
+    #endregion
 }

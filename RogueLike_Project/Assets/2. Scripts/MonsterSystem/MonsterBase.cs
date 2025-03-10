@@ -142,7 +142,7 @@ public abstract class MonsterBase : MonoBehaviour
 
 
 
-    private void Update()
+    protected virtual void Update()
     {
         //chaseSpeed?? ?????????? ????
         chaseSpeed = monsterStatus.GetMovementSpeed();
