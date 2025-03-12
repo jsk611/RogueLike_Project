@@ -167,17 +167,17 @@ PrefabInstance:
     - target: {fileID: 3134043617342798851, guid: 3b668d9ae74f23440aa8725077a02390,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.21
+      value: 4.8254
       objectReference: {fileID: 0}
     - target: {fileID: 3134043617342798851, guid: 3b668d9ae74f23440aa8725077a02390,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 5.656388
+      value: 4.8254
       objectReference: {fileID: 0}
     - target: {fileID: 3134043617342798851, guid: 3b668d9ae74f23440aa8725077a02390,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.414097
+      value: 4.8254
       objectReference: {fileID: 0}
     - target: {fileID: 3134043617342798851, guid: 3b668d9ae74f23440aa8725077a02390,
         type: 3}
@@ -266,12 +266,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.76331
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6492245
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
@@ -281,12 +281,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.8868
+      value: 6.51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 32.153
+      value: 33.09
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
@@ -426,12 +426,12 @@ MonoBehaviour:
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
-  runInterval: 10
-  enemySummonAmount: 4
+  runInterval: 7
+  enemySummonAmount: 1
   lurkHeathBoundary:
   - 30
   - 60
-  lurkInterval: 165
+  lurkInterval: 20
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
   copyChain: 3
   isCopied: 0

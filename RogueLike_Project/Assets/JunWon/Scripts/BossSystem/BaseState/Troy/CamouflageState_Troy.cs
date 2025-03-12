@@ -95,17 +95,18 @@ public class CamouflageState_Troy : State<Troy>
     IEnumerator RushToPlayer()
     {
         Collider[] checkPlayer;
+        BoxCollider ownerCollider = owner.GetComponent<BoxCollider>();
         float elapsedTime = 0f;
-        while(isRushing && elapsedTime <= 5f)
+        while(isRushing && elapsedTime <= 2f)
         { 
             Vector3 rushDirection = owner.Player.position;
-            checkPlayer = Physics.OverlapBox(owner.transform.position + Vector3.up * 4, Vector3.one*12, owner.transform.rotation,LayerMask.GetMask("Character"));
+            checkPlayer = Physics.OverlapBox(owner.transform.position+ new Vector3(0, 2f, 0.3f), ownerCollider.size*1.8f , owner.transform.rotation,LayerMask.GetMask("Character"));
             elapsedTime += Time.deltaTime;
             owner.NmAgent.SetDestination(rushDirection);
             if (checkPlayer.Length > 0)
             {
                 owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(owner.BossStatus.GetAttackDamage());
-                owner.CoroutineRunner(owner.Player.GetComponent<PlayerControl>()?.AirBorne((owner.Player.position-owner.transform.position).normalized,7,6));
+                owner.CoroutineRunner(owner.Player.GetComponent<PlayerControl>()?.AirBorne((owner.Player.position-owner.transform.position).normalized,7,5));
                 rushDirection = owner.transform.position + (owner.Player.position - owner.transform.position) * 6;
                 owner.NmAgent.SetDestination(rushDirection);
                 isRushing = false;

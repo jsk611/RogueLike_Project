@@ -3,14 +3,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SocialPlatforms;
+using static UnityEngine.UI.GridLayoutGroup;
 public class Troy : BossBase
 {
     [Header("StateMachine")]
     [SerializeField] protected StateMachine<Troy> fsm;
     private bool isCamouflaged = false;
+    private bool isRushing = false;
     private bool isLurked = false;
 
     [Header("Camouflage")]
@@ -52,6 +55,7 @@ public class Troy : BossBase
 
     private void Update()
     {
+   
         runTimer += Time.deltaTime;
 
         lurkTimer += Time.deltaTime;
@@ -147,11 +151,20 @@ public class Troy : BossBase
     {
         isCamouflaged = !isCamouflaged; 
         runTimer = 0f;
+        isRushing = !isRushing;
     }
 
     public void CoroutineRunner(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
     }
+    private void OnDrawGizmos()
+    {
+        BoxCollider collider = GetComponent<BoxCollider>();
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.localPosition+new Vector3(0,2.1f,0.3f), collider.size*transform.localScale.x);
+        Gizmos.DrawCube(transform.position,Vector3.one*0.1f);
+    }
+
 
 }
