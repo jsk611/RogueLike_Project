@@ -11,40 +11,42 @@
   "enemies": [
     {
       "type": 101,
-      "count": 2,
+      "count": 16,
       "spawnPoints": [
-        { "x": 3, "y": 16}
+        { "x": 8, "y": 43},
+        { "x": 14, "y": 43},
+        { "x": 30, "y": 43},
+        { "x": 36, "y": 43}
+
       ],
-      "spawnDelay": 5
+      "spawnDelay": 8
     },
     {
       "type": 111,
-      "count": 3,
+      "count": 16,
       "spawnPoints": [
-        {
-          "x": 30,
-          "y": 16
-        }
+        { "x": 8, "y": 1},
+        { "x": 14, "y": 1},
+        { "x": 30, "y": 1},
+        { "x": 36, "y": 1}
       ],
-      "spawnDelay": 5
+      "spawnDelay": 8
     },
     {
-      "type": 102,
-      "count": 1,
+      "type": 212,
+      "count": 8,
       "spawnPoints": [
-        {
-          "x": 16,
-          "y": 16
-        }
+        { "x": 22, "y": 43},
+        { "x": 22, "y": 1}
       ],
-      "spawnDelay": 5
+      "spawnDelay": 8
     }
 
   ],
   "mission":
   {
-    "type": "Killing",
-    "count": 6
+    "type": "Survive",
+    "time": 90
   },
   
   "isRandomEvent": false,

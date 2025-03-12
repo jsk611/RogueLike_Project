@@ -29,6 +29,11 @@
   
   "isRandomEvent": false,
   "events": [
-    
+    {
+      "type": "Spike",
+      "repeat": 6,
+      "delay": 8,
+      "count": 20
+    }
   ]
 }

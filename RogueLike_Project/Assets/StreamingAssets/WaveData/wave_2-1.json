@@ -13,17 +13,26 @@
       "type": 101,
       "count": 3,
       "spawnPoints": [
-        { "x": 13, "y": 13},
-        { "x": 15, "y": 15}
+        { "x": 14, "y": 14}
       ],
-      "spawnDelay": 5
+      "spawnDelay": 6
+    },
+    {
+      "type": 102,
+      "count": 3,
+      "spawnPoints": [
+        { "x": 30, "y": 30}
+      ],
+      "spawnDelay": 6
     },
     {
       "type": 211,
-      "count": 3,
+      "count": 4,
       "spawnPoints": [
         { "x": 35, "y": 35},
-        { "x": 10, "y": 10}
+        { "x": 35, "y": 9},
+        { "x": 9, "y": 9},
+        { "x": 9, "y": 35}
       ],
       "spawnDelay": 5
     }
@@ -31,16 +40,11 @@
   "mission":
   {
     "type": "Killing",
-    "count": 6
+    "count": 10
   },
   
   "isRandomEvent": false,
   "events": [
-    {
-      "type": "Spike",
-      "repeat": 6,
-      "delay": 8,
-      "count": 25
-    }
+    
   ]
 }

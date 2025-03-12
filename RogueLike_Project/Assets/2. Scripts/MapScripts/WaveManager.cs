@@ -149,7 +149,6 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator RunStage()
     {
-        currentStage = 1;
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         for(currentStage = 1; currentStage <= 4; currentStage++)
