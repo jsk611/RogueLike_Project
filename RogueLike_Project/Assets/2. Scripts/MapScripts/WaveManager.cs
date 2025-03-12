@@ -155,7 +155,7 @@ public class WaveManager : MonoBehaviour
         for(currentStage = 1; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
-            for (int i = 0; i < 0; i++)
+            for (int i = 0; i < 4; i++)
             {
                 currentWave = i + 1;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
