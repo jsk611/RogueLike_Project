@@ -57,8 +57,6 @@ public class WaveManager : MonoBehaviour
         
         sp = startPosition.transform.position;
 
-        LoadWaveData("1-1");
-
         StartCoroutine(StartMap());
         //StartCoroutine(RunWaves()); //?????? GameManager?? ???? ??
     }
@@ -160,9 +158,9 @@ public class WaveManager : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 currentWave = i + 1;
-                int randNum = Random.Range(1, mapMaxIdx+1);
+                int randNum = Random.Range(1, mapMaxIdx + 1);
                 int cnt = 0;
-                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx+1);
+                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
                 yield return StartCoroutine(RunWave());
@@ -170,9 +168,9 @@ public class WaveManager : MonoBehaviour
                 prevWave = randNum;
             }
             //보스전
-            //LoadWaveData($"{currentStage}-boss");
-            //yield return StartCoroutine(RunWave());
-            //yield return new WaitForSeconds(0.5f);
+            LoadWaveData($"{currentStage}-boss");
+            yield return StartCoroutine(RunWave());
+            yield return new WaitForSeconds(0.5f);
 
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(Maintenance());
@@ -233,6 +231,7 @@ public class WaveManager : MonoBehaviour
         isMissionEnd = false;
         //UI작업
         UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
+        if(waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
         //맵 불러오기
         tileManager.InitializeArray(1);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
@@ -248,6 +247,7 @@ public class WaveManager : MonoBehaviour
         switch (waveData.mission.type)
         {
             case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
+            case "Boss": StartCoroutine(KillingMission(waveData.mission.count, true)); break;
             case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
         }
 
@@ -321,10 +321,10 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(enemy.spawnDelay);
         }
     }
-    IEnumerator KillingMission(int count)
+    IEnumerator KillingMission(int count, bool isBoss = false)
     {
         enemyCountData.enemyCount = count;
-        UIManager.instance.KillingMissionStart();
+        UIManager.instance.KillingMissionStart(isBoss);
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();
