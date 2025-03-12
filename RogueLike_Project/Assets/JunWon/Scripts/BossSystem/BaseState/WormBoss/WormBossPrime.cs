@@ -33,6 +33,8 @@ public class WormBossPrime : BossBase
     private bool ChsToWanTrigger = false;
     private bool DigToWanTrigger = false;
 
+    WormBossBodyMovement wormBossBodyMovement;
+
     #region ReadOnlyFunc 
 
     public List<GameObject> Summoned => summoned;
@@ -43,6 +45,7 @@ public class WormBossPrime : BossBase
     // Start is called before the first frame update
     void Start()
     {
+        wormBossBodyMovement = GetComponent<WormBossBodyMovement>();
         target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
         InitializeComponent();
         InitializeFSM();
@@ -180,8 +183,10 @@ public class WormBossPrime : BossBase
     {
         bossStatus.DecreaseHealth(damage);
         
+        
+
         EventManager.Instance.TriggerMonsterDamagedEvent();
-        Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+        Instantiate(UIDamaged, wormBossBodyMovement.WormHead.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
         if (bossStatus.GetHealth() <= 0)
         {
             var dieState = new DieState_WormBoss(this);
@@ -194,6 +199,9 @@ public class WormBossPrime : BossBase
             fsm.AddTransition(AnyToDeath);
         }
     }
-
+    public void CoroutineRunner(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
 
 }

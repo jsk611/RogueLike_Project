@@ -22,6 +22,7 @@ public class WormBossBodyMovement : MonoBehaviour
     private BossStatus bossStatus;
     Transform target;
     private float chaseSpeed;
+    private float originSpeed;
     Quaternion moveDirection;
 
     TileManager tileManager;
@@ -53,7 +54,8 @@ public class WormBossBodyMovement : MonoBehaviour
         wormBoss = GetComponent<WormBossPrime>();
         bossStatus = GetComponent<BossStatus>();
         target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
-        chaseSpeed = GetComponent<BossStatus>().GetMovementSpeed();
+        originSpeed = bossStatus.GetMovementSpeed();
+        chaseSpeed = originSpeed;
         tileManager = FindAnyObjectByType<TileManager>();
         bodyCount = bodyList.Count;
         
@@ -74,13 +76,14 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         moveType.TryGetValue(currentActionType, out var action);
         action?.Invoke();
+        chaseSpeed = originSpeed *( 1+(bossStatus.GetMaxHealth()-bossStatus.GetHealth())/bossStatus.GetMaxHealth());
         WormMove();
     }
     public void ChangeState(actionType actionType, float speed)
     {
         currentActionType = actionType;
         //moveTimer = 0f;
-        chaseSpeed = speed;
+        originSpeed = speed;
     }
     void WormMove()
     {
@@ -128,7 +131,7 @@ public class WormBossBodyMovement : MonoBehaviour
                 int x = (int)wormHead.position.z / 2;
                 Debug.Log(hit.transform.name);
                 StartCoroutine(tileManager.CreateShockwave(z, x, 6, 4));
-                Collider[] boom = Physics.OverlapSphere(wormHead.position, 12, LayerMask.GetMask("Character"));
+                Collider[] boom = Physics.OverlapSphere(wormHead.position, 8, LayerMask.GetMask("Character"));
                 if (boom.Length > 0)
                 {
                     target.GetComponent<PlayerStatus>().DecreaseHealth(bossStatus.GetAttackDamage());
