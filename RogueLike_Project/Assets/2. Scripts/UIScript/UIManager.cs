@@ -152,14 +152,15 @@ public class UIManager : MonoBehaviour
     bool isKillingMission = false;
     bool isSurviveMission = false;
     public float time;
-    public void KillingMissionStart()
+    public void KillingMissionStart(bool isBoss = false)
     {
         isKillingMission = true;
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionStart");
         maxEnemyCount = enemyCountData.enemyCount;
 
-        MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
+        if(isBoss) MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
+        else MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
         KillingMissionUpdate(true);
     }
     void KillingMissionUpdate(bool tmp)
