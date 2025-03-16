@@ -66,11 +66,24 @@ public class ProjectileLauncher : MonoBehaviour {
 		Collider[] hits = Physics.OverlapSphere(transform.position, explosionRange);//,LayerMask.NameToLayer("Creature"));
 		foreach (Collider hit in hits)
 		{
-			if (hit.gameObject.GetComponent<MonsterStatus>() != null)
-				hit.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
-			else if (hit.gameObject.GetComponent<BossBase>() != null)
-				hit.gameObject.GetComponent<BossBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
-		}
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
+            {
+                if (collision.gameObject.GetComponent<MonsterBase>() != null)
+                {
+                    collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+                }
+                else if (collision.gameObject.GetComponent<BossBase>() != null)
+                {
+                    Debug.Log("Boss hit");
+                    collision.gameObject.GetComponent<BossBase>()?.TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+                }
+                else if (collision.gameObject.GetComponent<Dummy>() != null)
+                {
+                    collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+                }
+                Destroy(gameObject);
+            }
+        }
 			//Destroy(gameObject);
 		
 		// //Ignore collision if bullet collides with "Player" tag

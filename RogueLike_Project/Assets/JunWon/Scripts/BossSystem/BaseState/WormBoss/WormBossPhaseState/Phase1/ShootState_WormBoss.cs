@@ -8,7 +8,7 @@ public class ShootState_WormBoss : State<WormBossPrime>
     public ShootState_WormBoss(WormBossPrime owner) : base(owner) { }
 
     private float attackTimer = 0f;
-    private float attackTime = 3f;
+    private float attackTime = 2f;
     List<Transform> bodyList;
     public override void Enter()
     {
