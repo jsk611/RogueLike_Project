@@ -13,6 +13,10 @@ public class Phase2State_Ransomeware : State<Ransomware>
     {
         owner.AbilityManager.SetAbilityActive("DataBlink");
         owner.AbilityManager.SetMaxCoolTime("DataBlink");
+        owner.AbilityManager.SetAbilityActive("Lock");
+        owner.AbilityManager.SetMaxCoolTime("Lock");
+        owner.AbilityManager.SetAbilityActive("SummonShadows");
+        owner.AbilityManager.SetMaxCoolTime("SummonShadows");
 
     }
     private void InitializeStats()
@@ -23,6 +27,8 @@ public class Phase2State_Ransomeware : State<Ransomware>
         var idleState = new Phase1_Idle_State(owner);
         var chaseState = new Phase1_Chase_State(owner);
         var blinkState = new Phase2_DataBlink_State(owner);
+        var lockState = new Phase2_RansomLock_State(owner);
+        var summonState = new Phase2_DigitalShadow_State(owner);
 
         subFsm = new StateMachine<Ransomware>(idleState);
 
@@ -38,10 +44,10 @@ public class Phase2State_Ransomeware : State<Ransomware>
         // Blink State Transition
 
         subFsm.AddTransition(new Transition<Ransomware>(
-           chaseState,
-           blinkState,
-           () => owner.AbilityManager.GetAbilityRemainingCooldown("DataBlink") == 0
-       ));
+            chaseState,
+            blinkState,
+            () => owner.AbilityManager.GetAbilityRemainingCooldown("DataBlink") == 0
+        ));
 
         subFsm.AddTransition(new Transition<Ransomware>(
             blinkState,
@@ -49,6 +55,29 @@ public class Phase2State_Ransomeware : State<Ransomware>
             () => blinkState.IsAnimationFinished()
         ));
 
+        subFsm.AddTransition(new Transition<Ransomware>(
+            chaseState,
+            lockState,
+            () => owner.AbilityManager.GetAbilityRemainingCooldown("Lock") == 0
+        ));
+
+        subFsm.AddTransition(new Transition<Ransomware>(
+            lockState,
+            chaseState,
+            () => blinkState.IsAnimationFinished()
+        ));
+
+        subFsm.AddTransition(new Transition<Ransomware>(
+            chaseState,
+            summonState,
+            () => owner.AbilityManager.GetAbilityRemainingCooldown("SummonShadows") == 0
+        ));
+
+        subFsm.AddTransition(new Transition<Ransomware>(
+            summonState,
+            chaseState,
+            () => summonState.IsAnimationFinished()
+        ));
 
     }
 

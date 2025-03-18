@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
 {
     private bool isAttackFinished = false;
-    private int shadowCount = 3; // 소환할 그림자 수
+    private int shadowCount = 6; // 소환할 그림자 수
     private List<GameObject> activeShadows = new List<GameObject>();
     private float shadowLifetime = 15f; // 그림자 자동 소멸 시간
 
@@ -24,7 +24,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
         if (CanExecuteAttack())
         {
             owner.Animator.SetTrigger("SummonShadows");
-            if (owner.AbilityManager.UseAbility("DigitalShadow"))
+            if (owner.AbilityManager.UseAbility("SummonShadows"))
             {
                 // 실제 그림자 생성은 애니메이션 이벤트를 통해 트리거됨
             }
@@ -64,7 +64,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
         DestroyAllShadows();
 
         // 어빌리티 매니저에서 그림자 프리팹 가져오기
-        GameObject shadowPrefab = owner.AbilityManager.GetAbilityPrefab("DigitalShadow");
+        GameObject shadowPrefab = owner.Shadow;
         if (shadowPrefab == null)
         {
             Debug.LogError("디지털 그림자 프리팹을 찾을 수 없습니다!");

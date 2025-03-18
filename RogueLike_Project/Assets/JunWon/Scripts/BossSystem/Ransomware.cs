@@ -14,6 +14,13 @@ public class Ransomware : BossBase
     [Header("Transform References")]
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform explosionPoint;
+
+    [Header("Basic Skill Lock")]
+    private Dictionary<SkillType, float> skillUnlockTimes = new Dictionary<SkillType, float>();
+
+    [Header("Summon Object")]
+    [SerializeField] private GameObject shadowPrefab;
+
     #endregion
 
     #region Combat Settings
@@ -94,6 +101,13 @@ public class Ransomware : BossBase
             blinkState.OnTeleport();
         }
     }
+
+    public void LockFromAnimation()
+    {
+        if (lockState != null)
+        {
+        }
+    }
     #endregion
 
     #region State Setters
@@ -140,6 +154,8 @@ public class Ransomware : BossBase
     public Transform FirePoint => firePoint;
     public GameObject DataPacket => dataPacket;
     public Transform ExplosionPoint => explosionPoint;
+
+    public GameObject Shadow => shadowPrefab;
     #endregion
 
     #region Unity Lifecycle
@@ -152,6 +168,7 @@ public class Ransomware : BossBase
     private void Update()
     {
         fsm.Update();
+        CheckLockedSkills();
     }
 
     private void LateUpdate()
@@ -370,6 +387,47 @@ public class Ransomware : BossBase
 
         // 현재 진행중인 액션 중단
         Animator.SetTrigger("InterruptAction");
+    }
+
+    #endregion
+
+    #region LockSystem
+    public void LockPlayerSkill(SkillType skillType, float duration)
+    {
+        PlayerControl playerControl = GameObject.FindObjectOfType<PlayerControl>();
+        if (playerControl != null)
+        {
+            // 스킬 잠금
+            playerControl.SetSkillEnabled(skillType, false);
+
+            // 해제 시간 설정 (현재 시간 + 지속 시간)
+            skillUnlockTimes[skillType] = Time.time + duration;
+        }
+    }
+    private void CheckLockedSkills()
+    {
+        float currentTime = Time.time;
+        List<SkillType> skillsToUnlock = new List<SkillType>();
+
+        // 해제 시간이 된 스킬 확인
+        foreach (var entry in skillUnlockTimes)
+        {
+            if (currentTime >= entry.Value)
+            {
+                skillsToUnlock.Add(entry.Key);
+            }
+        }
+
+        // 해제 시간이 된 스킬 해제
+        PlayerControl playerControl = GameObject.FindObjectOfType<PlayerControl>();
+        if (playerControl != null && skillsToUnlock.Count > 0)
+        {
+            foreach (SkillType skill in skillsToUnlock)
+            {
+                playerControl.SetSkillEnabled(skill, true);
+                skillUnlockTimes.Remove(skill);
+            }
+        }
     }
 
     #endregion

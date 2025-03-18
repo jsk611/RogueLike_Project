@@ -907,6 +907,7 @@ GameObject:
   - component: {fileID: 3193221684165263386}
   - component: {fileID: -5532140609096168611}
   - component: {fileID: 8136102259909351704}
+  - component: {fileID: 5586220341193173390}
   m_Layer: 16
   m_Name: TestGolem
   m_TagString: Untagged
@@ -1143,6 +1144,7 @@ MonoBehaviour:
   abilityManager: {fileID: 8136102259909351704}
   firePoint: {fileID: 1472911293522630302}
   explosionPoint: {fileID: 6264956134639678497}
+  shadowPrefab: {fileID: 0}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
     type: 3}
 --- !u!114 &8136102259909351704
@@ -1162,6 +1164,28 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4df6051b070972f49a63e0eada83ee65, type: 2}
   - {fileID: 11400000, guid: 149539ace83ae93449add97c278aefff, type: 2}
   - {fileID: 11400000, guid: 2eb3b389ab2d9574093ea89988516a40, type: 2}
+  - {fileID: 11400000, guid: b90eaf485e1a27a48a43a4a5457dd5b5, type: 2}
+  - {fileID: 11400000, guid: 1a5f6877e6d8e72499ed800cea5a7eb5, type: 2}
+--- !u!114 &5586220341193173390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8560706903217793330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7433041f328cbf0428be39514da8b6ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultLockDuration: 60
+  skillChangeDuration: 10
+  lockPatternType: 4
+  maxSimultaneousLockedSkills: 2
+  lockableSkills: 050000000100000002000000
+  lockSound: {fileID: 0}
+  unlockSound: {fileID: 0}
+  glitchSound: {fileID: 0}
 --- !u!1 &8909898536846366522
 GameObject:
   m_ObjectHideFlags: 0
