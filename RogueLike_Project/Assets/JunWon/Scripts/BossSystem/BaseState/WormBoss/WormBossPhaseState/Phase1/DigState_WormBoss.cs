@@ -29,7 +29,6 @@ public class DigState_WormBoss : State<WormBossPrime>
         if((Vector3.Distance(wormHead.position,chaseTarget.position)<=3f && thrustTimer >=3f )|| thrustTimer >=8f)
         {
             thrustTimer = 0f;
-            Debug.Log("dfdf");
             wormBossBodyMovement.ChangeState(WormBossBodyMovement.actionType.Flying, owner.BossStatus.GetMovementSpeed()*2);
         }
  

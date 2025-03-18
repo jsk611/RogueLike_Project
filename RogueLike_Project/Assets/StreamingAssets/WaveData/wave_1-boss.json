@@ -1,0 +1,39 @@
+{
+  "waveIndex": 5,
+  "isMultiMap": false,
+  "maps": [
+    {
+      "file": "1_boss",
+      "duration": 60
+    }
+  ],
+  "isRandomEnemy": false,
+  "enemies": [
+    {
+      "type": 131,
+      "count": 1,
+      "spawnPoints": [
+        {
+          "x": 20,
+          "y": 20
+        }
+      ],
+      "spawnDelay": 8
+    }
+  ],
+  "mission":
+  {
+    "type": "Boss",
+    "count": 1
+  },
+  
+  "isRandomEvent": false,
+  "events": [
+    {
+      "type": "Spike",
+      "repeat": 6,
+      "delay": 8,
+      "count": 20
+    }
+  ]
+}
