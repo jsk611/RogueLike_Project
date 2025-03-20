@@ -160,7 +160,7 @@ public class PlayerStatus : StatusBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene("GameOverScene");
+        StartCoroutine(UIManager.instance.DieBuffering());
     }
 
     private void UpdateUI()

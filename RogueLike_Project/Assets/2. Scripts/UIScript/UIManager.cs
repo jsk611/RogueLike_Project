@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
 using System;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
@@ -216,6 +217,18 @@ public class UIManager : MonoBehaviour
     }
 
     #endregion
+
+    [SerializeField] Image DyingBackground;
+    public IEnumerator DieBuffering()
+    {
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(2f);
+        DyingBackground.DOFade(0.5f, 2f).SetUpdate(true);
+        yield return new WaitForSecondsRealtime(4f);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("GameOverScene");
+    } 
+
     public GameObject PauseUI;
     public void PauseGame()
     {
