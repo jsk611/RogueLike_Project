@@ -76,7 +76,7 @@ public class WormBossBodyMovement : MonoBehaviour
     {
         moveType.TryGetValue(currentActionType, out var action);
         action?.Invoke();
-        chaseSpeed = originSpeed *( 1+(bossStatus.GetMaxHealth()-bossStatus.GetHealth())/bossStatus.GetMaxHealth());
+        chaseSpeed = originSpeed *( 1+(bossStatus.GetMaxHealth()-bossStatus.GetHealth())/bossStatus.GetMaxHealth()/2f);
         WormMove();
     }
     public void ChangeState(actionType actionType, float speed)

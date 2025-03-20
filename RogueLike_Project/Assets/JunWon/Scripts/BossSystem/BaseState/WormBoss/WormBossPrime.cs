@@ -41,6 +41,7 @@ public class WormBossPrime : BossBase
     
     public bool ATKTOWANDER => ShtToWanTrigger;
     public bool SUMTOWANDER => SumToWanTrigger;
+    public WormBossBodyMovement WormBossBodyMovement => wormBossBodyMovement;
     #endregion
     // Start is called before the first frame update
     void Start()

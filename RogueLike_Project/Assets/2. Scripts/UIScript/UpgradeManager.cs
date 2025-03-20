@@ -14,8 +14,11 @@ public class UpgradeManager : MonoBehaviour
 
     [SerializeField] GameObject upgradeUI;
 
-    [SerializeField] GameObject[] commonButtons, rareButtons, epicButtons;
-    private GameObject[] curUpgradeButtons = new GameObject[3]; // 수정된 변수명
+    [SerializeField] VarSetDisplayManager varSetDisplayManager;
+
+
+    [SerializeField] GameObject commonButtons, rareButtons, epicButtons;
+    private Button[] curUpgradeButtons = new Button[3]; // 수정된 변수명
 
     private CharacterBehaviour player;
     private PlayerStatus status;
@@ -32,8 +35,6 @@ public class UpgradeManager : MonoBehaviour
         Damage,
         AttackSpeed,
         ReloadSpeed,
-        CriticalRate,
-        CriticalDamage,
         MoveSpeed,
         Heath,
         CoinAcquisitonRate,
@@ -80,28 +81,29 @@ public class UpgradeManager : MonoBehaviour
         upgradeUI.SetActive(true);
 
         // 중복 방지를 위한 리스트
-        List<GameObject> selectedButtons = new List<GameObject>();
-        GameObject[] selectList = commonButtons;
-        if (upgradeLevel == 2) selectList = rareButtons;
-        else if (upgradeLevel == 3) selectList = epicButtons;
+        //List<GameObject> selectedButtons = new List<GameObject>();
+        GameObject upgradeType = commonButtons;
+        if (upgradeLevel == 2) upgradeType = rareButtons;
+        else if (upgradeLevel == 3) upgradeType = epicButtons;
         
 
-        for (int i = 0; i < 3; i++)
-        {
-            GameObject selectedButton;
-            selectedButton = selectList[Random.Range(0, selectList.Length)];
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    GameObject selectedButton;
+        //    selectedButton = selectList[Random.Range(0, selectList.Length)];
 
-            // 중복 체크
-            while (selectedButton != null && selectedButtons.Contains(selectedButton))
-            {
-                if (selectList.Length > 0)
-                {
-                    selectedButton = selectList[Random.Range(0, rareButtons.Length)];
-                }
-            }
-            curUpgradeButtons[i] = selectedButton;
-            selectedButtons.Add(selectedButton); // 선택된 버튼을 리스트에 추가
-        }
+        //    // 중복 체크
+        //    while (selectedButton != null && selectedButtons.Contains(selectedButton))
+        //    {
+        //        if (selectList.Length > 0)
+        //        {
+        //            selectedButton = selectList[Random.Range(0, rareButtons.Length)];
+        //        }
+        //    }
+        //    curUpgradeButtons[i] = selectedButton;
+        //    selectedButtons.Add(selectedButton); // 선택된 버튼을 리스트에 추가
+        //}
+        curUpgradeButtons = upgradeType.GetComponentsInChildren<Button>(true);
         if(!UIenabled)
         {
             UIenabled = !UIenabled;
@@ -109,12 +111,12 @@ public class UpgradeManager : MonoBehaviour
         }
         // 기존 UI 요소 유지
         
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < curUpgradeButtons.Length; i++)
         {
             if (curUpgradeButtons[i] != null)
             {
-                curUpgradeButtons[i].SetActive(true);
-                StartCoroutine(Typing(curUpgradeButtons[i]));
+                curUpgradeButtons[i].gameObject.SetActive(true);
+                StartCoroutine(Typing(curUpgradeButtons[i].gameObject));
             }
             else
             {
@@ -136,12 +138,6 @@ public class UpgradeManager : MonoBehaviour
             case CommonUpgrade.MoveSpeed:
                 status.IncreaseMovementSpeed(degree);
                 break;
-            case CommonUpgrade.CriticalRate:
-                status.IncreaseCriticalRate(degree);
-                break;
-            case CommonUpgrade.CriticalDamage:
-                status.IncreaseCriticalDamage(degree);
-                break;
             case CommonUpgrade.Damage:
                 status.IncreaseAttackDamage(degree);
                 break;
@@ -160,8 +156,9 @@ public class UpgradeManager : MonoBehaviour
         }
         for(int i = 0; i < 3; i++)
         {
-            curUpgradeButtons[i].SetActive(false);
+            curUpgradeButtons[i].gameObject.SetActive(false);
         }
+        varSetDisplayManager.ResetVarSet();
         upgradeUI.SetActive(false);
 
         if (repeatCommon > 0)
@@ -212,7 +209,7 @@ public class UpgradeManager : MonoBehaviour
         
         for (int i = 0; i < 3; i++)
         {
-            curUpgradeButtons[i].SetActive(false);
+            curUpgradeButtons[i].gameObject.SetActive(false);
         }
         upgradeUI.SetActive(false);
 
@@ -239,10 +236,14 @@ public class UpgradeManager : MonoBehaviour
 
     }
 
+    public void VarSetDisplay(int type)
+    {
+        varSetDisplayManager.ShowVarSet(type);
+    }
     IEnumerator Typing(GameObject curButton)
     {
         TMP_Text tx = curButton.transform.GetChild(1).GetComponent<TMP_Text>();
-        string temptx = curButton.GetComponent<CompleteUpgrade>().baseText;
+        string temptx = tx.text;
         tx.text = "";
 
         for(int i = 0; i <= temptx.Length; i++)

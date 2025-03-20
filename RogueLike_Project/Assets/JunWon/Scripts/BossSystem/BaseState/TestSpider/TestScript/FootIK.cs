@@ -20,13 +20,13 @@ public class FootIK : MonoBehaviour
     [SerializeField] Transform LegHint;
     float hintOffSet;
 
-    public LegIKManager.LEGS legType;
-    public LegIKManager.LEGS oppositeLegType;
+    [SerializeField] FootIK oppositeLeg;
     bool isMoving = false;
+    public bool GetLegMoving => isMoving;
     // Start is called before the first frame update
     void Start()
     {
-        stepInterval = 1;// LegIKManager.instance.StepInterval;
+        stepInterval = 1.5f;//LegIKManager.instance.StepInterval;
         fixedFootpos = transform.position;
         fixedFootrot = transform.rotation;
         body = GetComponentInParent<BodyMove>();
@@ -38,7 +38,7 @@ public class FootIK : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        Physics.Raycast(nextFoot.position+body.MoveDirection/3, -nextFoot.up,out RaycastHit hit,30f,LayerMask.GetMask("Wall"));
+        Physics.Raycast(nextFoot.position+body.MoveDirection/2, -nextFoot.up,out RaycastHit hit,30f,LayerMask.GetMask("Wall"));
         nextFootpos = hit.point;
 
         transform.position = fixedFootpos;
@@ -56,11 +56,11 @@ public class FootIK : MonoBehaviour
 
 
 
-        if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && LegIKManager.instance.legState[oppositeLegType] == false)
+        if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
         {
             StartCoroutine(LegMove(fixedFootpos));
         }
-        if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && LegIKManager.instance.legState[oppositeLegType] == false)
+        if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && oppositeLeg.GetLegMoving == false)
         {
             Debug.Log("rotate");
             StartCoroutine(LegMove(fixedFootpos));
@@ -70,10 +70,10 @@ public class FootIK : MonoBehaviour
     IEnumerator LegMove(Vector3 curFootpos)
     {
         isMoving = true;
-        LegIKManager.instance.UpdateLEGS(legType, isMoving);
+
         float elapsedTime = 0f;
         float moveDuration = stepInterval/bodySpeed/2;
-        Vector3 centerFootpos = (curFootpos+nextFootpos) / 2+Vector3.up*LegIKManager.instance.StepInterval/1.5f;
+        Vector3 centerFootpos = (curFootpos+nextFootpos) / 2 +Vector3.up*LegIKManager.instance.StepInterval;
         Vector3 currentHintpos = LegHint.position;
         while (elapsedTime/moveDuration <1f)
         {
@@ -95,7 +95,6 @@ public class FootIK : MonoBehaviour
             yield return null;
         }
         isMoving = false;
-        LegIKManager.instance.UpdateLEGS(legType, isMoving);
     }
     private void OnDrawGizmos()
     {

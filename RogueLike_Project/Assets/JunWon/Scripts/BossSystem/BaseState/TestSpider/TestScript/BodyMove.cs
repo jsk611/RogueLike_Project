@@ -20,14 +20,15 @@ public class BodyMove : MonoBehaviour
     public float SPEED => speed;
     public Vector3 MoveDirection => moveDirection;
 
-
-    NavMeshAgent nmAgent;
+    #region bossProperties
+    SpiderPrime spiderPrime;
+    #endregion
     // Update is called once per frame
     private void Start()
     {
         origin = transform.position;
         moveDirection = Vector3.zero;
-        nmAgent = GetComponent<NavMeshAgent>();
+        spiderPrime = GetComponent<SpiderPrime>();
      //   nmAgent.baseOffset = -bodyYOffset.y;
     }
     void Update()
@@ -36,9 +37,10 @@ public class BodyMove : MonoBehaviour
    //     var v = Input.GetAxisRaw("Vertical") * transform.forward;
       //  moveDirection = h + v;
      //   moveDirection.Normalize();
-        nmAgent.SetDestination(ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform.position);
-   //     moveDirection = nmAgent.
-    //    transform.position += moveDirection * speed * Time.deltaTime ;
+        spiderPrime.NmAgent.SetDestination(spiderPrime.Player.position);
+        //     moveDirection = nmAgent.
+        //    transform.position += moveDirection * speed * Time.deltaTime ;
+        moveDirection = (spiderPrime.Player.position - transform.position).normalized;
         float totalLegY = 0;
         foreach (var leg in legList)
         {
