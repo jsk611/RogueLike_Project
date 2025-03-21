@@ -219,12 +219,15 @@ public class UIManager : MonoBehaviour
     #endregion
 
     [SerializeField] Image DyingBackground;
+    [SerializeField] Image NoResp;
     public IEnumerator DieBuffering()
     {
         Time.timeScale = 0f;
-        yield return new WaitForSecondsRealtime(2f);
+        yield return new WaitForSecondsRealtime(1f);
         DyingBackground.DOFade(0.5f, 2f).SetUpdate(true);
-        yield return new WaitForSecondsRealtime(4f);
+        yield return new WaitForSecondsRealtime(2f);
+        NoResp.DOFade(0.5f, 0.4f).SetUpdate(true);
+        yield return new WaitForSecondsRealtime(0.4f);
         Time.timeScale = 1f;
         SceneManager.LoadScene("GameOverScene");
     } 
