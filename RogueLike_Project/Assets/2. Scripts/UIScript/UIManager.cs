@@ -220,14 +220,17 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Image DyingBackground;
     [SerializeField] Image NoResp;
+    [SerializeField] GameObject DyingParticle;
     public IEnumerator DieBuffering()
     {
         Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(0.5f);
+        DyingBackground.DOFade(0.5f, 1.5f).SetUpdate(true);
         yield return new WaitForSecondsRealtime(1f);
-        DyingBackground.DOFade(0.5f, 2f).SetUpdate(true);
-        yield return new WaitForSecondsRealtime(2f);
-        NoResp.DOFade(0.5f, 0.4f).SetUpdate(true);
+        NoResp.DOFade(0.5f, 1f).SetUpdate(true);
         yield return new WaitForSecondsRealtime(0.4f);
+        DyingParticle.SetActive(true);
+        yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1f;
         SceneManager.LoadScene("GameOverScene");
     } 
