@@ -18,7 +18,7 @@ public class PlayerHPBar : MonoBehaviour
 
         if (mid.fillAmount > ratio)
         {
-            mid.fillAmount -= Time.deltaTime * 0.1f;
+            mid.fillAmount -= Time.deltaTime * 0.2f;
         }
         else if (mid.fillAmount < ratio)
         {

@@ -39,8 +39,10 @@ public class UIManager : MonoBehaviour
 
     //Controlling bars value
     public Image[] Bar;
+    [SerializeField] PlayerHPBar_New playerHPBar;
     public void BarValueChange(int i, float maxValue, float curValue)
     {
+        if (i == 0) playerHPBar.ChangeBarValue(curValue, maxValue);
         Bar[i].fillAmount = curValue / maxValue;
     }
 
