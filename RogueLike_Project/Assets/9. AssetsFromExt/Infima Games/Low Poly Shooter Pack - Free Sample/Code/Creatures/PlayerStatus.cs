@@ -442,31 +442,5 @@ public class PlayerStatus : StatusBehaviour
         weaponAnimator.SetFloat(Id, value);
     }
 
-    public override void ConditionOverload(Condition con, float effect = 1, float duration = 1, float interval = 1, float shockTime = 0.5f)
-    {
-        Debug.Log("Duration " + duration);
-        switch (con)
-        {
-            case Condition.Poisoned:
-                if (currentCon != Condition.Poisoned)
-                    StartCoroutine(Poisoned(effect, duration, interval));
-                break;
-            case Condition.Blazed:
-                if (currentCon != Condition.Blazed)
-                    StartCoroutine(Blazed(effect, duration, interval));
-                break;
-            case Condition.Frozen:
-                if (currentCon != Condition.Frozen)
-                    StartCoroutine(Frozen(duration));
-                break;
-            case Condition.Shocked:
-                if (currentCon != Condition.Shocked)
-                    StartCoroutine(Shocked(duration, interval, shockTime));
-                break;
-            case Condition.Iced:
-                StartCoroutine(Iced(effect, duration, interval));
-                break;
-        }
-        return;
-    }
+
 }

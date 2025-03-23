@@ -111,10 +111,10 @@ RectTransform:
   - {fileID: 2201639787216004099}
   m_Father: {fileID: 8050820257070999963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -158}
-  m_SizeDelta: {x: 660, y: 316}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -197.5}
+  m_SizeDelta: {x: 0, y: 79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6201289309358249267
 CanvasRenderer:
@@ -224,9 +224,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 3
-  epictype: 0
   degree: 5
+  raretype: 3
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: poison
 --- !u!1 &238353642964920814
 GameObject:
@@ -605,9 +608,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4025723637356113398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -27}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 525, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1707614195246247748
@@ -1021,10 +1024,10 @@ RectTransform:
   - {fileID: 6760547568522987468}
   m_Father: {fileID: 8050820257070999963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -158}
-  m_SizeDelta: {x: 660, y: 316}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -276.5}
+  m_SizeDelta: {x: 0, y: 79}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1296950051552014006
 CanvasRenderer:
@@ -1134,9 +1137,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
+  degree: 0
   raretype: 4
+  effect: 0
+  duration: 0.5
+  interval: -0.1
   epictype: 0
-  degree: 10
   baseText: shock
 --- !u!1 &870476679001681875
 GameObject:
@@ -1154,7 +1160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8050820257070999963
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1353,9 +1359,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 2
-  raretype: 0
-  epictype: 0
   degree: 10
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Attack Speed + 10%
 --- !u!1 &1430507170931341751
 GameObject:
@@ -1454,9 +1463,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4948458584844466572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -27}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 525, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7877111899756115546
@@ -1781,9 +1790,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 3
-  raretype: 0
-  epictype: 0
   degree: 3
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Reloading Speed + 3
 --- !u!1 &1869575108535354920
 GameObject:
@@ -2658,10 +2670,10 @@ RectTransform:
   - {fileID: 4949155852964925370}
   m_Father: {fileID: 8050820257070999963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -158}
-  m_SizeDelta: {x: 660, y: 316}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9180215704801382184
 CanvasRenderer:
@@ -2771,9 +2783,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 1
-  epictype: 0
   degree: 10
+  raretype: 1
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Blaze
 --- !u!1 &3699054933278198660
 GameObject:
@@ -3269,9 +3284,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 1
-  raretype: 0
-  epictype: 0
   degree: 5
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: +5% Damage
 --- !u!1 &4076166597996068614
 GameObject:
@@ -3486,9 +3504,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 6
-  raretype: 0
-  epictype: 0
   degree: 1
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Coin Acquisition +10%
 --- !u!1 &4327024471640656845
 GameObject:
@@ -3583,7 +3604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7115165649231075976
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3600,10 +3621,10 @@ RectTransform:
   - {fileID: 1562677597727163535}
   m_Father: {fileID: 6030395365368614189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -52.666668}
+  m_SizeDelta: {x: 660, y: 105.333336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1580747648965493007
 CanvasRenderer:
@@ -3717,7 +3738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4948458584844466572
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3734,10 +3755,10 @@ RectTransform:
   - {fileID: 6026733253432237663}
   m_Father: {fileID: 6030395365368614189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -263.33334}
+  m_SizeDelta: {x: 660, y: 105.333336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4668731169610772855
 CanvasRenderer:
@@ -3869,10 +3890,10 @@ RectTransform:
   - {fileID: 4643824006091007165}
   m_Father: {fileID: 8050820257070999963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 230, y: -158}
-  m_SizeDelta: {x: 660, y: 316}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -79}
+  m_SizeDelta: {x: 0, y: 158}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7297237376724826013
 CanvasRenderer:
@@ -3982,9 +4003,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
+  degree: 0
   raretype: 2
+  effect: 1
+  duration: 0.2
+  interval: 1
   epictype: 0
-  degree: 5
   baseText: Freeze
 --- !u!1 &5028572448031706472
 GameObject:
@@ -4345,9 +4369,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 0
-  epictype: 4
   degree: 5
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 4
   baseText: Cavity_System_Model
 --- !u!1 &5042051762880528343
 GameObject:
@@ -4498,9 +4525,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 6
-  raretype: 0
-  epictype: 0
   degree: 1
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Move Speed +1
 --- !u!1 &5049451873671217480
 GameObject:
@@ -4517,7 +4547,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7748096641895838674
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4576,7 +4606,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 25, y: -25}
+  m_AnchoredPosition: {x: 25, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &6746764017721071631
@@ -4766,9 +4796,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 0
-  epictype: 2
   degree: 10
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 2
   baseText: Berserk
 --- !u!1 &5593356698534810009
 GameObject:
@@ -4802,9 +4835,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4948458584844466572}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -25}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 25, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3002842498232374562
@@ -4994,9 +5027,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 0
-  epictype: 5
   degree: 5
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 5
   baseText: Havel_The_Rock
 --- !u!1 &6197017462707765189
 GameObject:
@@ -5636,7 +5672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4025723637356113398
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5653,10 +5689,10 @@ RectTransform:
   - {fileID: 8763164588075379187}
   m_Father: {fileID: 6030395365368614189}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 230, y: -158}
+  m_SizeDelta: {x: 660, y: 105.333336}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &44971307165748178
 CanvasRenderer:
@@ -5901,9 +5937,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 7
-  raretype: 0
-  epictype: 0
   degree: 1
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: DNA Acquisition +3%
 --- !u!1 &6975896996060540038
 GameObject:
@@ -6264,9 +6303,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 4
-  raretype: 0
-  epictype: 0
   degree: 1
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: Move Speed +1
 --- !u!1 &7339640137540173539
 GameObject:
@@ -6417,9 +6459,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 0
-  epictype: 1
   degree: 5
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 1
   baseText: Pain_Stress
 --- !u!1 &7372951873619429341
 GameObject:
@@ -6717,9 +6762,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4025723637356113398}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -25}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 25, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8039380992925183381
@@ -6778,7 +6823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2150440848725162169
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7087,9 +7132,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 0
-  raretype: 0
-  epictype: 3
   degree: 10
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 3
   baseText: K_Ampule
 --- !u!1 &8532174653312234679
 GameObject:
@@ -7200,7 +7248,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: -27}
+  m_AnchoredPosition: {x: 100, y: 0}
   m_SizeDelta: {x: 525, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8762799518552634332
@@ -7531,9 +7579,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeManager: {fileID: 0}
   commontype: 5
-  raretype: 0
-  epictype: 0
   degree: 10
+  raretype: 0
+  effect: 0
+  duration: 0
+  interval: 0
+  epictype: 0
   baseText: HP + 10
 --- !u!1 &9150343041861821723
 GameObject:

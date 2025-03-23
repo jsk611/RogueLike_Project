@@ -282,7 +282,7 @@ public class MonsterStatus : StatusBehaviour
 
    
 
-    public override IEnumerator Shocked(float duration, float interval, float shockTime)
+    public override IEnumerator Shocked(float damage, float duration, float probability,float interval, float shockTime)
     {
         if (currentCon == Condition.Shocked) yield break;
         eventHandler.SetShockTime(shockTime);
@@ -292,10 +292,10 @@ public class MonsterStatus : StatusBehaviour
         currentCon = Condition.Shocked;
         while (startTime < duration)
         {
-            if (latest >= interval)
+            if (latest >= interval && Random.Range(1f, 100f) <= probability)
             {
                 latest = 0;
-                monsterBase.TakeDamage(1);
+                monsterBase.TakeDamage(damage);
             }
             latest += Time.deltaTime;
             startTime += Time.deltaTime;
@@ -304,31 +304,32 @@ public class MonsterStatus : StatusBehaviour
         currentCon = Condition.normal;
         currentCC = CC.normal;
     }
-    public override IEnumerator Poisoned(float effect, float duration, float interval)
-    {
-        if (currentCon == Condition.Poisoned) yield break;
-        currentCon = Condition.Poisoned;
-        float startTime = 0;
-        while (startTime < duration)
-        {
-            DecreaseHealth(effect);
-            yield return new WaitForSeconds(interval);
-            startTime += interval;
-        }
-        currentCon = Condition.normal;
-    }
-    public override IEnumerator Frozen(float duration)
+    //public override IEnumerator Poisoned(float effect, float duration, float interval)
+    //{
+    //    if (currentCon == Condition.Poisoned) yield break;
+    //    currentCon = Condition.Poisoned;
+    //    float startTime = 0;
+    //    while (startTime < duration)
+    //    {
+    //        DecreaseHealth(effect);
+    //        yield return new WaitForSeconds(interval);
+    //        startTime += interval;
+    //    }
+    //    currentCon = Condition.normal;
+    //}
+    public override IEnumerator Frozen(float damage,float effect,float duration)
     {
         Debug.Log("Get Frozened");
         if (currentCon == Condition.Frozen) yield break;
         eventHandler.SetFrozenTime(duration);
         currentCon = Condition.Frozen;
-        monsterBase.TakeDamage(1,false);
+        monsterBase.TakeDamage(0,false);
         yield return new WaitForSeconds(duration);
+        monsterBase.TakeDamage(damage);
         currentCon = Condition.normal;
         currentCC = CC.normal;
     }
-    public override IEnumerator Blazed(float effect, float duration, float interval)
+    public override IEnumerator Blazed(float damage, float probability, float duration, float interval)
     {
      //   if (currentCon == Condition.Blazed) yield break;
         currentCon = Condition.Blazed;
@@ -336,36 +337,11 @@ public class MonsterStatus : StatusBehaviour
         while (Time.time - startTime < duration)
         {
             Debug.Log("Get Blazed");
-            DecreaseHealth(effect);
+            DecreaseHealth(damage);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;
     }
-    public override void ConditionOverload(Condition con, float effect = 1, float duration = 1, float interval = 1, float shockTime = 0.5f)
-    {
-        switch (con)
-        {
-            case Condition.Poisoned:
-                if(currentCon != Condition.Poisoned)
-                    StartCoroutine(Poisoned(effect, duration, interval));
-                break;
-            case Condition.Blazed:
-                if(currentCon != Condition.Blazed)
-                   StartCoroutine(Blazed(effect, duration, interval));
-                break;
-            case Condition.Frozen:
-                if(currentCon != Condition.Frozen)
-                    StartCoroutine(Frozen(duration));
-                break;
-            case Condition.Shocked:
-                if(currentCon != Condition.Shocked)
-                    StartCoroutine(Shocked(duration, interval, shockTime));
-                break;
-            case Condition.Iced:
-                StartCoroutine(Iced(effect, duration, interval));
-                break;
-        }
-        return;
-    }
+
 }
 

@@ -48,6 +48,14 @@ public class UpgradeManager : MonoBehaviour
         ApplyPoisonous,
         ApplyShock,
     }
+    public struct RareUpgradeSet
+    {
+        public float damage;
+        public float duration;
+        public float probability;
+        public float interval;
+        public float effect;
+    }
     public enum EpicUpgrade
     {
         Default,
@@ -110,7 +118,6 @@ public class UpgradeManager : MonoBehaviour
             player.SetCursorState(false);
         }
         // 기존 UI 요소 유지
-        
         for (int i = 0; i < curUpgradeButtons.Length; i++)
         {
             if (curUpgradeButtons[i] != null)
@@ -154,7 +161,7 @@ public class UpgradeManager : MonoBehaviour
             default:
                 break;
         }
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < curUpgradeButtons.Length; i++)
         {
             curUpgradeButtons[i].gameObject.SetActive(false);
         }
@@ -179,35 +186,10 @@ public class UpgradeManager : MonoBehaviour
             player.SetCursorState(true);
         }
     }
-    public void CompleteRareUpgrade(RareUpgrade type, float degree)
+    public void CompleteRareUpgrade(RareUpgrade type,RareUpgradeSet upgradeSet)
     {
-        WeaponBehaviour weapon = player.GetInventory().GetEquipped();
-        //if (weapon.GetComponent<Blaze>() != null) { Destroy(weapon.GetComponent<Blaze>()); status.IncreaseCoin(375); }
-        //if (weapon.GetComponent<Freeze>() != null) { Destroy(weapon.GetComponent<Freeze>()); status.IncreaseCoin(375); }
-        //if (weapon.GetComponent<Poison>() != null) { Destroy(weapon.GetComponent<Poison>()); status.IncreaseCoin(375); }
-        //if (weapon.GetComponent<Shock>() != null) { Destroy(weapon.GetComponent<Shock>()); status.IncreaseCoin(375); }
-        if(weapon.GetComponent<WeaponCondition>() != null) { Destroy(weapon.GetComponent<WeaponCondition>()); status.IncreaseCoin(375); }
-        
-
-        switch (type)
-        {
-            case RareUpgrade.ApplyBlaze:
-                weapon.AddComponent<Blaze>().StateInitializer(2,2,1);
-                break;
-            case RareUpgrade.ApplyFreeze:
-                weapon.AddComponent<Freeze>().StateInitializer(2,2,1);
-                break;
-            case RareUpgrade.ApplyPoisonous:
-                weapon.AddComponent<Poison>().StateInitializer(2, 2, 1);
-                break;
-            case RareUpgrade.ApplyShock:
-                weapon.AddComponent<Shock>().StateInitializer(2, 2, 1);
-                break;
-            default:
-                break;
-        }
-        
-        for (int i = 0; i < 3; i++)
+        WeaponConditionUpgrade(type, upgradeSet);
+        for (int i = 0; i < curUpgradeButtons.Length; i++)
         {
             curUpgradeButtons[i].gameObject.SetActive(false);
         }
@@ -231,6 +213,33 @@ public class UpgradeManager : MonoBehaviour
             player.SetCursorState(true);
         }
     }
+    private void WeaponConditionUpgrade(RareUpgrade type, RareUpgradeSet upgradeSet)
+    {
+        WeaponBehaviour weapon = player.GetInventory().GetEquipped();
+        switch (type)
+        {
+            case RareUpgrade.ApplyBlaze:
+                Blaze weaponBlaze = weapon.GetComponent<Blaze>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponBlaze) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(1, 1, 1,1,1);
+                else weaponBlaze.Upgrade(upgradeSet);
+                    break;
+            case RareUpgrade.ApplyFreeze:
+                Freeze weaponFreeze = weapon.GetComponent<Freeze>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponFreeze) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(1, 1, 1,1,1);
+                else weaponFreeze.Upgrade(upgradeSet);
+                    break;
+            case RareUpgrade.ApplyShock:
+                Shock weaponShock = weapon.GetComponent<Shock>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponShock) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(1, 1, 1, 1, 1);
+                else weaponShock.Upgrade(upgradeSet);
+                    break;
+            default:
+                break;
+        }
+    }
     public void CompleteEpicUpgrade(EpicUpgrade type, float degree)
     {
 
@@ -238,6 +247,7 @@ public class UpgradeManager : MonoBehaviour
 
     public void VarSetDisplay(int type)
     {
+        Debug.Log("asdfasdf");
         varSetDisplayManager.ShowVarSet(type);
     }
     IEnumerator Typing(GameObject curButton)

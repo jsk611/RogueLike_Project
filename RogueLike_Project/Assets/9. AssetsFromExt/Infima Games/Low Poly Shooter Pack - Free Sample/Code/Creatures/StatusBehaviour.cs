@@ -85,8 +85,6 @@ public abstract class StatusBehaviour : MonoBehaviour
         Blazed,
         Shocked,
         Frozen,
-        Iced,
-        Poisoned
     }
     public CC currentCC;
     public Condition currentCon;
@@ -106,16 +104,15 @@ public abstract class StatusBehaviour : MonoBehaviour
         DecreaseMovementSpeed(effect);
     }
    
-    public virtual IEnumerator Shocked(float duration,float interval,float shockTime)
+    public virtual IEnumerator Shocked(float damage, float duration,float probability, float interval,float shockTime)
     {
         float startTime = Time.time;
         float latest = 0;
         float currentSpeed;
         while (Time.time-startTime<duration)
         {
-            if (latest >= interval)
+            if (latest >= interval && Random.Range(1f,100f)<=probability)
             {
-              
                 latest = 0;
                 currentSpeed = GetMovementSpeed();
                 SetMovementSpeed(0);
@@ -128,14 +125,14 @@ public abstract class StatusBehaviour : MonoBehaviour
             latest += Time.deltaTime;
         }
     }
-    public virtual IEnumerator Blazed(float effect, float duration,float interval)
+    public virtual IEnumerator Blazed(float damage, float probability, float duration,float interval)
     {
-        if (currentCon == Condition.Blazed) yield break;
+        if (currentCon == Condition.Blazed || Random.Range(1f, 100f) > probability) yield break;
         currentCon = Condition.Blazed;
         float startTime = Time.time;
         while(Time.time-startTime < duration)
         {
-            DecreaseHealth(effect);
+            DecreaseHealth(damage);
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;
@@ -143,7 +140,7 @@ public abstract class StatusBehaviour : MonoBehaviour
 
 
     
-    public virtual IEnumerator Frozen(float duration)
+    public virtual IEnumerator Frozen(float damage,float effect, float duration)
     {
         Debug.Log("Entered Frozen State" + duration);
         if (currentCon == Condition.Frozen) yield break;
@@ -160,49 +157,43 @@ public abstract class StatusBehaviour : MonoBehaviour
         SetMovementSpeed(12f);
         currentCon = Condition.normal;
     }
-    public virtual IEnumerator Iced(float effect,float duration,float interval)
-    {
-        //예외적으로 interval을 둔화율로 판단하겠음
-        float currentAtk = GetAttackSpeed();
-        float currentMv = GetMovementSpeed();
-        DecreaseAttackSpeed(effect);
-        DecreaseMovementSpeed(interval);
-        yield return new WaitForSeconds(duration);
-        SetAttackSpeed(currentAtk);
-        SetMovementSpeed(currentMv);
-    }
+    //public virtual IEnumerator Iced(float effect,float duration,float interval)
+    //{
+    //    //예외적으로 interval을 둔화율로 판단하겠음
+    //    float currentAtk = GetAttackSpeed();
+    //    float currentMv = GetMovementSpeed();
+    //    DecreaseAttackSpeed(effect);
+    //    DecreaseMovementSpeed(interval);
+    //    yield return new WaitForSeconds(duration);
+    //    SetAttackSpeed(currentAtk);
+    //    SetMovementSpeed(currentMv);
+    //}
 
-    public virtual IEnumerator Poisoned(float effect, float duration,float interval)
-    {
-        if (currentCon == Condition.Poisoned) yield break;
-        currentCon = Condition.Poisoned;
-        float startTime = Time.time;
-        while (Time.time - startTime < duration)
-        {
-            DecreaseHealth(effect);
-            yield return new WaitForSeconds(interval);
-        }
-        currentCon = Condition.normal;
-    }
+    //public virtual IEnumerator Poisoned(float effect, float duration,float interval)
+    //{
+    //    if (currentCon == Condition.Poisoned) yield break;
+    //    currentCon = Condition.Poisoned;
+    //    float startTime = Time.time;
+    //    while (Time.time - startTime < duration)
+    //    {
+    //        DecreaseHealth(effect);
+    //        yield return new WaitForSeconds(interval);
+    //    }
+    //    currentCon = Condition.normal;
+    //}
 
-    public virtual void ConditionOverload(Condition con,float effect=1, float duration = 1, float interval = 1,float shockTime = 0.5f)
+    public virtual void ConditionOverload(Condition con,float damage = 1, float duration = 1, float probability = 1, float interval = 1,float effect = 1,float shockTime = 0.5f)
     {
-        switch(currentCon)
+        switch(con)
         {
-            case Condition.Poisoned:
-                StartCoroutine(Poisoned(effect, duration,interval));
-                break;
             case Condition.Blazed:
-                StartCoroutine(Blazed(effect,duration,interval));  
+                StartCoroutine(Blazed(damage,probability,duration,interval));  
                 break;
             case Condition.Frozen:
-                StartCoroutine(Frozen(duration));
+                StartCoroutine(Frozen(damage,effect,duration));
                 break;
             case Condition.Shocked:
-                StartCoroutine(Shocked(duration,interval,shockTime));
-                break;
-            case Condition.Iced:
-                StartCoroutine(Iced(effect,duration,interval));
+                StartCoroutine(Shocked(damage,duration,probability,interval,shockTime));
                 break;
         }
         return;

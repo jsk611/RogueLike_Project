@@ -5,21 +5,34 @@ using UnityEngine;
 public abstract class WeaponCondition : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float effect = 0;
-    public float duration = 0;
-    public float interval = 0;
+    public float damage;
+    public float duration;
+    public float probability;
+    public float interval;
+    public float effect;
 
     //초기화 및 수정도 포함
-    public virtual void StateInitializer(float eff, float dur, float itv)
+
+    public virtual void StateInitializer(float dmg,float dur, float prob, float itv, float eff)
     {
-        effect += eff;
-        duration += dur;
-        interval += itv;
+        damage = dmg;
+        duration = dur;
+        probability = prob;
+        interval = itv;
+        effect = eff;
     }
 
     public virtual void Succession(WeaponCondition bulletCondition)
     {
-        bulletCondition.StateInitializer(effect, duration, interval);
+        bulletCondition.StateInitializer(damage, duration, probability,interval,effect);
+    }
+    public virtual void Upgrade(UpgradeManager.RareUpgradeSet upgradeSet) 
+    {
+        damage += upgradeSet.damage;
+        duration += upgradeSet.duration;
+        probability += upgradeSet.probability;
+        interval += upgradeSet.interval;
+        effect += upgradeSet.effect;
     }
     // Update is called once per frame
 

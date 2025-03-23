@@ -309,9 +309,6 @@ namespace InfimaGames.LowPolyShooterPack
                 case Freeze:
                     projectile.AddComponent<Freeze>();
                     break;
-                case Poison:
-                    projectile.AddComponent<Poison>();
-                    break;
                 case Shock:
                     projectile.AddComponent<Shock>();
                     break;

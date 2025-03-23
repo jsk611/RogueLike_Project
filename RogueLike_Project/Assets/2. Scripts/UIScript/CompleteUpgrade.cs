@@ -8,11 +8,19 @@ public class CompleteUpgrade : MonoBehaviour
 {
     public UpgradeManager upgradeManager;
     
-    public UpgradeManager.CommonUpgrade commontype;
-    public UpgradeManager.RareUpgrade raretype;
-    public UpgradeManager.EpicUpgrade epictype;
+    [SerializeField] UpgradeManager.CommonUpgrade commontype;
+    [SerializeField] float degree;
 
-    public float degree;
+    [SerializeField] UpgradeManager.RareUpgrade raretype;
+    [SerializeField] float damage;
+    [SerializeField] float duration;
+    [SerializeField] float probability;
+    [SerializeField] float interval;
+    [SerializeField] float effect;
+    UpgradeManager.RareUpgradeSet upgradeSet;
+
+    [SerializeField] UpgradeManager.EpicUpgrade epictype;
+    
     public string baseText;
 
     public void CommonUpgradeDone()
@@ -21,7 +29,13 @@ public class CompleteUpgrade : MonoBehaviour
     }
     public void RareUpgradeDone()
     {
-        upgradeManager.CompleteRareUpgrade(raretype, degree);
+        upgradeSet.damage = damage;
+        upgradeSet.duration = duration;
+        upgradeSet.probability = probability;
+        upgradeSet.interval = interval;
+        upgradeSet.effect = effect;
+
+        upgradeManager.CompleteRareUpgrade(raretype, upgradeSet);
     }
     public void EpicUpgradeDone()
     {

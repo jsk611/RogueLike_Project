@@ -7,14 +7,14 @@ public class Shock : WeaponCondition
 
     public float shockTime;
 
-    public void StateInitializer(float eff, float dur, float itv, float shkTime)
+    public void StateInitializer(float dmg, float dur, float prob, float itv, float eff, float shkTime)
     {
-        base.StateInitializer(eff, dur, itv);
+        base.StateInitializer(dmg, dur, prob, itv, eff);
         shockTime = shkTime;
     }
     public void Succession(Shock bulletCondition)
     {
-        bulletCondition.StateInitializer(effect, duration, interval, shockTime);
+        bulletCondition.StateInitializer(damage, duration, probability,interval,effect, shockTime);
     }
     private void OnCollisionEnter(Collision collision)
     {

@@ -15,6 +15,8 @@ public class BodyMove : MonoBehaviour
     [SerializeField] List<Transform> legList;
     [SerializeField] Vector3 bodyYOffset;
     Vector3 moveDirection;
+    [Header("BodyMesh")]
+    [SerializeField] Transform bodyMesh;
 
     Vector3 origin;
     public float SPEED => speed;
