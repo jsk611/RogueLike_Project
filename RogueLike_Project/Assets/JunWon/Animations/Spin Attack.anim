@@ -9588,9 +9588,10 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.33333334
-    functionName: 
+    functionName: OnSpecialAttackFinished
     data: 
-    objectReferenceParameter: {fileID: 0}
+    objectReferenceParameter: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332,
+      type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

@@ -43,6 +43,7 @@ public class Ransomware : BossBase
     private Phase2_DataBlink_State blinkState;
     private Phase2_DigitalShadow_State summonState;
     private Phase2_RansomLock_State lockState;
+    private DefeatedState_Ransomeware defeatedState;
     #endregion
 
     #region Animation Event Handlers
@@ -102,10 +103,26 @@ public class Ransomware : BossBase
         }
     }
 
+    public void OnLockFinished()
+    {
+        if (lockState != null)
+        {
+            lockState.OnAttackFinished();
+        }
+    }
     public void LockFromAnimation()
     {
         if (lockState != null)
         {
+            lockState.OnStartLockEffect();
+        }
+    }
+
+    public void OnDeadFinished()
+    {
+        if (defeatedState != null)
+        {
+            defeatedState.OnDeathAnimationFinished();
         }
     }
     #endregion
@@ -140,6 +157,10 @@ public class Ransomware : BossBase
     public void SetLockState(Phase2_RansomLock_State state)
     {
         lockState = state;
+    }
+    public void SetDefeatedState(DefeatedState_Ransomeware state)
+    {
+        defeatedState = state;
     }
     #endregion
 
@@ -228,7 +249,7 @@ public class Ransomware : BossBase
             () => bossStatus.GetHealth() <= 0.5f * bossStatus.GetMaxHealth()));
 
         fsm.AddTransition(new Transition<Ransomware>(
-            states.phase1State,
+            states.phase2State,
             states.deadState,
             () => bossStatus.GetHealth() <= 0f));
     }
