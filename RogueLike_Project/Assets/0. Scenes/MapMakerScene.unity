@@ -6144,7 +6144,7 @@ MonoBehaviour:
   tile: {fileID: 7438511172107195512, guid: 99a060d294057034f9b88ecfb2608de7, type: 3}
   colorSamples:
   - {fileID: 2100000, guid: 8ba36adcf497bfc4e8177a7ba4602508, type: 2}
-  - {fileID: 2100000, guid: 2c8b0da1416e5df4aa8cffa114d14d2f, type: 2}
+  - {fileID: 2100000, guid: 75dd4bd16c5411746bafbfe6fd05bdb0, type: 2}
   - {fileID: 2100000, guid: 520f52d281ff2844d9a698e2f1c8b730, type: 2}
   - {fileID: 2100000, guid: 389a1f317851a174c8217c07ee4540ae, type: 2}
 --- !u!4 &2127978740

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
+using DG.Tweening;
 
 public class WaveManager : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class WaveManager : MonoBehaviour
     [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
     [SerializeField] PlayerPositionData playerPositionData;
+    [SerializeField] Material[] skyboxMaterials;
+    [SerializeField] Material defaultSkybox;
     bool nextWaveTrigger = false;
     public bool NextWaveTrigger
     {
@@ -147,6 +150,18 @@ public class WaveManager : MonoBehaviour
         }
     }
 
+    void ChangeSkyBox(float duration = 3f)
+    {
+        Color skycolor = skyboxMaterials[currentStage - 1].GetColor("_SkyColor");
+        Color Horizon = skyboxMaterials[currentStage - 1].GetColor("_HorizonColor");
+        float horizonStrength = skyboxMaterials[currentStage - 1].GetFloat("_HorizonStrength");
+        float horizonHeight = skyboxMaterials[currentStage - 1].GetFloat("_HorizonHeight");
+        defaultSkybox.DOColor(skycolor, "_SkyColor", duration);
+        defaultSkybox.DOColor(Horizon, "_HorizonColor", duration);
+        defaultSkybox.DOFloat(horizonStrength, "_HorizonStrength", duration);
+        defaultSkybox.DOFloat(horizonHeight, "_HorizonHeight", duration);
+    }
+
     IEnumerator RunStage()
     {
         yield return new WaitForSeconds(1f);
@@ -154,6 +169,7 @@ public class WaveManager : MonoBehaviour
         for(currentStage = 1; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
+            ChangeSkyBox();
             for (int i = 0; i < 4; i++)
             {
                 currentWave = i + 1;
@@ -232,7 +248,7 @@ public class WaveManager : MonoBehaviour
         UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
         if(waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
         //¸Ê ºÒ·¯¿À±â
-        tileManager.InitializeArray(1);
+        tileManager.InitializeArray(currentStage);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         Vector2Int basePos = tileManager.MakeCenteredMapFromCSV(waveData.maps[0].file, playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
