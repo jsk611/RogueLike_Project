@@ -93,25 +93,9 @@ public class UpgradeManager : MonoBehaviour
         GameObject upgradeType = commonButtons;
         if (upgradeLevel == 2) upgradeType = rareButtons;
         else if (upgradeLevel == 3) upgradeType = epicButtons;
-        
-
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    GameObject selectedButton;
-        //    selectedButton = selectList[Random.Range(0, selectList.Length)];
-
-        //    // 중복 체크
-        //    while (selectedButton != null && selectedButtons.Contains(selectedButton))
-        //    {
-        //        if (selectList.Length > 0)
-        //        {
-        //            selectedButton = selectList[Random.Range(0, rareButtons.Length)];
-        //        }
-        //    }
-        //    curUpgradeButtons[i] = selectedButton;
-        //    selectedButtons.Add(selectedButton); // 선택된 버튼을 리스트에 추가
-        //}
+       
         curUpgradeButtons = upgradeType.GetComponentsInChildren<Button>(true);
+        if (upgradeLevel == 2) curUpgradeButtons = ButtonRandomSelect(curUpgradeButtons,3);
         if(!UIenabled)
         {
             UIenabled = !UIenabled;
@@ -131,7 +115,18 @@ public class UpgradeManager : MonoBehaviour
             }
         }
     }
-
+    Button[] ButtonRandomSelect(Button[] buttonGroups,int selectN)
+    {
+        Button[] selectedButtons = new Button[selectN];
+        List<Button> buttons = new List<Button>(buttonGroups);  
+        for (int i = 0;i<selectN;i++)
+        {
+            int randomIndex = Random.Range(0,buttons.Count);
+            selectedButtons[i] = buttons[randomIndex];
+            buttons.RemoveAt(randomIndex);
+        }
+        return selectedButtons;
+    }
     public void CompleteCommonUpgrade(CommonUpgrade type,float degree)
     {
         switch(type)
