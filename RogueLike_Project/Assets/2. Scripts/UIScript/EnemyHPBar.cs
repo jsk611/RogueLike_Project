@@ -7,6 +7,7 @@ public class EnemyHPBar : MonoBehaviour
 {
     [SerializeField] Image inside;
     [SerializeField] Image mid;
+    [SerializeField] float speed = 0.6f;
 
     float ratio = 1f;
 
@@ -18,7 +19,7 @@ public class EnemyHPBar : MonoBehaviour
         
         if(mid.fillAmount > ratio )
         {
-            mid.fillAmount -= Time.deltaTime*0.6f;
+            mid.fillAmount -= Time.deltaTime*speed;
         }
         else mid.fillAmount = ratio;
 

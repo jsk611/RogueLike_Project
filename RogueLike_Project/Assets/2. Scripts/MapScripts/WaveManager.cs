@@ -170,7 +170,7 @@ public class WaveManager : MonoBehaviour
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 0; i++)
             {
                 currentWave = i + 1;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
