@@ -91,13 +91,13 @@ public class WormBossBodyMovement : MonoBehaviour
         wormHead.position += wormHead.forward * Time.deltaTime * chaseSpeed;
         for (int i = 1; i < bodyList.Count; i++)
         {
-            if (Vector3.Distance(bodyList[i].position, bodyList[i - 1].position) > 2.3f)
+            if (bodyList[i] != null && Vector3.Distance(bodyList[i].position, bodyList[i - 1].position) > 2.3f)
             {
                 bodyList[i].rotation = Quaternion.Lerp(bodyList[i].rotation, Quaternion.LookRotation(bodyList[i - 1].position - bodyList[i].position), Time.deltaTime * chaseSpeed);
                 bodyList[i].position += bodyList[i].forward * Time.deltaTime * chaseSpeed;
             }
         }
-    }
+    } 
     void Idle()
     {
 

@@ -197,7 +197,7 @@ public class WormBossPrime : BossBase
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, wormBossBodyMovement.WormHead.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
 
-        if (bossStatus.GetHealth() <= 50 && !isPartitioned)
+        if (bossStatus.GetHealth() <= bossStatus.GetMaxHealth()/2 && !isPartitioned)
         {
             WormPartition();
         }
@@ -234,16 +234,17 @@ public class WormBossPrime : BossBase
         WormBossPrime subWormPrime = subWorm.GetComponent<WormBossPrime>();
         WormBossBodyMovement subBody = subWorm.GetComponent<WormBossBodyMovement>();
 
-        subBody.BodyList.RemoveRange(subBody.BodyList.Count/2, subBody.BodyList.Count-bodyList.Count/2);
+        
 
         subWormPrime.isPartitioned = true;
-        for (int i = 0; i < subBody.BodyList.Count; i++)
+        for (int i = 0; i < subBody.BodyList.Count/2; i++)
         {
             subBody.BodyList[i].position = bodyList[i+bodyList.Count/2].position;
             subBody.BodyList[i].rotation = bodyList[i+bodyList.Count/2].rotation;
             Destroy(bodyList[i + bodyList.Count / 2].gameObject);
+            Destroy(subBody.BodyList[i+subBody.BodyList.Count/2].gameObject);
         }
-        
+        subBody.BodyList.RemoveRange(subBody.BodyList.Count/2, subBody.BodyList.Count-bodyList.Count/2);
         bodyList.RemoveRange(bodyList.Count/2,bodyList.Count-bodyList.Count/2);
         
 
