@@ -8,8 +8,15 @@ public class MeeleWeapon : BaseWeapon
     [SerializeField] private float knockbackForce = 5f;
     [SerializeField] private bool applyKnockback = true;
 
+    [SerializeField] private float collisionCooldown = 0.5f; // 충돌 쿨다운 시간 (초)
+    private float lastCollisionTime = -1f; // 마지막 충돌 시간
     protected override void OnTriggerEnter(Collider other)
     {
+        if (Time.time - lastCollisionTime < collisionCooldown)
+        {
+            return; 
+        }
+
         base.OnTriggerEnter(other);
 
         // 추가적인 근접 무기 효과 (예: 넉백)

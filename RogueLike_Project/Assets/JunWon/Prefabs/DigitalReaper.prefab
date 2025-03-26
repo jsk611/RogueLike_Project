@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 585535893726684165}
   - component: {fileID: 242401263114273750}
   - component: {fileID: 4849638994630259282}
-  - component: {fileID: 5151712613477527680}
+  - component: {fileID: 988040930713811334}
   m_Layer: 16
   m_Name: Blade
   m_TagString: Untagged
@@ -133,7 +133,8 @@ MonoBehaviour:
   hitTargets: []
   knockbackForce: 5
   applyKnockback: 1
---- !u!54 &5151712613477527680
+  collisionCooldown: 0.5
+--- !u!54 &988040930713811334
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -555,7 +556,8 @@ MonoBehaviour:
   abilityManager: {fileID: 3249761337790021742}
   firePoint: {fileID: 7494765328391050869}
   explosionPoint: {fileID: 6302444479095177544}
-  shadowPrefab: {fileID: 0}
+  shadowPrefab: {fileID: 6282819528194173987, guid: e40fc687be7d8f84abc21f71319f54bc,
+    type: 3}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
     type: 3}
   weaponsList:
