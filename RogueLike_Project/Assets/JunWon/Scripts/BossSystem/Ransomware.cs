@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.UI.GridLayoutGroup;
 
-public class Ransomware : BossBase
+public class Ransomware : BossBase, IBossEntity
 {
     #region Components
     [Header("Basic Components")]
@@ -148,7 +148,7 @@ public class Ransomware : BossBase
     {
         if (summonState != null)
         {
-            summonState.SummonShadows();
+            summonState.ActivateLastStandSplit();
         }
     }
 
@@ -268,6 +268,7 @@ public class Ransomware : BossBase
         IntroState_Ransomeware introState,
         Phase1State_Ransomware phase1State,
         Phase2State_Ransomeware phase2State,
+        Phase3State_Ransomware phase3State,
         DefeatedState_Ransomeware deadState
     ) CreateStates()
     {
@@ -275,6 +276,7 @@ public class Ransomware : BossBase
             new IntroState_Ransomeware(this),
             new Phase1State_Ransomware(this),
             new Phase2State_Ransomeware(this),
+            new Phase3State_Ransomware(this),
             new DefeatedState_Ransomeware(this)
         );
     }
@@ -283,6 +285,7 @@ public class Ransomware : BossBase
         IntroState_Ransomeware introState,
         Phase1State_Ransomware phase1State,
         Phase2State_Ransomeware phase2State,
+        Phase3State_Ransomware phase3State,
         DefeatedState_Ransomeware deadState) states)
     {
         fsm.AddTransition(new Transition<Ransomware>(
@@ -297,8 +300,15 @@ public class Ransomware : BossBase
 
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase2State,
+            states.phase3State,
+            () => bossStatus.GetHealth() <= 0.1f * bossStatus.GetMaxHealth()));
+
+        fsm.AddTransition(new Transition<Ransomware>(
+            states.phase3State,
             states.deadState,
             () => bossStatus.GetHealth() <= 0f));
+
+        
     }
     #endregion
 
@@ -537,4 +547,23 @@ public class Ransomware : BossBase
         }
     }
     #endregion
+
+    // 인터페이스 메서드 추가
+    public float GetBaseDamage()
+    {
+        // 기본 데미지 값 반환
+        return 20f; // 또는 필요한 기본 데미지 값
+    }
+
+    public float GetDamageMultiplier()
+    {
+        // 보스 페이즈나 상태에 따른 배수 반환
+        return fsm.CurrentState is Phase2State_Ransomeware ? 1.5f : 1.0f;
+    }
+
+    public bool IsInSpecialState()
+    {
+        // 보스가 특수 상태인 경우 true 반환
+        return false; // 기본값은 false 또는 로직 구현
+    }
 }

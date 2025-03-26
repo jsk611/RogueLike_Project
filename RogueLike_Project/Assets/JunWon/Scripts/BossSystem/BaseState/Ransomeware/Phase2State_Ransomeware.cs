@@ -17,9 +17,6 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
         owner.AbilityManager.SetMaxCoolTime("DataBlink");
         owner.AbilityManager.SetAbilityActive("Lock");
         owner.AbilityManager.SetMaxCoolTime("Lock");
-        owner.AbilityManager.SetAbilityActive("SummonShadows");
-        owner.AbilityManager.SetMaxCoolTime("SummonShadows");
-
     }
     private void InitializeStats()
     {
@@ -32,7 +29,6 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
         var chaseState = new Phase1_Chase_State(owner);
         var blinkState = new Phase2_DataBlink_State(owner);
         var lockState = new Phase2_RansomLock_State(owner);
-        var summonState = new Phase2_DigitalShadow_State(owner);
 
         subFsm = new StateMachine<Ransomware>(idleState);
 
@@ -68,19 +64,6 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
             lockState,
             chaseState,
             () => lockState.IsAnimationFinished() // 수정: 이전에는 blinkState를 사용하고 있었음
-        ));
-
-        // 3. Summon Shadows 전환
-        subFsm.AddTransition(new Transition<Ransomware>(
-            chaseState,
-            summonState,
-            () => owner.AbilityManager.GetAbilityRemainingCooldown("SummonShadows") == 0
-        ));
-
-        subFsm.AddTransition(new Transition<Ransomware>(
-            summonState,
-            chaseState,
-            () => summonState.IsAnimationFinished()
         ));
 
         // 기본 근접 공격 전환 (우선순위가 낮음)
@@ -140,7 +123,6 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
         }
         subFsm = null;
 
-        owner.Animator.SetLayerWeight(owner.Animator.GetLayerIndex("Phase2"), 0);
     }
 
     public override void Interrupt()

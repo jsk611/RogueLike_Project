@@ -7,12 +7,7 @@ using UnityEngine;
 /// </summary>
 public interface IBossEntity
 {
-    float GetCurrentHealth();
-    float GetMaxHealth();
     float GetBaseDamage();
     float GetDamageMultiplier();
-    int GetCurrentPhase();
     bool IsInSpecialState();
-    Transform GetTransform();
-    Animator GetAnimator();
 }
