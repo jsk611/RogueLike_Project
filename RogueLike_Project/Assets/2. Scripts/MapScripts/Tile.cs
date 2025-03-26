@@ -62,7 +62,7 @@ public class Tile : MonoBehaviour
                 //yield return new WaitForSeconds(0.4f);
                 //meshRenderer.material.SetColor("_GridColor", Color.white);
                 //yield return new WaitForSeconds(0.4f);
-                meshRenderer.material.DOColor(alertColor, "_GridColor", 0.4f).SetLoops(2, LoopType.Yoyo);
+                meshRenderer.material.DOColor(alertColor, "_GridColor", 0.3f).SetLoops(2, LoopType.Yoyo);
                 yield return new WaitForSeconds(0.8f);
                 time -= 0.8f;
             }
@@ -104,6 +104,7 @@ public class Tile : MonoBehaviour
         Vector3 newSize = new Vector3(transform.localScale.x, size_y, transform.localScale.z);
         if(duration > 0)
         {
+            yield return new WaitForEndOfFrame();
             transform.DOScaleY(size_y, duration);
             meshRenderer.material.DOColor(Color.yellow, "_GridColor", 0.4f);
             yield return new WaitForSeconds(duration);

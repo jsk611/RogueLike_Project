@@ -12,6 +12,7 @@ public class EnemySpawnLogic : MonoBehaviour
 
     [SerializeField] EnemyCountData enemyCountData;
 
+    static public EnemySpawnLogic instance = new EnemySpawnLogic();
     private void Start()
     {
         tileManager = FindObjectOfType<TileManager>();
