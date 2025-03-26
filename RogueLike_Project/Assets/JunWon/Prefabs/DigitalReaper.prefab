@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 585535893726684165}
   - component: {fileID: 242401263114273750}
   - component: {fileID: 4849638994630259282}
+  - component: {fileID: 5151712613477527680}
   m_Layer: 16
   m_Name: Blade
   m_TagString: Untagged
@@ -129,8 +130,36 @@ MonoBehaviour:
   hitSound: {fileID: 0}
   baseDamage: 10
   damageMultiplier: 1
+  hitTargets: []
   knockbackForce: 5
   applyKnockback: 1
+--- !u!54 &5151712613477527680
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605870404267388531}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1071906547479078085
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,7 +558,8 @@ MonoBehaviour:
   shadowPrefab: {fileID: 0}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
     type: 3}
-  weaponsList: []
+  weaponsList:
+  - {fileID: 4849638994630259282}
   meeleAttackRange: 0
   rangedAttackRange: 0
 --- !u!114 &3249761337790021742

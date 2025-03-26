@@ -21,7 +21,7 @@ public class BaseWeapon : MonoBehaviour, IWeapon
     protected float currentDamage;
     protected IBossEntity bossOwner;
     protected AudioSource audioSource;
-    protected List<GameObject> hitTargets = new List<GameObject>();
+    [SerializeField] protected List<GameObject> hitTargets = new List<GameObject>();
 
     protected virtual void Awake()
     {
@@ -72,6 +72,7 @@ public class BaseWeapon : MonoBehaviour, IWeapon
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Meele Attack is activated");
         if (!isCollisionEnabled)
             return;
 
