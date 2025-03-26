@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class Ransomware : BossBase
 {
@@ -20,13 +21,17 @@ public class Ransomware : BossBase
 
     [Header("Summon Object")]
     [SerializeField] private GameObject shadowPrefab;
-
     #endregion
 
     #region Combat Settings
     [Header("Combat")]
     [SerializeField] private GameObject dataPacket;
     private bool canRotate = true;
+
+    [SerializeField] List<BaseWeapon> weaponsList = new List<BaseWeapon>();
+
+    [SerializeField] float meeleAttackRange;
+    [SerializeField] float rangedAttackRange;
     #endregion
 
     #region Status & State
@@ -39,7 +44,8 @@ public class Ransomware : BossBase
     private Phase1_Attack_State meeleAttackState;
     private Phase1_BasicRangedAttack_State rangedAttackState;
     private Phase1_SpeacialAttack_State specialAttackState;
-    private Phase2State_Ransomeware phase2State;
+    private Phase2_MeeleAttackState meeleAttackState2;
+    private Phase2_RangedAttackState rangedAttackState2;
     private Phase2_DataBlink_State blinkState;
     private Phase2_DigitalShadow_State summonState;
     private Phase2_RansomLock_State lockState;
@@ -55,6 +61,11 @@ public class Ransomware : BossBase
         {
             meeleAttackState.OnAttackFinished();
         }
+
+        if (meeleAttackState2 != null)
+        {
+            meeleAttackState2.OnAttackFinished();
+        }
     }
 
     public void OnRangedAttackFinished()
@@ -63,12 +74,20 @@ public class Ransomware : BossBase
         {
             rangedAttackState.OnAttackFinished();
         }
+        if (rangedAttackState2 != null){
+
+            rangedAttackState2.OnAttackFinished();
+        }
     }
     public void FireProjectileFromAnimation()
     {
         if (rangedAttackState != null)
         {
             rangedAttackState.FireProjectile();
+        }
+        if (rangedAttackState2 != null)
+        {
+            rangedAttackState2.FireProjectile();
         }
     }
 
@@ -118,6 +137,21 @@ public class Ransomware : BossBase
         }
     }
 
+    public void OnSummonFinished()
+    {
+        if (summonState != null)
+        {
+            summonState.OnAttackFinished();
+        }
+    }
+    public void SummonFromAnimation()
+    {
+        if (summonState != null)
+        {
+            summonState.SummonShadows();
+        }
+    }
+
     public void OnDeadFinished()
     {
         if (defeatedState != null)
@@ -132,17 +166,21 @@ public class Ransomware : BossBase
     {
         meeleAttackState = state;
     }
+    public void SetMeeleAttackState(Phase2_MeeleAttackState state)
+    {
+        meeleAttackState2 = state;
+    }
     public void SetRangedAttackState(Phase1_BasicRangedAttack_State state)
     {
         rangedAttackState = state;
     }
+    public void SetRangedAttackState(Phase2_RangedAttackState state)
+    {
+        rangedAttackState2 = state;
+    }
     public void SetSpecialAttackState(Phase1_SpeacialAttack_State state)
     {
         specialAttackState = state;
-    }
-    public void SetPhase2State(Phase2State_Ransomeware state)
-    {
-        phase2State = state;
     }
     public void SetDataBlinkState(Phase2_DataBlink_State state)
     {
@@ -176,6 +214,9 @@ public class Ransomware : BossBase
     public GameObject DataPacket => dataPacket;
     public Transform ExplosionPoint => explosionPoint;
 
+    public float MeeleAttackRange => meeleAttackRange;
+    public float RangedAttackRange => rangedAttackRange;
+
     public GameObject Shadow => shadowPrefab;
     #endregion
 
@@ -184,6 +225,10 @@ public class Ransomware : BossBase
     {
         InitializeComponents();
         InitializeFSM();
+        InitializeWeapons();
+        EnableMeeleWeapon();
+        anim.SetLayerWeight(anim.GetLayerIndex("Phase1"), 0);
+        anim.SetLayerWeight(anim.GetLayerIndex("Phase2"), 0);
     }
 
     private void Update()
@@ -208,6 +253,8 @@ public class Ransomware : BossBase
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
         fov = GetComponent<FieldOfView>();
+        meeleAttackRange = 5f;
+        rangedAttackRange = 30f;
     }
 
     private void InitializeFSM()
@@ -401,7 +448,7 @@ public class Ransomware : BossBase
     private void ResetAllAnimationTriggers()
     {
         // 모든 공격 관련 트리거 리셋
-        Animator.ResetTrigger("Attack");
+        Animator.ResetTrigger("MeeleAttack");
         Animator.ResetTrigger("RangedAttack");
         Animator.ResetTrigger("SpecialAttack");
         Animator.ResetTrigger("DataBlink");
@@ -451,5 +498,43 @@ public class Ransomware : BossBase
         }
     }
 
+    #endregion
+
+    #region WeaponMethod
+    // 무기 초기화 (Start나 InitializeComponents 메서드에서 호출)
+    private void InitializeWeapons()
+    {
+        // 필요한 경우 무기 컴포넌트들을 찾아서 리스트에 추가
+        weaponsList.Clear();
+        BaseWeapon[] foundWeapons = GetComponentsInChildren<BaseWeapon>();
+        foreach (var weapon in foundWeapons)
+        {
+            weaponsList.Add(weapon);
+            weapon.DisableCollision(); // 시작 시 모든 무기 콜라이더 비활성화
+        }
+    }
+
+    // 애니메이션 이벤트에서 호출할 메서드들
+    public void EnableMeeleWeapon()
+    {
+        foreach (var weapon in weaponsList)
+        {
+            if (weapon is MeeleWeapon)
+            {
+                weapon.EnableCollision();
+            }
+        }
+    }
+
+    public void DisableMeeleWeapon()
+    {
+        foreach (var weapon in weaponsList)
+        {
+            if (weapon is MeeleWeapon)
+            {
+                weapon.DisableCollision();
+            }
+        }
+    }
     #endregion
 }

@@ -90,6 +90,7 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
     public override void Enter()
     {
         Debug.Log("랜섬웨어 보스 페이즈1 시작");
+        owner.Animator.SetLayerWeight(owner.Animator.GetLayerIndex("Phase1"), 1);
         InitializeStats();
         InitializeAbility();
         InitializeSubFSM();
@@ -109,6 +110,8 @@ public class Phase1State_Ransomware : BossPhaseBase<Ransomware>
             subFsm.CurrentState.Exit();
         }
         subFsm = null;
+
+        owner.Animator.SetLayerWeight(owner.Animator.GetLayerIndex("Phase1"), 0);
     }
 
     public override void Interrupt()

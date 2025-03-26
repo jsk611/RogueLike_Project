@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 1358991940566535551}
   - component: {fileID: 8496856854550407858}
   - component: {fileID: 585535893726684165}
+  - component: {fileID: 242401263114273750}
+  - component: {fileID: 4849638994630259282}
   m_Layer: 16
   m_Name: Blade
   m_TagString: Untagged
@@ -84,6 +86,51 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &242401263114273750
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605870404267388531}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2034736, y: 0.23318177, z: 0.6}
+  m_Center: {x: 0.23414718, y: -0.000003841485, z: 0.6}
+--- !u!114 &4849638994630259282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 605870404267388531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75bb7041ed2e8b74b99b65d1a77fcba8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponName: "\uADFC\uC811 \uBB34\uAE30"
+  weaponCollider: {fileID: 242401263114273750}
+  isCollisionEnabled: 0
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 1152
+  hitEffect: {fileID: 0}
+  hitSound: {fileID: 0}
+  baseDamage: 10
+  damageMultiplier: 1
+  knockbackForce: 5
+  applyKnockback: 1
 --- !u!1 &1071906547479078085
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,6 +346,7 @@ GameObject:
   - component: {fileID: 2199741305966334760}
   - component: {fileID: 4997459721449239894}
   - component: {fileID: 7698812038261654805}
+  - component: {fileID: 6690881497741808660}
   m_Layer: 16
   m_Name: DigitalReaper
   m_TagString: Untagged
@@ -481,6 +529,9 @@ MonoBehaviour:
   shadowPrefab: {fileID: 0}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
     type: 3}
+  weaponsList: []
+  meeleAttackRange: 0
+  rangedAttackRange: 0
 --- !u!114 &3249761337790021742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -565,6 +616,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &6690881497741808660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890576070884137300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05bb1cac37203de4595e7670dae807a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  edgeWidth: 0.02
+  edgeGlowIntensity: 1.5
+  edgeColor: {r: 0.025710933, g: 0.32704395, b: 0.32704395, a: 1}
+  glitchIntensity: 0.6
+  pulseSpeed: 1
+  noiseScale: 5
 --- !u!1 &2017852236662126329
 GameObject:
   m_ObjectHideFlags: 0
@@ -5510,7 +5579,6 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a24177d55878951459cddba82e170f32, type: 2}
   - {fileID: 2100000, guid: a24177d55878951459cddba82e170f32, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

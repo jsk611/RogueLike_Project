@@ -9,6 +9,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
     private int shadowCount = 6; // 소환할 그림자 수
     private List<GameObject> activeShadows = new List<GameObject>();
     private float shadowLifetime = 15f; // 그림자 자동 소멸 시간
+    private float summonDistance = 5f;
 
     public Phase2_DigitalShadow_State(Ransomware owner) : base(owner)
     {
@@ -79,9 +80,9 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
             Vector3 direction = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
             // NavMesh 위에 위치 찾기
-            Vector3 targetPos = owner.Player.position + direction * 5f;
+            Vector3 targetPos = owner.Player.position + direction * summonDistance;
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(targetPos, out hit, 5f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(targetPos, out hit, summonDistance, NavMesh.AllAreas))
             {
                 // 그림자 인스턴스화
                 GameObject shadow = GameObject.Instantiate(shadowPrefab, hit.position, Quaternion.identity);

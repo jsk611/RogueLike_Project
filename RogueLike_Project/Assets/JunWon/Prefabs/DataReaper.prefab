@@ -323,7 +323,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 87.897446, y: -15, z: -80.32553}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6301913639271182367}
@@ -507,6 +507,7 @@ MonoBehaviour:
   shadowPrefab: {fileID: 0}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
     type: 3}
+  weaponsList: []
 --- !u!114 &656236987459865108
 MonoBehaviour:
   m_ObjectHideFlags: 0

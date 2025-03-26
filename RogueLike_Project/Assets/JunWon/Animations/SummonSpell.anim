@@ -63858,7 +63858,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.5
-    functionName: LockFromAnimation
+    functionName: SummonFromAnimation
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332,
       type: 3}
@@ -63866,7 +63866,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.8333333
-    functionName: OnLockFinished
+    functionName: OnSummonFinished
     data: 
     objectReferenceParameter: {fileID: 11500000, guid: 532871c4aab528041a049ee8870e7332,
       type: 3}
