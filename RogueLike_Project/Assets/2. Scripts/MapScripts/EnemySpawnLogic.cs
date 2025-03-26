@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemySpawnLogic : MonoBehaviour
 {
+    static public EnemySpawnLogic instance = new EnemySpawnLogic();
     TileManager tileManager;
     int mapSize;
 
@@ -12,9 +13,10 @@ public class EnemySpawnLogic : MonoBehaviour
 
     [SerializeField] EnemyCountData enemyCountData;
 
-    static public EnemySpawnLogic instance = new EnemySpawnLogic();
+
     private void Start()
     {
+        instance = this;
         tileManager = FindObjectOfType<TileManager>();
         mapSize = tileManager.GetMapSize;
     }

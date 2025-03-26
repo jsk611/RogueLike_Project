@@ -7,7 +7,10 @@ using UnityEngine.AI;
 public class SpiderPrime : BossBase
 {
     // Start is called before the first frame update
+    [SerializeField] private AbilityManager abilityManager;
 
+
+    public AbilityManager AbilityManager => abilityManager;
 
     void Start()
     {

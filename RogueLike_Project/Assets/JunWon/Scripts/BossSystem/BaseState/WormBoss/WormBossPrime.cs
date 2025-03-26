@@ -1,6 +1,8 @@
 using InfimaGames.LowPolyShooterPack;
+using JetBrains.Annotations;
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using Unity.VisualScripting;
@@ -9,6 +11,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class WormBossPrime : BossBase
 {
@@ -33,6 +36,7 @@ public class WormBossPrime : BossBase
     private bool ChsToWanTrigger = false;
     private bool DigToWanTrigger = false;
 
+    private bool isPartitioned = false;
     WormBossBodyMovement wormBossBodyMovement;
 
     #region ReadOnlyFunc 
@@ -42,6 +46,7 @@ public class WormBossPrime : BossBase
     public bool ATKTOWANDER => ShtToWanTrigger;
     public bool SUMTOWANDER => SumToWanTrigger;
     public WormBossBodyMovement WormBossBodyMovement => wormBossBodyMovement;
+    public bool ISPARTITIONED => isPartitioned;
     #endregion
     // Start is called before the first frame update
     void Start()
@@ -50,7 +55,8 @@ public class WormBossPrime : BossBase
         target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
         InitializeComponent();
         InitializeFSM();
-        
+
+
     }
 
     void Update()
@@ -62,6 +68,7 @@ public class WormBossPrime : BossBase
         shootTimer += Time.deltaTime;
         chaseTimer += Time.deltaTime;
         digTimer += Time.deltaTime;
+
     }
 
     private void InitializeFSM()
@@ -72,6 +79,7 @@ public class WormBossPrime : BossBase
         var wanderState = new WanderingStateWormBoss(this);
         var shootState = new ShootState_WormBoss(this);
         var digState = new DigState_WormBoss(this);
+
         
 
         fsm = new StateMachine<WormBossPrime>(introState);
@@ -188,6 +196,12 @@ public class WormBossPrime : BossBase
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, wormBossBodyMovement.WormHead.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+
+        if (bossStatus.GetHealth() <= 50 && !isPartitioned)
+        {
+            WormPartition();
+        }
+        
         if (bossStatus.GetHealth() <= 0)
         {
             var dieState = new DieState_WormBoss(this);
@@ -203,6 +217,39 @@ public class WormBossPrime : BossBase
     public void CoroutineRunner(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
+    }
+
+    private void WormPartition()
+    {
+
+        isPartitioned = true;
+        EnemySpawnLogic logic = EnemySpawnLogic.instance;
+        GameObject prefab = logic.GetEnemyPrefab(EnemyType.Wormboss);
+        Debug.Log(prefab);
+
+        List<Transform> bodyList = WormBossBodyMovement.BodyList;
+
+        Transform partition = bodyList[bodyList.Count / 2];
+        GameObject subWorm = GameObject.Instantiate(prefab, partition.position,partition.rotation,null);
+        WormBossPrime subWormPrime = subWorm.GetComponent<WormBossPrime>();
+        WormBossBodyMovement subBody = subWorm.GetComponent<WormBossBodyMovement>();
+
+        subBody.BodyList.RemoveRange(subBody.BodyList.Count/2, subBody.BodyList.Count-bodyList.Count/2);
+
+        subWormPrime.isPartitioned = true;
+        for (int i = 0; i < subBody.BodyList.Count; i++)
+        {
+            subBody.BodyList[i].position = bodyList[i+bodyList.Count/2].position;
+            subBody.BodyList[i].rotation = bodyList[i+bodyList.Count/2].rotation;
+            Destroy(bodyList[i + bodyList.Count / 2].gameObject);
+        }
+        
+        bodyList.RemoveRange(bodyList.Count/2,bodyList.Count-bodyList.Count/2);
+        
+
+
+        Debug.Log("origin dead");
+      
     }
 
 }

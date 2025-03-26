@@ -36,6 +36,7 @@ public class ShootState_WormBoss : State<WormBossPrime>
             {
                 foreach (Transform t in bodyList)
                 {
+                    if (t == null) yield break;
                     t.GetComponent<EnemyWeapon>().Fire();
                     yield return new WaitForSeconds(0.2f);
                 }

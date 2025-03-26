@@ -8,14 +8,29 @@ public class Phase2State_WormBoss : BossPhaseBase<WormBossPrime>
 
     Transform paritition1, partition2;
     // Start is called before the first frame update
-    void Start()
+    public override void Enter()
     {
-    //   owner.WormBossBodyMovement.BodyList
-    }
+        EnemySpawnLogic logic = EnemySpawnLogic.instance;
+        GameObject prefab = logic.GetEnemyPrefab(EnemyType.Wormboss);
+        Debug.Log(prefab);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        List<Transform> bodyList = owner.WormBossBodyMovement.BodyList;
+        partition2 = bodyList[bodyList.Count / 2];
+        GameObject subWorm = GameObject.Instantiate(prefab,partition2.position,partition2.rotation,null);
+        WormBossPrime subWormPrime = subWorm.GetComponent<WormBossPrime>();
+        for (int i = 0; i < bodyList.Count / 2; i++)
+        {
+            Transform bodyPart = subWormPrime.WormBossBodyMovement.BodyList[i];
+            bodyPart.position = bodyList[i].position;
+            bodyPart.rotation = bodyList[i].rotation;
+        }
+        for (int i = bodyList.Count / 2; i < bodyList.Count; i++)
+            subWormPrime.WormBossBodyMovement.BodyList[i].gameObject.SetActive(false);
+
+        Debug.Log("origin dead");
     }
+    public override void Update()
+    {
+    }
+    public override void Exit() { base.Exit(); }
 }

@@ -39,6 +39,7 @@ public class BodyMove : MonoBehaviour
    //     var v = Input.GetAxisRaw("Vertical") * transform.forward;
       //  moveDirection = h + v;
      //   moveDirection.Normalize();
+        spiderPrime.NmAgent.speed = speed;
         spiderPrime.NmAgent.SetDestination(spiderPrime.Player.position);
         //     moveDirection = nmAgent.
         //    transform.position += moveDirection * speed * Time.deltaTime ;
