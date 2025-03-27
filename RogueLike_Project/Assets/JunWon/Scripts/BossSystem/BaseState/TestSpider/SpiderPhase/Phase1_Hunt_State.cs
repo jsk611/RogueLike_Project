@@ -10,7 +10,7 @@ public class Phase1_Hunt_State : State<SpiderPrime>
     Transform target;
     public Phase1_Hunt_State(SpiderPrime owner) : base(owner) { }
     // Start is called before the first frame update
-    void Start()
+    public override void Enter()
     {
         if (agent == null)
         {
@@ -20,8 +20,10 @@ public class Phase1_Hunt_State : State<SpiderPrime>
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    public override void Update() { 
         agent.SetDestination(target.position);
+    }
+    public override void Exit() {
+        agent.SetDestination(owner.transform.position);
     }
 }

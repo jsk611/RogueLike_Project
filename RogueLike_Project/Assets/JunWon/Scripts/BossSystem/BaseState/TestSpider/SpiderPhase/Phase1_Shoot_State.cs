@@ -5,16 +5,25 @@ using UnityEngine;
 public class Phase1_Shoot_State : State<SpiderPrime>
 {
     public Phase1_Shoot_State(SpiderPrime owner) : base(owner) {}
-
-    // Start is called before the first frame update
-    void Start()
+    private string rangedAttack = "SpiderRangeAttack";
+    private bool attackFinished = false;
+    public bool IsAttackFinished => attackFinished;
+    public override void Enter()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
+    public override void Update()
+    {
+        if (!attackFinished)
+        {
+            owner.HeadWeapon.Fire();
+            attackFinished = true;  
+        }
+    }
+    public override void Exit()
+    {
+        attackFinished = false;
+        owner.AbilityManager.SetMaxCoolTime(rangedAttack);
+    }
+    
 }

@@ -2487,7 +2487,7 @@ GameObject:
   - component: {fileID: 853965210943193689}
   - component: {fileID: 6737020689261539520}
   - component: {fileID: 4210750534451347775}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2557,7 +2557,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7368322638257693185}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cd574a328cb0dc3409b8b5c28b613896, type: 3}
   m_Name: 
@@ -2680,6 +2680,7 @@ MonoBehaviour:
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  abilityManager: {fileID: 0}
 --- !u!114 &6737020689261539520
 MonoBehaviour:
   m_ObjectHideFlags: 0

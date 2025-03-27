@@ -199,6 +199,7 @@ public class WormBossPrime : BossBase
 
         if (bossStatus.GetHealth() <= bossStatus.GetMaxHealth()/2 && !isPartitioned)
         {
+            enemyCountData.enemyCount++;
             WormPartition();
         }
         

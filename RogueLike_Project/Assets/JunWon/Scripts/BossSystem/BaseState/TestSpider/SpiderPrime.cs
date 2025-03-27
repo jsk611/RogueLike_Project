@@ -8,19 +8,33 @@ public class SpiderPrime : BossBase
 {
     // Start is called before the first frame update
     [SerializeField] private AbilityManager abilityManager;
+    [SerializeField] private EnemyWeapon headWeapon;
 
 
     public AbilityManager AbilityManager => abilityManager;
+    public EnemyWeapon HeadWeapon => headWeapon;
+
+    private StateMachine<SpiderPrime> fsm;
 
     void Start()
     {
         InitializeComponents();
+        InitializeFSM();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        fsm.Update();
+    }
+    private void InitializeFSM()
+    {
+        var phase1 = new Spider_Phase1(this);
+
+
+        fsm = new StateMachine<SpiderPrime>(phase1);
+
+
     }
     private void InitializeComponents()
     {
