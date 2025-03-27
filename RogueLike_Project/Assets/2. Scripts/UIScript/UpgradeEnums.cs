@@ -4,7 +4,12 @@ public enum UpgradeTier
     weapon,
     special
 }
-
+public enum CommonUpgrade
+{
+    ATK,
+    UTIL,
+    COIN
+}
 public enum ATKUGType
 {
     Damage,
