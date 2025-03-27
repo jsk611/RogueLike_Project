@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,11 @@ using UnityEngine;
 public class HealTrigger : MonoBehaviour
 {
     bool isHealed = false;
+    PlayerStatus ps;
     // Start is called before the first frame update
     void Start()
     {
+        ps = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
         isHealed = false;
     }
 
@@ -22,13 +25,14 @@ public class HealTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (!isHealed && Input.GetKeyDown(KeyCode.F))
+            if (!isHealed && Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=200)
             {
                 isHealed = true;
-                PlayerStatus ps = other.gameObject.GetComponent<PlayerStatus>();
-                ps.IncreaseHealth(ps.GetMaxHealth() * 0.3f);
+                ps.IncreaseHealth(ps.GetMaxHealth() * 0.25f);
+                ps.DecreaseCoin(200);
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
+
             }
         }
     }

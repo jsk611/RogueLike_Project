@@ -5,17 +5,17 @@ using UnityEngine;
 
 public class CoinTrigger : MonoBehaviour
 {
-    bool gotCoin = false;
     public int coinAmount = 100;
+    PlayerStatus ps;
     // Start is called before the first frame update
     void Start()
     {
-        gotCoin = false;
+        ps = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
+
     }
 
     private void OnEnable()
     {
-        gotCoin = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
@@ -24,12 +24,12 @@ public class CoinTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (!gotCoin && Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=coinAmount)
             {
-                gotCoin = true;
-                ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>().IncreasePermanentCoin(coinAmount);
-                GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
-                GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
+                ps.IncreasePermanentCoin(1);
+                ps.DecreaseCoin(coinAmount);
+             //   GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
+             //   GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
             }
         }
     }
