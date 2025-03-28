@@ -1312,7 +1312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 690.615, y: -15}
+  m_AnchoredPosition: {x: 677.715, y: -15}
   m_SizeDelta: {x: 101.51, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &958737275
@@ -3128,8 +3128,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 471.34003, y: -15}
-  m_SizeDelta: {x: 317.04, y: 30}
+  m_AnchoredPosition: {x: 464.89, y: -15}
+  m_SizeDelta: {x: 304.14, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &3109569757055958510
 RectTransform:
@@ -3292,6 +3292,21 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3891963321768079333, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.5990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891963321768079333, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.98299795
+      objectReference: {fileID: 0}
+    - target: {fileID: 3891963321768079333, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5379544973956523238, guid: 372602bf1747ba947bdcc73064e26436,
         type: 3}
       propertyPath: m_Enabled
@@ -3346,6 +3361,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: 'Enter a command (ATK, UTIL, COIN) : '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6203145418467542802, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6203145418467542802, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6203145418467542802, guid: 372602bf1747ba947bdcc73064e26436,
+        type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8569975909444680753, guid: 372602bf1747ba947bdcc73064e26436,
         type: 3}
@@ -3843,7 +3873,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "|\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0|"
+  m_text: "|\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0   \u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0\u25A0|"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 44492a5d84586b647bdacc4dd1dbfbaf, type: 2}
   m_sharedMaterial: {fileID: -4208989021222996064, guid: 44492a5d84586b647bdacc4dd1dbfbaf,
@@ -3854,7 +3884,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 1, g: 0.8912153, b: 0.504717, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3949,6 +3979,8 @@ MonoBehaviour:
   - {fileID: 1412709262}
   weaponUpgradeSet: []
   specialUpgradeSet: []
+  upgradeProcessing: {fileID: 3874576860596455950}
+  upgradeSuccess: {fileID: 805351547}
   upgradeTier: 0
   upgradeType: 
 --- !u!1660057539 &9223372036854775807

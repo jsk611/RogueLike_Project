@@ -13,6 +13,8 @@ public class UpgradeManager_New : MonoBehaviour
     [SerializeField] GameObject[] commonUpgradeSet;
     [SerializeField] GameObject[] weaponUpgradeSet;
     [SerializeField] GameObject[] specialUpgradeSet;
+    [SerializeField] GameObject upgradeProcessing;
+    [SerializeField] GameObject upgradeSuccess;
 
     public UpgradeTier upgradeTier;
     GameObject[] UpgradeSet;
@@ -28,6 +30,14 @@ public class UpgradeManager_New : MonoBehaviour
 
         inputField.onEndEdit.AddListener(OnInputEnd);
     }
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.Escape) && isWaitingInput)
+    //    {
+    //        isWaitingInput = false;
+    //        OnInputEnd(inputField.text);
+    //    }
+    //}
     IEnumerator UpgradeDisplay()
     {
         upgradeType = new List<int>();
@@ -69,18 +79,105 @@ public class UpgradeManager_New : MonoBehaviour
         inputField.transform.parent.gameObject.SetActive(true);
         isWaitingInput = true;
     }
-    
+
+    CommonUpgrade commonTypeInput;
+    int upgradeResult = -1;
+
     void OnInputEnd(string input)
     {
-        if(upgradeTier == UpgradeTier.common && Enum.TryParse(input, out CommonUpgrade result))
-        {
-            
-        }
         
+        if(upgradeTier == UpgradeTier.common && Enum.TryParse(input, true, out commonTypeInput))
+        {
+            upgradeResult = upgradeType[(int)commonTypeInput];
+        }
+        else
+        {
+            Debug.Log("잘못된 입력");
+            return;
+        }
+        //else if (upgradeTier == UpgradeTier.weapon && Enum.TryParse(input, out int result))
+        //{
+        //    upgradeResult = upgradeType[(int)result];
+        //}
+        //else if (upgradeTier == UpgradeTier.special && Enum.TryParse(input, out int result))
+        //{
+        //    upgradeResult = upgradeType[(int)result];
+        //}
+        StartCoroutine(EndUpgrade());
     }
+    void ApplyCommonUpgrade()
+    {
+        switch (commonTypeInput)
+        {
+            case CommonUpgrade.ATK:
+                switch ((ATKUGType)upgradeResult)
+                {
+                    case ATKUGType.Damage:
+                        //업글 적용
+                        Debug.Log("Damage up");
+                        break;
+                    case ATKUGType.AttackSpeed:
+                        //업글 적용
+                        Debug.Log("AttackSpeed");
+                        break;
+                    case ATKUGType.ReloadSpeed:
+                        //업글 적용
+                        Debug.Log("ReloadSpeed");
+                        break;
+                }
+                break;
+            case CommonUpgrade.UTIL:
+                switch ((UTILUGType)upgradeResult)
+                {
+                    case UTILUGType.Heath:
+                        //업글 적용
+                        Debug.Log("Heath");
+                        break;
+                    case UTILUGType.MoveSpeed:
+                        //업글 적용
+                        Debug.Log("MoveSpeed");
+                        break;
+                    
+                }
+                break;
+            case CommonUpgrade.COIN:
+                switch ((COINUGType)upgradeResult)
+                {
+                    case COINUGType.CoinAcquisitonRate:
+                        //업글 적용
+                        Debug.Log("CoinAcquisitonRate");
+                        break;
+                    case COINUGType.PermanentCoinAcquisitionRate:
+                        //업글 적용
+                        Debug.Log("PermanentCoinAcquisitionRate");
+                        break;
+                }
+                break;
+        }
+    }
+
     IEnumerator EndUpgrade()
     {
         yield return new WaitForEndOfFrame();
+        upgradeProcessing.SetActive(true);
+        TMP_Text[] upgradeProcessingText = upgradeProcessing.GetComponentsInChildren<TMP_Text>();
+        int progress = 0;
+        string progressBarText = "|";
+        while(progress < 100)
+        {
+            progress += Random.Range(0, 16);
+            if(progress > 100) progress = 100;
+
+            int barCount = (int)(progress / 100f * 20);
+            progressBarText = "|" + new string('■', barCount) + new string('□', (20-barCount)) + "|";
+            upgradeProcessingText[1].text = progressBarText;
+            upgradeProcessingText[2].text = $"{progress} / 100%";
+
+            yield return new WaitForSeconds(0.15f);
+        }
+        yield return new WaitForSeconds(0.2f);
+        ApplyCommonUpgrade();
+        upgradeSuccess.SetActive(true);
     }
 
 }
