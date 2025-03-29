@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using Unity.VisualScripting;
 
 public class PlayerStatus : StatusBehaviour
 {
@@ -386,17 +387,28 @@ public class PlayerStatus : StatusBehaviour
 
     //Coins
     public void IncreaseCoin(int coin)
-    { Coins += coin; }
+    {   Coins += coin;
+        UIManager.instance.dnaIncrease(coin);
+    }
     public void DecreaseCoin(int coin)
-    { Coins -= coin; }
+    { 
+        Coins -= coin;
+        UIManager.instance.dnaIncrease(-coin);
+    }
     public void SetCoin(int coin)
     { Coins = coin; }
 
     //Permanent Coins
-    public void IncreasePermanentCoin(int coin)
-    { PermanentCoins += coin; }
-    public void DecreasePermanentCoin(int coin)
-    { PermanentCoins -= coin; }
+    public void IncreasePermanentCoin(int packet)
+    { 
+        PermanentCoins += packet;
+        UIManager.instance.packetIncrease(packet);
+    }
+    public void DecreasePermanentCoin(int packet)
+    { 
+        PermanentCoins -= packet;
+        UIManager.instance.packetIncrease(-packet);
+    }
     public void SetPermanentCoin(int coin)
     { PermanentCoins = coin; }
 
