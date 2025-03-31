@@ -36,7 +36,7 @@ public enum WeaponUpgrade
     Freeze,
     Shock
 }
-public enum RareUpgradeSet
+public enum WeaponUpgradeSet
 {
     damage,
     duration,

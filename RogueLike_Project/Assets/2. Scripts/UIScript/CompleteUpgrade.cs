@@ -11,7 +11,7 @@ public class CompleteUpgrade : MonoBehaviour
     [SerializeField] UpgradeManager.CommonUpgrade commontype;
     [SerializeField] float degree;
 
-    [SerializeField] UpgradeManager.RareUpgrade raretype;
+    [SerializeField] UpgradeManager.WeaponUpgrade raretype;
     [SerializeField] float damage;
     [SerializeField] float duration;
     [SerializeField] float probability;

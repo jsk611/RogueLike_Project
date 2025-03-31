@@ -7,6 +7,7 @@ using TMPro;
 using System;
 using Random = UnityEngine.Random;
 using InfimaGames.LowPolyShooterPack;
+using static UpgradeManager;
 
 public class UpgradeManager_New : MonoBehaviour
 {
@@ -25,17 +26,24 @@ public class UpgradeManager_New : MonoBehaviour
     bool isWaitingInput = false;
     CharacterBehaviour player;
     PlayerStatus playerStatus;
+
+    Dictionary<UpgradeTier, Action> upgradeActions;
     
+
     private void Start()
     {
         StartCoroutine(UpgradeDisplay());
 
-        upgradeTier = UpgradeTier.common;
-
         inputField.onEndEdit.AddListener(OnInputEnd);
 
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
-        playerStatus.GetComponent<PlayerStatus>();
+        playerStatus = player.gameObject.GetComponent<PlayerStatus>();
+
+        upgradeActions = new Dictionary<UpgradeTier, Action>
+        {
+            {UpgradeTier.common,ApplyCommonUpgrade },
+            {UpgradeTier.weapon,ApplyWeaponUpgrade },
+        };
     }
     //private void Update()
     //{
@@ -107,7 +115,7 @@ public class UpgradeManager_New : MonoBehaviour
     }
 
     CommonUpgrade commonTypeInput;
-    WeaponUpgrade weaponUpgrade;
+    WeaponUpgrade weaponTypeInput;
     //SpecialUpgrade specialUpgrade;
     int upgradeResult = -1;
 
@@ -119,20 +127,21 @@ public class UpgradeManager_New : MonoBehaviour
             upgradeResult = upgradeType[(int)commonTypeInput];
             inputField.onEndEdit.RemoveListener(OnInputEnd);
         }
-        else
+        else if(upgradeTier == UpgradeTier.weapon && Enum.TryParse(input,true,out weaponTypeInput))
         {
-            Debug.Log("잘못된 입력");
-            return;
+            upgradeResult = upgradeType[(int)weaponTypeInput];
+            inputField.onEndEdit.RemoveListener(OnInputEnd);
         }
-        //else if (upgradeTier == UpgradeTier.weapon && Enum.TryParse(input, out int result))
-        //{
-        //    upgradeResult = upgradeType[(int)result];
-        //}
         //else if (upgradeTier == UpgradeTier.special && Enum.TryParse(input, out int result))
         //{
         //    upgradeResult = upgradeType[(int)result];
         //}
-        StartCoroutine(EndUpgrade());
+        else
+        {
+            Debug.Log("Wrong Input");
+            return;
+        }
+            StartCoroutine(EndUpgrade());
     }
     void ApplyCommonUpgrade()
     {
@@ -144,17 +153,17 @@ public class UpgradeManager_New : MonoBehaviour
                     case ATKUGType.Damage:
                         //업글 적용
                         Debug.Log("Damage up");
-                        playerStatus.IncreaseAttackDamage(10);
+                        playerStatus?.IncreaseAttackDamage(10);
                         break;
                     case ATKUGType.AttackSpeed:
                         //업글 적용
                         Debug.Log("AttackSpeed");
-                        playerStatus.IncreaseAttackSpeed(1);
+                        playerStatus?.IncreaseAttackSpeed(1);
                         break;
                     case ATKUGType.ReloadSpeed:
                         //업글 적용
                         Debug.Log("ReloadSpeed");
-                        playerStatus.IncreaseReloadSpeed(1);
+                        playerStatus?.IncreaseReloadSpeed(1);
                         break;
                 }
                 break;
@@ -191,16 +200,96 @@ public class UpgradeManager_New : MonoBehaviour
                 break;
         }
     }
-    void ApplyWeaponUpgrade1()
+    void ApplyWeaponUpgrade()
     {
-        switch(weaponUpgrade)
+        switch(weaponTypeInput)
         {
             case WeaponUpgrade.Blaze:
-                //ApplyWeaponUpgrade2();
+                switch ((WeaponUpgradeSet)upgradeResult)
+                {
+                    case WeaponUpgradeSet.damage:
+                        WeaponConditionUpgrade(1, 0, 0, 0, 0);
+                        break;
+                    case WeaponUpgradeSet.interval:
+                        WeaponConditionUpgrade(0, 0, 0, 1, 0);
+                        break;
+                    case WeaponUpgradeSet.effect:
+                        WeaponConditionUpgrade(0, 0, 0, 0, 1);
+                        break;
+                    case WeaponUpgradeSet.probability:
+                        WeaponConditionUpgrade(0, 0, 1, 0, 0);
+                        break;
+                    case WeaponUpgradeSet.duration:
+                        WeaponConditionUpgrade(0, 1, 0, 0, 0);
+                        break;
+                }
                 break;
             case WeaponUpgrade.Freeze:
+                switch ((WeaponUpgradeSet)upgradeResult)
+                {
+                    case WeaponUpgradeSet.damage:
+
+                        break;
+                    case WeaponUpgradeSet.interval:
+
+                        break;
+                    case WeaponUpgradeSet.effect:
+
+                        break;
+                    case WeaponUpgradeSet.probability:
+
+                        break;
+                    case WeaponUpgradeSet.duration:
+
+                        break;
+                }
                 break;
             case WeaponUpgrade.Shock:
+                switch ((WeaponUpgradeSet)upgradeResult)
+                {
+                    case WeaponUpgradeSet.damage:
+
+                        break;
+                    case WeaponUpgradeSet.interval:
+
+                        break;
+                    case WeaponUpgradeSet.effect:
+
+                        break;
+                    case WeaponUpgradeSet.probability:
+
+                        break;
+                    case WeaponUpgradeSet.duration:
+
+                        break;
+                }
+                break;
+        }
+    }
+    private void WeaponConditionUpgrade(float dmg, float dur, float prob, float itv, float eff)
+    {
+        WeaponBehaviour weapon = player.GetInventory().GetEquipped();
+        switch (weaponTypeInput)
+        {
+            case WeaponUpgrade.Blaze:
+                Blaze weaponBlaze = weapon.GetComponent<Blaze>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponBlaze) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(1, 1, 1, 1, 1);
+                else weaponBlaze.Upgrade(dmg,dur,prob,itv,eff);
+                break;
+            case WeaponUpgrade.Freeze:
+                Freeze weaponFreeze = weapon.GetComponent<Freeze>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponFreeze) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(1, 1, 1, 1, 1);
+                else weaponFreeze.Upgrade(dmg, dur, prob, itv, eff);
+                break;
+            case WeaponUpgrade.Shock:
+                Shock weaponShock = weapon.GetComponent<Shock>();
+                if (weapon.GetComponent<WeaponCondition>() != weaponShock) Destroy(weapon.GetComponent<WeaponCondition>());
+                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(1, 1, 1, 1, 1);
+                else weaponShock.Upgrade(dmg, dur, prob, itv, eff);
+                break;
+            default:
                 break;
         }
     }
@@ -236,7 +325,7 @@ public class UpgradeManager_New : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
         }
         yield return new WaitForSeconds(0.2f);
-        ApplyCommonUpgrade();
+        upgradeActions[upgradeTier].Invoke();
         upgradeSuccess.SetActive(true);
         yield return new WaitForSeconds(3f);
         upgradeRootUI.SetActive(false);

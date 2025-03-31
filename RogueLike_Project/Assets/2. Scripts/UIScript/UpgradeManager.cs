@@ -40,7 +40,7 @@ public class UpgradeManager : MonoBehaviour
         CoinAcquisitonRate,
         PermanentCoinAcquisitionRate
     }
-    public enum RareUpgrade
+    public enum WeaponUpgrade
     {
         Default,
         ApplyBlaze,
@@ -181,7 +181,7 @@ public class UpgradeManager : MonoBehaviour
             player.SetCursorState(true);
         }
     }
-    public void CompleteRareUpgrade(RareUpgrade type,RareUpgradeSet upgradeSet)
+    public void CompleteRareUpgrade(WeaponUpgrade type,RareUpgradeSet upgradeSet)
     {
         WeaponConditionUpgrade(type, upgradeSet);
         for (int i = 0; i < curUpgradeButtons.Length; i++)
@@ -208,28 +208,28 @@ public class UpgradeManager : MonoBehaviour
             player.SetCursorState(true);
         }
     }
-    private void WeaponConditionUpgrade(RareUpgrade type, RareUpgradeSet upgradeSet)
+    private void WeaponConditionUpgrade(WeaponUpgrade type, RareUpgradeSet upgradeSet)
     {
         WeaponBehaviour weapon = player.GetInventory().GetEquipped();
         switch (type)
         {
-            case RareUpgrade.ApplyBlaze:
+            case WeaponUpgrade.ApplyBlaze:
                 Blaze weaponBlaze = weapon.GetComponent<Blaze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponBlaze) Destroy(weapon.GetComponent<WeaponCondition>());
                 if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(1, 1, 1,1,1);
-                else weaponBlaze.Upgrade(upgradeSet);
+            //    else weaponBlaze.Upgrade(upgradeSet);
                     break;
-            case RareUpgrade.ApplyFreeze:
+            case WeaponUpgrade.ApplyFreeze:
                 Freeze weaponFreeze = weapon.GetComponent<Freeze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponFreeze) Destroy(weapon.GetComponent<WeaponCondition>());
                 if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(1, 1, 1,1,1);
-                else weaponFreeze.Upgrade(upgradeSet);
+       //         else weaponFreeze.Upgrade(upgradeSet);
                     break;
-            case RareUpgrade.ApplyShock:
+            case WeaponUpgrade.ApplyShock:
                 Shock weaponShock = weapon.GetComponent<Shock>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponShock) Destroy(weapon.GetComponent<WeaponCondition>());
                 if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(1, 1, 1, 1, 1);
-                else weaponShock.Upgrade(upgradeSet);
+           //     else weaponShock.Upgrade(upgradeSet);
                     break;
             default:
                 break;

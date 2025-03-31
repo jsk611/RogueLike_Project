@@ -26,13 +26,13 @@ public abstract class WeaponCondition : MonoBehaviour
     {
         bulletCondition.StateInitializer(damage, duration, probability,interval,effect);
     }
-    public virtual void Upgrade(UpgradeManager.RareUpgradeSet upgradeSet) 
+    public virtual void Upgrade(float dmg, float dur, float prob, float itv, float eff) 
     {
-        damage += upgradeSet.damage;
-        duration += upgradeSet.duration;
-        probability += upgradeSet.probability;
-        interval += upgradeSet.interval;
-        effect += upgradeSet.effect;
+        damage += dmg;
+        duration += dur;
+        probability += prob;
+        interval += itv;
+        effect += eff;
     }
     // Update is called once per frame
 
