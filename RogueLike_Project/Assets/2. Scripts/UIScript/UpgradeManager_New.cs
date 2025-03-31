@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 public class UpgradeManager_New : MonoBehaviour
 {
+    [SerializeField] GameObject upgradeRootUI;
     [SerializeField] TMP_InputField inputField;
     [SerializeField] GameObject[] commonUpgradeSet;
     [SerializeField] GameObject[] weaponUpgradeSet;
@@ -38,8 +39,24 @@ public class UpgradeManager_New : MonoBehaviour
     //        OnInputEnd(inputField.text);
     //    }
     //}
-    IEnumerator UpgradeDisplay()
+    public IEnumerator UpgradeDisplay()
     {
+        yield return new WaitForEndOfFrame();
+        upgradeRootUI.SetActive(true);
+
+        inputField.transform.parent.gameObject.SetActive(false);
+        upgradeProcessing.SetActive(false);
+        upgradeSuccess.SetActive(false);
+
+        if(UpgradeSet != null)
+        {
+            foreach (GameObject upgrade in UpgradeSet)
+            {
+                upgrade.SetActive(false);
+            }
+
+        }
+
         upgradeType = new List<int>();
         yield return new WaitForSeconds(0.2f);
 
@@ -65,6 +82,7 @@ public class UpgradeManager_New : MonoBehaviour
             foreach (Transform child in upgrade.transform)
             {
                 directChildren.Add(child);
+                child.gameObject.SetActive(false);
             }
 
             if (directChildren.Count > 0)
@@ -89,6 +107,7 @@ public class UpgradeManager_New : MonoBehaviour
         if(upgradeTier == UpgradeTier.common && Enum.TryParse(input, true, out commonTypeInput))
         {
             upgradeResult = upgradeType[(int)commonTypeInput];
+            inputField.onEndEdit.RemoveListener(OnInputEnd);
         }
         else
         {
@@ -178,6 +197,9 @@ public class UpgradeManager_New : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         ApplyCommonUpgrade();
         upgradeSuccess.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        upgradeRootUI.SetActive(false);
+
     }
 
 }
