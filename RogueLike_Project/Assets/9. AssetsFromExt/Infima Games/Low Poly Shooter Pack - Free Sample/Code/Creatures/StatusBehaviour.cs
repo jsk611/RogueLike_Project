@@ -91,10 +91,12 @@ public abstract class StatusBehaviour : MonoBehaviour
 
     public IEnumerator Slow(float effect, float duration)
     {
+        currentCC = CC.entangled;
         Debug.Log("slow");
         DecreaseMovementSpeed(effect);
         yield return new WaitForSeconds(duration);
         IncreaseMovementSpeed(effect);
+        currentCC = CC.normal;
     }
     
     public IEnumerator Accelerate(float effect,float duration)

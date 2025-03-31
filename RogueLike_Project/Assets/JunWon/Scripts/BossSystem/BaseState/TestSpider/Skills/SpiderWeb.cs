@@ -5,21 +5,16 @@ using UnityEngine;
 
 public class SpiderWeb : MonoBehaviour
 {
-    public float sloowTime = 3f;
+    public float slowTime = 3f;
     PlayerStatus player;
     private void OnTriggerEnter(Collider other)
     {
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>(); 
-        if (other.gameObject == other.gameObject)
+        if (player.currentCC != StatusBehaviour.CC.entangled && other.gameObject == player.gameObject)
         {
-            StartCoroutine(TargetSlow());
+            float speed = player.GetMovementSpeed() / 2;
+            StartCoroutine(player.Slow(speed,slowTime));
         }
     }
-    IEnumerator TargetSlow()
-    {
-        float speed = player.GetMovementSpeed() / 2;
-        player.DecreaseMovementSpeed(speed);
-        yield return new WaitForSeconds(sloowTime);
-        player.IncreaseMovementSpeed(speed);
-    }
+
 }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using Random = UnityEngine.Random;
+using InfimaGames.LowPolyShooterPack;
 
 public class UpgradeManager_New : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class UpgradeManager_New : MonoBehaviour
     public List<int> upgradeType;
 
     bool isWaitingInput = false;
+    CharacterBehaviour player;
+    PlayerStatus playerStatus;
     
     private void Start()
     {
@@ -30,6 +33,9 @@ public class UpgradeManager_New : MonoBehaviour
         upgradeTier = UpgradeTier.common;
 
         inputField.onEndEdit.AddListener(OnInputEnd);
+
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
+        playerStatus.GetComponent<PlayerStatus>();
     }
     //private void Update()
     //{
@@ -43,6 +49,8 @@ public class UpgradeManager_New : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         upgradeRootUI.SetActive(true);
+
+        player.SetCursorState(false);
 
         inputField.transform.parent.gameObject.SetActive(false);
         upgradeProcessing.SetActive(false);
@@ -99,6 +107,8 @@ public class UpgradeManager_New : MonoBehaviour
     }
 
     CommonUpgrade commonTypeInput;
+    WeaponUpgrade weaponUpgrade;
+    //SpecialUpgrade specialUpgrade;
     int upgradeResult = -1;
 
     void OnInputEnd(string input)
@@ -134,14 +144,17 @@ public class UpgradeManager_New : MonoBehaviour
                     case ATKUGType.Damage:
                         //업글 적용
                         Debug.Log("Damage up");
+                        playerStatus.IncreaseAttackDamage(10);
                         break;
                     case ATKUGType.AttackSpeed:
                         //업글 적용
                         Debug.Log("AttackSpeed");
+                        playerStatus.IncreaseAttackSpeed(1);
                         break;
                     case ATKUGType.ReloadSpeed:
                         //업글 적용
                         Debug.Log("ReloadSpeed");
+                        playerStatus.IncreaseReloadSpeed(1);
                         break;
                 }
                 break;
@@ -151,10 +164,12 @@ public class UpgradeManager_New : MonoBehaviour
                     case UTILUGType.Heath:
                         //업글 적용
                         Debug.Log("Heath");
+                        playerStatus.IncreaseHealth(1);
                         break;
                     case UTILUGType.MoveSpeed:
                         //업글 적용
                         Debug.Log("MoveSpeed");
+                        playerStatus.IncreaseMovementSpeed(1);
                         break;
                     
                 }
@@ -165,15 +180,41 @@ public class UpgradeManager_New : MonoBehaviour
                     case COINUGType.CoinAcquisitonRate:
                         //업글 적용
                         Debug.Log("CoinAcquisitonRate");
+                        playerStatus.IncreaseCoin(1);
                         break;
                     case COINUGType.PermanentCoinAcquisitionRate:
                         //업글 적용
                         Debug.Log("PermanentCoinAcquisitionRate");
+                        playerStatus.IncreasePermanentAcquisitionRate(1);
                         break;
                 }
                 break;
         }
     }
+    void ApplyWeaponUpgrade1()
+    {
+        switch(weaponUpgrade)
+        {
+            case WeaponUpgrade.Blaze:
+                //ApplyWeaponUpgrade2();
+                break;
+            case WeaponUpgrade.Freeze:
+                break;
+            case WeaponUpgrade.Shock:
+                break;
+        }
+    }
+    //void ApplyWeaponUpgrade2()
+    //{
+    //    switch()
+    //    {
+    //        case RareUpgradeSet.damage:
+    //        case RareUpgradeSet.probability:
+    //        case RareUpgradeSet.duration:
+    //        case RareUpgradeSet.interval:
+    //        case RareUpgradeSet.effect:
+    //    }
+    //}
 
     IEnumerator EndUpgrade()
     {
@@ -199,6 +240,8 @@ public class UpgradeManager_New : MonoBehaviour
         upgradeSuccess.SetActive(true);
         yield return new WaitForSeconds(3f);
         upgradeRootUI.SetActive(false);
+
+        player.SetCursorState(true);
 
     }
 

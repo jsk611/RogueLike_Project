@@ -292,21 +292,16 @@ public class PlayerStatus : StatusBehaviour
 
     // Movement Speed
     public override void IncreaseMovementSpeed(float moveSpeed)
-    { if(currentCC == CC.normal)MoveSpeed += moveSpeed; }
+    { MoveSpeed += moveSpeed; }
     public override void DecreaseMovementSpeed(float moveSpeed)
     {
-        if (currentCC == CC.normal) { 
-            MoveSpeed -= moveSpeed;
-            if (MoveSpeed < 0) MoveSpeed = 0;
-        }
+        MoveSpeed -= moveSpeed;
+        if (MoveSpeed < 0) MoveSpeed = 0;
     }
     public override void SetMovementSpeed(float moveSpeed)
     {
-        if (currentCC == CC.normal)
-        {
-            MoveSpeed = moveSpeed;
-            if (MoveSpeed < 0) MoveSpeed = 0;
-        }
+        MoveSpeed = moveSpeed;
+        if (MoveSpeed < 0) MoveSpeed = 0;
     }
    
 
