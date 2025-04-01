@@ -21,6 +21,9 @@ public class Ransomware : BossBase, IBossEntity
 
     [Header("Summon Object")]
     [SerializeField] private GameObject shadowPrefab;
+    private bool shadowsSpawned = false;
+    public bool ShadowsSpawned { get => shadowsSpawned; set => shadowsSpawned = value; }
+    private bool isPhase3End = false;
     #endregion
 
     #region Combat Settings
@@ -220,6 +223,11 @@ public class Ransomware : BossBase, IBossEntity
     public GameObject Shadow => shadowPrefab;
     #endregion
 
+    public void DigitalShadowsFinished()
+    {
+        isPhase3End = true;
+    }
+
     #region Unity Lifecycle
     private void Start()
     {
@@ -253,6 +261,7 @@ public class Ransomware : BossBase, IBossEntity
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
         fov = GetComponent<FieldOfView>();
+        shadowsSpawned = false;
         meeleAttackRange = 5f;
         rangedAttackRange = 30f;
     }
@@ -291,24 +300,34 @@ public class Ransomware : BossBase, IBossEntity
         fsm.AddTransition(new Transition<Ransomware>(
             states.introState,
             states.phase1State,
-            () => true));
+            () => true)
+        );
 
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase1State,
             states.phase2State,
-            () => bossStatus.GetHealth() <= 0.5f * bossStatus.GetMaxHealth()));
+            () => bossStatus.GetHealth() <= 0.5f * bossStatus.GetMaxHealth())
+        );
 
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase2State,
             states.phase3State,
-            () => bossStatus.GetHealth() <= 0.1f * bossStatus.GetMaxHealth()));
+            () => bossStatus.GetHealth() <= 0.1f * bossStatus.GetMaxHealth())
+        );
 
         fsm.AddTransition(new Transition<Ransomware>(
             states.phase3State,
             states.deadState,
-            () => bossStatus.GetHealth() <= 0f));
+            () =>
+            {
+                if (!shadowsSpawned) return false; // 섀도우가 아직 생성되지 않았으면 전환하지 않음
 
-        
+                bool allShadowsDestroyed = FindObjectsOfType<DigitalShadow>().Length == 0;
+                return bossStatus.GetHealth() <= 0f || allShadowsDestroyed;
+            }
+        ));
+
+
     }
     #endregion
 
@@ -429,6 +448,10 @@ public class Ransomware : BossBase, IBossEntity
         {
             phase2.Interrupt();
         }
+        else if (fsm.CurrentState is Phase3State_Ransomware phase3)
+        {
+            phase3.Interrupt();
+        }
 
         // 애니메이션 리셋
         ResetAllAnimationTriggers();
@@ -439,6 +462,7 @@ public class Ransomware : BossBase, IBossEntity
             case InterruptReason.PhaseTransition:
                 SetRotationLock(true);
                 NmAgent.isStopped = true;
+                Animator.SetTrigger("PhaseTransition");
                 break;
 
             case InterruptReason.Stunned:
@@ -451,6 +475,12 @@ public class Ransomware : BossBase, IBossEntity
                 SetRotationLock(true);
                 NmAgent.isStopped = true;
                 Animator.SetTrigger("PlayerDeath");
+                break;
+
+            case InterruptReason.ForcedInterrupt:
+                SetRotationLock(true);
+                NmAgent.isStopped = true;
+                // 강제 중단 시 모든 섀도우 제거
                 break;
         }
     }

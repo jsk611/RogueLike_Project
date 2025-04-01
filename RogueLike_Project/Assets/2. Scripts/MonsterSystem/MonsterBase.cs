@@ -242,7 +242,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
     }
 
-    protected void UpdateDie()
+    protected virtual void UpdateDie()
     {
         nmAgent.isStopped = true;
 
@@ -263,7 +263,7 @@ public abstract class MonsterBase : MonoBehaviour
 
         if (state != newState || newState == State.HIT)
         {
-            //Debug.Log($"{transform.name} state change: {state} ?? {newState}");
+            Debug.Log($"{transform.name} state change: {state} ?? {newState}");
             SetAnimatorState(newState);
             state = newState;
 
