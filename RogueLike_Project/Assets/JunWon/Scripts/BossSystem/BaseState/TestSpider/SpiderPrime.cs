@@ -9,11 +9,12 @@ public class SpiderPrime : BossBase
     // Start is called before the first frame update
     [SerializeField] private AbilityManager abilityManager;
     [SerializeField] private EnemyWeapon headWeapon;
+    [SerializeField] private LegIKManager legIKManager;
 
 
     public AbilityManager AbilityManager => abilityManager;
     public EnemyWeapon HeadWeapon => headWeapon;
-
+    public LegIKManager LegIKManager => legIKManager;
     private StateMachine<SpiderPrime> fsm;
 
     void Start()

@@ -8,6 +8,7 @@ public class Phase1_Hunt_State : State<SpiderPrime>
 {
     NavMeshAgent agent;
     Transform target;
+    BossStatus status;
     public Phase1_Hunt_State(SpiderPrime owner) : base(owner) { }
     // Start is called before the first frame update
     public override void Enter()
@@ -16,11 +17,14 @@ public class Phase1_Hunt_State : State<SpiderPrime>
         {
             agent = owner.NmAgent;
             target = owner.Player;
+            status = owner.BossStatus;
         }
     }
 
     // Update is called once per frame
-    public override void Update() { 
+    public override void Update() 
+    {
+        agent.speed = status.GetMovementSpeed();
         agent.SetDestination(target.position);
     }
     public override void Exit() {

@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class FootIK : MonoBehaviour
 {
-    BodyMove body;
+    SpiderPrime spiderPrime;
+    LegIKManager legIKManager;
     float bodySpeed;
     
     private Vector3 fixedFootpos;
@@ -29,19 +31,38 @@ public class FootIK : MonoBehaviour
         stepInterval = 1.5f;//LegIKManager.instance.StepInterval;
         fixedFootpos = transform.position;
         fixedFootrot = transform.rotation;
-        body = GetComponentInParent<BodyMove>();
-        bodySpeed = body.SPEED;
+        spiderPrime = GetComponentInParent<SpiderPrime>();
+        bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
         hintOffSet = Vector3.Distance(LegHint.position,fixedFootpos);// LegHint.position - fixedFootpos;
-  
+        legIKManager = spiderPrime.LegIKManager;
     }
-
+    private void Update()
+    {
+        bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
+    }
     // Update is called once per frame
     void LateUpdate()
     {
-        Physics.Raycast(nextFoot.position+body.MoveDirection/2, -nextFoot.up,out RaycastHit hit,30f,LayerMask.GetMask("Wall"));
-        nextFootpos = hit.point;
+        UpdateNextFootpos(out RaycastHit hit);
 
         transform.position = fixedFootpos;
+
+
+        if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
+            StartCoroutine(LegMove(fixedFootpos));
+        
+        if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && oppositeLeg.GetLegMoving == false)
+            StartCoroutine(LegMove(fixedFootpos));
+        
+    }
+
+    void UpdateNextFootpos(out RaycastHit hit)
+    {
+        Vector3 MoveDirection = spiderPrime.transform.forward;
+        Physics.Raycast(nextFoot.position + MoveDirection / 2, -nextFoot.up, out hit, 30f, LayerMask.GetMask("Wall"));
+           nextFootpos = hit.point;
+      //  nextFootpos = nextFoot.position - Vector3.up * 30;
+        
         // transform.rotation = fixedFootrot;
         if (Vector3.Angle(hit.normal, Vector3.ProjectOnPlane(hit.normal, Vector3.up)) >= 2)
         {
@@ -53,27 +74,14 @@ public class FootIK : MonoBehaviour
         {
             nextHintpos = nextFootpos + Vector3.up * hintOffSet;
         }
-
-
-
-        if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
-        {
-            StartCoroutine(LegMove(fixedFootpos));
-        }
-        if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && oppositeLeg.GetLegMoving == false)
-        {
-            Debug.Log("rotate");
-            StartCoroutine(LegMove(fixedFootpos));
-        }
     }
-
     IEnumerator LegMove(Vector3 curFootpos)
     {
         isMoving = true;
 
         float elapsedTime = 0f;
-        float moveDuration = stepInterval/bodySpeed/2;
-        Vector3 centerFootpos = (curFootpos+nextFootpos) / 2 +Vector3.up*LegIKManager.instance.StepInterval;
+        float moveDuration = stepInterval/bodySpeed;
+        Vector3 centerFootpos = (curFootpos+nextFootpos) / 2 +Vector3.up*legIKManager.StepInterval;
         Vector3 currentHintpos = LegHint.position;
         while (elapsedTime/moveDuration <1f)
         {
@@ -96,6 +104,8 @@ public class FootIK : MonoBehaviour
         }
         isMoving = false;
     }
+    
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;

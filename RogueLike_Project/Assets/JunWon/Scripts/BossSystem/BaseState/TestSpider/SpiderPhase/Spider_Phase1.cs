@@ -12,15 +12,23 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
 
     public string meleeAttack;
     public string rangedAttack;
+    public string assaultAttack;
+    public string rushAttack;
     // Start is called before the first frame update
 
     private void InitializeAbilities()
     {
         meleeAttack = "SpiderMeleeAttack";
         rangedAttack = "SpiderRangeAttack";
+        assaultAttack = "SpiderAerialAttack";
+        rushAttack = "SpiderRushAttack";
 
         owner.AbilityManager.SetAbilityActive(meleeAttack);
         owner.AbilityManager.SetAbilityActive(rangedAttack);
+        owner.AbilityManager.SetAbilityActive(assaultAttack);
+
+        owner.AbilityManager.SetAbilityActive(rushAttack);
+        owner.AbilityManager.SetMaxCoolTime(rushAttack);
     }
     private void InitializeState()
     {
@@ -31,7 +39,8 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
         var huntState = new Phase1_Hunt_State(owner);
         var meleeAttackState = new Phase1_Melee_State(owner);
         var shootAttackState = new Phase1_Shoot_State(owner);
-        //var aerial assault = new Phase2_Aerial_State(owner);
+        var aerialAttackState = new Phase1_AirAssault(owner);
+        var rushAttackState = new Phase1_Rush_State(owner);
 
         subFsm = new StateMachine<SpiderPrime>(huntState);
 
@@ -47,22 +56,41 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
             () => Vector3.Distance(owner.Player.position, owner.transform.position) <= rangedAttackRange
             && owner.AbilityManager.GetAbilityRemainingCooldown(rangedAttack)==0
         ));
+        //subFsm.AddTransition(new Transition<SpiderPrime>(
+        //    huntState,
+        //    aerialAttackState,
+        //    () => Vector3.Distance(owner.Player.position, owner.transform.position) > rangedAttackRange
+        //    && owner.AbilityManager.GetAbilityRemainingCooldown(assaultAttack) == 0
+        //));
+        subFsm.AddTransition(new Transition<SpiderPrime>(
+            huntState,
+            rushAttackState,
+            () => Vector3.Distance(owner.Player.position, owner.transform.position) > rangedAttackRange
+            && owner.AbilityManager.GetAbilityRemainingCooldown(rushAttack) == 0
+        ));
+            
+
 
         subFsm.AddTransition(new Transition<SpiderPrime>(
             shootAttackState,
             huntState,
-            () => shootAttackState.IsAttackFinished));
+            () => shootAttackState.IsAttackFinished
+        ));
         subFsm.AddTransition(new Transition<SpiderPrime>(
             meleeAttackState,
             huntState,
-            () => meleeAttackState.IsAttackFinished));
-
-
-        //subFsm.AddTransition(new Transition<SpiderPrime>(
-        //    meleeAttackState,
-        //    huntState,
-        //   // owner.AbilityManager.
-        //));
+            () => meleeAttackState.IsAttackFinished
+        ));
+        subFsm.AddTransition(new Transition<SpiderPrime>(
+            aerialAttackState,
+            huntState,
+            () => aerialAttackState.isAttackFinished
+        ));
+        subFsm.AddTransition(new Transition<SpiderPrime>(
+            rushAttackState,
+            huntState,
+            ()=>rushAttackState.isAttackFinished
+        ));
     }
     // Update is called once per frame
     public override void Enter()
