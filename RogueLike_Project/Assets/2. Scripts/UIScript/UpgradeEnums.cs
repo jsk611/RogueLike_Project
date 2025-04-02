@@ -1,8 +1,16 @@
 public enum UpgradeTier
 {
+    decision,
     common,
     weapon,
     special
+}
+public enum UpgradeDecision
+{
+    BASIC,
+    WEAPON,
+    SPECIAL,
+    EXIT
 }
 public enum CommonUpgrade
 {

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UpgradeTrigger : MonoBehaviour
 {
-    UpgradeManager UpgradeManager;
+    UpgradeManager_New UpgradeManager;
     bool isUpgraded;
     // Start is called before the first frame update
     void Start()
@@ -27,8 +27,7 @@ public class UpgradeTrigger : MonoBehaviour
             if (!isUpgraded && Input.GetKeyDown(KeyCode.F))
             {
                 isUpgraded = true;
-                UpgradeManager.RepeatNumSet(0,0,0);
-                UpgradeManager.UpgradeDisplay();
+                StartCoroutine(UpgradeManager.UpgradeDisplay(UpgradeTier.weapon));
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
             }

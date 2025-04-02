@@ -13,7 +13,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// The Player Character.
         /// </summary>
         private CharacterBehaviour playerCharacter;
-        private UpgradeManager upgradeManager;
+        private UpgradeManager_New upgradeManager;
         private KillingEffect KillingEffect;
         
         #endregion
@@ -29,10 +29,10 @@ namespace InfimaGames.LowPolyShooterPack
             //Return.
             return playerCharacter;
         }
-        public UpgradeManager GetUpgradeManager()
+        public UpgradeManager_New GetUpgradeManager()
         {
             if (upgradeManager == null)
-                upgradeManager = UnityEngine.Object.FindObjectOfType<UpgradeManager>();
+                upgradeManager = UnityEngine.Object.FindObjectOfType<UpgradeManager_New>();
 
             return upgradeManager;
         }

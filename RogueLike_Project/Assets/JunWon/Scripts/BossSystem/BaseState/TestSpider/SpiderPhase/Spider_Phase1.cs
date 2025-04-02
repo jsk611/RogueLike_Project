@@ -65,8 +65,8 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
         subFsm.AddTransition(new Transition<SpiderPrime>(
             huntState,
             rushAttackState,
-            () => Vector3.Distance(owner.Player.position, owner.transform.position) > rangedAttackRange
-            && owner.AbilityManager.GetAbilityRemainingCooldown(rushAttack) == 0
+            () => 
+             owner.AbilityManager.GetAbilityRemainingCooldown(rushAttack) == 0
         ));
             
 

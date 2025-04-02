@@ -28,6 +28,7 @@ public class Phase1_Rush_State : State<SpiderPrime>
         rushSpeed = owner.BossStatus.GetMovementSpeed();
         owner.BossStatus.SetMovementSpeed(rushSpeed * 3);
 
+        owner.NmAgent.height += 0.3f;
         rushTIme = 0f;
     }
     public override void Update()
@@ -47,5 +48,6 @@ public class Phase1_Rush_State : State<SpiderPrime>
         attackFinished = false;
         owner.NmAgent.SetDestination(owner.transform.position);
         owner.AbilityManager.SetMaxCoolTime(rushAttack);
+        owner.NmAgent.height -= 0.3f;
     }
 }

@@ -14,7 +14,7 @@ public class VarSetDisplayManager : MonoBehaviour
 
     private GameObject selectedUpgradeType;
 
-    private UpgradeManager upgradeManager;
+    private UpgradeManager_New upgradeManager;
     void Start()
     {
         upgradeManager = ServiceLocator.Current.Get<IGameModeService>().GetUpgradeManager();

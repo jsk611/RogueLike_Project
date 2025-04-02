@@ -11,7 +11,7 @@ using DG.Tweening;
 
 public class WaveManager : MonoBehaviour
 {
-    UpgradeManager upgradeManager;
+    UpgradeManager_New upgradeManager;
     TileManager tileManager;
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
@@ -50,7 +50,7 @@ public class WaveManager : MonoBehaviour
     bool isMissionEnd;
     void Start()
     {
-        upgradeManager = FindObjectOfType<UpgradeManager>();
+        upgradeManager = FindObjectOfType<UpgradeManager_New>();
         tileManager = FindObjectOfType<TileManager>();
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
@@ -395,13 +395,15 @@ public class WaveManager : MonoBehaviour
         tileManager.InitializeArray(currentStage,4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
-        upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
-        if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);
-        else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
-        else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
+        //upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
+        //if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);
+        //else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
+        //else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
+        //StartCoroutine(upgradeManager.UpgradeDisplay(UpgradeTier.common));
+        StartCoroutine(upgradeManager.DecisionTreeDisplay());
 
         yield return null;
-        while (upgradeManager.UIenabled)
+        while (upgradeManager.Upgrading)
         {
             yield return null;
         }
