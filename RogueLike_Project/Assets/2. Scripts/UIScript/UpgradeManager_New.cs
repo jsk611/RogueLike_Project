@@ -65,22 +65,22 @@ public class UpgradeManager_New : MonoBehaviour
     //}
     public IEnumerator DecisionTreeDisplay()
     {
-        decisionInputField.transform.transform.gameObject.SetActive(false);
+        decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
         terminal2.SetActive(false);
         decisionInputField.text = "";
-       
+        decisionInputField.onEndEdit.AddListener(DecisionInputEnd);
         upgrading = true;
         yield return new WaitForEndOfFrame();
         upgradeRootUI.SetActive(true);
         player.SetCursorState(false);
-        decisionInputField.transform.transform.gameObject.SetActive(true);
+        decisionInputField.transform.gameObject.SetActive(true);
 
     }
     public IEnumerator UpgradeDisplay(UpgradeTier tier)
     {
         terminal2.SetActive(true);
-        decisionInputField.transform.transform.gameObject.SetActive(false);
+        decisionInputField.transform.gameObject.SetActive(false);
 
         upgrading = true;
         upgradeInputField.text = "";
@@ -92,7 +92,6 @@ public class UpgradeManager_New : MonoBehaviour
 
         player.SetCursorState(false);
 
-        upgradeInputField.transform.parent.gameObject.SetActive(false);
         upgradeProcessing.SetActive(false);
         upgradeSuccess.SetActive(false);
 
@@ -183,7 +182,7 @@ public class UpgradeManager_New : MonoBehaviour
             Debug.Log("Wrong Input");
             return;
         }
-        
+        StartCoroutine(EndUpgrade());
     }
     void DecisionTree()
     {
