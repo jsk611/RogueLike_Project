@@ -8,9 +8,15 @@ public class Phase1_Melee_State : State<SpiderPrime>
     // Start is called before the first frame update
     private bool attackFinished = false;
     public bool IsAttackFinished => attackFinished;
+
+    FootIK frontLeft, frontRight;
     public override void Enter()
     {
+        frontLeft = owner.LegIKManager.frontLeft;
+        frontRight = owner.LegIKManager.frontRight;
 
+        frontLeft.moveLock = true;
+        frontRight.moveLock = true;
     }
     public override void Update()
     {
@@ -23,5 +29,16 @@ public class Phase1_Melee_State : State<SpiderPrime>
     public override void Exit()
     {
         attackFinished = false;
+
+        frontLeft.moveLock = false;
+        frontRight.moveLock = false;
+    }
+
+    private IEnumerator LegAttack()
+    {
+        while(true)
+        {
+            yield return null;
+        }
     }
 }

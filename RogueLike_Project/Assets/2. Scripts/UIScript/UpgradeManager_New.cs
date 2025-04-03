@@ -27,6 +27,8 @@ public class UpgradeManager_New : MonoBehaviour
     [SerializeField] GameObject upgradeSuccess;
 
     public UpgradeTier upgradeTier;
+    private float curUpgradeLevel;
+
     GameObject[] UpgradeSet;
     public List<int> upgradeType;
 
@@ -63,7 +65,7 @@ public class UpgradeManager_New : MonoBehaviour
     //        OnInputEnd(inputField.text);
     //    }
     //}
-    public IEnumerator DecisionTreeDisplay()
+    public IEnumerator DecisionTreeDisplay(int level)
     {
         decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
@@ -71,7 +73,12 @@ public class UpgradeManager_New : MonoBehaviour
         decisionInputField.text = "";
         decisionInputField.onEndEdit.AddListener(DecisionInputEnd);
         upgrading = true;
+        curUpgradeLevel = level;
+        foreach (GameObject types in UpgradeDecisionSet) types.SetActive(false);
+
         yield return new WaitForEndOfFrame();
+
+        for (int i = 0; i <= level; i++) UpgradeDecisionSet[i].SetActive(true);
         upgradeRootUI.SetActive(true);
         player.SetCursorState(false);
         decisionInputField.transform.gameObject.SetActive(true);
@@ -186,24 +193,27 @@ public class UpgradeManager_New : MonoBehaviour
     }
     void DecisionTree()
     {
-        switch (decisionTypeInput)
-        {
-            case UpgradeDecision.BASIC:
-                StartCoroutine(UpgradeDisplay(UpgradeTier.common));
-                break;
-            case UpgradeDecision.WEAPON:
-                StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
-                break;
-            case UpgradeDecision.SPECIAL:
-                StartCoroutine(UpgradeDisplay(UpgradeTier.special));
-                break;
-            case UpgradeDecision.EXIT:
-                upgradeRootUI.SetActive(false);
-
-                player.SetCursorState(true);
-                upgrading = false;
-                break;
-        }
+        if (decisionTypeInput == UpgradeDecision.BASIC) { }
+        else if (decisionTypeInput == UpgradeDecision.WEAPON) { }
+        else if (decisionTypeInput == UpgradeDecision.SPECIAL) { }
+        else
+            switch (decisionTypeInput)
+            {
+                case UpgradeDecision.BASIC:
+                    StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+                    break;
+                case UpgradeDecision.WEAPON:
+                    StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
+                    break;
+                case UpgradeDecision.SPECIAL:
+                    StartCoroutine(UpgradeDisplay(UpgradeTier.special));
+                    break;
+                case UpgradeDecision.EXIT:
+                    upgradeRootUI.SetActive(false);
+                    player.SetCursorState(true);
+                    upgrading = false;
+                    break;
+            }
     }
     void ApplyCommonUpgrade()
     {

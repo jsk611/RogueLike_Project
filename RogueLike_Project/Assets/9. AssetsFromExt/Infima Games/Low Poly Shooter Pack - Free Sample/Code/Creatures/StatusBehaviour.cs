@@ -89,13 +89,17 @@ public abstract class StatusBehaviour : MonoBehaviour
     public CC currentCC;
     public Condition currentCon;
 
-    public IEnumerator Slow(float effect, float duration)
+    public void CoroutineEngine(IEnumerator coroutine) {
+        StartCoroutine(coroutine);
+    }
+    public IEnumerator SlowCoroutine(float effect, float duration)
     {
         currentCC = CC.entangled;
         Debug.Log("slow");
         DecreaseMovementSpeed(effect);
         yield return new WaitForSeconds(duration);
         IncreaseMovementSpeed(effect);
+        Debug.Log("Slow off");
         currentCC = CC.normal;
     }
     

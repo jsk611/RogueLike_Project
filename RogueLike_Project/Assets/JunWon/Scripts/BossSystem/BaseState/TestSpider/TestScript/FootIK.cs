@@ -24,6 +24,7 @@ public class FootIK : MonoBehaviour
 
     [SerializeField] FootIK oppositeLeg;
     bool isMoving = false;
+    public bool moveLock = false;
     public bool GetLegMoving => isMoving;
     // Start is called before the first frame update
     void Start()
@@ -43,6 +44,7 @@ public class FootIK : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        if (moveLock) return;
         UpdateNextFootpos(out RaycastHit hit);
 
         transform.position = fixedFootpos;
@@ -80,7 +82,7 @@ public class FootIK : MonoBehaviour
         isMoving = true;
 
         float elapsedTime = 0f;
-        float moveDuration = stepInterval/bodySpeed;
+        float moveDuration = stepInterval/bodySpeed/1.5f;
         Vector3 centerFootpos = (curFootpos+nextFootpos) / 2 +Vector3.up*legIKManager.StepInterval;
         Vector3 currentHintpos = LegHint.position;
         while (elapsedTime/moveDuration <1f)
