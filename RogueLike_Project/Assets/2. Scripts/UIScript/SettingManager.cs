@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class SettingManager : MonoBehaviour
 {
     [SerializeField] GameObject continueButton;
+    [SerializeField] Image fade;
     private void Start()
     {
         if(!PlayerPrefs.HasKey("packet")) continueButton.SetActive(false);
     }
     public void InitGame()
+    {
+        fade.gameObject.SetActive(true);
+        fade.DOFade(1, 1f);
+        Invoke("LoadToGame", 1f);
+    }
+    void LoadToGame()
     {
         SceneManager.LoadScene("IngameScene");
     }
@@ -20,7 +28,10 @@ public class SettingManager : MonoBehaviour
         //저장 데이터 초기화
         PlayerPrefs.DeleteAll();
 
-        SceneManager.LoadScene("IngameScene");
+        fade.gameObject.SetActive(true);
+
+        fade.DOFade(1, 1f);
+        Invoke("LoadToGame", 1f);
     }
     public void GoToTitle()
     {

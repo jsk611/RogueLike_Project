@@ -18,8 +18,9 @@ public class UIManager : MonoBehaviour
     public Text[] curAmmo, maxAmmo;
     Text curammo, maxammo;
 
-
     int dna, packet;
+
+    [SerializeField] Image fade;
     private void Awake()
     {
         instance = this;
@@ -35,6 +36,8 @@ public class UIManager : MonoBehaviour
         DNAReset(0);
         PacketReset(packet);
         Swapping(0);
+        fade.gameObject.SetActive(true);
+        fade.DOFade(0, 1f);
     }
 
     //Controlling bars value
