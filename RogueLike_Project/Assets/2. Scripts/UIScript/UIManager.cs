@@ -7,6 +7,7 @@ using TMPro;
 using Unity.VisualScripting;
 using System;
 using DG.Tweening;
+using InfimaGames.LowPolyShooterPack;
 
 public class UIManager : MonoBehaviour
 {
@@ -228,6 +229,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject DyingParticle;
     public IEnumerator DieBuffering()
     {
+        ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().SetCursorState(false);
         Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(0.5f);
         DyingBackground.DOFade(0.5f, 1.5f).SetUpdate(true);
