@@ -7,7 +7,7 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
     public Spider_Phase1(SpiderPrime owner) : base(owner) { }
     StateMachine<SpiderPrime> subFsm;
 
-    float meleeAttackRange = 5f;
+    float meleeAttackRange = 8f;
     float rangedAttackRange = 20f;
 
     public string meleeAttack;

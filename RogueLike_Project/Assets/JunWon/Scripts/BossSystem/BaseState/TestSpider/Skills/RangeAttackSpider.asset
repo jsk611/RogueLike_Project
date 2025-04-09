@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: SpiderRangeAttack
   abilityDescription: spider bullet shooting
-  cooldown: 2
+  cooldown: 1000
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0

@@ -238,7 +238,7 @@ public class UpgradeManager_New : MonoBehaviour
                     case UTILUGType.Heath:
                         //업글 적용
                         Debug.Log("Heath");
-                        playerStatus.IncreaseHealth(1);
+                        playerStatus.IncreaseHealth(10);
                         break;
                     case UTILUGType.MoveSpeed:
                         //업글 적용

@@ -44,10 +44,11 @@ public class FootIK : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (moveLock) return;
-        UpdateNextFootpos(out RaycastHit hit);
-
-        transform.position = fixedFootpos;
+        if (!moveLock)
+        {
+            UpdateNextFootpos(out RaycastHit hit);
+            transform.position = fixedFootpos;
+        }
 
 
         if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)

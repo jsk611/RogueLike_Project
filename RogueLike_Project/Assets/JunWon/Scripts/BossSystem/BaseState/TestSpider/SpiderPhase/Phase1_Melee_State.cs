@@ -9,6 +9,8 @@ public class Phase1_Melee_State : State<SpiderPrime>
     private bool attackFinished = false;
     public bool IsAttackFinished => attackFinished;
 
+    private float attackTime = 0.5f;
+
     FootIK frontLeft, frontRight;
     public override void Enter()
     {
@@ -17,14 +19,12 @@ public class Phase1_Melee_State : State<SpiderPrime>
 
         frontLeft.moveLock = true;
         frontRight.moveLock = true;
+
+        owner.StartCoroutine(LegAttack());
     }
     public override void Update()
     {
-        if (!attackFinished)
-        {
-            if (Vector3.Distance(owner.Player.position, owner.transform.position) <= 10f) owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(owner.BossStatus.GetAttackDamage());
-            attackFinished = true;
-        }
+
     }
     public override void Exit()
     {
@@ -36,9 +36,19 @@ public class Phase1_Melee_State : State<SpiderPrime>
 
     private IEnumerator LegAttack()
     {
-        while(true)
+        float time = 0f;
+        float elapsedTime = time/attackTime;
+        Vector3 target = owner.Player.position;
+        frontLeft.transform.position =target + Vector3.up * 20;
+        frontRight.transform.position = target + Vector3.up * 20;
+        while (elapsedTime < 1)
         {
+            elapsedTime = time / attackTime;
+            frontLeft.transform.position = Vector3.Lerp(frontLeft.transform.position, target, elapsedTime);
+            frontRight.transform.position = Vector3.Lerp( frontRight.transform.position, target,elapsedTime);
+            time += Time.deltaTime;
             yield return null;
         }
+        attackFinished = true;
     }
 }
