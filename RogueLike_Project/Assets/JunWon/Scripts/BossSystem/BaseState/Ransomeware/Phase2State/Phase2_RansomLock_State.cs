@@ -5,30 +5,42 @@ using InfimaGames.LowPolyShooterPack;
 
 public class Phase2_RansomLock_State : State<Ransomware>
 {
-    private float skillChangeInterval = 10f;  // 스킬 변경 간격
-    private RandomSkillLockController.LockPatternType patternType = RandomSkillLockController.LockPatternType.RandomRotation;
-    private int maxLockedSkills = 2;         // 동시에 잠글 수 있는 최대 스킬 수
-    private float duration = 5f;
+    [Header("스킬 잠금 설정")]
+    [SerializeField] private float skillChangeInterval = 10f;  // 스킬 변경 간격
+    [SerializeField] private RandomSkillLockController.LockPatternType patternType = RandomSkillLockController.LockPatternType.RandomRotation;
+    [SerializeField] private int maxLockedSkills = 2;         // 동시에 잠글 수 있는 최대 스킬 수
+    [SerializeField] private float lockDuration = 15f;        // 스킬 잠금 지속 시간
+    [SerializeField] private float stateMaxDuration = 30f;    // 전체 스킬 잠금 공격 지속 시간
 
-    private float glitchEffectDuration = 1.0f;   // 글리치 효과 지속 시간
-    private float glitchEffectInterval = 15.0f;  // 글리치 효과 간격
+    [Header("글리치 효과 설정")]
+    [SerializeField] private float glitchEffectDuration = 1.0f;   // 글리치 효과 지속 시간
+    [SerializeField] private float glitchEffectInterval = 15.0f;  // 글리치 효과 간격
 
+    // 내부 변수
     private float nextGlitchTime = 0f;
     private float nextSkillChangeTime = 0f;
+    private float stateTimeRemaining = 0f;
     private bool isActive = false;
     private bool isAttackFinished = false;
 
+    // 컴포넌트 참조
     private UIManager uiManager;
     private PlayerControl playerControl;
     private PlayerStatus playerStatus;
     private PostProcessingManager postProcessingManager;
+    private SkillLockUI skillLockUI;
+    public static event RandomSkillLockController.SkillLockEvent OnRansomLockEvent;
 
+
+    // 스킬 관련 리스트
     private List<SkillType> lockableSkills = new List<SkillType>();
+    private List<SkillType> currentlyLockedSkills = new List<SkillType>();
 
     public Phase2_RansomLock_State(Ransomware owner) : base(owner)
     {
         owner.SetLockState(this);
     }
+
 
     public override void Enter()
     {
@@ -43,8 +55,9 @@ public class Phase2_RansomLock_State : State<Ransomware>
         InitializeLockableSkills();
 
         // 상태 초기화
-        nextGlitchTime = glitchEffectInterval;
-        nextSkillChangeTime = skillChangeInterval;
+        stateTimeRemaining = stateMaxDuration;
+        nextGlitchTime = Time.time + glitchEffectInterval * 0.5f;
+        nextSkillChangeTime = Time.time + skillChangeInterval;
         isActive = true;
 
         // UI 초기화
@@ -68,6 +81,12 @@ public class Phase2_RansomLock_State : State<Ransomware>
         // UI 정리
         CleanupUI();
 
+        // 모든 플레이어 스킬 잠금 해제
+        if (playerControl != null)
+        {
+            playerControl.UnlockAllSkills();
+        }
+
         isActive = false;
         owner.NmAgent.isStopped = false;
         owner.Animator.ResetTrigger("RansomLock");
@@ -75,7 +94,29 @@ public class Phase2_RansomLock_State : State<Ransomware>
 
     public override void Update()
     {
-        if (!isActive) return;
+        if (!isActive || isInterrupted) return;
+
+        // 스킬 잠금 공격 전체 지속 시간 체크
+        stateTimeRemaining -= Time.deltaTime;
+        if (stateTimeRemaining <= 0)
+        {
+            isAttackFinished = true;
+            return;
+        }
+
+        // 정기적인 글리치 효과 체크
+        if (Time.time >= nextGlitchTime)
+        {
+            PlayGlitchEffect();
+            nextGlitchTime = Time.time + Random.Range(glitchEffectInterval * 0.8f, glitchEffectInterval * 1.2f);
+        }
+
+        // 정기적인 스킬 변경 체크
+        if (Time.time >= nextSkillChangeTime)
+        {
+            ApplyLockPattern();
+            nextSkillChangeTime = Time.time + skillChangeInterval;
+        }
     }
 
     private bool CanExecuteAttack()
@@ -102,59 +143,65 @@ public class Phase2_RansomLock_State : State<Ransomware>
         PlayGlitchEffect();
     }
 
-    // 애니메이션 이벤트에서 호출
-    public void OnApplySkillLock()
-    {
-        Debug.Log("[Phase2_RansomLock_State] OnApplySkillLock");
-
-        // 실제 스킬 잠금 적용
-        ApplyLockPattern();
-    }
-
-    // 애니메이션 이벤트에서 호출
-    public void OnGlitchEffect()
-    {
-        Debug.Log("[Phase2_RansomLock_State] OnGlitchEffect");
-        PlayGlitchEffect();
-    }
-
     private void InitializeReferences()
     {
         uiManager = GameObject.FindObjectOfType<UIManager>();
         playerControl = GameObject.FindObjectOfType<PlayerControl>();
         playerStatus = GameObject.FindObjectOfType<PlayerStatus>();
         postProcessingManager = GameObject.FindObjectOfType<PostProcessingManager>();
+        skillLockUI = GameObject.FindObjectOfType<SkillLockUI>();
     }
 
     private void InitializeLockableSkills()
     {
         lockableSkills.Clear();
+        currentlyLockedSkills.Clear();
 
+        // 잠글 수 있는 스킬 목록 설정
         lockableSkills.Add(SkillType.Running);
         lockableSkills.Add(SkillType.Jumping);
         lockableSkills.Add(SkillType.Dash);
         lockableSkills.Add(SkillType.Movement);
+
+        // 게임 플레이에 큰 영향을 주지 않도록 다음 스킬들은 제외
+        // lockableSkills.Add(SkillType.Shooting);
+        // lockableSkills.Add(SkillType.WeaponSwitch);
+        // lockableSkills.Add(SkillType.Interaction);
     }
 
     private void SetupUI()
     {
         if (uiManager == null) return;
 
-        // UI에 랜섬웨어 잠금 표시
-        // uiManager.ShowRansomLockUI(stateDuration);
+        // 필요한 UI 컴포넌트 활성화
+        if (postProcessingManager != null)
+        {
+            postProcessingManager.EnableGlitchEffect(0.2f);
+        }
     }
 
     private void CleanupUI()
     {
-        if (uiManager == null) return;
+        // 글리치 효과 비활성화
+        if (postProcessingManager != null)
+        {
+            postProcessingManager.DisableGlitchEffect();
+        }
 
-        // UI에서 랜섬웨어 잠금 표시 제거
-        // uiManager.HideRansomLockUI();
+        // 스킬 잠금 UI 숨기기
+        if (skillLockUI != null)
+        {
+            TriggerLockEvent("LockEnded", new List<SkillType>(), 0);
+        }
     }
 
     private void ApplyLockPattern()
     {
         if (playerControl == null || lockableSkills.Count == 0) return;
+
+        // 이전에 잠긴 모든 스킬 해제
+        UnlockAllSkills();
+        currentlyLockedSkills.Clear();
 
         // 패턴에 따라 다른 잠금 적용
         switch (patternType)
@@ -175,6 +222,12 @@ public class Phase2_RansomLock_State : State<Ransomware>
                 ApplyRandomPattern();
                 break;
         }
+
+        // 현재 잠긴 스킬 로그 출력
+        LogLockedSkills();
+
+        // UI 업데이트를 위한 이벤트 발생
+        TriggerLockEvent("SkillsChanged", currentlyLockedSkills, lockDuration);
     }
 
     private void ApplyFixedPattern()
@@ -183,7 +236,7 @@ public class Phase2_RansomLock_State : State<Ransomware>
 
         for (int i = 0; i < count; i++)
         {
-            owner.LockPlayerSkill(lockableSkills[i], duration);
+            LockSkill(lockableSkills[i]);
         }
     }
 
@@ -192,7 +245,14 @@ public class Phase2_RansomLock_State : State<Ransomware>
         if (lockableSkills.Count == 0) return;
 
         int cycleIndex = Mathf.FloorToInt(Time.time / skillChangeInterval) % lockableSkills.Count;
-        owner.LockPlayerSkill(lockableSkills[cycleIndex], duration);
+        LockSkill(lockableSkills[cycleIndex]);
+
+        // 두 번째 스킬도 랜덤하게 선택 (첫 번째와 다른 스킬)
+        if (lockableSkills.Count > 1 && Random.value > 0.5f)
+        {
+            int secondIndex = (cycleIndex + 1 + Random.Range(0, lockableSkills.Count - 1)) % lockableSkills.Count;
+            LockSkill(lockableSkills[secondIndex]);
+        }
     }
 
     private void ApplyPulsatingPattern()
@@ -205,7 +265,7 @@ public class Phase2_RansomLock_State : State<Ransomware>
 
             for (int i = 0; i < count; i++)
             {
-                owner.LockPlayerSkill(lockableSkills[i], duration);
+                LockSkill(lockableSkills[i]);
             }
         }
     }
@@ -214,15 +274,19 @@ public class Phase2_RansomLock_State : State<Ransomware>
     {
         if (lockableSkills.Count == 0) return;
 
-        int skillsToLock = 0;
+        // 스테이트 진행도에 따라 잠글 스킬 수 결정 (시간이 갈수록 더 많은 스킬 잠금)
+        float progress = 1.0f - (stateTimeRemaining / stateMaxDuration);
+        int skillsToLock = Mathf.CeilToInt(progress * maxLockedSkills);
         skillsToLock = Mathf.Clamp(skillsToLock, 1, Mathf.Min(maxLockedSkills, lockableSkills.Count));
 
+        // 복사본 생성 후 섞기
         List<SkillType> shuffledSkills = new List<SkillType>(lockableSkills);
         ShuffleList(shuffledSkills);
 
+        // 계산된 수만큼 스킬 잠금
         for (int i = 0; i < skillsToLock; i++)
         {
-            owner.LockPlayerSkill(shuffledSkills[i], duration);
+            LockSkill(shuffledSkills[i]);
         }
     }
 
@@ -230,32 +294,83 @@ public class Phase2_RansomLock_State : State<Ransomware>
     {
         if (lockableSkills.Count == 0) return;
 
+        // 복사본 생성 후 섞기
         List<SkillType> shuffledSkills = new List<SkillType>(lockableSkills);
         ShuffleList(shuffledSkills);
 
+        // 무작위로 잠글 스킬 수 결정
         int skillsToLock = Random.Range(1, Mathf.Min(maxLockedSkills, shuffledSkills.Count) + 1);
 
+        // 선택된 수만큼 스킬 잠금
         for (int i = 0; i < skillsToLock; i++)
         {
-            owner.LockPlayerSkill(shuffledSkills[i], duration);
+            LockSkill(shuffledSkills[i]);
         }
     }
 
-    private void UpdateGlitchEffects()
+    private void LockSkill(SkillType skillType)
     {
-        if (Time.time >= nextGlitchTime)
+        if (playerControl == null) return;
+
+        // 플레이어 스킬 비활성화
+        playerControl.SetSkillEnabled(skillType, false);
+        currentlyLockedSkills.Add(skillType);
+
+        // 실제 랜섬웨어 보스에서는 지속 시간으로 스킬을 잠금
+        owner.LockPlayerSkill(skillType, lockDuration);
+    }
+
+    private void UnlockAllSkills()
+    {
+        if (playerControl == null) return;
+
+        foreach (SkillType skill in currentlyLockedSkills)
         {
-            PlayGlitchEffect();
-            nextGlitchTime = Time.time + Random.Range(glitchEffectInterval * 0.8f, glitchEffectInterval * 1.2f);
+            playerControl.SetSkillEnabled(skill, true);
         }
+    }
+
+    private void LogLockedSkills()
+    {
+        if (currentlyLockedSkills.Count == 0)
+        {
+            Debug.Log("현재 잠긴 스킬 없음");
+            return;
+        }
+
+        string skills = "";
+        foreach (SkillType skill in currentlyLockedSkills)
+        {
+            skills += skill.ToString() + ", ";
+        }
+
+        if (skills.Length > 2)
+        {
+            skills = skills.Substring(0, skills.Length - 2);
+        }
+
+        Debug.Log($"현재 잠긴 스킬: {skills}");
     }
 
     private void PlayGlitchEffect()
     {
-        if (uiManager != null)
+        // 포스트 프로세싱 글리치 효과 재생
+        if (postProcessingManager != null)
         {
-            // uiManager.PlayGlitchEffect(glitchEffectDuration);
+            postProcessingManager.TriggerGlitchEffect(glitchEffectDuration);
         }
+
+        // UI 글리치 효과 재생
+        if (skillLockUI != null)
+        {
+            skillLockUI.PlayGlitchEffect();
+        }
+    }
+
+    private void TriggerLockEvent(string eventType, List<SkillType> skills, float remainingTime)
+    {
+        // RandomSkillLockController에서 정의된 이벤트 형식을 직접 호출
+        OnRansomLockEvent?.Invoke(eventType, new List<SkillType>(skills), remainingTime);
     }
 
     private void ShuffleList<T>(List<T> list)
