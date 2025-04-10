@@ -54,7 +54,8 @@ public class InteractionSphere : MonoBehaviour
             if(Input.GetKey(KeyCode.F))
             {
                 // F 입력했을 때 신호 송신
-             //   Debug.Log("Switching!");
+                //   Debug.Log("Switching!");
+                helpUI.enabled = false;
                 waveManager.NextWaveTrigger = true;
                 isActived=true;
             }

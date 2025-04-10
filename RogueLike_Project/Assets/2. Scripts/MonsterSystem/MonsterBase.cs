@@ -349,7 +349,7 @@ public abstract class MonsterBase : MonoBehaviour
         else
         { 
             Debug.LogWarning("?? ?????? --");
-            if (dropItem) SpawnItem();
+         //   if (dropItem) SpawnItem();
             if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
             //enemyCountData.enemyCount--;
         }

@@ -172,7 +172,6 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
     public bool CheckGrounded()
     {
         isGrounded = Physics.SphereCast(character.transform.position, character.radius, Vector3.down, out hitInfo, 0.83f, LayerMask.GetMask("Wall"));
-
         if (!isGrounded)
         {
             rigidBody.isKinematic = false;
@@ -182,6 +181,13 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         {
             rigidBody.isKinematic = true;
             character.Move(Vector3.down * 4f * Time.deltaTime);
+
+            if (hitInfo.transform != transform.parent)
+            {
+                transform.SetParent(hitInfo.transform);
+                string[] tilePos = hitInfo.transform.name.Split(',');
+                if (tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
+            }
         }
         if (transform.position.y < -5f)
         {
@@ -230,15 +236,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         }
     }
 
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.CompareTag("Floor") && hit.transform != transform.parent)
-        {
-            transform.SetParent(hit.transform);
-            string[] tilePos = hit.gameObject.name.Split(',');
-            if (tilePos.Length == 2) positionData.playerTilePosition = new Vector2Int(int.Parse(tilePos[0]), int.Parse(tilePos[1]));
-        }
-    }
+
 
     #region ISkillLockable 인터페이스 구현
     public void SetSkillEnabled(SkillType skillType, bool enabled)
