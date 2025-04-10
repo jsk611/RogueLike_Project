@@ -1,12 +1,17 @@
 using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UpgradeTrigger : MonoBehaviour
 {
+    [SerializeField] TMP_Text helpUI;
+    string uiText = "Upgrade - ";
+
     UpgradeManager_New UpgradeManager;
-    bool isUpgraded;
+    int canUpgrade;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,7 +20,7 @@ public class UpgradeTrigger : MonoBehaviour
 
     private void OnEnable()
     {
-        isUpgraded = false;
+        canUpgrade = 2;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
@@ -24,13 +29,24 @@ public class UpgradeTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (!isUpgraded && Input.GetKeyDown(KeyCode.F))
+            helpUI.text = uiText + canUpgrade +" left";
+            helpUI.enabled = true;
+            helpUI.color = Color.cyan;
+            if (canUpgrade > 0 && Input.GetKeyUp(KeyCode.F))
             {
-                isUpgraded = true;
-                StartCoroutine(UpgradeManager.DecisionTreeDisplay(2));
+                StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
+                canUpgrade--;
+            }
+            else if (canUpgrade <= 0)
+            {
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
             }
         }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+            helpUI.enabled = false;
     }
 }

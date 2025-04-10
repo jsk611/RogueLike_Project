@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: SpiderRushAttack
   abilityDescription: spider rush attack
-  cooldown: 202.31
+  cooldown: 5
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0

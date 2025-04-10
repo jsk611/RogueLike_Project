@@ -1,10 +1,14 @@
 using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class CoinTrigger : MonoBehaviour
 {
+    [SerializeField] TMP_Text helpUI;
+    string uiText = "Get DNA with ";
+
     public int coinAmount = 100;
     PlayerStatus ps;
     // Start is called before the first frame update
@@ -24,6 +28,9 @@ public class CoinTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            helpUI.text = uiText + coinAmount + " coins";
+            helpUI.enabled = true;
+            helpUI.color = Color.yellow;
             if (Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=coinAmount)
             {
                 ps.IncreasePermanentCoin(1);
@@ -33,5 +40,8 @@ public class CoinTrigger : MonoBehaviour
             }
         }
     }
-
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player")) helpUI.enabled = false;
+    }
 }
