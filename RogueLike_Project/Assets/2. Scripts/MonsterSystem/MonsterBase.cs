@@ -62,6 +62,9 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("External Data")]
     [SerializeField] private EnemyCountData enemyCountData;
+
+    [Header("Effect")]
+    [SerializeField] private GameObject binaryDeathEffectObject;
     #endregion
 
     #region Private Fields
@@ -335,6 +338,9 @@ public abstract class MonsterBase : MonoBehaviour
             }
             EventManager.Instance.TriggerMonsterKilledEvent(!summonedMonster);
 
+            GameObject effectInstance = Instantiate(binaryDeathEffectObject, transform.position, Quaternion.identity);
+            BinaryDeathEffect effect = effectInstance.GetComponent<BinaryDeathEffect>();
+            effect.TriggerDeathEffect(transform.position);
         }
     }
 
