@@ -8,10 +8,15 @@ using TMPro;
 public class GameOverScene : MonoBehaviour
 {
     public TMP_Text tx;
+    [SerializeField] TMP_Text time;
+    [SerializeField] TMP_Text stage;
+
 
     void Start()
     {
         StartCoroutine(GameOverTyping());
+        time.text = "Time: " + PlayerPrefs.GetString("Time");
+        stage.text = "Stage: " + PlayerPrefs.GetString("Stage");
     }
 
     IEnumerator GameOverTyping()

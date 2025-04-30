@@ -453,7 +453,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13ea24b3c1f01407d921fccc86071ffd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tx: {fileID: 0}
+  tx: {fileID: 1125278415}
+  time: {fileID: 1261858472}
+  stage: {fileID: 1282571297}
 --- !u!1 &1261858470
 GameObject:
   m_ObjectHideFlags: 0

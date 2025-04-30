@@ -22,6 +22,7 @@ public class UIManager : MonoBehaviour
     int dna, packet;
 
     [SerializeField] Image fade;
+
     private void Awake()
     {
         instance = this;
@@ -41,12 +42,26 @@ public class UIManager : MonoBehaviour
         fade.DOFade(0, 1f);
     }
 
+    public float stopwatch = 0;
+    public bool isStarted = false;
+    [SerializeField] TMP_Text stopwatchText;
+    private void Update()
+    {
+        if (isStarted)
+        {
+            stopwatch += Time.deltaTime;
+            if((int)stopwatch % 60 / 10 == 0) stopwatchText.text = $"{(int)stopwatch / 60}:0{(int)stopwatch % 60}";
+            else stopwatchText.text = $"{(int)stopwatch / 60}:{(int)stopwatch % 60}";
+        }
+        else stopwatchText.text = "0:00";
+    }
+
     //Controlling bars value
     public Image[] Bar;
-    [SerializeField] PlayerHPBar_New playerHPBar;
+    [SerializeField] PlayerHPBar_New signalBar;
     public void BarValueChange(int i, float maxValue, float curValue)
     {
-        if (i == 0) playerHPBar.ChangeBarValue(curValue, maxValue);
+        if (i == 0) signalBar.ChangeBarValue(curValue, maxValue);
         Bar[i].fillAmount = curValue / maxValue;
     }
 
@@ -239,6 +254,8 @@ public class UIManager : MonoBehaviour
         DyingParticle.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1f;
+        PlayerPrefs.SetString("Time", $"{(int)stopwatch / 60}:{(int)stopwatch % 60}");
+        PlayerPrefs.SetString("Stage", waveText.text);
         SceneManager.LoadScene("GameOverScene");
     } 
 
