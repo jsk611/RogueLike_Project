@@ -56,4 +56,8 @@ public class SpiderPrime : BossBase
           //add dieState;
         }
     }
+    public void CoroutineRunner(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
 }

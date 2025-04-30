@@ -391,13 +391,12 @@ public class TileManager : MonoBehaviour
 
     }
 
-    public IEnumerator CreateShockwave(int i,int j,int chain,float power)
+    public IEnumerator CreateShockwave(int i,int j,int chain,float power,float duration = 0.3f)
     {
        
         if (i>=0 && i<=mapSize && j>=0 && j<=mapSize && tiles[i,j].canShockWave && chain>0)
         {
             tiles[i,j].canShockWave = false;
-            float duration = 0.3f;
             float time = 0;
             float PI = Mathf.PI;
             Vector3 origin = tiles[i,j].transform.position;

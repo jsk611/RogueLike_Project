@@ -25,7 +25,9 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
 
         owner.AbilityManager.SetAbilityActive(meleeAttack);
         owner.AbilityManager.SetAbilityActive(rangedAttack);
+
         owner.AbilityManager.SetAbilityActive(assaultAttack);
+        owner.AbilityManager.SetMaxCoolTime(assaultAttack);
 
         owner.AbilityManager.SetAbilityActive(rushAttack);
         owner.AbilityManager.SetMaxCoolTime(rushAttack);
@@ -56,12 +58,12 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
             () => Vector3.Distance(owner.Player.position, owner.transform.position) <= rangedAttackRange
             && owner.AbilityManager.GetAbilityRemainingCooldown(rangedAttack)==0
         ));
-        //subFsm.AddTransition(new Transition<SpiderPrime>(
-        //    huntState,
-        //    aerialAttackState,
-        //    () => Vector3.Distance(owner.Player.position, owner.transform.position) > rangedAttackRange
-        //    && owner.AbilityManager.GetAbilityRemainingCooldown(assaultAttack) == 0
-        //));
+        subFsm.AddTransition(new Transition<SpiderPrime>(
+            huntState,
+            aerialAttackState,
+            () => Vector3.Distance(owner.Player.position, owner.transform.position) > meleeAttackRange
+            && owner.AbilityManager.GetAbilityRemainingCooldown(assaultAttack) == 0
+        ));
         subFsm.AddTransition(new Transition<SpiderPrime>(
             huntState,
             rushAttackState,

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Phase1_Melee_State : State<SpiderPrime>
@@ -9,46 +11,52 @@ public class Phase1_Melee_State : State<SpiderPrime>
     private bool attackFinished = false;
     public bool IsAttackFinished => attackFinished;
 
-    private float attackTime = 0.5f;
+    private float attackTime = 0f;
 
-    FootIK frontLeft, frontRight;
+    Transform spiderHead;
+    Vector3 originScale;
+    bool isAttacking = true;
+    float expansionTIme = 0.2f;
+    float shrinkingTime = 0.6f;
     public override void Enter()
     {
-        frontLeft = owner.LegIKManager.frontLeft;
-        frontRight = owner.LegIKManager.frontRight;
-
-        frontLeft.moveLock = true;
-        frontRight.moveLock = true;
-
-        owner.StartCoroutine(LegAttack());
+        if (spiderHead == null)
+        {
+            spiderHead = owner.HeadWeapon.transform;
+            originScale = spiderHead.localScale;
+        }
+        attackTime = 0f;
+        isAttacking = true;
     }
     public override void Update()
     {
-
+        if (isAttacking) Expansion();
+        else Shrink();
+        attackTime += Time.deltaTime;
     }
+
+
     public override void Exit()
     {
         attackFinished = false;
-
-        frontLeft.moveLock = false;
-        frontRight.moveLock = false;
     }
-
-    private IEnumerator LegAttack()
+    void Expansion()
     {
-        float time = 0f;
-        float elapsedTime = time/attackTime;
-        Vector3 target = owner.Player.position;
-        frontLeft.transform.position =target + Vector3.up * 20;
-        frontRight.transform.position = target + Vector3.up * 20;
-        while (elapsedTime < 1)
+        float elapsedTime = attackTime / expansionTIme;
+        spiderHead.localScale += Vector3.one * 0.2f;
+        if (elapsedTime > 1f)
         {
-            elapsedTime = time / attackTime;
-            frontLeft.transform.position = Vector3.Lerp(frontLeft.transform.position, target, elapsedTime);
-            frontRight.transform.position = Vector3.Lerp( frontRight.transform.position, target,elapsedTime);
-            time += Time.deltaTime;
-            yield return null;
+            attackTime = 0f;
+            isAttacking = false;
         }
-        attackFinished = true;
+    }
+    void Shrink()
+    {
+        float elaspedTime = attackTime / shrinkingTime;
+        spiderHead.localScale = Vector3.Lerp(spiderHead.localScale, originScale, elaspedTime);
+        if (elaspedTime > 1f) {
+            spiderHead.localScale = originScale;
+            attackFinished = true;
+        }
     }
 }

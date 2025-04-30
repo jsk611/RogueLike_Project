@@ -19,7 +19,7 @@ MonoBehaviour:
   abilityIcon: {fileID: 0}
   targetType: 0
   damage: 10
-  range: 20
+  range: 0
   buffType: 0
   buffAmount: 0
   abilityAnimation: {fileID: 0}

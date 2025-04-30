@@ -36,6 +36,8 @@ public class FootIK : MonoBehaviour
         bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
         hintOffSet = Vector3.Distance(LegHint.position,fixedFootpos);// LegHint.position - fixedFootpos;
         legIKManager = spiderPrime.LegIKManager;
+
+        nextFootpos = transform.position;
     }
     private void Update()
     {
@@ -62,8 +64,7 @@ public class FootIK : MonoBehaviour
     void UpdateNextFootpos(out RaycastHit hit)
     {
         Vector3 MoveDirection = spiderPrime.transform.forward;
-        Physics.Raycast(nextFoot.position + MoveDirection / 2, -nextFoot.up, out hit, 30f, LayerMask.GetMask("Wall"));
-           nextFootpos = hit.point;
+        if(Physics.Raycast(nextFoot.position + MoveDirection / 2, -nextFoot.up, out hit, 30f, LayerMask.GetMask("Wall"))) nextFootpos = hit.point;
       //  nextFootpos = nextFoot.position - Vector3.up * 30;
         
         // transform.rotation = fixedFootrot;
