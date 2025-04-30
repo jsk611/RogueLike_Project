@@ -6349,7 +6349,6 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 20
-  summonedMonster: 0
   master: {fileID: 0}
   anim: {fileID: 2403159443009841261}
   nmAgent: {fileID: 5956197097378150369}
@@ -6362,12 +6361,15 @@ MonoBehaviour:
   spawnEffect: {fileID: 4734613887287955740}
   startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
   baseMaterial: {fileID: 2100000, guid: b1c5cc39fad6535439a9c2641326f277, type: 2}
+  height: 3
+  summonedMonster: 0
+  dropDNA: 1
+  dropItem: 1
   items:
   - {fileID: 8021822854330241990, guid: 982b8077848b5ff4e88bc60f5a86e4d4, type: 3}
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
   - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
-  height: 3
   DNADrop: 69
   HPBar: {fileID: 1623563776320361648}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
@@ -6377,6 +6379,8 @@ MonoBehaviour:
   dieDuration: 1
   transitionCooldown: 0.3
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
+    type: 3}
   state: 0
 --- !u!114 &-2712703648059829631
 MonoBehaviour:
