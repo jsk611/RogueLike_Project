@@ -15,7 +15,16 @@ public class LegIKManager : MonoBehaviour
     public FootIK midRight;
     public FootIK backLeft;
     public FootIK backRight;
-    
 
+    public List<FootIK> Foots = new List<FootIK>();
 
+    private void Start()
+    {
+        Foots.Add(frontLeft);
+        Foots.Add(frontRight);
+        Foots.Add(backLeft);
+        Foots.Add(backRight);
+        Foots.Add(midLeft);
+        Foots.Add(midRight);
+    }
 }

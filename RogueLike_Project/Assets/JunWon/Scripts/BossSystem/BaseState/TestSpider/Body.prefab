@@ -275,6 +275,7 @@ MonoBehaviour:
   LegHint: {fileID: 6498933437207028912}
   oppositeLeg: {fileID: 8535403590489343883}
   moveLock: 0
+  state: 0
 --- !u!1 &2173700923677828951
 GameObject:
   m_ObjectHideFlags: 0
@@ -475,7 +476,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1638b5141a41da846b658388c45701d0, type: 2}
   - {fileID: 2100000, guid: b8ec9440f06384746a94b6d5afa3230e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -833,6 +833,7 @@ MonoBehaviour:
   LegHint: {fileID: 2945015331244930724}
   oppositeLeg: {fileID: 6264355245668961726}
   moveLock: 0
+  state: 0
 --- !u!1 &4081704904188480759
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1107,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c47564865d29fd14fa9cf72003158f17, type: 2}
+  - {fileID: 2100000, guid: 9789f486f6582664ea486c4bb85ca631, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1340,6 +1341,7 @@ MonoBehaviour:
   LegHint: {fileID: 1981071193401469993}
   oppositeLeg: {fileID: 298105967085504950}
   moveLock: 0
+  state: 0
 --- !u!1 &5267640816526563627
 GameObject:
   m_ObjectHideFlags: 0
@@ -2100,6 +2102,7 @@ MonoBehaviour:
   LegHint: {fileID: 7628136856808540822}
   oppositeLeg: {fileID: 2449371288951325068}
   moveLock: 0
+  state: 0
 --- !u!1 &6577054784460678386
 GameObject:
   m_ObjectHideFlags: 0
@@ -2589,9 +2592,9 @@ MonoBehaviour:
   MaxHealth: 1000
   CriticalRate: 0
   CriticalDamage: 0
-  MoveSpeed: 8
+  MoveSpeed: 6
   ReloadSpeed: 100
-  Damage: 10
+  Damage: 30
   AttackSpeed: 100
 --- !u!195 &3529113191450723981
 NavMeshAgent:
@@ -2797,6 +2800,7 @@ MonoBehaviour:
   LegHint: {fileID: 6731229473578256553}
   oppositeLeg: {fileID: 7382247373426187116}
   moveLock: 0
+  state: 0
 --- !u!1 &7638651133663491450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2902,6 +2906,7 @@ MonoBehaviour:
   midRight: {fileID: 7382247373426187116}
   backLeft: {fileID: 6264355245668961726}
   backRight: {fileID: 298105967085504950}
+  Foots: []
 --- !u!1 &7742792983483226023
 GameObject:
   m_ObjectHideFlags: 0
@@ -3040,6 +3045,7 @@ MonoBehaviour:
   LegHint: {fileID: 3443888435927676357}
   oppositeLeg: {fileID: 4007186539249776661}
   moveLock: 0
+  state: 0
 --- !u!1 &7872454370964214073
 GameObject:
   m_ObjectHideFlags: 0

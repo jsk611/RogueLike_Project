@@ -60,7 +60,7 @@ public class Phase1_AirAssault : State<SpiderPrime>
                     int x = (int)tile.transform.position.z / 2;
                     Debug.Log(hit.transform.name);
                     owner.CoroutineRunner(tileManager.CreateShockwave(z, x, 6, 3, 0.05f));
-                    Collider[] boom = Physics.OverlapSphere(tile.transform.position, 14, LayerMask.GetMask("Character"));
+                    Collider[] boom = Physics.OverlapSphere(owner.transform.position, 14, LayerMask.GetMask("Character"));
                     if (boom.Length > 0)
                     {
                         playerStatus.DecreaseHealth(bossStatus.GetAttackDamage());
