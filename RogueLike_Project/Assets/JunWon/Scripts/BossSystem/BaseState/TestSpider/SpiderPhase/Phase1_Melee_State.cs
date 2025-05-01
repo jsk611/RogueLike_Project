@@ -16,8 +16,8 @@ public class Phase1_Melee_State : State<SpiderPrime>
     Transform spiderHead;
     Vector3 originScale;
     bool isAttacking = true;
-    float expansionTIme = 0.2f;
-    float shrinkingTime = 0.6f;
+    float expansionTIme = 0.1f;
+    float shrinkingTime = 1f;
     public override void Enter()
     {
         if (spiderHead == null)
@@ -27,6 +27,9 @@ public class Phase1_Melee_State : State<SpiderPrime>
         }
         attackTime = 0f;
         isAttacking = true;
+
+        float damage = owner.BossStatus.GetAttackDamage();
+        owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(damage);
     }
     public override void Update()
     {
@@ -43,7 +46,7 @@ public class Phase1_Melee_State : State<SpiderPrime>
     void Expansion()
     {
         float elapsedTime = attackTime / expansionTIme;
-        spiderHead.localScale += Vector3.one * 0.2f;
+        spiderHead.localScale += Vector3.one * 0.9f;
         if (elapsedTime > 1f)
         {
             attackTime = 0f;

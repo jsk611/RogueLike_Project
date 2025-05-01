@@ -1,3 +1,4 @@
+using Autodesk.Fbx;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -26,6 +27,13 @@ public class FootIK : MonoBehaviour
     bool isMoving = false;
     public bool moveLock = false;
     public bool GetLegMoving => isMoving;
+
+    public enum FootState{
+        Default,
+        Die,
+        End
+    }
+    public FootState state;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +46,7 @@ public class FootIK : MonoBehaviour
         legIKManager = spiderPrime.LegIKManager;
 
         nextFootpos = transform.position;
+        state = FootState.Default;
     }
     private void Update()
     {
@@ -46,19 +55,22 @@ public class FootIK : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-        if (!moveLock)
+        if (moveLock) return;
+
+        else if (state == FootState.Default)
         {
             UpdateNextFootpos(out RaycastHit hit);
             transform.position = fixedFootpos;
+            if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
+                StartCoroutine(LegMove(fixedFootpos));
+            if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && oppositeLeg.GetLegMoving == false)
+                StartCoroutine(LegMove(fixedFootpos));
         }
-
-
-        if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
-            StartCoroutine(LegMove(fixedFootpos));
-        
-        if (Quaternion.Angle(fixedFootrot, nextFoot.rotation) >= 5f && !isMoving && oppositeLeg.GetLegMoving == false)
-            StartCoroutine(LegMove(fixedFootpos));
-        
+        else if (state == FootState.Die)
+        {
+            StartCoroutine(LegDie());
+            state = FootState.End;
+        }
     }
 
     void UpdateNextFootpos(out RaycastHit hit)
@@ -107,6 +119,24 @@ public class FootIK : MonoBehaviour
             yield return null;
         }
         isMoving = false;
+    }
+    IEnumerator LegDie()
+    {
+        LegHint.position = new Vector3(LegHint.position.x, -LegHint.position.y, LegHint.position.z);
+        float deathTime = 3f;
+        float dieTime = 0f;
+        float elapsedTime = dieTime / deathTime;
+
+        Vector3 endFoot = nextFoot.position / 2;
+        while(elapsedTime<=1f)
+        {
+            nextFoot.position = Vector3.Lerp(nextFoot.position,endFoot, elapsedTime);
+
+            transform.position = nextFoot.position + Vector3.up*30f;
+
+            dieTime += Time.deltaTime;
+            yield return null;
+        }
     }
     
 

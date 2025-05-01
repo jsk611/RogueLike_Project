@@ -46,11 +46,13 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
 
         subFsm = new StateMachine<SpiderPrime>(huntState);
 
+        
         subFsm.AddTransition(new Transition<SpiderPrime>(
             huntState,
             meleeAttackState,
             () => Vector3.Distance(owner.Player.position, owner.transform.position) <= meleeAttackRange
-            && owner.AbilityManager.GetAbilityRemainingCooldown(meleeAttack)==0)
+            && owner.AbilityManager.GetAbilityRemainingCooldown(meleeAttack)==0
+            && Quaternion.Angle(owner.transform.rotation,owner.Player.rotation)>=160f)
         );
         subFsm.AddTransition(new Transition<SpiderPrime>(
             huntState,
@@ -105,6 +107,7 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
     }
     public override void Update()
     {
+        Debug.Log(Quaternion.Angle(owner.transform.rotation, owner.Player.rotation));
         subFsm.Update();
         Debug.Log(subFsm.CurrentState);
     }

@@ -53,7 +53,17 @@ public class SpiderPrime : BossBase
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
         if (bossStatus.GetHealth() <= 0)
         {
-          //add dieState;
+            fsm.CurrentState.Interrupt();
+            var dieState = new Phase1_DIe_State(this);
+            fsm.AddTransition(new Transition<SpiderPrime>(
+                null,
+                dieState,
+                () => true
+            ));
+            foreach (FootIK foot in legIKManager.Foots)
+            {
+                foot.state = FootIK.FootState.Die;
+            }
         }
     }
     public void CoroutineRunner(IEnumerator coroutine)
