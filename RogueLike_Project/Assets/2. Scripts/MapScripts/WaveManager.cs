@@ -246,8 +246,8 @@ public class WaveManager : MonoBehaviour
     {
         isMissionEnd = false;
         //UI작업
-        UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
         if(waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
+        else UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
         //맵 불러오기
         tileManager.InitializeArray(currentStage);
         Vector2Int playerPos = playerPositionData.playerTilePosition;

@@ -234,8 +234,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_Text waveText;
     public void changeWaveText(string title)
     {
-        StartCoroutine(ProgressUI.instance.ChangeWaveProgress());
-        waveText.text = title;
+        StartCoroutine(ProgressUI.instance.ChangeWaveProgress(title));
+        
     }
 
     #endregion
