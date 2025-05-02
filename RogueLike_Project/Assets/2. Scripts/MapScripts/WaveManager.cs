@@ -401,7 +401,7 @@ public class WaveManager : MonoBehaviour
         //else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
         //else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
         //StartCoroutine(upgradeManager.UpgradeDisplay(UpgradeTier.common));
-        StartCoroutine(upgradeManager.DecisionTreeDisplay(1));
+        upgradeManager.BasicUpgradeCall();
 
         yield return null;
         while (upgradeManager.Upgrading)

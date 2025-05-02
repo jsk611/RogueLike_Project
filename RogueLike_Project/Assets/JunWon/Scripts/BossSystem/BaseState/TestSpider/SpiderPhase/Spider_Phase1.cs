@@ -107,7 +107,6 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
     }
     public override void Update()
     {
-        Debug.Log(Quaternion.Angle(owner.transform.rotation, owner.Player.rotation));
         subFsm.Update();
         Debug.Log(subFsm.CurrentState);
     }

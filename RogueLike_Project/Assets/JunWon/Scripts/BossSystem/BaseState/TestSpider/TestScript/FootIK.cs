@@ -8,6 +8,7 @@ using UnityEngine;
 public class FootIK : MonoBehaviour
 {
     SpiderPrime spiderPrime;
+    BossStatus spiderStatus;
     LegIKManager legIKManager;
     float bodySpeed;
     
@@ -37,20 +38,22 @@ public class FootIK : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        stepInterval = 1.5f;//LegIKManager.instance.StepInterval;
         fixedFootpos = transform.position;
         fixedFootrot = transform.rotation;
         spiderPrime = GetComponentInParent<SpiderPrime>();
+        spiderStatus = spiderPrime.GetComponent<BossStatus>();
         bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
         hintOffSet = Vector3.Distance(LegHint.position,fixedFootpos);// LegHint.position - fixedFootpos;
         legIKManager = spiderPrime.LegIKManager;
 
         nextFootpos = transform.position;
         state = FootState.Default;
+        stepInterval = spiderStatus.GetMovementSpeed() / 4f;
     }
     private void Update()
     {
         bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
+        stepInterval = spiderStatus.GetMovementSpeed() / 4f;
     }
     // Update is called once per frame
     void LateUpdate()
@@ -122,21 +125,23 @@ public class FootIK : MonoBehaviour
     }
     IEnumerator LegDie()
     {
+    //    yield return new WaitForSeconds(1);
         LegHint.position = new Vector3(LegHint.position.x, -LegHint.position.y, LegHint.position.z);
         float deathTime = 3f;
         float dieTime = 0f;
         float elapsedTime = dieTime / deathTime;
 
-        Vector3 endFoot = nextFoot.position / 2;
-        while(elapsedTime<=1f)
+        Vector3 endFoot = nextFoot.localPosition/ 3;
+        while (elapsedTime <= 1f)
         {
-            nextFoot.position = Vector3.Lerp(nextFoot.position,endFoot, elapsedTime);
+            elapsedTime = dieTime / deathTime;
+            nextFoot.localPosition = Vector3.Lerp(nextFoot.localPosition, endFoot, elapsedTime);
 
-            transform.position = nextFoot.position + Vector3.up*30f;
-
+            transform.localPosition = Vector3.Lerp(transform.localPosition,nextFoot.localPosition,elapsedTime);
             dieTime += Time.deltaTime;
             yield return null;
         }
+       // this.AddComponent<Rigidbody>();
     }
     
 

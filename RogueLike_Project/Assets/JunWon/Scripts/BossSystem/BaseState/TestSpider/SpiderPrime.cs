@@ -31,11 +31,7 @@ public class SpiderPrime : BossBase
     private void InitializeFSM()
     {
         var phase1 = new Spider_Phase1(this);
-
-
         fsm = new StateMachine<SpiderPrime>(phase1);
-
-
     }
     private void InitializeComponents()
     {
@@ -53,13 +49,15 @@ public class SpiderPrime : BossBase
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
         if (bossStatus.GetHealth() <= 0)
         {
-            fsm.CurrentState.Interrupt();
+           // fsm.CurrentState.Interrupt();
             var dieState = new Phase1_DIe_State(this);
-            fsm.AddTransition(new Transition<SpiderPrime>(
-                null,
+            Transition<SpiderPrime> AnytoDeath;
+            AnytoDeath = new Transition<SpiderPrime>(
+                fsm.CurrentState,
                 dieState,
                 () => true
-            ));
+            );
+            fsm.AddTransition( AnytoDeath );
             foreach (FootIK foot in legIKManager.Foots)
             {
                 foot.state = FootIK.FootState.Die;

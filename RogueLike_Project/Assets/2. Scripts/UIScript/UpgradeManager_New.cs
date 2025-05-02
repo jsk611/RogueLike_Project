@@ -84,6 +84,13 @@ public class UpgradeManager_New : MonoBehaviour
         decisionInputField.transform.gameObject.SetActive(true);
 
     }
+    public void BasicUpgradeCall()
+    {
+        terminal1.SetActive(false);
+        curUpgradeLevel = 1;
+        decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
+        StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+    }
     public IEnumerator UpgradeDisplay(UpgradeTier tier)
     {
         terminal2.SetActive(true);
@@ -163,7 +170,6 @@ public class UpgradeManager_New : MonoBehaviour
     {
         if (Enum.TryParse(input, true, out decisionTypeInput))
             DecisionTree();
-        
     }
     void OnInputEnd(string input)
     {
