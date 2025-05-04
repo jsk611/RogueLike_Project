@@ -65,6 +65,15 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("Effect")]
     [SerializeField] private GameObject binaryDeathEffectObject;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip monsterAttackSound;
+    [SerializeField] private AudioClip monsterHitSound;
+    [SerializeField] private AudioClip[] extraSounds;
+
+    public AudioClip AttackSound => monsterAttackSound;
+    public AudioClip HitSound => monsterHitSound;
+    public AudioClip[] ExtraSounds => extraSounds;
     #endregion
 
     #region Private Fields

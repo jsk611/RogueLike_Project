@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class TileManager : MonoBehaviour
@@ -66,6 +67,31 @@ public class TileManager : MonoBehaviour
                 tiles[i, j].isSetActive = false;
                 tiles[i,j].gameObject.SetActive(false);
 
+                //if (i-1>=0 && tiles[i - 1, j] != null) {
+                //    OffMeshLink link = tiles[i,j].jumpPlatForm.AddComponent<OffMeshLink>();
+                //    link.startTransform = tiles[i, j].jumpPlatForm;
+                //    link.endTransform = tiles[i - 1, j].jumpPlatForm;
+                //    link.costOverride = 1;
+                //}
+                //if (j-1>=0 && tiles[i,j-1] != null) {
+                //    OffMeshLink link = tiles[i, j].jumpPlatForm.AddComponent<OffMeshLink>();
+                //    link.startTransform = tiles[i, j].jumpPlatForm;
+                //    link.endTransform = tiles[i, j-1].jumpPlatForm;
+                //    link.costOverride = 1;
+                //}
+                //if (i+1 < mapSize && tiles[i+1,j] != null) {
+                //    OffMeshLink link = tiles[i, j].jumpPlatForm.AddComponent<OffMeshLink>();
+                //    link.startTransform = tiles[i, j].jumpPlatForm;
+                //    link.endTransform = tiles[i + 1, j].jumpPlatForm;
+                //    link.endTransform = tiles[i + 1, j].jumpPlatForm; link.costOverride = 1;
+
+                //}
+                //if (j+1 < mapSize && tiles[i,j+1] != null) {
+                //    OffMeshLink link = tiles[i, j].jumpPlatForm.AddComponent<OffMeshLink>();
+                //    link.startTransform = tiles[i, j].jumpPlatForm;
+                //    link.endTransform = tiles[i, j+1].jumpPlatForm;
+                //    link.endTransform = tiles[i + 1, j].jumpPlatForm; link.costOverride = 1;
+                //}
             }
         }
     }

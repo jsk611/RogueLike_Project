@@ -119,7 +119,7 @@ namespace InfimaGames.LowPolyShooterPack
             
                 //Default.
                 _ => default
-            }; ; ;
+            };
 
             #endregion
             //Play with some delay. Granted, if the delay is set to zero, this will just straight-up play!

@@ -17,6 +17,7 @@ public class Tile : MonoBehaviour
     [SerializeField] SpriteRenderer minimapTile;
     [SerializeField] GameObject spike;
     [SerializeField] GameObject warningLaser;
+    public Transform jumpPlatForm;
     public float maxHeight;
     bool isSpike = false;
     public bool canShockWave = true;
