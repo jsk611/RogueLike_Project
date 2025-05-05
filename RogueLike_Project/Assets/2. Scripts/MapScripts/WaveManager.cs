@@ -61,6 +61,7 @@ public class WaveManager : MonoBehaviour
         sp = startPosition.transform.position;
 
         StartCoroutine(StartMap());
+        InvokeRepeating("UpdateLighting", 0, 0.5f);
         //StartCoroutine(RunWaves()); //?????? GameManager?? ???? ??
     }
 
@@ -149,6 +150,10 @@ public class WaveManager : MonoBehaviour
             enemyMap[y,x] = (EnemyType)randNum;
         }
     }
+    void UpdateLighting()
+    {
+        DynamicGI.UpdateEnvironment();
+    }
 
     void ChangeSkyBox(float duration = 3f)
     {
@@ -160,6 +165,7 @@ public class WaveManager : MonoBehaviour
         defaultSkybox.DOColor(Horizon, "_HorizonColor", duration);
         defaultSkybox.DOFloat(horizonStrength, "_HorizonStrength", duration);
         defaultSkybox.DOFloat(horizonHeight, "_HorizonHeight", duration);
+
     }
 
     IEnumerator RunStage()
