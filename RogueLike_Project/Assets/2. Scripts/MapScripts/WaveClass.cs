@@ -49,9 +49,9 @@ public class MissionInfo
     public float time;
 
     //∞≈¡°
-    public Vector2Data strongholdPoint;
-    public float strongholdHeight;
-    public Vector2Data strongholdSize;
+    public Vector2Data footholdPoint;
+    public float footholdHeight;
+    public Vector2Data footholdSize;
    
 }
 

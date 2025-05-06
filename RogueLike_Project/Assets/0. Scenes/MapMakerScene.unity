@@ -6142,6 +6142,7 @@ MonoBehaviour:
   - 2_4
   - 2_5
   - 2_6
+  - 2_7
   - 3_1
   - MaintenanceStage
   tile: {fileID: 7438511172107195512, guid: 99a060d294057034f9b88ecfb2608de7, type: 3}

@@ -173,6 +173,7 @@ public class UIManager : MonoBehaviour
     int maxEnemyCount;
     bool isKillingMission = false;
     bool isSurviveMission = false;
+    bool isCaptureMission = false;
     public float time;
     public void KillingMissionStart(bool isBoss = false)
     {
@@ -220,6 +221,19 @@ public class UIManager : MonoBehaviour
         time = 0;
         ProgressText.text = (Mathf.Floor(time * 10f) / 10f).ToString();
         ProgressText.color = Color.green;
+    }
+    public void CaptureMissionStart()
+    {
+        isCaptureMission = true;
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionStart");
+        MissionText.text = "<b><color=orange>목표: </color></b> 거점 점령";
+    }
+    public void CaptureMissionUpdate(float progress)
+    {
+        ProgressText.text = $"{(int)(progress*100)}%";
+        if(progress >= 1) ProgressText.color = Color.green;
+        else ProgressText.color = Color.white;
     }
     public void MissionComplete()
     {

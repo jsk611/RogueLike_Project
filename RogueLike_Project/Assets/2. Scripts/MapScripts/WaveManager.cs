@@ -24,6 +24,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] PlayerPositionData playerPositionData;
     [SerializeField] Material[] skyboxMaterials;
     [SerializeField] Material defaultSkybox;
+    [SerializeField] GameObject footHold;
     bool nextWaveTrigger = false;
     public bool NextWaveTrigger
     {
@@ -185,6 +186,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
+                //LoadWaveData($"{currentStage}-{5}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -271,6 +273,7 @@ public class WaveManager : MonoBehaviour
             case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
             case "Boss": StartCoroutine(KillingMission(waveData.mission.count, true)); break;
             case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
+            case "Capture": StartCoroutine(CaptureMission(waveData.mission.time, basePos)); break;
         }
 
         //¸ÖÆ¼ ¸ÊÀÏ½Ã ¸Ê º¯°æ
@@ -361,6 +364,23 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isMissionEnd = true;
+    }
+    IEnumerator CaptureMission(float time, Vector2Int basePos)
+    {
+        MissionInfo info = waveData.mission;
+        UIManager.instance.CaptureMissionStart();
+        Vector2Int pos = basePos + new Vector2Int(info.footholdPoint.x, info.footholdPoint.y);
+        Vector3 realPos = tileManager.GetTiles[pos.y, pos.x].transform.position;
+        Vector2 size = new Vector2(info.footholdSize.x, info.footholdSize.y);
+        FootHold fh = Instantiate(footHold, new Vector3(realPos.x, info.footholdHeight, realPos.z), quaternion.identity).GetComponent<FootHold>();
+        fh.gameObject.transform.localScale = new Vector3(size.x, 0.5f, size.y);
+        fh.maxTime = time;
+        while (fh.progress < 1)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        isMissionEnd = true;
+        Destroy(fh.gameObject, 2f);
     }
     //IEnumerator Stage1Boss()
     //{

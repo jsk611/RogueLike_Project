@@ -261,6 +261,7 @@ public abstract class MonsterBase : MonoBehaviour
         dieTimer += Time.deltaTime;
         if (dieTimer >= dieDuration)
         {
+            transform.position = new Vector3(-100, -100, -100);
             HandleDeath();
         }
     }
@@ -372,7 +373,8 @@ public abstract class MonsterBase : MonoBehaviour
             if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
             //enemyCountData.enemyCount--;
         }
-        Destroy(gameObject);
+
+        Destroy(gameObject, 0.1f);
     }
 
     private void SpawnItem()

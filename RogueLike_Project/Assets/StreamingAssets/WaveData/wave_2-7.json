@@ -1,0 +1,92 @@
+{
+  "waveIndex": 5,
+  "isMultiMap": false,
+  "maps": [
+    {
+      "file": "2_4",
+      "duration": 60
+    }
+  ],
+  "isRandomEnemy": false,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 12,
+      "spawnPoints": [
+        {
+          "x": 11,
+          "y": 3
+        },
+        {
+          "x": 31,
+          "y": 11
+        }
+      ],
+      "spawnDelay": 16
+    },
+    {
+      "type": 102,
+      "count": 12,
+      "spawnPoints": [
+        {
+          "x": 23,
+          "y": 31
+        },
+        {
+          "x": 3,
+          "y": 23
+        }
+      ],
+      "spawnDelay": 20
+    },
+    {
+      "type": 111,
+      "count": 12,
+      "spawnPoints": [
+        {
+          "x": 31,
+          "y": 23
+        },
+        {
+          "x": 23,
+          "y": 3
+        }
+      ],
+      "spawnDelay": 16
+    },
+    {
+      "type": 212,
+      "count": 16,
+      "spawnPoints": [
+        {
+          "x": 11,
+          "y": 31
+        },
+        {
+          "x": 3,
+          "y": 11
+        }
+      ],
+      "spawnDelay": 12
+    }
+
+  ],
+  "mission": {
+    "type": "Capture",
+    "time": 12,
+    "footholdPoint": {
+      "x": 17,
+      "y": 17
+    },
+    "footholdHeight": 4.5,
+    "footholdSize": {
+      "x": 15,
+      "y": 15
+    }
+  },
+  
+  "isRandomEvent": false,
+  "events": [
+    
+  ]
+}
