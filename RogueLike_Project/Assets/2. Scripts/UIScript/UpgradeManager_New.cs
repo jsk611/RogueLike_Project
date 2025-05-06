@@ -26,6 +26,10 @@ public class UpgradeManager_New : MonoBehaviour
     [SerializeField] GameObject upgradeProcessing;
     [SerializeField] GameObject upgradeSuccess;
 
+    [SerializeField] AudioClip upgradeSuccessSound;
+    private IAudioManagerService audioManager;
+    private InfimaGames.LowPolyShooterPack.AudioSettings audioSetting;
+
     public UpgradeTier upgradeTier;
     private float curUpgradeLevel;
 
@@ -42,6 +46,8 @@ public class UpgradeManager_New : MonoBehaviour
 
     public bool Upgrading => upgrading;
 
+
+
     private void Start()
     {
      //   StartCoroutine(UpgradeDisplay());
@@ -50,6 +56,9 @@ public class UpgradeManager_New : MonoBehaviour
         decisionInputField.onEndEdit.AddListener(DecisionInputEnd);
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
         playerStatus = player.gameObject.GetComponent<PlayerStatus>();
+
+        audioManager = ServiceLocator.Current.Get<IAudioManagerService>();
+        audioSetting = new InfimaGames.LowPolyShooterPack.AudioSettings(1.0f, 0.0f, true);
 
         upgradeActions = new Dictionary<UpgradeTier, Action>
         {
@@ -398,10 +407,10 @@ public class UpgradeManager_New : MonoBehaviour
         }
         yield return new WaitForSeconds(0.2f);
         upgradeActions[upgradeTier].Invoke();
+        audioManager.PlayOneShotDelayed(upgradeSuccessSound,audioSetting,0.0f);
         upgradeSuccess.SetActive(true);
         yield return new WaitForSeconds(3f);
         upgradeRootUI.SetActive(false);
-
         player.SetCursorState(true);
         upgrading = false;
     }

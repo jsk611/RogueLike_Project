@@ -6324,6 +6324,9 @@ MonoBehaviour:
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}
+  monsterAttackSound: {fileID: 8300000, guid: 3becec1909f194046945d85ac1077772, type: 3}
+  monsterHitSound: {fileID: 0}
+  extraSounds: []
   state: 0
 --- !u!114 &-2712703648059829631
 MonoBehaviour:
