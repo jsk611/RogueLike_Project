@@ -350,6 +350,10 @@ public abstract class MonsterBase : MonoBehaviour
             GameObject effectInstance = Instantiate(binaryDeathEffectObject, transform.position, Quaternion.identity);
             BinaryDeathEffect effect = effectInstance.GetComponent<BinaryDeathEffect>();
             effect.TriggerDeathEffect(transform.position);
+
+            DigitalStripeDissolveEffect.ApplyDeathEffect(this);
+
+
         }
     }
 
