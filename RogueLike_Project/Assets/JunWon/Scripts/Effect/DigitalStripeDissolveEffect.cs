@@ -11,8 +11,8 @@ public class DigitalStripeDissolveEffect : MonoBehaviour
     [Header("스트라이프 효과 설정")]
     [SerializeField] private float stripeWidthStart = 10f;
     [SerializeField] private float stripeWidthEnd = 30f;
-    [SerializeField] private float stripeSpeedStart = 1f;
-    [SerializeField] private float stripeSpeedEnd = 3f;
+    [SerializeField] private float stripeSpeedStart = 2f;
+    [SerializeField] private float stripeSpeedEnd = 4f;
 
     [Header("글리치 효과 설정")]
     [SerializeField] private float glitchDelayTime = 0.3f; // 글리치 효과 시작 지연 시간

@@ -96,14 +96,14 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DissolveAmount: 0.462
+    - _DissolveAmount: 0.932
     - _DissolveScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EdgeWidth: 0.1
+    - _EdgeWidth: 0.19
     - _EmissionStrength: 1
     - _EnvironmentReflections: 1
-    - _GlitchIntensity: 0.392
+    - _GlitchIntensity: 0.046
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
@@ -117,9 +117,9 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _StripeIntensity: 0.5
-    - _StripeSpeed: 3
-    - _StripeWidth: 30
+    - _StripeIntensity: 0.091
+    - _StripeSpeed: 2.8
+    - _StripeWidth: 15
     - _Surface: 0
     - _VoxelSize: 0.01
     - _WorkflowMode: 1
