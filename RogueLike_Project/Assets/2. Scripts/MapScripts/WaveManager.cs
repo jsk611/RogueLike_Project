@@ -25,6 +25,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] Material[] skyboxMaterials;
     [SerializeField] Material defaultSkybox;
     [SerializeField] GameObject footHold;
+    [SerializeField] GameObject item;
     bool nextWaveTrigger = false;
     public bool NextWaveTrigger
     {
@@ -42,9 +43,6 @@ public class WaveManager : MonoBehaviour
     Vector3 sp;
 
     [Header("Item")]
-    Queue<int> earnedCommonItems = new Queue<int>();
-    Queue<int> earnedRareItems = new Queue<int>();
-    Queue<int> earnedEpicItems = new Queue<int>();
     [SerializeField] GameObject upgradeUI;
 
     WaveData waveData;
@@ -186,7 +184,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-{5}");
+                LoadWaveData($"{currentStage}-{6}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -274,6 +272,7 @@ public class WaveManager : MonoBehaviour
             case "Boss": StartCoroutine(KillingMission(waveData.mission.count, true)); break;
             case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
             case "Capture": StartCoroutine(CaptureMission(waveData.mission.time, basePos)); break;
+            case "Item": StartCoroutine(ItemMission(basePos)); break;
         }
 
         //¸ÖÆ¼ ¸ÊÀÏ½Ã ¸Ê º¯°æ
@@ -382,6 +381,32 @@ public class WaveManager : MonoBehaviour
         isMissionEnd = true;
         Destroy(fh.gameObject, 2f);
     }
+    IEnumerator ItemMission(Vector2Int basePos, float time = 6f)
+    {
+        MissionInfo info = waveData.mission;
+        UIManager.instance.ItemMissionStart(info.count);
+        Stack<Item> itemStk = new Stack<Item>();
+
+        foreach(var posData in info.itemPoints)
+        {
+            Vector2Int pos = basePos + new Vector2Int(posData.x, posData.y);
+            Vector3 realPos = tileManager.GetTiles[pos.y, pos.x].transform.position + new Vector3(0, tileManager.GetTiles[pos.y, pos.x].transform.localScale.y /2 + 1.5f, 0);
+            Item it = Instantiate(item,realPos, quaternion.identity).GetComponent<Item>();
+            it.maxTime = time;
+            itemStk.Push(it);
+        }
+
+        while (UIManager.instance.itemCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        isMissionEnd = true;
+        int c = itemStk.Count;
+        for(int i=0; i< c; i++)
+        {
+            Destroy(itemStk.Pop().gameObject, 2f);
+        }
+    }
     //IEnumerator Stage1Boss()
     //{
     //    Debug.Log("Stage1_Wave");
@@ -414,11 +439,11 @@ public class WaveManager : MonoBehaviour
         StopCoroutine("HoleCrisis");
         StopCoroutine("SpikeCrisis");
 
-        Item[] items = FindObjectsOfType<Item>();
-        foreach(Item item in items) { 
-            item.isChasing = true;
-            item.velocity *= 2;
-        }
+        //Item[] items = FindObjectsOfType<Item>();
+        //foreach(Item item in items) { 
+        //    item.isChasing = true;
+        //    item.velocity *= 2;
+        //}
         tileManager.InitializeArray(currentStage,4);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
@@ -434,9 +459,7 @@ public class WaveManager : MonoBehaviour
         {
             yield return null;
         }
-        earnedCommonItems = new Queue<int>();
-        earnedRareItems = new Queue<int>();
-        earnedEpicItems = new Queue<int>();
+
         yield return null;
     }
 
@@ -475,13 +498,5 @@ public class WaveManager : MonoBehaviour
         }
     }
     #endregion
-    public void AddItem(int star)
-    {
-        if (star == 1)
-            earnedCommonItems.Enqueue(star);
-        else if (star == 2)
-            earnedRareItems.Enqueue(star);
-        else if (star == 3)
-            earnedEpicItems.Enqueue(star);
-    }
+    
 }

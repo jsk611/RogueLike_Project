@@ -42,17 +42,19 @@ public class MissionInfo
 {
     public string type;
 
-    //처치
+    //처치or아이템
     public int count;
 
-    //생존or거점점령시간
+    //생존or거점점령시간or아이템획득소요시간
     public float time;
 
     //거점
     public Vector2Data footholdPoint;
     public float footholdHeight;
     public Vector2Data footholdSize;
-   
+
+    //아이템
+    public List<Vector2Data> itemPoints;
 }
 
 [Serializable]

@@ -39,7 +39,7 @@ public class FootHold : MonoBehaviour
         }
         else if(isEnemyHolding)
         {
-            time = time > 0 ? time - Time.deltaTime/2 : 0;
+            time = time > 0 ? time - Time.deltaTime/4 : 0;
             material.SetColor("_Color", Color.red);
         }
         progress = time / maxTime;

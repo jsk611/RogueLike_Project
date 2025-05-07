@@ -1,59 +1,101 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] int star = 1;
+    [SerializeField] Sprite[] progressImages;
+    [SerializeField] Material[] beaconMaterials;
+    [SerializeField] MeshRenderer beacon;
+    [SerializeField] SpriteRenderer imageRenderer;
 
-    bool _isChasing = false;
-    public bool isChasing
-    {
-        get { return _isChasing; }
-        set 
-        { 
-            _isChasing = value;
-            rb.useGravity = !value;
-            physicsCol.isTrigger = value;
-        }
-    }
-    Transform playerPos;
-    Rigidbody rb;
-    public float velocity;
-    [SerializeField] SphereCollider physicsCol;
+    public float maxTime = 6f;
+    public float time;
+    public bool isPlayerHolding;
+    public bool isEnemyHolding;
+    SpriteRenderer spriteRenderer;
+    HashSet<GameObject> enemiesInZone = new HashSet<GameObject>();
+
+    float progress;
+    public bool isDone;
+
     private void Start()
     {
-        playerPos = GameObject.Find("Player").transform;
-        rb = GetComponent<Rigidbody>();
+        time = 0;
+        imageRenderer.sprite = progressImages[0];
+        isDone = false;
+        beacon.material = beaconMaterials[0];
     }
     private void Update()
     {
-        if (!isChasing)
+        if (enemiesInZone.Count == 0) isEnemyHolding = false;
+        else isEnemyHolding = true;
+
+        if (isDone) return;
+        if (time >= maxTime)
         {
-            float distance = Vector3.Distance(transform.position, playerPos.position);
-            if (distance < 5f || distance > 300f)
-            {
-                isChasing = true;
-            }
+            imageRenderer.color = Color.green;
+            imageRenderer.sprite = progressImages[5];
+            isDone = true;
+            beacon.material = beaconMaterials[1];
+            UIManager.instance.ItemMissionUpdate();
+            return;
+        }
+        if (!(isPlayerHolding ^ isEnemyHolding))
+        {
+            imageRenderer.color = Color.yellow;
+        }
+        else if (isPlayerHolding)
+        {
+            time = time < maxTime ? time + Time.deltaTime : maxTime;
+            imageRenderer.color = Color.blue;
+        }
+        else if (isEnemyHolding)
+        {
+            time = time > 0 ? time - Time.deltaTime / 2 : 0;
+            imageRenderer.color = Color.red;
         }
 
-        if (isChasing)
+        progress = time / maxTime;
+        if(progress > 0.8f)
         {
-
-            Vector3 dir = (playerPos.position - transform.position).normalized; 
-            rb.velocity = dir * velocity;
-            if(velocity < 24) velocity *= 1.05f;
+            imageRenderer.sprite = progressImages[4];
+        }
+        else if (progress > 0.6f)
+        {
+            imageRenderer.sprite = progressImages[3];
+        }
+        else if (progress > 0.4f)
+        {
+            imageRenderer.sprite = progressImages[2];
+        }
+        else if (progress > 0.2f)
+        {
+            imageRenderer.sprite = progressImages[1];
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.tag == "Player")
         {
-            WaveManager waveManager = FindObjectOfType<WaveManager>();
-            waveManager.AddItem(star);
-
-            Destroy(gameObject);
+            isPlayerHolding = true;
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Creature"))
+        {
+            enemiesInZone.Add(other.gameObject);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            isPlayerHolding = false;
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Creature"))
+        {
+            enemiesInZone.Remove(other.gameObject);
         }
     }
 }

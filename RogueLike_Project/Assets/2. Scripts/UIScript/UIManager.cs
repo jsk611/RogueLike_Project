@@ -174,6 +174,7 @@ public class UIManager : MonoBehaviour
     bool isKillingMission = false;
     bool isSurviveMission = false;
     bool isCaptureMission = false;
+    bool isItemMission = false;
     public float time;
     public void KillingMissionStart(bool isBoss = false)
     {
@@ -235,10 +236,28 @@ public class UIManager : MonoBehaviour
         if(progress >= 1) ProgressText.color = Color.green;
         else ProgressText.color = Color.white;
     }
+    public int itemCount;
+    public void ItemMissionStart(int cnt)
+    {
+        itemCount = cnt;    
+        isItemMission = true;
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionStart");
+        MissionText.text = "<b><color=orange>목표: </color></b> 에너지 전달";
+        ProgressText.color = Color.white;
+        ProgressText.text = $"{itemCount}회 남음";
+    }
+    public void ItemMissionUpdate()
+    {
+        ProgressText.text = $"{--itemCount}회 남음";
+        if (itemCount == 0) ProgressText.color = Color.green;
+        else ProgressText.color = Color.white;
+    }
     public void MissionComplete()
     {
         isKillingMission = false;
         isSurviveMission = false;
+
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionEnd");
     }
