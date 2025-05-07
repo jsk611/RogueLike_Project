@@ -49994,12 +49994,4 @@ AnimationClip:
     flags: 0
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
-  m_Events:
-  - time: 0
-    functionName: StartDeathSequence
-    data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 2ccd7f68ecfcdbc49b321e62224d46d1,
-      type: 3}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
+  m_Events: []
