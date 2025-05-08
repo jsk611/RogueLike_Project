@@ -7,6 +7,7 @@ public class EnemyTeleportManager : MonoBehaviour
 {
     public static EnemyTeleportManager instance;
 
+    [SerializeField] TileManager tileManager;
     [SerializeField] PlayerPositionData playerPositionData;
     [SerializeField] GameObject Beam;
     [SerializeField] float teleportCoolTime = 5f;
@@ -21,20 +22,27 @@ public class EnemyTeleportManager : MonoBehaviour
         monsterStack = new Stack<MonsterBase>();
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
         elapsedTime = 0f;
+        StartCoroutine(TeleportEnemy());
     }
-    private void Update()
+ 
+    IEnumerator TeleportEnemy()
     {
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime > teleportCoolTime && monsterStack.Peek() != null) {
-            elapsedTime = 0f;
-            MonsterBase monster = monsterStack.Pop();
-            Instantiate(Beam);
+        while (true)
+        {
+            if(monsterStack.Peek() != null)
+            {
+                MonsterBase monster = monsterStack.Pop();
 
-            Vector3 newPosition = new Vector3(playerPositionData.playerTilePosition.x, player.transform.position.y, playerPositionData.playerTilePosition.y);
-            monster.transform.position = newPosition;
+                Vector3 newPosition = tileManager.GetTiles[playerPositionData.playerTilePosition.x, playerPositionData.playerTilePosition.y].transform.position;
+                Destroy(Instantiate(Beam, newPosition, Quaternion.identity), 2f);
+                yield return new WaitForSeconds(2f);
+                monster.transform.position = newPosition;
+            }
+            
+            yield return new WaitForSeconds(teleportCoolTime -2f);
         }
+        
     }
-
     public void GetEnemyToTeleport(MonsterBase monster)
     {
         monsterStack.Push(monster);

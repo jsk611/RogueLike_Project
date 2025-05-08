@@ -163,6 +163,8 @@ public abstract class MonsterBase : MonoBehaviour
         // ???? ???????? ???? ????
         if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
         ExecuteStateAction();
+
+
     }
 
     private void LateUpdate()
