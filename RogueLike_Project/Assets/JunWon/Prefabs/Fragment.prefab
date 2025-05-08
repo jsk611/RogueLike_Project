@@ -6226,9 +6226,10 @@ MonoBehaviour:
   attackRange: 20
   attackCooldown: 3
   splashFx: {fileID: 0}
-  spawnEffect: {fileID: 0}
-  startMaterial: {fileID: 0}
-  baseMaterial: {fileID: 0}
+  spawnEffect: {fileID: 6074852470660675165}
+  startMaterial: {fileID: -876546973899608171, guid: ba657210dc79a2548921bae956e9439f,
+    type: 3}
+  baseMaterial: {fileID: 2100000, guid: f2c6b2587207b454ab0a92d534b15098, type: 2}
   height: 5
   summonedMonster: 0
   dropDNA: 1
@@ -6243,7 +6244,12 @@ MonoBehaviour:
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
-  enemyCountData: {fileID: 0}
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
+  binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
+    type: 3}
+  monsterAttackSound: {fileID: 0}
+  monsterHitSound: {fileID: 0}
+  extraSounds: []
   state: 0
   fireRate: 1.5
   isHitScan: 0
@@ -6975,6 +6981,12 @@ PrefabInstance:
 --- !u!4 &1756246489687191823 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3264435620089175655}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6074852470660675165 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
     type: 3}
   m_PrefabInstance: {fileID: 3264435620089175655}
   m_PrefabAsset: {fileID: 0}

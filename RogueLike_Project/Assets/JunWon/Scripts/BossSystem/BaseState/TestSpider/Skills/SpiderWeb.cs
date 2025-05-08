@@ -12,7 +12,7 @@ public class SpiderWeb : MonoBehaviour
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>(); 
         if (player.currentCC != StatusBehaviour.CC.entangled && other.gameObject == player.gameObject)
         {
-            float speed = player.GetMovementSpeed() / 2;
+            float speed = player.GetMovementSpeed() / 3;
             player.CoroutineEngine(player.SlowCoroutine(speed,slowTime));
         }
     }

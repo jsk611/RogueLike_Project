@@ -12,6 +12,7 @@ public class UpgradeTrigger : MonoBehaviour
 
     UpgradeManager_New UpgradeManager;
     int canUpgrade;
+    bool isUpgrading;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +22,7 @@ public class UpgradeTrigger : MonoBehaviour
     private void OnEnable()
     {
         canUpgrade = 2;
+        isUpgrading = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
     }
@@ -32,7 +34,7 @@ public class UpgradeTrigger : MonoBehaviour
             helpUI.text = uiText + canUpgrade +" left";
             helpUI.enabled = true;
             helpUI.color = Color.cyan;
-            if (canUpgrade > 0 && Input.GetKeyUp(KeyCode.F))
+            if (!UpgradeManager.upgrading && canUpgrade > 0 && Input.GetKeyUp(KeyCode.F))
             {
                 StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
                 canUpgrade--;

@@ -542,9 +542,9 @@ MonoBehaviour:
   bossStatus: {fileID: 4997459721449239894}
   playerRigidBody: {fileID: 0}
   splashFx: {fileID: 0}
-  spawnEffect: {fileID: 0}
-  startMaterial: {fileID: 0}
-  baseMaterial: {fileID: 0}
+  spawnEffect: {fileID: 8740832882846417876}
+  startMaterial: {fileID: 2100000, guid: e7cd0fd4d3c4b1247945089d4b74f5a3, type: 2}
+  baseMaterial: {fileID: 2100000, guid: f2c6b2587207b454ab0a92d534b15098, type: 2}
   items: []
   itemProbability: 320000001900000000000000
   height: 5
@@ -552,7 +552,7 @@ MonoBehaviour:
   HPBar: {fileID: 3798410641381620603}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
-  enemyCountData: {fileID: 0}
+  enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   abilityManager: {fileID: 3249761337790021742}
   firePoint: {fileID: 7494765328391050869}
   explosionPoint: {fileID: 6302444479095177544}
@@ -6709,6 +6709,12 @@ PrefabInstance:
 --- !u!4 &3845207599711224966 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3824376345288830824, guid: d00c08351fab3b940bc257c13bc4f68e,
+    type: 3}
+  m_PrefabInstance: {fileID: 21957205870996462}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8740832882846417876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8720003262661404730, guid: d00c08351fab3b940bc257c13bc4f68e,
     type: 3}
   m_PrefabInstance: {fileID: 21957205870996462}
   m_PrefabAsset: {fileID: 0}

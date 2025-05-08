@@ -37,7 +37,7 @@ public class UpgradeManager_New : MonoBehaviour
     public List<int> upgradeType;
 
     bool isWaitingInput = false;
-    bool upgrading = false;
+    public bool upgrading = false;
     CharacterBehaviour player;
     PlayerStatus playerStatus;
 
@@ -254,7 +254,7 @@ public class UpgradeManager_New : MonoBehaviour
                         //업글 적용
                         Debug.Log("Heath");
                         playerStatus.IncreaseMaxHealth(10);
-                        playerStatus.IncreaseHealth(10);
+                        playerStatus.IncreaseHealth(15);
                         break;
                     case UTILUGType.MoveSpeed:
                         //업글 적용
@@ -270,7 +270,7 @@ public class UpgradeManager_New : MonoBehaviour
                     case COINUGType.CoinAcquisitonRate:
                         //업글 적용
                         Debug.Log("CoinAcquisitonRate");
-                        playerStatus.IncreaseCoin(1);
+                        playerStatus.IncreaseCoin(100);
                         break;
                     case COINUGType.PermanentCoinAcquisitionRate:
                         //업글 적용

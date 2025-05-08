@@ -217,7 +217,7 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent.isStopped = false;
         nmAgent.speed = chaseSpeed;
         nmAgent.SetDestination(target.position);
-      
+        
 
         if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {

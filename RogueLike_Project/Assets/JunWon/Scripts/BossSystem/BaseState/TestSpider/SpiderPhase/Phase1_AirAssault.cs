@@ -66,7 +66,7 @@ public class Phase1_AirAssault : State<SpiderPrime>
                         playerStatus.DecreaseHealth(bossStatus.GetAttackDamage());
                         if (playerStatus.currentCC != StatusBehaviour.CC.entangled)
                         {
-                            float speed = playerStatus.GetMovementSpeed() / 2;
+                            float speed = playerStatus.GetMovementSpeed() / 3;
                             playerStatus.CoroutineEngine(playerStatus.SlowCoroutine(speed, 3));
                         }
                     }

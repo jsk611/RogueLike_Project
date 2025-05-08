@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: SpiderRangeAttack
   abilityDescription: spider bullet shooting
-  cooldown: 1000
+  cooldown: 5
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0
-  damage: 10
+  damage: 4
   range: 20
   buffType: 0
   buffAmount: 0
