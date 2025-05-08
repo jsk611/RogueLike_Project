@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class TurretMonster : RangedMonster
 {
-
     protected override void UpdateChase()
     {
         if (target == null) {
@@ -21,11 +20,9 @@ public class TurretMonster : RangedMonster
     protected override void UpdateHit()
     {
         if (anim.GetFloat("Activated") == 1)
-            ChangeState(State.AIM);
+            ChangeState(State.ATTACK);
         else if (anim.GetFloat("Activated") == 0)
             ChangeState(State.CHASE);
-        
-        
     }
     public void SetActivated(int value) 
     {

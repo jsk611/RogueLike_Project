@@ -739,7 +739,7 @@ MonoBehaviour:
   height: 3
   summonedMonster: 0
   dropDNA: 1
-  dropItem: 1
+  dropItem: 0
   items:
   - {fileID: 8021822854330241990, guid: 982b8077848b5ff4e88bc60f5a86e4d4, type: 3}
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
@@ -756,6 +756,9 @@ MonoBehaviour:
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}
+  monsterAttackSound: {fileID: 0}
+  monsterHitSound: {fileID: 0}
+  extraSounds: []
   state: 0
   fireRate: 1
   isHitScan: 0
