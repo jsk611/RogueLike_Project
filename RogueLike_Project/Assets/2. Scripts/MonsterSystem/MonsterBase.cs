@@ -59,6 +59,8 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private float hitDuration = 0.8f;
     [SerializeField] private float dieDuration = 1f;
     [SerializeField] private float transitionCooldown = 0.3f;
+    [SerializeField] private float teleportCooldown = 4f;
+    private float teleportTimer = 0f;
 
     [Header("External Data")]
     [SerializeField] private EnemyCountData enemyCountData;
@@ -210,19 +212,28 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void UpdateChase()
     {
+        teleportTimer += Time.deltaTime;
+        Debug.Log(target.position.y - transform.position.y);
         if (target == null)
         {
             ChangeState(State.IDLE);
             return;
+        }
+        if(teleportTimer >= teleportCooldown && target.position.y-transform.position.y >= 4f)
+        {
+            Debug.Log("enemy teleport stacked");
+            EnemyTeleportManager.instance.GetEnemyToTeleport(this);
+            teleportTimer = 0f;
         }
 
         nmAgent.isStopped = false;
         nmAgent.speed = chaseSpeed;
         nmAgent.SetDestination(target.position);
         
-
+        
         if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {
+            teleportTimer = 0f;
             ChangeState(State.ATTACK);
         }
     }
