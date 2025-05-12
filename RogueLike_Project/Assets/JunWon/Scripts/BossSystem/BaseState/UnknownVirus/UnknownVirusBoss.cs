@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering;
@@ -33,8 +35,8 @@ public class UnknownVirusBoss : BossBase
     [Range(0, 1)][SerializeField] private float formChangeChance = 0.3f;
     #endregion
 
-
-
+    #region Status & State
+    [Header("State")]
     // FSM & States
     private StateMachine<UnknownVirusBoss> fsm;
     private IntroState_UnknownVirus introState;
@@ -45,6 +47,7 @@ public class UnknownVirusBoss : BossBase
     private TrojanCombatState_UnknownVirus trojanCombatState;
     private RansomwareCombatState_UnknownVirus ransomwareCombatState;
     private DefeatedState_UnknownVirus deadState;
+    #endregion
 
     #region Animation Event Handlers
     // 기본 원거리 공격 애니메이션 이벤트
@@ -88,9 +91,9 @@ public class UnknownVirusBoss : BossBase
 
     private void Start()
     {
-        InitializeComponent();
-        InitializeStates();
-        InitializeFSM();
+        InitializeComponent(); Debug.Log("→ Component 초기화 완료");
+        InitializeStates(); Debug.Log("→ State 초기화 완료");
+        InitializeFSM(); Debug.Log("→ FSM 초기화 완료");
     }
 
     private void Update()
@@ -104,14 +107,16 @@ public class UnknownVirusBoss : BossBase
         target = GameObject.FindWithTag("Player").transform;
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
-        bossStatus = GetComponent<BossStatus>();
+        bossStatus.SetMaxHealth(200);
+        bossStatus.SetHealth(200f);
+        fov = GetComponent<FieldOfView>();
         // 원본 모델은 이 스크립트가 붙은 오브젝트 자체
     }
 
     private void InitializeStates()
     {
         introState = new IntroState_UnknownVirus(this);
-        // basicState = new BasicCombatState_UnknownVirus(this);
+        basicState = new BasicCombatState_UnknownVirus(this);
         mapAttackState = new MapAttackState_UnknownVirus(this);
         transformState = new TransformState_UnknownVirus(this);
         wormCombatState = new WormCombatState_UnknownVirus(this);
@@ -212,9 +217,8 @@ public class UnknownVirusBoss : BossBase
             () => currentActiveBoss == null));
 
         // 어느 상태에서나 Dead
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            null, s.deadState,
-            () => bossStatus.GetHealth() <= 0f));
+        List<State<UnknownVirusBoss>> exceptStates = new List<State<UnknownVirusBoss>> { introState };
+        fsm.AddGlobalTransition(deadState, () => bossStatus.GetHealth() <= 0, exceptStates);
     }
 
     #region BasicCombat Helpers
@@ -317,17 +321,7 @@ public class UnknownVirusBoss : BossBase
             ).GetComponent<UIDamage>();
             popup.damage = damage;
         }
-
-        // 3-3) 사망 처리: health ≤ 0일 때 DefeatedState로 전이
-        if (bossStatus.GetHealth() <= 0f)
-        {
-            // 즉시 Dead 상태로 전환하도록 Transition 추가
-            fsm.AddTransition(new Transition<UnknownVirusBoss>(
-                null,
-                deadState,
-                () => true
-            ));
-        }
+       
     }
 
 }
