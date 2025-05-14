@@ -76,6 +76,7 @@ public abstract class MonsterBase : MonoBehaviour
     public AudioClip AttackSound => monsterAttackSound;
     public AudioClip HitSound => monsterHitSound;
     public AudioClip[] ExtraSounds => extraSounds;
+    public NavMeshAgent NmAgent => nmAgent;
     #endregion
 
     #region Private Fields
@@ -213,7 +214,6 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void UpdateChase()
     {
         teleportTimer += Time.deltaTime;
-        Debug.Log(target.position.y - transform.position.y);
         if (target == null)
         {
             ChangeState(State.IDLE);
