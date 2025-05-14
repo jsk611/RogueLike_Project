@@ -16,8 +16,8 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
-    int currentStage;
-    int currentWave;
+    public int currentStage;
+    public int currentWave;
 
     [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
