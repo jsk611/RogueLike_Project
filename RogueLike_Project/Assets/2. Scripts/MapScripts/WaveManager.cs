@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 using Unity.Mathematics;
 using DG.Tweening;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class WaveManager : MonoBehaviour
 {
@@ -16,8 +17,8 @@ public class WaveManager : MonoBehaviour
     EnemySpawnLogic enemySpawnLogic;
     EnemyType[,] enemyMap;
     int mapSize;
-    int currentStage;
-    int currentWave;
+    public int currentStage;
+    public int currentWave;
 
     [Header("Data")]
     [SerializeField] EnemyCountData enemyCountData;
@@ -114,41 +115,6 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    void MakeRandomEnemyMap(int num)
-    {
-        Array allEnemy = Enum.GetValues(typeof(EnemyType));
-        List<int> enemyPool1 = new List<int>(); 
-        List<int> enemyPool2 = new List<int>();
-        foreach (int enemyNum in allEnemy)
-        {
-            if(enemyNum/100 <= currentStage)
-            {
-                if(enemyNum%100/10 <= 1) enemyPool1.Add(enemyNum);
-                if(enemyNum%100/10 >= 1) enemyPool2.Add(enemyNum);
-            }
-        }
-        for(int i=0; i<num; i++)
-        {
-            int x = Random.Range(0, mapSize);
-            int y = Random.Range(0, mapSize);
-
-            if (enemyMap[y,x] != EnemyType.None || tileManager.GetTileMap[y,x] <= 0)
-            {
-                i--;
-                continue;
-            }
-
-            int randNum;
-            if (tileManager.IsHighPos(y, x))
-            {
-                randNum = enemyPool2[Random.Range(0, enemyPool2.Count)];
-            }
-            else randNum = enemyPool1[Random.Range(0, enemyPool1.Count)];
-
-
-            enemyMap[y,x] = (EnemyType)randNum;
-        }
-    }
     void UpdateLighting()
     {
         DynamicGI.UpdateEnvironment();
@@ -172,7 +138,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
-        for(currentStage = 1; currentStage <= 4; currentStage++)
+        for(currentStage = 3; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
@@ -184,7 +150,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-{6}");
+                LoadWaveData($"{currentStage}-{3}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -257,14 +223,26 @@ public class WaveManager : MonoBehaviour
         //맵 불러오기
         tileManager.InitializeArray(currentStage);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
+        Vector2Int tmp = new Vector2Int(playerPos.x, playerPos.y);
         Vector2Int basePos = tileManager.MakeCenteredMapFromCSV(waveData.maps[0].file, playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
         //적 소환
-        foreach(var enemy in waveData.enemies)
+        if (waveData.isRandomPos)
         {
-            StartCoroutine(SummonEnemyCoroutine(basePos, enemy));
+            foreach (var enemy in waveData.enemies)
+            {
+                StartCoroutine(SummonRandomPosEnemyCoroutine(basePos, enemy));
+            }
         }
+        else
+        {
+            foreach (var enemy in waveData.enemies)
+            {
+                StartCoroutine(SummonEnemyCoroutine(basePos, enemy));
+            }
+        }
+        
         //임무
         switch (waveData.mission.type)
         {
@@ -277,7 +255,7 @@ public class WaveManager : MonoBehaviour
 
         //멀티 맵일시 맵 변경
         Coroutine mapChanging = null;
-        if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(basePos));
+        if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(tmp));
         //이벤트
         foreach (var ev in waveData.events)
         {
@@ -322,9 +300,9 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
+        yield return new WaitForSeconds(enemy.firstDelay); //첫 스폰 지연시간
+
         //적 스폰 위치 표시
-        
-        
         List<Vector2Int> spawnPoints = new List<Vector2Int>();
         foreach(var spawnpoint in enemy.spawnPoints)
         {
@@ -342,6 +320,27 @@ public class WaveManager : MonoBehaviour
                 count--;
                 if(count == 0) break;
             }
+            yield return new WaitForSeconds(enemy.spawnDelay);
+        }
+    }
+    IEnumerator SummonRandomPosEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
+    {
+        //적 스폰 위치 표시
+        int count = enemy.count;
+        EnemyType enemyType = enemy.type;
+        while (count > 0)
+        {
+            if (isMissionEnd) yield break;
+            Vector2Int randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
+            while (tileManager.GetTileMap[randomPos.y, randomPos.x] <= 0)
+            {
+                randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
+            }
+            
+            enemySpawnLogic.SpawnEnemy(randomPos.x, randomPos.y, enemyType);
+            count--;
+            if (count == 0) break;
+            
             yield return new WaitForSeconds(enemy.spawnDelay);
         }
     }
@@ -373,6 +372,7 @@ public class WaveManager : MonoBehaviour
         Vector2 size = new Vector2(info.footholdSize.x, info.footholdSize.y);
         FootHold fh = Instantiate(footHold, new Vector3(realPos.x, info.footholdHeight, realPos.z), quaternion.identity).GetComponent<FootHold>();
         fh.gameObject.transform.localScale = new Vector3(size.x, 0.5f, size.y);
+        fh.transform.parent = tileManager.GetTiles[pos.y, pos.x].transform;
         fh.maxTime = time;
         while (fh.progress < 1)
         {

@@ -13,10 +13,13 @@ public class FootHold : MonoBehaviour
     public float progress;
 
     HashSet<GameObject> enemiesInZone = new HashSet<GameObject>();
+
+    private Vector3 desiredWorldScale;
     void Start()
     {
         time = 0;
         material = GetComponent<MeshRenderer>().material;
+        desiredWorldScale = transform.lossyScale;
     }
     private void Update()
     {
@@ -45,6 +48,16 @@ public class FootHold : MonoBehaviour
         progress = time / maxTime;
         material.SetFloat("_progress", progress);
         UIManager.instance.CaptureMissionUpdate(progress);
+    }
+    void LateUpdate()
+    {
+        // 현재 부모 스케일 반영하여 localScale을 조정
+        Vector3 parentScale = transform.parent != null ? transform.parent.lossyScale : Vector3.one;
+        transform.localScale = new Vector3(
+            desiredWorldScale.x / parentScale.x,
+            desiredWorldScale.y / parentScale.y,
+            desiredWorldScale.z / parentScale.z
+        );
     }
 
     private void OnTriggerEnter(Collider other)

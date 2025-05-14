@@ -32,6 +32,8 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("Stats")]
     [SerializeField] protected float attackRange = 5.0f;
     [SerializeField] protected float attackCooldown = 3.0f;
+    [SerializeField] protected float HPenforceRate = 1f;
+    [SerializeField] protected float ATKenforceRate = 1f;
 
     [Header("Effects")]
     [SerializeField] private GameObject splashFx;
@@ -76,6 +78,7 @@ public abstract class MonsterBase : MonoBehaviour
     public AudioClip AttackSound => monsterAttackSound;
     public AudioClip HitSound => monsterHitSound;
     public AudioClip[] ExtraSounds => extraSounds;
+    public NavMeshAgent NmAgent => nmAgent;
     #endregion
 
     #region Private Fields
@@ -87,6 +90,7 @@ public abstract class MonsterBase : MonoBehaviour
     protected float dieTimer = 0f;
     protected float lastTransitionTime = 0f;
     protected bool isDie = false;
+    protected WaveManager waveManager;
     #endregion
 
     #region State Management
@@ -115,6 +119,7 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void Start()
     {
         target = GameObject.FindWithTag("Player").transform;
+        waveManager = FindObjectOfType<WaveManager>();
         InitializeComponents();
         InitializeStateMachine();
         InitializeStats();
@@ -150,6 +155,12 @@ public abstract class MonsterBase : MonoBehaviour
         hp = monsterStatus.GetHealth();
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
+
+        float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * HPenforceRate;
+        monsterStatus.SetMaxHealth(hp * HPenforce);
+        monsterStatus.SetHealth(hp* HPenforce);
+        float ATKenforce = (4*(waveManager.currentStage - 1) + waveManager.currentWave) * ATKenforceRate;
+        monsterStatus.SetAttackDamage(dmg * ATKenforce);
     }
 
     #endregion
@@ -213,13 +224,12 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual void UpdateChase()
     {
         teleportTimer += Time.deltaTime;
-        Debug.Log(target.position.y - transform.position.y);
         if (target == null)
         {
             ChangeState(State.IDLE);
             return;
         }
-        if(teleportTimer >= teleportCooldown && target.position.y-transform.position.y >= 4f)
+        if(teleportTimer >= teleportCooldown && target.position.y-transform.position.y >= 2f)
         {
             Debug.Log("enemy teleport stacked");
             EnemyTeleportManager.instance.GetEnemyToTeleport(this);

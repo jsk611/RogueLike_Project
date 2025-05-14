@@ -228,54 +228,42 @@ public class UpgradeManager_New : MonoBehaviour
         switch (commonTypeInput)
         {
             case CommonUpgrade.ATK:
+                float ATKUpgradeRate = PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate;
                 switch ((ATKUGType)upgradeResult)
                 {
                     case ATKUGType.Damage:
-                        //업글 적용
-                        Debug.Log("Damage up");
-                        playerStatus?.IncreaseAttackDamage(10);
+                        playerStatus?.IncreaseAttackDamage(10*ATKUpgradeRate);
                         break;
                     case ATKUGType.AttackSpeed:
-                        //업글 적용
-                        Debug.Log("AttackSpeed");
-                        playerStatus?.IncreaseAttackSpeed(1);
+                        playerStatus?.IncreaseAttackSpeed(1*ATKUpgradeRate);
                         break;
                     case ATKUGType.ReloadSpeed:
-                        //업글 적용
-                        Debug.Log("ReloadSpeed");
-                        playerStatus?.IncreaseReloadSpeed(1);
+                        playerStatus?.IncreaseReloadSpeed(1*ATKUpgradeRate);
                         break;
                 }
                 break;
             case CommonUpgrade.UTIL:
+                float UTLUpgradeRate = PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate;
                 switch ((UTILUGType)upgradeResult)
                 {
                     case UTILUGType.Heath:
-                        //업글 적용
-                        Debug.Log("Heath");
-                        playerStatus.IncreaseMaxHealth(10);
-                        playerStatus.IncreaseHealth(15);
+                        playerStatus.IncreaseMaxHealth(10*UTLUpgradeRate);
+                        playerStatus.IncreaseHealth(15*UTLUpgradeRate);
                         break;
                     case UTILUGType.MoveSpeed:
-                        //업글 적용
-                        Debug.Log("MoveSpeed");
-                        playerStatus.IncreaseMovementSpeed(1);
+                        playerStatus.IncreaseMovementSpeed(1*UTLUpgradeRate);
                         break;
-                    
                 }
                 break;
             case CommonUpgrade.COIN:
+                float COINAcquistionRate = PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate;
                 switch ((COINUGType)upgradeResult)
                 {
                     case COINUGType.CoinAcquisitonRate:
-                        //업글 적용
-                        Debug.Log("CoinAcquisitonRate");
-                        playerStatus.IncreaseCoin(100);
+                        playerStatus.IncreaseCoin((int)(100*COINAcquistionRate));
                         break;
                     case COINUGType.PermanentCoinAcquisitionRate:
-                        //업글 적용
-                        Debug.Log("PermanentCoinAcquisitionRate");
-                        playerStatus.IncreasePermanentAcquisitionRate(1);
+                        playerStatus.IncreasePermanentAcquisitionRate(1*COINAcquistionRate);
                         break;
                 }
                 break;

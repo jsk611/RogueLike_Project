@@ -9,6 +9,7 @@ public class WaveData
     public bool isMultiMap;
     public List<MapInfo> maps;
     public bool isRandomEnemy;
+    public bool isRandomPos=false;
     public List<EnemyInfo> enemies;
     public MissionInfo mission;
     public bool isRandomEvent;
@@ -29,6 +30,7 @@ public class EnemyInfo
     public int count;
     public List<Vector2Data> spawnPoints;
     public float spawnDelay;
+    public float firstDelay=0;
 }
 [Serializable]
 public class Vector2Data
