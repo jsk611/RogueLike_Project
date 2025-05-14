@@ -2,6 +2,7 @@ using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyTeleportManager : MonoBehaviour
 {
@@ -13,13 +14,15 @@ public class EnemyTeleportManager : MonoBehaviour
     [SerializeField] float teleportCoolTime = 5f;
  
     CharacterBehaviour player;
-    private Stack<MonsterBase> monsterStack;
+    private Queue<MonsterBase> monsterQueue;
+    private HashSet<MonsterBase> monsterSet;
     private float elapsedTime;
 
     private void Start()
     {
         instance = this;
-        monsterStack = new Stack<MonsterBase>();
+        monsterQueue = new Queue<MonsterBase>();
+        monsterSet = new HashSet<MonsterBase>();
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
         elapsedTime = 0f;
         StartCoroutine(TeleportEnemy());
@@ -27,17 +30,23 @@ public class EnemyTeleportManager : MonoBehaviour
  
     IEnumerator TeleportEnemy()
     {
-        while (true)
-        {
-            Debug.Log("enemy teleporting");
-            if (monsterStack.Count > 0)
+        while (true) { 
+            if (monsterQueue.Count > 0)
             {
-                MonsterBase monster = monsterStack.Pop();
-         //       Vector3 newPosition = tileManager.GetTiles[playerPositionData.playerTilePosition.y, playerPositionData.playerTilePosition.x].transform.position+Vector3.up*4;
-                Vector3 newPosition = Physics.Raycast(player.transform.position,Vector3.down,8f,LayerMask.GetMask("Floor"))
+                MonsterBase monster = monsterQueue.Peek();
+                monsterQueue.Dequeue();
+                monsterSet.Remove(monster);
+                //       Vector3 newPosition = tileManager.GetTiles[playerPositionData.playerTilePosition.y, playerPositionData.playerTilePosition.x].transform.position+Vector3.up*4;
+                RaycastHit hit;
+                Physics.Raycast(player.transform.position, Vector3.down, out hit, 8f, LayerMask.GetMask("Wall"));
+                Vector3 newPosition = hit.point;
                 Destroy(Instantiate(Beam, newPosition, Quaternion.identity), 2f);
                 yield return new WaitForSeconds(2f);
-                monster.transform.position = newPosition;
+                if (monster != null && monster.NmAgent != null)
+                {
+                    monster.NmAgent.Warp(newPosition);
+                    monster.NmAgent.FindClosestEdge(out NavMeshHit h);
+                }
                 Debug.Log("enemy teleported");
             }
             
@@ -47,6 +56,11 @@ public class EnemyTeleportManager : MonoBehaviour
     }
     public void GetEnemyToTeleport(MonsterBase monster)
     {
-        monsterStack.Push(monster);
+        if (monsterSet.Contains(monster))
+        {
+            return;
+        }
+        monsterQueue.Enqueue(monster);
+        monsterSet.Add(monster);
     }
 }
