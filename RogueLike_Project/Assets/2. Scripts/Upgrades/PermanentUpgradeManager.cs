@@ -30,7 +30,6 @@ public class PermanentUpgradeManager : MonoBehaviour
 
         weaponLockData = new WeaponLockData();
         upgradeData = new UpgradeData();
-        SaveData();
         LoadData();
     }
     public void SaveData()

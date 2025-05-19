@@ -27,6 +27,8 @@ public class WaveManager : MonoBehaviour
     [SerializeField] Material defaultSkybox;
     [SerializeField] GameObject footHold;
     [SerializeField] GameObject item;
+    public float HP_enforceRate = 1.0f;
+    public float ATK_enforceRate = 1.0f;
     bool nextWaveTrigger = false;
     public bool NextWaveTrigger
     {

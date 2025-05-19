@@ -32,8 +32,6 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("Stats")]
     [SerializeField] protected float attackRange = 5.0f;
     [SerializeField] protected float attackCooldown = 3.0f;
-    [SerializeField] protected float HPenforceRate = 1f;
-    [SerializeField] protected float ATKenforceRate = 1f;
 
     [Header("Effects")]
     [SerializeField] private GameObject splashFx;
@@ -156,10 +154,10 @@ public abstract class MonsterBase : MonoBehaviour
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
 
-        float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * HPenforceRate;
+        float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
         monsterStatus.SetMaxHealth(hp * HPenforce);
         monsterStatus.SetHealth(hp* HPenforce);
-        float ATKenforce = (4*(waveManager.currentStage - 1) + waveManager.currentWave) * ATKenforceRate;
+        float ATKenforce = (4*(waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
         monsterStatus.SetAttackDamage(dmg * ATKenforce);
     }
 
