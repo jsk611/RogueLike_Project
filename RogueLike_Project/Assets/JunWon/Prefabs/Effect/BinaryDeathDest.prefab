@@ -1613,6 +1613,14 @@ ParticleSystem:
     - sprite: {fileID: 0}
     - sprite: {fileID: 0}
     - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
+    - sprite: {fileID: 0}
     flipU: 0
     flipV: 0
   VelocityModule:

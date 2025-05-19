@@ -24,9 +24,15 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
         owner.NmAgent.isStopped = true;
         owner.Animator.SetBool("IsMoving", false);
 
+        if (owner.AbilityManager.UseAbility("MapAttack"))
+        {
+            owner.TriggerMapAttack();
+
+        }
+
+
         // 공격 애니메이션 & 효과
         owner.Animator.SetTrigger("MapAttack");
-        owner.TriggerMapAttack();
     }
 
     public override void Update()
