@@ -132,7 +132,6 @@ public class WaveManager : MonoBehaviour
         defaultSkybox.DOColor(Horizon, "_HorizonColor", duration);
         defaultSkybox.DOFloat(horizonStrength, "_HorizonStrength", duration);
         defaultSkybox.DOFloat(horizonHeight, "_HorizonHeight", duration);
-
     }
 
     IEnumerator RunStage()
@@ -140,7 +139,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
-        for(currentStage = 3; currentStage <= 4; currentStage++)
+        for(currentStage = 1; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
@@ -152,7 +151,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                LoadWaveData($"{currentStage}-{3}");
+                //LoadWaveData($"{currentStage}-{3}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
