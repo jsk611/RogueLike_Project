@@ -38,20 +38,7 @@ public class DefeatedState_UnknownVirus : BaseState_UnknownVirus
 
     public override void Update()
     {
-        timer += Time.deltaTime;
-
-        // 사망 이펙트 (1초 후 스폰)
-        if (!deathEffectSpawned && timer >= 1f)
-        {
-            // 사망 이펙트를 여기에 추가
-            deathEffectSpawned = true;
-        }
-
-        // 사망 지속 시간이 지난 후 오브젝트 제거
-        if (timer >= deathDuration)
-        {
-            GameObject.Destroy(owner.gameObject);
-        }
+       
     }
 
     public override void Exit()

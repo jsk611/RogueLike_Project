@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
 {
-    private float stateTimer = 0f;
-    private const float maxStateDuration = 12f;
     private bool isAttackFinished = false;
 
     public MapAttackState_UnknownVirus(UnknownVirusBoss owner) : base(owner)
@@ -17,7 +15,6 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
     public override void Enter()
     {
         Debug.Log("UnknownVirus: Map Attack State 진입");
-        stateTimer = 0f;
         isAttackFinished = false;
 
         // 이동 멈춤
@@ -37,13 +34,7 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
 
     public override void Update()
     {
-        stateTimer += Time.deltaTime;
-
-        // 애니메이션 이벤트나 타이머로 완료 처리
-        if (stateTimer >= maxStateDuration)
-        {
-        }
-        // (추가) 애니메이션 이벤트에서 직접 호출해도 좋습니다
+       
     }
 
     public override void Exit()
