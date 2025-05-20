@@ -227,7 +227,7 @@ public abstract class MonsterBase : MonoBehaviour
             ChangeState(State.IDLE);
             return;
         }
-        if(teleportTimer >= teleportCooldown && target.position.y-transform.position.y >= 2f)
+        if(teleportTimer >= teleportCooldown && Mathf.Abs(target.position.y-transform.position.y) >= 4f)
         {
             Debug.Log("enemy teleport stacked");
             EnemyTeleportManager.instance.GetEnemyToTeleport(this);

@@ -41,7 +41,6 @@ namespace InfimaGames.LowPolyShooterPack
                 SoundType.Extra4 => monster.ExtraSounds[3],
                 _ => default
             };
-            Debug.Log(audioClip.name);
             audioManagerService.PlayOneShotDelayed(audioClip, soundSettings, delay);
         }
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

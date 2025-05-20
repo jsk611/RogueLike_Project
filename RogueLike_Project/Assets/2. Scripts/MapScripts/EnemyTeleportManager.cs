@@ -45,9 +45,8 @@ public class EnemyTeleportManager : MonoBehaviour
                 if (monster != null && monster.NmAgent != null)
                 {
                     monster.NmAgent.Warp(newPosition);
-                    monster.NmAgent.FindClosestEdge(out NavMeshHit h);
+                   // monster.NmAgent.FindClosestEdge(out NavMeshHit h);
                 }
-                Debug.Log("enemy teleported");
             }
             
             yield return new WaitForSeconds(teleportCoolTime -2f);
@@ -57,9 +56,8 @@ public class EnemyTeleportManager : MonoBehaviour
     public void GetEnemyToTeleport(MonsterBase monster)
     {
         if (monsterSet.Contains(monster))
-        {
             return;
-        }
+        
         monsterQueue.Enqueue(monster);
         monsterSet.Add(monster);
     }

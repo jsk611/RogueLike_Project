@@ -62,29 +62,26 @@ public class ProjectileLauncher : MonoBehaviour {
 
 
 		Instantiate(explosionPrefab,transform.position,Quaternion.Euler(Vector3.left*90));
-		
-		Collider[] hits = Physics.OverlapSphere(transform.position, explosionRange);//,LayerMask.NameToLayer("Creature"));
+
+		Collider[] hits = Physics.OverlapSphere(transform.position, explosionRange,LayerMask.GetMask("Creature"));
 		foreach (Collider hit in hits)
 		{
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
+			Debug.Log("grenade hit " + hit.name);
+            if (hit.gameObject.GetComponent<MonsterBase>() != null)
             {
-                if (collision.gameObject.GetComponent<MonsterBase>() != null)
-                {
-                    collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
-                }
-                else if (collision.gameObject.GetComponent<BossBase>() != null)
-                {
-                    Debug.Log("Boss hit");
-                    collision.gameObject.GetComponent<BossBase>()?.TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
-                }
-                else if (collision.gameObject.GetComponent<Dummy>() != null)
-                {
-                    collision.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
-                }
-                Destroy(gameObject);
+                hit.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+            }
+            else if (hit.gameObject.GetComponent<BossBase>() != null)
+            {
+                Debug.Log("Boss hit");
+                hit.gameObject.GetComponent<BossBase>()?.TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
+            }
+            else if (hit.gameObject.GetComponent<Dummy>() != null)
+            {
+                hit.gameObject.GetComponent<Dummy>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
             }
         }
-			//Destroy(gameObject);
+		Destroy(gameObject);
 		
 		// //Ignore collision if bullet collides with "Player" tag
 		// if (collision.gameObject.CompareTag("Player")) 

@@ -27,7 +27,7 @@ public class SettingManager : MonoBehaviour
     {
         //저장 데이터 초기화
         PlayerPrefs.DeleteAll();
-
+        PlayerPrefs.SetInt("isNewGame", 1);
         fade.gameObject.SetActive(true);
 
         fade.DOFade(1, 1f);

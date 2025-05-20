@@ -2,7 +2,9 @@ using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
 
 public class PauseUIManager : MonoBehaviour
 {
@@ -42,6 +44,7 @@ public class PauseUIManager : MonoBehaviour
         DisplayOption.SetActive(false);
         SoundOption.SetActive(false);
         LanguageOption.SetActive(false);
+        Main.SetActive(true);
     }
     public void OptionDisplay(int selectedOption)
     {
@@ -51,15 +54,26 @@ public class PauseUIManager : MonoBehaviour
         Main.SetActive(false);
         display.SetActive(true);
     }
-    public void UpdateDisplay(bool cursorState)
+    public void UpdateDisplay()
     {
         ResetDisplay();
-        gameObject.SetActive(cursorState);
+        Time.timeScale = 0f;
+        gameObject.SetActive(true);
+    }
+    public void CancelDisplay()
+    {
+        ResetDisplay();
+        Resume();
     }
     public void Resume()
     {
-        bool cursorState = !character.GetCursorState();
-        character.SetCursorState(cursorState);
-        gameObject.SetActive(!cursorState);
+        character.SetCursorState(true);
+        gameObject.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    public void Exit()
+    {
+        PermanentUpgradeManager.instance.SaveData();
+        SceneManager.LoadScene(0);
     }
 }

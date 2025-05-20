@@ -1009,10 +1009,10 @@ namespace InfimaGames.LowPolyShooterPack
                 case { phase: InputActionPhase.Performed }:
                     //Toggle the cursor locked value.
                     cursorLocked = !cursorLocked;
-                    Debug.Log("cursor = "+cursorLocked);
                     //pause UI display
-                    PauseUIManager.instance.UpdateDisplay(!cursorLocked);
-                    //Update the cursor's state.
+                    if (!cursorLocked) PauseUIManager.instance.UpdateDisplay();
+                    else PauseUIManager.instance.CancelDisplay();
+                        //Update the cursor's state.
                     UpdateCursorState();
                     break;
             }
