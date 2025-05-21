@@ -45,8 +45,6 @@ public class UnknownVirusBoss : BossBase
 
     [Header("폼 변경")]
     [SerializeField] private GameObject transformationVFX;
-    [SerializeField] private float transformationTime = 3f;
-    [SerializeField] private float formChangeCooldown = 30f;
     [Range(0, 1)][SerializeField] private float formChangeChance = 0.3f;
 
     [Header("컴포넌트")]
@@ -194,6 +192,9 @@ public class UnknownVirusBoss : BossBase
         abilityManager.SetAbilityActive("MapAttack");
         abilityManager.SetMaxCoolTime("MapAttack");
 
+        abilityManager.SetAbilityActive("Transform");
+        abilityManager.SetMaxCoolTime("Transform");
+
         Debug.Log("[UnknownVirusBoss] 능력 초기화 완료");
     }
 
@@ -285,6 +286,7 @@ public class UnknownVirusBoss : BossBase
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.transformState, s.basicState,
             () => Time.time - formTimer >= formStayDuration));
+
 
         // 전역 사망 상태 전이 (인트로 제외)
         List<State<UnknownVirusBoss>> exceptStates = new List<State<UnknownVirusBoss>> { s.introState };
