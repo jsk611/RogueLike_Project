@@ -5,8 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using InfimaGames.LowPolyShooterPack;
 using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
-using UnityEditor.Experimental.GraphView;
+
 
 public class UpgradeManager : MonoBehaviour
 {

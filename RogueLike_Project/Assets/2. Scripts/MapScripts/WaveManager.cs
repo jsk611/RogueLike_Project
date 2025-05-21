@@ -139,7 +139,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
-        for(currentStage = 3; currentStage <= 4; currentStage++)
+        for(currentStage = 1; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
