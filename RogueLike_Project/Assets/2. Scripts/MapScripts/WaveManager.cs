@@ -139,7 +139,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
-        for(currentStage = 1; currentStage <= 4; currentStage++)
+        for(currentStage = 3; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
@@ -151,7 +151,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-{3}");
+                //LoadWaveData($"{3}-{4}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -256,7 +256,7 @@ public class WaveManager : MonoBehaviour
 
         //멀티 맵일시 맵 변경
         Coroutine mapChanging = null;
-        if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(tmp));
+        if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(tmp, waveData.isRepeating));
         //이벤트
         foreach (var ev in waveData.events)
         {
@@ -289,15 +289,19 @@ public class WaveManager : MonoBehaviour
         yield break;
     }
 
-    IEnumerator MultiMapsChangingCoroutine(Vector2Int basePos)
+    IEnumerator MultiMapsChangingCoroutine(Vector2Int basePos, bool isRepeating)
     {
         yield return new WaitForSeconds(waveData.maps[0].duration);
-        for(int i=1; i<waveData.maps.Count; i++)
+        do
         {
-            tileManager.MakeCenteredMapFromCSV(waveData.maps[i].file, basePos.x, basePos.y);
-            yield return StartCoroutine(tileManager.MoveTilesByArray());
-            yield return new WaitForSeconds(waveData.maps[i].duration);
-        }
+            for (int i = 1; i < waveData.maps.Count; i++)
+            {
+                tileManager.MakeCenteredMapFromCSV(waveData.maps[i].file, basePos.x, basePos.y);
+                yield return StartCoroutine(tileManager.MoveTilesByArray());
+                yield return new WaitForSeconds(waveData.maps[i].duration);
+            }
+        } while (isRepeating);
+        
     }
     IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {

@@ -206,6 +206,7 @@ MonoBehaviour:
   wormFormObject: {fileID: 6936975219301061261}
   trojanFormObject: {fileID: 5785480163866264625}
   ransomwareFormObject: {fileID: 7163613251637473412}
+  currentForm: 0
   baseAttackDamage: 20
   baseAttackRange: 10
   baseAttackCooldown: 3
@@ -333,6 +334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilitiesData:
   - {fileID: 11400000, guid: 6346be7e181e2254b884b7c8e6d141e5, type: 2}
+  - {fileID: 11400000, guid: 6e062cb803b105f4680d8a2678e9230f, type: 2}
 --- !u!1001 &301021611286561113
 PrefabInstance:
   m_ObjectHideFlags: 0
