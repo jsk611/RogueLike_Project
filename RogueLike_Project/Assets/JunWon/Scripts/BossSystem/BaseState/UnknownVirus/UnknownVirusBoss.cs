@@ -23,8 +23,7 @@ public class UnknownVirusBoss : BossBase
     // 현재 활성화된 폼 참조
     private GameObject currentActiveFormObject;
     private BossBase currentActiveBoss;
-    private bool isTransforming = false;
-    private BossForm currentForm = BossForm.Basic;
+    [SerializeField] private BossForm currentForm = BossForm.Basic;
 
     // 폼 변경 쿨타임 관리
     private float lastFormChangeTime = 0f;
@@ -102,6 +101,11 @@ public class UnknownVirusBoss : BossBase
     public FieldOfView FOV => fov;
     public AbilityManager AbilityManager => abilityManager;
     public BossBase GetCurrentActiveBoss() => currentActiveBoss;
+
+    public GameObject basic => basicFormObject;
+    public GameObject Worm => wormFormObject;
+    public GameObject Troy => trojanFormObject;
+    public GameObject Ransomware => ransomwareFormObject;
     #endregion
 
     #region 유니티 라이프사이클
@@ -126,12 +130,6 @@ public class UnknownVirusBoss : BossBase
         {
             SyncHealthFromActiveBoss();
         }
-
-        // 폼별 로직 업데이트
-        UpdateActiveFormLogic();
-
-        // 폼 변경 타이머 체크 (변신 폼에 머무는 시간)
-        CheckFormTransformationTimer();
 
         // 사망 상태 확인
         if (bossStatus.GetHealth() <= 0 && !(fsm.CurrentState is DefeatedState_UnknownVirus))
@@ -280,34 +278,13 @@ public class UnknownVirusBoss : BossBase
         // 기본 전투 → 변신
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.basicState, s.transformState,
-            () => Time.time - lastFormChangeTime >= formChangeCooldown &&
+            () => abilityManager.GetAbilityRemainingCooldown("Transform") == 0 &&
                  UnityEngine.Random.value < formChangeChance));
 
-        // 변신 → 각 폼 전투 상태
+        // 각 폼 전투 → 기본 전투
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.transformState, s.basicState,
-            () => !isTransforming && currentForm == BossForm.Basic));
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.transformState, s.wormCombatState,
-            () => !isTransforming && currentForm == BossForm.Worm));
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.transformState, s.trojanCombatState,
-            () => !isTransforming && currentForm == BossForm.Trojan));
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.transformState, s.ransomwareCombatState,
-            () => !isTransforming && currentForm == BossForm.Ransomware));
-
-        // 각 폼 전투 → 기본 전투
-        // 참고: 변신 폼에서 기본 폼으로 돌아오는 것은 Update에서 타이머로 처리함
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.wormCombatState, s.transformState,
-            () => formTimer >= formStayDuration));
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.trojanCombatState, s.transformState,
-            () => formTimer >= formStayDuration));
-        fsm.AddTransition(new Transition<UnknownVirusBoss>(
-            s.ransomwareCombatState, s.transformState,
-            () => formTimer >= formStayDuration));
+            () => Time.time - formTimer >= formStayDuration));
 
         // 전역 사망 상태 전이 (인트로 제외)
         List<State<UnknownVirusBoss>> exceptStates = new List<State<UnknownVirusBoss>> { s.introState };
@@ -351,13 +328,10 @@ public class UnknownVirusBoss : BossBase
         ActivateForm(form);
 
         // 폼 타이머 리셋
-        formTimer = 0f;
+        formTimer = Time.time;
 
         // 현재 폼 업데이트
         currentForm = form;
-
-        // 폼 변경 후 능력 업데이트
-        UpdateFormSpecificAbilities();
 
         Debug.Log($"[UnknownVirusBoss] {form} 폼으로 변신 완료");
     }
@@ -486,30 +460,6 @@ public class UnknownVirusBoss : BossBase
         HPBar?.SetRatio(bossStatus.GetHealth(), bossStatus.GetMaxHealth());
     }
 
-    private void UpdateFormSpecificAbilities()
-    {
-        // 현재 폼에 따라 특정 능력 활성화/비활성화
-        switch (currentForm)
-        {
-            case BossForm.Basic:
-                abilityManager.SetAbilityActive("BasicAttack");
-                abilityManager.SetAbilityActive("MapAttack");
-                break;
-
-            case BossForm.Worm:
-                // 웜 폼 특화 능력 설정 (필요시)
-                break;
-
-            case BossForm.Trojan:
-                // 트로이 목마 폼 특화 능력 설정 (필요시)
-                break;
-
-            case BossForm.Ransomware:
-                // 랜섬웨어 폼 특화 능력 설정 (필요시)
-                break;
-        }
-    }
-
     private void DeactivateAllForms()
     {
         // 모든 폼 비활성화 (사망시 사용)
@@ -529,152 +479,14 @@ public class UnknownVirusBoss : BossBase
     #endregion
 
     #region 업데이트 로직
-    private void UpdateActiveFormLogic()
+  
+
+    public void PrepareToReturnToBasicForm()
     {
-        // 현재 폼에 따른 특정 로직 업데이트
-        switch (currentForm)
-        {
-            case BossForm.Basic:
-                // 기본 폼에서의 로직
-                UpdateBasicFormLogic();
-                break;
-
-            case BossForm.Worm:
-                // 웜 폼에서의 로직
-                UpdateWormFormLogic();
-                break;
-
-            case BossForm.Trojan:
-                // 트로이 목마 폼에서의 로직
-                UpdateTrojanFormLogic();
-                break;
-
-            case BossForm.Ransomware:
-                // 랜섬웨어 폼에서의 로직
-                UpdateRansomwareFormLogic();
-                break;
-        }
-    }
-
-    private void UpdateBasicFormLogic()
-    {
-        // 기본 폼에서의 전투 및 의사결정 처리
-        if (fsm.CurrentState is BasicCombatState_UnknownVirus)
-        {
-            // 기본 공격 및 전투 로직 처리 (필요시)
-
-            // 폼 변경 결정 로직 (주기적으로 체크)
-            if (Time.time - lastFormChangeTime >= formChangeCooldown &&
-                UnityEngine.Random.value < formChangeChance * Time.deltaTime * 5f) // 확률 조정
-            {
-                DecideFormTransformation();
-            }
-        }
-    }
-
-    private void UpdateWormFormLogic()
-    {
-        // 웜 폼 특화 로직 (필요시)
-        if (wormComponent != null && wormComponent.isActiveAndEnabled)
-        {
-            // 추가 로직이 필요하면 여기에 구현
-        }
-    }
-
-    private void UpdateTrojanFormLogic()
-    {
-        // 트로이 목마 폼 특화 로직 (필요시)
-        if (trojanComponent != null && trojanComponent.isActiveAndEnabled)
-        {
-            // 추가 로직이 필요하면 여기에 구현
-        }
-    }
-
-    private void UpdateRansomwareFormLogic()
-    {
-        // 랜섬웨어 폼 특화 로직 (필요시)
-        if (ransomwareComponent != null && ransomwareComponent.isActiveAndEnabled)
-        {
-            // 추가 로직이 필요하면 여기에 구현
-        }
-    }
-
-    private void CheckFormTransformationTimer()
-    {
-        // 변신 폼에 머무는 시간 체크
-        if (currentForm != BossForm.Basic && !isTransforming)
-        {
-
-            // 지정된 시간 이상 지났으면 기본 폼으로 복귀 준비
-            if (formTimer >= formStayDuration &&
-                !(fsm.CurrentState is TransformState_UnknownVirus))
-            {
-                PrepareToReturnToBasicForm();
-            }
-        }
-    }
-
-    private void PrepareToReturnToBasicForm()
-    {
-        // 기본 폼으로 복귀 전환 시작
-        isTransforming = true;
         lastFormChangeTime = Time.time;
 
         // 변신 상태로 전환
         fsm.ForcedTransition(transformState);
-
-        // 기본 폼으로 변신 요청
-        RequestFormChange(BossForm.Basic);
-    }
-
-    private void DecideFormTransformation()
-    {
-        // 다음 변신 폼 결정 (랜덤)
-        int formIndex = UnityEngine.Random.Range(1, 4); // 1~3 (Worm, Trojan, Ransomware)
-        BossForm nextForm = (BossForm)formIndex;
-
-        // 선택한 폼 오브젝트가 없으면 다른 폼 선택
-        switch (nextForm)
-        {
-            case BossForm.Worm:
-                if (wormFormObject == null) nextForm = BossForm.Trojan;
-                break;
-            case BossForm.Trojan:
-                if (trojanFormObject == null) nextForm = BossForm.Ransomware;
-                break;
-            case BossForm.Ransomware:
-                if (ransomwareFormObject == null) nextForm = BossForm.Worm;
-                break;
-            default:
-                if (basicFormObject == null) nextForm = BossForm.Basic;
-                break;
-        }
-
-        // 선택한 폼도 없으면 기본 폼 유지
-        switch (nextForm)
-        {
-            case BossForm.Worm:
-                if (wormFormObject == null) return;
-                break;
-            case BossForm.Trojan:
-                if (trojanFormObject == null) return;
-                break;
-            case BossForm.Ransomware:
-                if (ransomwareFormObject == null) return;
-                break;
-            default:
-                if (basicFormObject == null) return;
-                break;
-        }
-
-        // 변신 시작
-        lastFormChangeTime = Time.time;
-
-        // 변신 상태로 전환
-        fsm.ForcedTransition(transformState);
-
-        // 변신 요청
-        RequestFormChange(nextForm);
     }
 
     private void HandleDeath()
@@ -687,54 +499,19 @@ public class UnknownVirusBoss : BossBase
 
         Debug.Log("[UnknownVirusBoss] 보스 사망");
     }
-    #endregion
 
-    #region 변신 로직
-    /// <summary>TransformState에서 호출</summary>
     public void RequestFormChange(BossForm newForm)
-    {
-        if (isTransforming) return;
-
-        isTransforming = true;
-        StartCoroutine(TransformRoutine(newForm));
-    }
-
-    private IEnumerator TransformRoutine(BossForm newForm)
     {
         // 변신 효과 활성화
         if (transformationVFX != null)
             transformationVFX.SetActive(true);
-
-        Debug.Log($"[UnknownVirusBoss] {newForm} 폼으로 변신 시작");
-
-        // 변신 시간 대기
-        yield return new WaitForSeconds(transformationTime);
-
-        // 해당 폼 적용
-        ApplyForm(newForm);
-
-        // 변신 효과 비활성화
-        if (transformationVFX != null)
-            transformationVFX.SetActive(false);
-
-        // 변신 완료
-        isTransforming = false;
-
-        // TransformState에 변신 완료 알림
-        if (transformState != null)
-            transformState.OnTransformationComplete();
-
-        Debug.Log($"[UnknownVirusBoss] {newForm} 폼으로 변신 완료");
     }
+
     #endregion
 
     #region 데미지 처리
     public override void TakeDamage(float damage, bool showDamage = true)
     {
-        // 변신 중엔 데미지 무시
-        if (isTransforming)
-            return;
-
         // 현재 활성화된 폼에 데미지 전달
         if (currentForm != BossForm.Basic && currentActiveBoss != null)
         {
