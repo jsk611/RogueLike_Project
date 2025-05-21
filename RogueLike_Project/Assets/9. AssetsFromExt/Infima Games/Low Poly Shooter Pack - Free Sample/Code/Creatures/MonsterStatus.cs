@@ -94,7 +94,7 @@ public class MonsterStatus : StatusBehaviour
     {
         Health = Mathf.Clamp(health, 0, MaxHealth);
         //if (health <= 0) Destroy(gameObject);
-        HPBar.SetRatio(GetHealth(), GetMaxHealth());
+        if(HPBar) HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
 
 

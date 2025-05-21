@@ -822,7 +822,8 @@ MonoBehaviour:
   attackCooldown: 1
   splashFx: {fileID: 0}
   spawnEffect: {fileID: 4616477468070435456}
-  startMaterial: {fileID: 2100000, guid: d70587f08473fc14f83ae0d6c286fdee, type: 2}
+  startMaterial: {fileID: -876546973899608171, guid: ba657210dc79a2548921bae956e9439f,
+    type: 3}
   baseMaterial: {fileID: 2100000, guid: 957781e2e64d0264f970dde36a30bd93, type: 2}
   height: 6
   summonedMonster: 0
@@ -841,9 +842,13 @@ MonoBehaviour:
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
+  teleportCooldown: 4
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}
+  monsterAttackSound: {fileID: 0}
+  monsterHitSound: {fileID: 0}
+  extraSounds: []
   state: 0
 --- !u!54 &5152150415338884019
 Rigidbody:

@@ -122,7 +122,6 @@ public abstract class MonsterBase : MonoBehaviour
         InitializeStateMachine();
         InitializeStats();
 
-        state = State.IDLE;
         StartCoroutine(SummonEffect());
     }
 
@@ -167,10 +166,8 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void Update()
     {
-        //chaseSpeed?? ?????????? ????
-        chaseSpeed = monsterStatus.GetMovementSpeed();
         // Debug.Log($"{name} current state = {state}");
-        if (state == State.IDLE) CheckPlayer();
+        // if (state == State.IDLE) CheckPlayer();
         // ???? ???????? ???? ????
         if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
         ExecuteStateAction();
@@ -217,8 +214,9 @@ public abstract class MonsterBase : MonoBehaviour
     #endregion
 
     #region State Update Methods
-    protected virtual void UpdateIdle() => ChangeState(State.CHASE);
-
+    protected virtual void UpdateIdle()
+    {
+    }
     protected virtual void UpdateChase()
     {
         teleportTimer += Time.deltaTime;
@@ -413,15 +411,16 @@ public abstract class MonsterBase : MonoBehaviour
     #region Summon Effect
     private IEnumerator SummonEffect()
     {
+        nmAgent.speed = 0;
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         Queue<Material> materials = new Queue<Material>();
+        Debug.Log("spawn started");
         foreach (Renderer renderer in renderers)
         {
             if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
             materials.Enqueue(renderer.material);
             renderer.material = startMaterial;
         }
-
         float currentYPos = transform.position.y - height/2 - 1f;
         float maxYPos = transform.position.y + height/2 + 1f;
         while (currentYPos < maxYPos)
@@ -431,8 +430,7 @@ public abstract class MonsterBase : MonoBehaviour
                 if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
                 renderer.material.SetFloat("_CustomTime", currentYPos);
             }
-
-            currentYPos += Time.deltaTime * (height+2)/2.5f;
+            currentYPos += Time.deltaTime * (height+2) / 2.2f;
             yield return null;
         }
 
@@ -443,6 +441,7 @@ public abstract class MonsterBase : MonoBehaviour
         }
 
         spawnEffect.SetActive(false);
+        ChangeState(State.CHASE);
     }
     #endregion
 
