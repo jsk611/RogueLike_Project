@@ -5,77 +5,72 @@ using static UnknownVirusBoss;
 
 public class TransformState_UnknownVirus : BaseState_UnknownVirus
 {
-    private bool isTransformationComplete = false;
-    private float stateEntryTime;
-    private float transformDecisionDelay = 1.0f;
+    private float startTime = 0f;
+    private float transformationTime = 1.0f;
     private BossForm targetForm;
+
+    bool isTransforming = false;
 
     public TransformState_UnknownVirus(UnknownVirusBoss owner) : base(owner)
     {
         owner.SetTransformState(this);
     }
 
-    #region LifeCycle
     public override void Enter()
     {
-        Debug.Log("[TransformState_UnknownVirus] Enter");
+        Debug.Log("UnknownVirus: Transform State 진입");
+        startTime = Time.time;
+        isTransforming = true;
 
-        // 상태 초기화
-        isTransformationComplete = false;
-        stateEntryTime = Time.time;
+        // 다음 폼 결정 (현재 Basic이면 다른 폼으로, 아니면 Basic으로)
+        if (owner.CurrentForm == BossForm.Basic)
+            targetForm = DecideNextForm();
 
-        // 애니메이션 트리거 설정
-        if (owner.Animator != null)
-        {
-            owner.Animator.SetTrigger("Transform");
-        }
+        // 변신 요청 - 이펙트 활성화 등
+        owner.RequestFormChange(targetForm);
 
-        // 변형 중 효과 적용 (선택적)
-        ApplyTransformationEffects();
+        Debug.Log($"[TransformState] {targetForm} 폼으로 변신 시작");
     }
 
     public override void Update()
     {
-        // 변형이 완료되었으면 아무것도 하지 않음
-        if (isTransformationComplete) return;
-
-        // 폼 변형은 TransformRoutine 코루틴에서 처리
-        // 여기서는 추가 로직만 처리
+        // 변신 완료
+        if (isTransforming && Time.time - startTime >= transformationTime)
+        {
+            CompleteTransformation();
+        }
     }
 
+    private void CompleteTransformation()
+    {
+        // 폼 적용
+        owner.ApplyForm(targetForm);
+
+        // 변신 완료 설정
+        isTransforming = false;
+
+        Debug.Log($"[TransformState] {targetForm} 폼으로 변신 완료");
+    }
     public override void Exit()
     {
-        // 애니메이션 트리거 리셋
-        if (owner.Animator != null)
-        {
-            owner.Animator.ResetTrigger("Transform");
-        }
-
-        // 변형 효과 정리
-        CleanupTransformationEffects();
+        targetForm = BossForm.Basic;
+        CompleteTransformation();
     }
-    #endregion
 
-    #region TransfomrFunc
-    public void OnTransformationComplete()
+    private BossForm DecideNextForm()
     {
-        isTransformationComplete = true;
-    }
+        List<BossForm> availableForms = new List<BossForm>();
 
-    
-    private void ApplyTransformationEffects()
-    {
-        // 예: 파티클 효과, 사운드 등
-    }
+        if (owner.Worm != null)
+            availableForms.Add(BossForm.Worm);
+        if (owner.Troy != null)
+            availableForms.Add(BossForm.Trojan);
+        if (owner.Ransomware != null)
+            availableForms.Add(BossForm.Ransomware);
 
-    private void CleanupTransformationEffects()
-    {
-        // 변형 관련 효과 정리
-    }
+        if (availableForms.Count == 0)
+            return BossForm.Basic;
 
-    public bool IsTransformationComplete()
-    {
-        return isTransformationComplete;
+        return availableForms[UnityEngine.Random.Range(0, availableForms.Count)];
     }
-    #endregion
 }
