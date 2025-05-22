@@ -531,7 +531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3784842488297378168
 Transform:
   m_ObjectHideFlags: 0
@@ -753,6 +753,7 @@ MonoBehaviour:
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
+  teleportCooldown: 4
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}
