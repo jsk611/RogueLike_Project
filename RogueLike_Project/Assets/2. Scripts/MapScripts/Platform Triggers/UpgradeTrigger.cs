@@ -34,7 +34,7 @@ public class UpgradeTrigger : MonoBehaviour
             helpUI.text = uiText + canUpgrade +" left";
             helpUI.enabled = true;
             helpUI.color = Color.cyan;
-            if (!UpgradeManager.upgrading && canUpgrade > 0 && Input.GetKeyUp(KeyCode.F))
+            if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F))
             {
                 StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
                 canUpgrade--;

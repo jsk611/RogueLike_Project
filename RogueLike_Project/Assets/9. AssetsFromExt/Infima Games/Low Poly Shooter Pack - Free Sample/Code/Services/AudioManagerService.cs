@@ -8,7 +8,7 @@ namespace InfimaGames.LowPolyShooterPack
     /// <summary>
     /// Manages the spawning and playing of sounds.
     /// </summary>
-    public class AudioManagerService : MonoBehaviour, IAudioManagerService
+    public class AudioManagerService : MonoBehaviour,IAudioManagerService
     {
         /// <summary>
         /// Contains data related to playing a OneShot audio.
@@ -47,9 +47,10 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private IEnumerator DestroySourceWhenFinished(AudioSource source)
         {
+            if (source == null) yield break;
             //Wait for the audio source to complete playing the clip.
-            yield return new WaitWhile(() => source.isPlaying);
-            
+            yield return new WaitForSeconds(source.clip.length);
+        
             //Destroy the audio game object, since we're not using it anymore.
             //This isn't really too great for performance, but it works, for now.
             DestroyImmediate(source.gameObject);

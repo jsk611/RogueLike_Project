@@ -17,10 +17,12 @@ public class SettingManager : MonoBehaviour
     {
         fade.gameObject.SetActive(true);
         fade.DOFade(1, 1f);
+        Debug.Log("Start Game");
         Invoke("LoadToGame", 1f);
     }
     void LoadToGame()
     {
+        fade.DOFade(0, 0.1f);
         SceneManager.LoadScene("IngameScene");
     }
     public void NewGame()
@@ -31,6 +33,7 @@ public class SettingManager : MonoBehaviour
         fade.gameObject.SetActive(true);
 
         fade.DOFade(1, 1f);
+        Debug.Log("New Game");
         Invoke("LoadToGame", 1f);
     }
     public void GoToTitle()
