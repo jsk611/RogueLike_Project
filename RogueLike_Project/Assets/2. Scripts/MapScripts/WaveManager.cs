@@ -120,6 +120,8 @@ public class WaveManager : MonoBehaviour
     void UpdateLighting()
     {
         DynamicGI.UpdateEnvironment();
+        
+       //if (currentStage == 1) RenderSettings.ambientIntensity = Mathf.PingPong(Time.time, 1);
     }
 
     void ChangeSkyBox(float duration = 3f)

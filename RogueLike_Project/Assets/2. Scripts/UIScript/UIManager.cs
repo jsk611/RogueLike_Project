@@ -59,9 +59,14 @@ public class UIManager : MonoBehaviour
     //Controlling bars value
     public Image[] Bar;
     [SerializeField] PlayerHPBar_New signalBar;
+    [SerializeField] TMP_Text hpStatText;
     public void BarValueChange(int i, float maxValue, float curValue)
     {
-        if (i == 0) signalBar.ChangeBarValue(curValue, maxValue);
+        if (i == 0)
+        {
+            signalBar.ChangeBarValue(curValue, maxValue);
+            hpStatText.text = $"<size=12>{(int)curValue}</size> | {(int)maxValue}";
+        }
         Bar[i].fillAmount = curValue / maxValue;
     }
 
