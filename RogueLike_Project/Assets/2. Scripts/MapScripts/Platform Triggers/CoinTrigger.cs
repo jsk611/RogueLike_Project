@@ -8,6 +8,7 @@ public class CoinTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
     string uiText = "Get DNA with ";
+    bool isInteracting = false;
 
     public int coinAmount = 100;
     PlayerStatus ps;
@@ -31,10 +32,12 @@ public class CoinTrigger : MonoBehaviour
             helpUI.text = uiText + coinAmount + " coins";
             helpUI.enabled = true;
             helpUI.color = Color.yellow;
-            if (Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=coinAmount)
+            if (Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=coinAmount && !isInteracting)
             {
+                isInteracting = true;
                 ps.IncreasePermanentCoin(1);
                 ps.DecreaseCoin(coinAmount);
+                isInteracting=false;
              //   GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
              //   GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
             }

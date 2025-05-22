@@ -10,7 +10,7 @@ public class Tooltip : MonoBehaviour
     TMP_Text text;
     private void Start()
     {
-        text = GetComponentInChildren<TMP_Text>();
+        text = GetComponentInChildren<TMP_Text>(true);
         gameObject.SetActive(false);
     }
     void Update()
@@ -20,14 +20,17 @@ public class Tooltip : MonoBehaviour
 
     public void isNewGameBtn()
     {
+        if(text == null) text = GetComponentInChildren<TMP_Text>(true);
         text.text = "New Game";
     }
     public void isSettingBtn()
     {
+        if (text == null) text = GetComponentInChildren<TMP_Text>(true);
         text.text = "Setting";
     }
     public void isQuitBtn()
     {
+        if (text == null) text = GetComponentInChildren<TMP_Text>(true);
         text.text = "Quit";
     }
 

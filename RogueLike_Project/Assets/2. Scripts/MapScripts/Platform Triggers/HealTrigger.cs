@@ -7,6 +7,7 @@ using UnityEngine;
 public class HealTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
+    [SerializeField] int healCost = 200; 
     string uiText = "Recovery - 100DNA";
     bool isHealed = false;
     
@@ -36,7 +37,7 @@ public class HealTrigger : MonoBehaviour
             {
                 isHealed = true;
                 ps.IncreaseHealth(ps.GetMaxHealth() * 0.25f);
-                ps.DecreaseCoin(200);
+                ps.DecreaseCoin(healCost);
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
 

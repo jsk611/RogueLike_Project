@@ -209,6 +209,8 @@ public class UpgradeManager_New : MonoBehaviour
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
             StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+
+            //upgrade 한 번 더 추가
         }
         else if (curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
         {
