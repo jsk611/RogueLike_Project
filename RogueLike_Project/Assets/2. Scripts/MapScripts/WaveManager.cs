@@ -50,6 +50,10 @@ public class WaveManager : MonoBehaviour
 
     WaveData waveData;
     bool isMissionEnd;
+
+    [Header("Debug")]
+    [SerializeField] int debugStage;
+
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager_New>();
@@ -141,7 +145,7 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
-        for(currentStage = 2; currentStage <= 4; currentStage++)
+        for(currentStage = debugStage; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();

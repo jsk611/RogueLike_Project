@@ -386,7 +386,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
-    public IEnumerator ShowWarningOnTile(Vector3 spawnPos, float duration, float fieldSize)
+    public IEnumerator ShowWarningOnTile(Vector3 spawnPos, float duration, float fieldSize, int mode)
     {
 
         int halfsize = (int)(fieldSize / 2);
@@ -394,6 +394,8 @@ public class TileManager : MonoBehaviour
         int tileZ = (int)(spawnPos.z / 2);
 
         Debug.Log("Field Spawned at [" + tileX + " , " + tileZ + "]");
+        float showWarningTime = duration / 4;
+        float remainingTime = duration - showWarningTime;
         // 1. 타겟 타일이 실제로 있는지 검사
         if (tileZ < 0 || tileZ >= mapSize || tileX < 0 || tileX >= mapSize)
             yield break;
@@ -410,11 +412,58 @@ public class TileManager : MonoBehaviour
                 targetTile.AlertChanging(duration, 4);
             }
 
+        }
+
+        yield return new WaitForSeconds(showWarningTime);
+
+        for (int i = tileX - halfsize; i <= tileX + halfsize; i++)
+        {
+            for (int j = tileZ - halfsize; j <= tileZ + halfsize; j++)
+            {
+                Tile targetTile = tiles[i, j];
+                if (targetTile == null || !targetTile.IsSetActive)
+                    continue;
+
+                SetMode(targetTile, mode);
+            }
 
         }
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(remainingTime);
 
+        for (int i = tileX - halfsize; i <= tileX + halfsize; i++)
+        {
+            for (int j = tileZ - halfsize; j <= tileZ + halfsize; j++)
+            {
+                Tile targetTile = tiles[i, j];
+                if (targetTile == null || !targetTile.IsSetActive)
+                    continue;
+
+                ResetMode(targetTile, mode);
+            }
+
+        }
+
+    }
+
+    private void SetMode(Tile target, int mode)
+    {
+        switch (mode)
+        {
+            case 0:
+                target.ChangeSpikeMode(true);
+                break;
+        }
+    }
+
+    private void ResetMode(Tile target, int mode)
+    {
+        switch (mode)
+        {
+            case 0:
+                target.ChangeSpikeMode(false);
+                break;
+        }
     }
 
     public IEnumerator CreateShockwave(int i,int j,int chain,float power,float duration = 0.3f)

@@ -29,6 +29,7 @@ public class Summoner : MonsterBase
     protected override void Start()
     {
         base.Start();
+
         // stateActions에 CAST 상태와 연관 메서드 등록
         stateActions[State.CAST] = UpdateCast;
         stateActions.Remove(State.ATTACK);
