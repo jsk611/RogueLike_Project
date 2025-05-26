@@ -61,6 +61,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
         currentStage = 1;
+        debugStage = 3;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
         
