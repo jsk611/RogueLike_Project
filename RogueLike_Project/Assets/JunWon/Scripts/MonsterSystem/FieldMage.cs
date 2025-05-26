@@ -7,6 +7,7 @@ using static UnityEngine.GraphicsBuffer;
 public class FieldMage : MonsterBase
 {
     [Header("Field Settings")]
+    [SerializeField] TileManager tileManager;
     [SerializeField] protected float maintainDistance = 10f;          // 플레이어와 유지할 최소 거리
     [SerializeField] protected float fieldSpawnInterval = 5f;     // 필드 생성 간격(초)
     protected float fieldSpawnTimer = 0f;                          // 타이머
@@ -26,6 +27,8 @@ public class FieldMage : MonsterBase
     protected override void Start()
     {
         base.Start();
+
+        tileManager = FindObjectOfType<TileManager>();
         // stateActions에 CAST 상태와 연관 메서드 등록
         stateActions[State.CAST] = UpdateCast;
         stateActions.Remove(State.ATTACK);
@@ -93,7 +96,7 @@ public class FieldMage : MonsterBase
         if (debuffFieldPrefab != null && target != null)
         {
             // 플레이어 위치에 디버프 필드를 생성
-            StartCoroutine(BuffFieldRoutine(target.position, debuffFieldPrefab));
+            StartCoroutine(BuffFieldRoutine(target.position, debuffFieldPrefab, 0));
         }
     }
 
@@ -131,17 +134,22 @@ public class FieldMage : MonsterBase
             if (lowestHealthMonster != null)
             {
                 Vector3 spawnPos = lowestHealthMonster.transform.position;
-                StartCoroutine(BuffFieldRoutine(spawnPos, buffFieldPrefab));
+                StartCoroutine(BuffFieldRoutine(spawnPos, buffFieldPrefab, 1));
             }
         }
     }
 
 
-    private IEnumerator BuffFieldRoutine(Vector3 spawnPos, GameObject field)
+    private IEnumerator BuffFieldRoutine(Vector3 spawnPos, GameObject field, int mode)
     {
 
         float fieldSize = 4; // 전조 및 필드의 반경
-        float warningDuration = 1.5f; // 전조 표시 지속 시간
+        float warningDuration = 8.0f; // 전조 표시 지속 시간
+
+        // 1. 월드 좌표를 타일 그리드 좌표로 변환
+        int tileX = Mathf.RoundToInt(spawnPos.x / 2);
+        int tileZ = Mathf.RoundToInt(spawnPos.z / 2);
+
 
         TileManager tileManager = FindObjectOfType<TileManager>();
         if (tileManager == null)
@@ -150,11 +158,27 @@ public class FieldMage : MonsterBase
             yield break;
         }
 
-        StartCoroutine(tileManager.ShowWarningOnTile(spawnPos, warningDuration, fieldSize));
+        // 3. 해당 타일이 활성화되어 있는지 확인
+        Tile targetTile = tileManager.GetTiles[tileZ, tileX];
+        if (targetTile == null || !targetTile.IsSetActive)
+        {
+            Debug.LogWarning("Target tile is not active");
+            yield return null;
+        }
+
+        StartCoroutine(tileManager.ShowWarningOnTile(spawnPos, warningDuration, fieldSize, mode));
         yield return new WaitForSeconds(warningDuration);
 
-        Instantiate(field, spawnPos, Quaternion.identity);
+        //// 4. 타일 위에 불꽃 장판 생성
+        //Vector3 fireFieldPosition = new Vector3(
+        //    tileX * 2,                    // 타일의 월드 X 좌표
+        //    targetTile.transform.position.y + 2.0f,  // 타일 위 약간 위
+        //    tileZ * 2                     // 타일의 월드 Z 좌표
+        //);
+
+        //Instantiate(field, fireFieldPosition, Quaternion.identity);
     }
+
 }
 
 

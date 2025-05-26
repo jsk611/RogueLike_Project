@@ -573,15 +573,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 38.260773
+      value: 36.659977
       objectReference: {fileID: 0}
     - target: {fileID: 400030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 9.48
+      value: 4.07
       objectReference: {fileID: 0}
     - target: {fileID: 400030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 42.42259
+      value: 41.27431
       objectReference: {fileID: 0}
     - target: {fileID: 400030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -730,10 +730,15 @@ MonoBehaviour:
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
+  teleportCooldown: 4
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}
+  monsterAttackSound: {fileID: 0}
+  monsterHitSound: {fileID: 0}
+  extraSounds: []
   state: 0
+  tileManager: {fileID: 0}
   maintainDistance: 15
   fieldSpawnInterval: 5
   debuffFieldPrefab: {fileID: 4061503500606719347, guid: edc30e9b8d86987428a129a4850d36da,
