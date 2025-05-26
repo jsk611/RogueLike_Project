@@ -20,6 +20,7 @@ TagManager:
   - Floor
   - Obstacle
   - UpperBody
+  - Monster
   layers:
   - Default
   - TransparentFX

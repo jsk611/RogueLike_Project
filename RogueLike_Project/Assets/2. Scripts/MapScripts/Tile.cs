@@ -16,10 +16,12 @@ public class Tile : MonoBehaviour
 
     [SerializeField] SpriteRenderer minimapTile;
     [SerializeField] GameObject spike;
+    [SerializeField] GameObject heal;
     [SerializeField] GameObject warningLaser;
     public Transform jumpPlatForm;
     public float maxHeight;
     bool isSpike = false;
+    bool isHeal = false;
     public bool canShockWave = true;
 
     private void Start()
@@ -94,6 +96,7 @@ public class Tile : MonoBehaviour
 
         if(isSpike) yield return new WaitForSeconds(1f);
         ChangeSpikeMode(false);
+        ChangeHealMode(false);
     }
     public void ChangeHeight(float size_y, float duration = 2f)
     {
@@ -242,6 +245,12 @@ public class Tile : MonoBehaviour
         Destroy(laser, 2f);
         yield return StartCoroutine(AlertChangingCoroutine(1.6f, 2));
         ChangeSpikeMode(true);
+    }
+
+    public void ChangeHealMode(bool isHeal)
+    {
+        this.isHeal = isHeal;
+        heal.SetActive(isHeal);
     }
 
     public IEnumerator CreateShockwave()

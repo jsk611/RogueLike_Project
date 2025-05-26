@@ -107,6 +107,7 @@ public class TileManager : MonoBehaviour
             {
                 tileMap[i,j] = initialValue;
                 tiles[i, j].ChangeSpikeMode(false);
+                tiles[i, j].ChangeHealMode(false);
                 baseColors[i, j] = defaultColor[0];
                 gridColors[i, j] = defaultColor[1];
                 emissionColors[i, j] = defaultColor[2];
@@ -453,6 +454,9 @@ public class TileManager : MonoBehaviour
             case 0:
                 target.ChangeSpikeMode(true);
                 break;
+            case 1:
+                target.ChangeHealMode(true);
+                break;
         }
     }
 
@@ -462,6 +466,9 @@ public class TileManager : MonoBehaviour
         {
             case 0:
                 target.ChangeSpikeMode(false);
+                break;
+            case 1:
+                target.ChangeHealMode(false);
                 break;
         }
     }
