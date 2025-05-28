@@ -54,7 +54,7 @@
         }
       ],
       "spawnDelay": 20,
-      "firstDelay": 20
+      "firstDelay": 30
     },
     {
       "type": 111,
@@ -70,7 +70,7 @@
         }
       ],
       "spawnDelay": 20,
-      "firstDelay": 15
+      "firstDelay": 25
     },
     {
       "type": 212,
@@ -86,7 +86,7 @@
         }
       ],
       "spawnDelay": 20,
-      "firstDelay": 10
+      "firstDelay": 15
     }
 
   ],

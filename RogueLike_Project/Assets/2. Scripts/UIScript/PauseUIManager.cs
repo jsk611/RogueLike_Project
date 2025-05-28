@@ -10,10 +10,8 @@ public class PauseUIManager : MonoBehaviour
 {
     public static PauseUIManager instance;
     [SerializeField] GameObject Main;
-    [SerializeField] GameObject GamePlayOption;
-    [SerializeField] GameObject DisplayOption;
-    [SerializeField] GameObject SoundOption;
-    [SerializeField] GameObject LanguageOption;
+    [SerializeField] GameObject Option;
+
 
     CharacterBehaviour character;
 
@@ -40,10 +38,8 @@ public class PauseUIManager : MonoBehaviour
  
     public void ResetDisplay()
     {
-        GamePlayOption.SetActive(false);
-        DisplayOption.SetActive(false);
-        SoundOption.SetActive(false);
-        LanguageOption.SetActive(false);
+        Option.SetActive(false);
+
         Main.SetActive(true);
     }
     public void OptionDisplay(int selectedOption)
