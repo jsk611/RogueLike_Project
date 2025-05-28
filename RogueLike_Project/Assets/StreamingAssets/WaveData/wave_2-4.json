@@ -21,7 +21,7 @@
       "spawnDelay": 8
     },
     {
-      "type": 111,
+      "type": 213,
       "count": 6,
       "spawnPoints": [
         {
@@ -54,9 +54,9 @@
   "events": [
     {
       "type": "Spike",
-      "repeat": 6,
-      "delay": 8,
-      "count": 20
+      "repeat": 4,
+      "delay": 12,
+      "count": 30
     }
   ]
 }

@@ -23,36 +23,43 @@
     },
     {
       "type": 212,
-      "count": 5,
+      "count": 3,
       "spawnPoints": [
         {
           "x": 1,
           "y": 1
         }
       ],
-      "spawnDelay": 4
+      "spawnDelay": 4,
+      "firstDelay": 5
     },
     {
       "type": 102,
-      "count": 3,
+      "count": 2,
       "spawnPoints": [
         {
           "x": 37,
           "y": 37
         }
       ],
-      "spawnDelay": 5
+      "spawnDelay": 5,
+      "firstDelay": 10
     }
 
   ],
   "mission":
   {
     "type": "Killing",
-    "count": 8
+    "count": 10
   },
   
   "isRandomEvent": false,
   "events": [
-    
+    {
+      "type": "Spike",
+      "repeat": 10,
+      "delay": 15,
+      "count": 10
+    }
   ]
 }
