@@ -61,7 +61,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
         currentStage = 1;
-        debugStage = 3;
+        debugStage = 2;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
         
@@ -158,7 +158,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{3}-{4}");
+                LoadWaveData($"{2}-{7}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -385,7 +385,7 @@ public class WaveManager : MonoBehaviour
         Vector2 size = new Vector2(info.footholdSize.x, info.footholdSize.y);
         FootHold fh = Instantiate(footHold, new Vector3(realPos.x, info.footholdHeight, realPos.z), quaternion.identity).GetComponent<FootHold>();
         fh.gameObject.transform.localScale = new Vector3(size.x, 0.5f, size.y);
-        fh.transform.parent = tileManager.GetTiles[pos.y, pos.x].transform;
+        if(tileManager.GetTiles[pos.y, pos.x].gameObject.activeSelf) fh.transform.parent = tileManager.GetTiles[pos.y, pos.x].transform;
         fh.maxTime = time;
         while (fh.progress < 1)
         {

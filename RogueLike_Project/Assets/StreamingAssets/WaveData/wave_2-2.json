@@ -13,33 +13,71 @@
       "type": 101,
       "count": 16,
       "spawnPoints": [
-        { "x": 8, "y": 43},
-        { "x": 14, "y": 43},
-        { "x": 30, "y": 43},
-        { "x": 36, "y": 43}
+        {
+          "x": 8,
+          "y": 43
+        },
+        {
+          "x": 14,
+          "y": 43
+        },
+        {
+          "x": 30,
+          "y": 43
+        },
+        {
+          "x": 36,
+          "y": 43
+        }
 
       ],
-      "spawnDelay": 8
+      "spawnDelay": 15
     },
     {
       "type": 111,
       "count": 16,
       "spawnPoints": [
-        { "x": 8, "y": 1},
-        { "x": 14, "y": 1},
-        { "x": 30, "y": 1},
-        { "x": 36, "y": 1}
+        {
+          "x": 8,
+          "y": 1
+        },
+        {
+          "x": 14,
+          "y": 1
+        }
+    
       ],
-      "spawnDelay": 8
+      "spawnDelay": 15
+    },
+    {
+      "type": 213,
+      "count": 16,
+      "spawnPoints": [
+        {
+          "x": 30,
+          "y": 1
+        },
+        {
+          "x": 36,
+          "y": 1
+        }
+      ],
+      "spawnDelay": 15
     },
     {
       "type": 212,
       "count": 8,
       "spawnPoints": [
-        { "x": 22, "y": 43},
-        { "x": 22, "y": 1}
+        {
+          "x": 22,
+          "y": 43
+        },
+        {
+          "x": 22,
+          "y": 1
+        }
       ],
-      "spawnDelay": 8
+      "spawnDelay": 15
     }
 
   ],
@@ -51,6 +89,11 @@
   
   "isRandomEvent": false,
   "events": [
-    
+    {
+      "type": "Spike",
+      "repeat": 10,
+      "delay": 15,
+      "count": 10
+    }
   ]
 }

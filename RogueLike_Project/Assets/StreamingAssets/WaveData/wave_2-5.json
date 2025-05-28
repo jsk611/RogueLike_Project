@@ -21,7 +21,7 @@
       "spawnDelay": 8
     },
     {
-      "type": 111,
+      "type": 213,
       "count": 2,
       "spawnPoints": [
         {
@@ -32,7 +32,7 @@
       "spawnDelay": 5
     },
     {
-      "type": 102,
+      "type": 212,
       "count": 2,
       "spawnPoints": [
         {
@@ -56,6 +56,11 @@
   
   "isRandomEvent": false,
   "events": [
-    
+    {
+      "type": "Spike",
+      "repeat": 10,
+      "delay": 15,
+      "count": 10
+    }
   ]
 }

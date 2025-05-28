@@ -22,7 +22,7 @@
           "y": 11
         }
       ],
-      "spawnDelay": 16
+      "spawnDelay": 20
     },
     {
       "type": 102,
@@ -37,7 +37,24 @@
           "y": 23
         }
       ],
-      "spawnDelay": 20
+      "spawnDelay": 40,
+      "firstDelay": 10
+    },
+    {
+      "type": 213,
+      "count": 12,
+      "spawnPoints": [
+        {
+          "x": 23,
+          "y": 31
+        },
+        {
+          "x": 3,
+          "y": 23
+        }
+      ],
+      "spawnDelay": 20,
+      "firstDelay": 20
     },
     {
       "type": 111,
@@ -52,7 +69,8 @@
           "y": 3
         }
       ],
-      "spawnDelay": 16
+      "spawnDelay": 20,
+      "firstDelay": 15
     },
     {
       "type": 212,
@@ -67,7 +85,8 @@
           "y": 11
         }
       ],
-      "spawnDelay": 12
+      "spawnDelay": 20,
+      "firstDelay": 10
     }
 
   ],
@@ -80,13 +99,18 @@
     },
     "footholdHeight": 4.5,
     "footholdSize": {
-      "x": 15,
-      "y": 15
+      "x": 18,
+      "y": 18
     }
   },
   
   "isRandomEvent": false,
   "events": [
-    
+    {
+      "type": "Spike",
+      "repeat": 10,
+      "delay": 15,
+      "count": 10
+    }
   ]
 }
