@@ -576,8 +576,6 @@ public class UnknownVirusBoss : BossBase
     {
         try
         {
-            lastMapAttackTime = Time.time;
-
             if (tileManager == null)
             {
                 Debug.LogError("맵 공격 실행 불가: TileManager가 null입니다");
@@ -688,9 +686,6 @@ public class UnknownVirusBoss : BossBase
                     // 충격파 생성 (TileManager의 CreateShockwave 코루틴 호출)
                     StartCoroutine(tileManager.CreateShockwave(x, z, halfSize, shockwavePower));
 
-                    // 해당 위치 주변에 데미지 적용
-                    ApplyDamageAroundPosition(new Vector3(x * 2, 0, z * 2));
-
                     yield break;
                 }
 
@@ -767,8 +762,6 @@ public class UnknownVirusBoss : BossBase
             if (midX == targetX && midZ == targetZ)
             {
                 HighlightTile(midX, midZ, Color.green);
-                StartCoroutine(tileManager.CreateShockwave(midX, midZ, halfSize, shockwavePower));
-                ApplyDamageAroundPosition(new Vector3(midX * 2, 0, midZ * 2));
                 yield break;
             }
 
@@ -786,8 +779,6 @@ public class UnknownVirusBoss : BossBase
 
         // 타겟 영역 강조 및 효과 적용 (이진 검색이 실패했을 경우)
         HighlightTile(targetX, targetZ, Color.green);
-        StartCoroutine(tileManager.CreateShockwave(targetX, targetZ, halfSize, shockwavePower));
-        ApplyDamageAroundPosition(new Vector3(targetX * 2, 0, targetZ * 2));
     }
 
     // 랜덤 타일 검색 공격
@@ -843,8 +834,6 @@ public class UnknownVirusBoss : BossBase
             if (x == targetX && z == targetZ)
             {
                 HighlightTile(x, z, Color.green);
-                StartCoroutine(tileManager.CreateShockwave(x, z, halfSize, shockwavePower));
-                ApplyDamageAroundPosition(new Vector3(x * 2, 0, z * 2));
                 yield break;
             }
 
@@ -854,8 +843,6 @@ public class UnknownVirusBoss : BossBase
 
         // 최대 시도 횟수를 초과해도 타겟을 찾지 못한 경우
         HighlightTile(targetX, targetZ, Color.green);
-        StartCoroutine(tileManager.CreateShockwave(targetX, targetZ, halfSize, shockwavePower));
-        ApplyDamageAroundPosition(new Vector3(targetX * 2, 0, targetZ * 2));
     }
 
     // 타일 강조 헬퍼 메서드
@@ -888,38 +875,6 @@ public class UnknownVirusBoss : BossBase
             if (renderer != null)
             {
                 renderer.material.SetColor("_BaseColor", Color.white);
-            }
-        }
-    }
-
-    // 지정된 위치 주변에 데미지 적용
-    private void ApplyDamageAroundPosition(Vector3 centerPosition)
-    {
-        float damageRadius = attackAreaSize * 1.0f; // 데미지 반경
-
-        Debug.Log("데미지 적용");
-
-        // 데미지 적용
-        Collider[] hitColliders = Physics.OverlapSphere(centerPosition, damageRadius, playerLayer);
-        foreach (var collider in hitColliders)
-        {
-            if (collider == null) continue;
-
-            Debug.Log(collider + "가 맞았습니다");
-
-            PlayerStatus playerStatus = collider.GetComponent<PlayerStatus>();
-            if (playerStatus != null)
-            {
-                playerStatus.DecreaseHealth(abilityManager.GetAbiltiyDmg("MapAttack"));
-
-                // 추가 효과 - 넉백
-                Rigidbody playerRb = collider.GetComponent<Rigidbody>();
-                if (playerRb != null)
-                {
-                    Vector3 knockbackDir = (collider.transform.position - centerPosition).normalized;
-                    knockbackDir.y = 0.3f; // 약간 위로
-                    playerRb.AddForce(knockbackDir * 10f, ForceMode.Impulse);
-                }
             }
         }
     }
