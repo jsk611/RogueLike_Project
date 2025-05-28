@@ -119,13 +119,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3833415478891e4d8ff57a9947db665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionRadius: 3
+  explosionRadius: 10
   explosionDamage: 50
   explosionForce: 15
   targetLayers:
     serializedVersion: 2
     m_Bits: 1408
-  explosionPrefab: {fileID: 4520469302474059286, guid: 65bbdc6526a45844bb68fc61c23c25f6,
+  explosionPrefab: {fileID: 8950624839484268180, guid: 45ce85b82008be84287f2c7e5bf07647,
     type: 3}
   explosionSound: {fileID: 0}
   cameraShakeIntensity: 0.5

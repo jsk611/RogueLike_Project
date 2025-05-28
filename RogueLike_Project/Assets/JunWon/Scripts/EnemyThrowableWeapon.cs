@@ -39,6 +39,11 @@ public class EnemyThrowableWeapon : MonoBehaviour
         }
     }
 
+    public void InitializeComponents()
+    {
+        
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         // 바닥이나 벽에 충돌 시 폭발

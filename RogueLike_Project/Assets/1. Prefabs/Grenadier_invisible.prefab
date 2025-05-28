@@ -24,6 +24,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
         type: 3}
+    - target: {fileID: 8390763758789801008, guid: 0833468f5bad55f4da2176c05eb1f131,
+        type: 3}
+      propertyPath: Damage
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 8788629424251833221, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -83,6 +88,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788629424251869093, guid: 0833468f5bad55f4da2176c05eb1f131,
+        type: 3}
+      propertyPath: m_TagString
+      value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 8788629424263437025, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
