@@ -61,7 +61,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
         currentStage = 1;
-        debugStage = 2;
+        debugStage = 1;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
         
@@ -150,15 +150,33 @@ public class WaveManager : MonoBehaviour
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeSkyBox();
-            for (int i = 0; i < 4; i++)
+            for (int i = 1; i <= 5; i++)
             {
-                currentWave = i + 1;
+                currentWave = i;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
                 int cnt = 0;
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                LoadWaveData($"{2}-{7}");
+                //LoadWaveData($"{2}-{7}");
+                yield return StartCoroutine(RunWave());
+                yield return new WaitForSeconds(0.5f);
+                prevWave = randNum;
+            }
+            //정비 스테이지
+            yield return new WaitForSeconds(0.5f);
+            yield return StartCoroutine(Maintenance());
+            yield return new WaitForSeconds(0.5f);
+
+            for (int i = 6; i <= 10; i++)
+            {
+                currentWave = i;
+                int randNum = Random.Range(1, mapMaxIdx + 1);
+                int cnt = 0;
+                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
+
+                LoadWaveData($"{currentStage}-{randNum}");
+                //LoadWaveData($"{2}-{7}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -202,6 +220,8 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator Maintenance()
     {
+        UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=green>M");
+
         tileManager.InitializeArray(currentStage, 4);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         Vector2Int stagePos = tileManager.MakeCenteredMapFromCSV(jeongbiMapPath, playerPos.x, playerPos.y);

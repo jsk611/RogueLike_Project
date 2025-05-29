@@ -45,10 +45,10 @@ public class PauseUIManager : MonoBehaviour
     public void OptionDisplay(int selectedOption)
     {
         Debug.Log((Options)selectedOption + "selected");
-        option.TryGetValue((Options)selectedOption, out GameObject display);
+        //option.TryGetValue((Options)selectedOption, out GameObject display);
         ResetDisplay();
         Main.SetActive(false);
-        display.SetActive(true);
+        Option.SetActive(true);
     }
     public void UpdateDisplay()
     {
