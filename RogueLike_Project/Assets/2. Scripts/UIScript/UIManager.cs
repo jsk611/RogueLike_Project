@@ -175,6 +175,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_Text MissionText;
     [SerializeField] TMP_Text ProgressText;
     [SerializeField] EnemyCountData enemyCountData;
+    [SerializeField] GameObject bossHPBar;
     int maxEnemyCount;
     bool isKillingMission = false;
     bool isSurviveMission = false;

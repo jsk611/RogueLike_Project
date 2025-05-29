@@ -225,6 +225,7 @@ public class TileManager : MonoBehaviour
 
     public bool IsHighPos(int i, int j)
     {
+        return false;
         bool isTooHigh = false;
         //높은 맵 생성 시  경고 후 가시 설치 
         if (j - 1 >= 0 && (tileMap[i, j] - tileMap[i, j - 1]) >= 4 && tileMap[i, j - 1] > 0) isTooHigh = true;
