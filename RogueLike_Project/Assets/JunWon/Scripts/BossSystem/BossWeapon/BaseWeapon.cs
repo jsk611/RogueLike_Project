@@ -123,7 +123,7 @@ public class BaseWeapon : MonoBehaviour, IWeapon
             baseDamage = bossOwner.GetBaseDamage();
 
             // 보스의 현재 페이즈/상태에 따른 멀티플라이어 적용
-            damageMultiplier = bossOwner.GetDamageMultiplier();
+            //damageMultiplier = bossOwner.GetDamageMultiplier();
 
             // 최종 데미지 계산
             currentDamage = baseDamage * damageMultiplier;

@@ -6,6 +6,8 @@ public class BossStatus : StatusBehaviour
 {
     [Header("Monster Status")]
 
+    public string bossName;
+
     [Tooltip("Creature Health")]
     [SerializeField]
     private float Health;
@@ -69,6 +71,8 @@ public class BossStatus : StatusBehaviour
         monsterAnimator = GetComponent<Animator>();
         eventHandler = GetComponent<MonsterAnimationEventHandler>();
         HPBar = bossBase.HPBar;
+        UIManager.instance.BossSummoned(this);
+        Debug.Log("Boss Summoned: " + bossName);
     }
 
     // Current Health
@@ -336,4 +340,8 @@ public class BossStatus : StatusBehaviour
         currentCon = Condition.normal;
     }
 
+    void OnDestroy()
+    {
+        UIManager.instance.BossKilled(this);
+    }
 }

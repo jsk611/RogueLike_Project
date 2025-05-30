@@ -175,7 +175,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_Text MissionText;
     [SerializeField] TMP_Text ProgressText;
     [SerializeField] EnemyCountData enemyCountData;
-    [SerializeField] GameObject bossHPBar;
+
+    [SerializeField] GameObject[] bossHPBars;
+    Stack<GameObject> barStk = new Stack<GameObject>();
+    Dictionary<BossStatus, GameObject> boss_hpBar_Dict = new Dictionary<BossStatus, GameObject>();
+
     int maxEnemyCount;
     bool isKillingMission = false;
     bool isSurviveMission = false;
@@ -189,10 +193,33 @@ public class UIManager : MonoBehaviour
         missionUIAnim.SetTrigger("MissionStart");
         maxEnemyCount = enemyCountData.enemyCount;
 
-        if(isBoss) MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
+        if (isBoss) { 
+            MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
+            foreach(GameObject bar in bossHPBars)
+            {
+                bar.SetActive(false);
+                barStk.Push(bar);
+            }
+        }
         else MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
         KillingMissionUpdate(true);
     }
+
+    public void BossSummoned(BossStatus boss)
+    {
+        GameObject bar = barStk.Pop();
+        bar.SetActive(true);
+        boss_hpBar_Dict.Add(boss, bar);
+        BossHPBar bossHPBar = bar.GetComponent<BossHPBar>();
+        bossHPBar.SetBoss(boss);
+    }
+
+    public void BossKilled(BossStatus boss)
+    {
+        boss_hpBar_Dict[boss].SetActive(false);
+        barStk.Push(boss_hpBar_Dict[boss]);
+    }
+
     void KillingMissionUpdate(bool tmp)
     {
         if(isKillingMission)

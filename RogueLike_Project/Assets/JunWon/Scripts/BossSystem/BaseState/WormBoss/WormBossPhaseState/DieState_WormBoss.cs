@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DieState_WormBoss : State<WormBossPrime>
@@ -34,7 +35,6 @@ public class DieState_WormBoss : State<WormBossPrime>
             GameObject.Destroy(owner.gameObject,0.2f);
         }
     }
-    public override void Exit()
-    {
-    }
+    
+
 }
