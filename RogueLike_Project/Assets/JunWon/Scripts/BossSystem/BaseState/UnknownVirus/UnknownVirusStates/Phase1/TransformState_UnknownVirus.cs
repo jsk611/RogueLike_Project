@@ -8,8 +8,8 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
     private float startTime = 0f;
     private float transformationTime = 1.0f;
     private BossForm targetForm;
-
-    bool isTransforming = false;
+    private bool isTransforming = false;
+    private bool hasTransformed = false;
 
     public TransformState_UnknownVirus(UnknownVirusBoss owner) : base(owner)
     {
@@ -21,21 +21,23 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
         Debug.Log("UnknownVirus: Transform State 진입");
         startTime = Time.time;
         isTransforming = true;
+        hasTransformed = false;
 
-        // 다음 폼 결정 (현재 Basic이면 다른 폼으로, 아니면 Basic으로)
-        if (owner.CurrentForm == BossForm.Basic)
-            targetForm = DecideNextForm();
+        owner.ResetFormTimer();
+
+        // 항상 Basic이 아닌 다른 폼으로 변신
+        targetForm = DecideNextForm();
 
         // 변신 요청 - 이펙트 활성화 등
         owner.RequestFormChange(targetForm);
 
-        Debug.Log($"[TransformState] {targetForm} 폼으로 변신 시작");
+        Debug.Log($"[TransformState] {owner.CurrentForm} → {targetForm} 폼으로 변신 시작");
     }
 
     public override void Update()
     {
-        // 변신 완료
-        if (isTransforming && Time.time - startTime >= transformationTime)
+        // 변신 애니메이션 완료 체크
+        if (isTransforming && !hasTransformed && Time.time - startTime >= transformationTime)
         {
             CompleteTransformation();
         }
@@ -43,18 +45,22 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
     private void CompleteTransformation()
     {
-        // 폼 적용
+        // 폼 적용 (여기서 formTimer가 설정됨)
         owner.ApplyForm(targetForm);
 
         // 변신 완료 설정
         isTransforming = false;
+        hasTransformed = true;
 
         Debug.Log($"[TransformState] {targetForm} 폼으로 변신 완료");
+        Debug.Log($"[TransformState] formTimer: {owner.GetFormTimer()}, 지속시간: {owner.GetStayDuration()}초");
     }
+
     public override void Exit()
     {
-        targetForm = BossForm.Basic;
-        CompleteTransformation();
+        // Transform State에서 나갈 때는 항상 Basic으로 돌아감
+        owner.ApplyForm(BossForm.Basic);
+        Debug.Log($"[TransformState] Exit - {owner.CurrentForm}에서 Basic으로 복귀");
     }
 
     private BossForm DecideNextForm()
@@ -69,7 +75,10 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
             availableForms.Add(BossForm.Ransomware);
 
         if (availableForms.Count == 0)
+        {
+            Debug.LogWarning("[TransformState] 사용 가능한 변신 폼이 없음 - Basic 유지");
             return BossForm.Basic;
+        }
 
         return availableForms[UnityEngine.Random.Range(0, availableForms.Count)];
     }

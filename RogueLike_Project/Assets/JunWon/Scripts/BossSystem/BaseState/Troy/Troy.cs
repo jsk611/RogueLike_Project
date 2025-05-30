@@ -51,6 +51,7 @@ public class Troy : BossBase
         target = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().transform;
         InitializeComponents();
         InitializeFSM();
+        ResetBoss();
     }
 
     private void Update()
@@ -165,6 +166,89 @@ public class Troy : BossBase
         Gizmos.DrawWireCube(transform.localPosition+new Vector3(0,2.1f,0.3f), collider.size*transform.localScale.x);
         Gizmos.DrawCube(transform.position,Vector3.one*0.1f);
     }
+
+    #region Reset
+    // 보스 상태 초기화 메서드
+    public void ResetBoss()
+    {
+        // 상태 변수들 초기화
+        ResetBossState();
+
+        // 체력 복구
+        if (bossStatus != null)
+        {
+            bossStatus.SetHealth(bossStatus.GetMaxHealth());
+        }
+
+        // 소환된 몬스터들 정리
+        ClearSummonedMonsters();
+
+        // 애니메이터 상태 초기화
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Update(0f);
+        }
+
+        // NavMeshAgent 초기화
+        if (nmAgent != null)
+        {
+            nmAgent.isStopped = false;
+            nmAgent.ResetPath();
+        }
+
+        // FSM을 처음 상태로 되돌리기
+        ResetStateMachine();
+
+        // lurkHeathBoundary 복구 (원본 데이터 백업 필요)
+        RestoreLurkHealthBoundary();
+    }
+
+    private void ResetBossState()
+    {
+        // 초기 상태값 설정
+        isCamouflaged = false;
+        isRushing = false;
+        isLurked = false;
+        runTimer = 0f;
+        lurkTimer = 0f;
+    }
+
+    private void ClearSummonedMonsters()
+    {
+        foreach (var monster in monsterList)
+        {
+            if (monster != null)
+            {
+                Destroy(monster);
+            }
+        }
+        monsterList.Clear();
+    }
+
+    private void ResetStateMachine()
+    {
+        if (fsm != null)
+        {
+            // FSM을 새로 초기화
+            InitializeFSM();
+        }
+    }
+
+    // lurkHeathBoundary 원본 데이터 백업 및 복구
+    [SerializeField] private List<float> originalLurkHeathBoundary = new List<float>();
+
+    private void Awake()
+    {
+        // 원본 데이터 백업
+        originalLurkHeathBoundary = new List<float>(lurkHeathBoundary);
+    }
+
+    private void RestoreLurkHealthBoundary()
+    {
+        lurkHeathBoundary = new List<float>(originalLurkHeathBoundary);
+    }
+    #endregion
 
 
 }

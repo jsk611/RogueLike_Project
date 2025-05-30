@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -26,12 +27,12 @@ public class UnknownVirusBoss : BossBase
     [SerializeField] private BossForm currentForm = BossForm.Basic;
 
     // 폼 변경 쿨타임 관리
-    private float lastFormChangeTime = 0f;
     private float formStayDuration = 15f; // 변신한 폼에 머무는 시간
     private float formTimer = 0f;
     #endregion
 
     #region 보스 설정
+    private float currentRandomValue = 0.9f;
     [Header("전투 설정")]
     [SerializeField] private float baseAttackDamage = 20f;
     [SerializeField] private float baseAttackRange = 10f;
@@ -40,7 +41,7 @@ public class UnknownVirusBoss : BossBase
     [Header("맵 공격")]
     [SerializeField] private GameObject mapAttackVFX;
     [SerializeField] private float mapAttackCooldown = 15f;
-    [Range(0, 1)][SerializeField] private float mapAttackChance = 0.8f;
+    [Range(0, 1)][SerializeField] private float mapAttackChance = 0.7f;
     private float lastMapAttackTime = 0f;
 
     [Header("폼 변경")]
@@ -60,9 +61,6 @@ public class UnknownVirusBoss : BossBase
     private BasicCombatState_UnknownVirus basicState;
     private MapAttackState_UnknownVirus mapAttackState;
     private TransformState_UnknownVirus transformState;
-    private WormCombatState_UnknownVirus wormCombatState;
-    private TrojanCombatState_UnknownVirus trojanCombatState;
-    private RansomwareCombatState_UnknownVirus ransomwareCombatState;
     private DefeatedState_UnknownVirus deadState;
     #endregion
 
@@ -95,7 +93,6 @@ public class UnknownVirusBoss : BossBase
     public Transform Player => target;
     public NavMeshAgent NmAgent => nmAgent;
     public Animator Animator => anim;
-    public BossStatus MonsterStatus => bossStatus;
     public FieldOfView FOV => fov;
     public AbilityManager AbilityManager => abilityManager;
     public BossBase GetCurrentActiveBoss() => currentActiveBoss;
@@ -104,6 +101,20 @@ public class UnknownVirusBoss : BossBase
     public GameObject Worm => wormFormObject;
     public GameObject Troy => trojanFormObject;
     public GameObject Ransomware => ransomwareFormObject;
+
+    public float GetFormTimer()
+    {
+        return formTimer;
+    }
+    public float GetStayDuration()
+    {
+        return formStayDuration;
+    }
+
+    public void ResetFormTimer()
+    {
+        formTimer = Time.time;
+    }
     #endregion
 
     #region 유니티 라이프사이클
@@ -121,6 +132,7 @@ public class UnknownVirusBoss : BossBase
     private void Update()
     {
         // FSM 업데이트
+        UpdateRandomValue();
         fsm.Update();
 
         // 현재 활성화된 폼의 체력을 메인 보스에 동기화
@@ -204,9 +216,6 @@ public class UnknownVirusBoss : BossBase
         basicState = new BasicCombatState_UnknownVirus(this);
         mapAttackState = new MapAttackState_UnknownVirus(this);
         transformState = new TransformState_UnknownVirus(this);
-        wormCombatState = new WormCombatState_UnknownVirus(this);
-        trojanCombatState = new TrojanCombatState_UnknownVirus(this);
-        ransomwareCombatState = new RansomwareCombatState_UnknownVirus(this);
         deadState = new DefeatedState_UnknownVirus(this);
 
         Debug.Log("[UnknownVirusBoss] 상태 초기화 완료");
@@ -231,9 +240,6 @@ public class UnknownVirusBoss : BossBase
         BasicCombatState_UnknownVirus basicState,
         MapAttackState_UnknownVirus mapAttackState,
         TransformState_UnknownVirus transformState,
-        WormCombatState_UnknownVirus wormCombatState,
-        TrojanCombatState_UnknownVirus trojanCombatState,
-        RansomwareCombatState_UnknownVirus ransomwareCombatState,
         DefeatedState_UnknownVirus deadState
     ) CreateStates()
     {
@@ -242,9 +248,6 @@ public class UnknownVirusBoss : BossBase
             new BasicCombatState_UnknownVirus(this),
             new MapAttackState_UnknownVirus(this),
             new TransformState_UnknownVirus(this),
-            new WormCombatState_UnknownVirus(this),
-            new TrojanCombatState_UnknownVirus(this),
-            new RansomwareCombatState_UnknownVirus(this),
             new DefeatedState_UnknownVirus(this)
         );
     }
@@ -254,9 +257,6 @@ public class UnknownVirusBoss : BossBase
         BasicCombatState_UnknownVirus basicState,
         MapAttackState_UnknownVirus mapAttackState,
         TransformState_UnknownVirus transformState,
-        WormCombatState_UnknownVirus wormCombatState,
-        TrojanCombatState_UnknownVirus trojanCombatState,
-        RansomwareCombatState_UnknownVirus ransomwareCombatState,
         DefeatedState_UnknownVirus deadState
     ) s)
     {
@@ -268,7 +268,7 @@ public class UnknownVirusBoss : BossBase
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.basicState, s.mapAttackState,
             () => abilityManager.GetAbilityRemainingCooldown("MapAttack") == 0 &&
-                 UnityEngine.Random.value < mapAttackChance));
+                 currentRandomValue < mapAttackChance));
 
         // 맵 공격 → 기본 전투
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
@@ -280,7 +280,7 @@ public class UnknownVirusBoss : BossBase
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.basicState, s.transformState,
             () => abilityManager.GetAbilityRemainingCooldown("Transform") == 0 &&
-                 UnityEngine.Random.value < formChangeChance));
+                 currentRandomValue > mapAttackChance));
 
         // 각 폼 전투 → 기본 전투
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
@@ -369,16 +369,26 @@ public class UnknownVirusBoss : BossBase
             case BossForm.Worm:
                 targetFormObject = wormFormObject;
                 currentActiveBoss = wormComponent;
+                if (wormComponent != null)
+                {
+                }
                 break;
 
             case BossForm.Trojan:
                 targetFormObject = trojanFormObject;
                 currentActiveBoss = trojanComponent;
+                if (trojanComponent != null)
+                {
+                    trojanComponent.ResetBoss();
+                }
                 break;
 
             case BossForm.Ransomware:
                 targetFormObject = ransomwareFormObject;
                 currentActiveBoss = ransomwareComponent;
+                if (trojanComponent != null)
+                {
+                }
                 break;
         }
 
@@ -415,25 +425,30 @@ public class UnknownVirusBoss : BossBase
         float healthRatio = bossStatus.GetHealth() / bossStatus.GetMaxHealth();
 
         // 대상 폼의 체력 컴포넌트 가져오기
-        BossStatus targetStatus = null;
+        BossStatus targetStatus = formObject.GetComponent<BossStatus>();
 
-        switch (form)
-        {
-            case BossForm.Worm:
-                if (wormComponent != null)
-                    targetStatus = wormComponent.BossStatus;
-                break;
+        //switch (form)
+        //{
+        //    case BossForm.Worm:
+        //        if (wormComponent != null)
+        //            targetStatus = wormComponent.BossStatus;
+        //        break;
 
-            case BossForm.Trojan:
-                if (trojanComponent != null)
-                    targetStatus = trojanComponent.BossStatus;
-                break;
+        //    case BossForm.Trojan:
+        //        if (trojanComponent != null)
+        //            targetStatus = trojanComponent.BossStatus;
+        //        break;
 
-            case BossForm.Ransomware:
-                if (ransomwareComponent != null)
-                    targetStatus = ransomwareComponent.BossStatus;
-                break;
-        }
+        //    case BossForm.Ransomware:
+        //        if (ransomwareComponent != null)
+        //            targetStatus = ransomwareComponent.BossStatus;
+        //        break;
+            
+        //    default:
+        //        if (bossStatus != null)
+        //            targetStatus = bossStatus;
+        //        break;
+        //}
 
         // 대상 체력 설정 (비율 동일하게)
         if (targetStatus != null)
@@ -485,9 +500,6 @@ public class UnknownVirusBoss : BossBase
 
     public void PrepareToReturnToBasicForm()
     {
-        lastFormChangeTime = Time.time;
-
-        // 변신 상태로 전환
         fsm.ForcedTransition(transformState);
     }
 
@@ -890,4 +902,9 @@ public class UnknownVirusBoss : BossBase
         }
     }
     #endregion
+
+    void UpdateRandomValue()
+    {
+        currentRandomValue = UnityEngine.Random.value;
+    }
 }
