@@ -32,7 +32,6 @@ public class MonsterAnimationEventHandler : MonoBehaviour
 
         if (Vector3.Distance(transform.position, player.transform.position) <= monsterBase.GetRange())
         {
-            Debug.Log("melee hit!");
             player.DecreaseHealth(statusBehaviour.GetAttackDamage());
         }
     }

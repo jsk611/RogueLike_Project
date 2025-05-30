@@ -43,7 +43,7 @@ public class DigitalStripeDissolveEffect : MonoBehaviour
     // 몬스터 사망 효과 적용 정적 메서드
     public static void ApplyDeathEffect(MonsterBase targetMonster)
     {
-        Debug.Log("죽음 연출 적용 시작");
+        //Debug.Log("죽음 연출 적용 시작");
         // 이미 효과가 적용되었는지 확인
         if (targetMonster.GetComponent<DigitalStripeDissolveEffect>() == null)
             return;

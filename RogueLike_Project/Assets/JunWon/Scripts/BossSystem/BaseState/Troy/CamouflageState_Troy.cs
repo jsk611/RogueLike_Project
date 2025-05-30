@@ -27,59 +27,49 @@ public class CamouflageState_Troy : State<Troy>
     public override void Enter()
     {
         if (enemyManager == null) enemyManager = GameObject.FindAnyObjectByType<EnemySpawnLogic>();
-        StatusBehaviour[] monsterList = enemyManager.GetComponentsInChildren<StatusBehaviour>();
-        if (monsterList.Length > 0)
-            CamouflageObject = monsterList[Random.Range(0, monsterList.Length)];
+        owner.SUMMONEDMONSTERS.RemoveAll(item => item == null);
+        if (owner.SUMMONEDMONSTERS.Count > 0)
+            CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];
         else
         {
-            summonEnemyCount = owner.SUMMONAMOUNT;
-            while (summonEnemyCount > 0)
+            for (int i = 0;i<owner.SUMMONAMOUNT;i++)
             {
-                summonEnemyCount--;
                 Vector3 randomPos = owner.transform.position + new Vector3(Random.Range(-4f,4f),0,Random.Range(-4f,4f));
-                 GameObject enemy = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.MeeleeSoldier), randomPos, Quaternion.identity,enemyManager.transform);
-             //   GameObject enemy = GameObject.Instantiate(owner.gameObject, randomPos, Quaternion.identity, enemyManager.transform);
-             //   enemy.transform.localScale = owner.transform.localScale * 0.5f;
+                StatusBehaviour enemy = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.MeeleeSoldier), randomPos, Quaternion.identity).GetComponent<StatusBehaviour>();
+               
                 enemy.GetComponent<MonsterBase>().summonedMonster = true;
-                owner.SUMMONEDMONSTERS.Add(enemy);
+                owner.SUMMONEDMONSTERS.Add(enemy.GetComponent<StatusBehaviour>());
             }
+            CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];
         }
-        CamouflageObject = monsterList[Random.Range(0, monsterList.Length)];
-
         owner.IdleToCamouflage();
+        Debug.Log(CamouflageObject.name);
     }
     public override void Update()
     {
         bombThrowTimer += Time.deltaTime;
         rushTimer += Time.deltaTime;
 
-        if(rushTimer >= rushInterval)
-        {
-            if (!isRushing)
-            {
-                isRushing = true;
-                owner.CoroutineRunner(RushToPlayer());
-            }
-
-        }
-        if (bombThrowTimer >= bombThrowInterval)
-        {
-            Debug.Log(bombThrowInterval);
-            bombThrowTimer = 0f;
-            GameObject.Instantiate(owner.TROYBOMB, owner.Player.position+Vector3.up, owner.transform.rotation).GetComponent<Rigidbody>().velocity = Vector3.up*3;
-        }
+        //if(rushTimer >= rushInterval)
+        //{
+        //    if (!isRushing)
+        //    {
+        //        isRushing = true;
+        //        owner.CoroutineRunner(RushToPlayer());
+        //    }
+        //}
+        //if (bombThrowTimer >= bombThrowInterval)
+        //{
+        //    Debug.Log(bombThrowInterval);
+        //    bombThrowTimer = 0f;
+        //    GameObject.Instantiate(owner.TROYBOMB, owner.Player.position+Vector3.up, owner.transform.rotation).GetComponent<Rigidbody>().velocity = Vector3.up*3;
+        //}
         if (CamouflageObject == null)
         {
-            owner.IdleToCamouflage();
-            return;
-        }
-
-        else if (CamouflageObject == null || CamouflageObject.GetHealth() <= 0)
-        {
+            Debug.Log("Back to Idle");
             owner.IdleToCamouflage();
             owner.TakeDamage(owner.BossStatus.GetHealth() * 0.2f);
         }
-        Debug.Log(CamouflageObject.name);
     }
     public override void Exit()
     {

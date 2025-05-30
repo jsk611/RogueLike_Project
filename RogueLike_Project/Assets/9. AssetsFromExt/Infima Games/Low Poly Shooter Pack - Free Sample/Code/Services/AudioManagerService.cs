@@ -88,10 +88,7 @@ namespace InfimaGames.LowPolyShooterPack
             
             //Play the clip!
             newAudioSource.PlayOneShot(clip);
-            
-            //Start a coroutine that will destroy the whole object once it is done!
-            if(settings.AutomaticCleanup)
-                StartCoroutine(nameof(DestroySourceWhenFinished), newAudioSource);
+            Destroy(newSourceObject, clip.length);
         }
 
         #region Audio Manager Service Interface

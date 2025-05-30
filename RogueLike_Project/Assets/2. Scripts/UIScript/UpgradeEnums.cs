@@ -42,7 +42,8 @@ public enum WeaponUpgrade
 {
     Blaze,
     Freeze,
-    Shock
+    Shock,
+    Null
 }
 public enum WeaponUpgradeSet
 {

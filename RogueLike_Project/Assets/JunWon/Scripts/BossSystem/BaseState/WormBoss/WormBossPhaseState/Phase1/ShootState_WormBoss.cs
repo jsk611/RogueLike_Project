@@ -28,7 +28,6 @@ public class ShootState_WormBoss : State<WormBossPrime>
     }
     IEnumerator FireWeapon()
     {
-        Debug.Log("fireeee");
         while(attackTime>0)
         {
             attackTimer+= Time.deltaTime;
@@ -43,8 +42,6 @@ public class ShootState_WormBoss : State<WormBossPrime>
                 attackTimer = 0f;
                 attackTime--;
             }
-            
-            
             yield return null;
         }
         

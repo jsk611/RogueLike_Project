@@ -18,6 +18,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HPBarUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1595825769350734390, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8071894703879071964, guid: bdf0c3564b562af4cb4d83e786a3ee7b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -239,6 +244,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyIcon
       objectReference: {fileID: 0}
+    - target: {fileID: 3213465320262380994, guid: 3b668d9ae74f23440aa8725077a02390,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -325,6 +335,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
         type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
+        type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: -1444460858095362738, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
@@ -344,6 +359,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a52d09cc16ee4c34b9be9879bf72fb0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

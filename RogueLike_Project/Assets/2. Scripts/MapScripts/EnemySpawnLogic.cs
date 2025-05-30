@@ -22,17 +22,19 @@ public class EnemySpawnLogic : MonoBehaviour
     }
 
 
-    public void SpawnEnemy(int x, int y, EnemyType enemyType)
+    public GameObject SpawnEnemy(int x, int y, EnemyType enemyType)
     {
         GameObject enemyPrefab = GetEnemyPrefab(enemyType);
+        GameObject enemySpawned = null;
         if (enemyPrefab != null)
         {
             Transform tileTransform = tileManager.GetTiles[y, x].transform;
             Debug.Log(transform.name + ": " + "[" + tileTransform.position.x + " " + tileTransform.position.z + "]" + "/ height: " + tileTransform.position.y);
             Vector3 spawnVec = tileTransform.position + new Vector3(0, tileTransform.localScale.y / 2.0f + 0.5f, 0); 
-            Instantiate(enemyPrefab, spawnVec, Quaternion.identity, this.transform);
+            enemySpawned = Instantiate(enemyPrefab, spawnVec, Quaternion.identity, this.transform);
             //enemyCountData.enemyCount++;
         }
+        return enemySpawned;
     }
 
     public void SpawnEnemyByArray(EnemyType[,] enemyMap)

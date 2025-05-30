@@ -55,7 +55,6 @@ public class Projectile : MonoBehaviour {
 			}
 			else if (collision.gameObject.GetComponent<BossBase>() != null)
 			{
-				Debug.Log("Boss hit");
 				collision.gameObject.GetComponent<BossBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());
 			}
 			else if (collision.gameObject.GetComponent<Dummy>() != null)

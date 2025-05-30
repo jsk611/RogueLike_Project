@@ -37,7 +37,7 @@ public class UpgradeTrigger : MonoBehaviour
             if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F))
             {
                 StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
-                canUpgrade--;
+                canUpgrade= 0;
             }
             else if (canUpgrade <= 0)
             {

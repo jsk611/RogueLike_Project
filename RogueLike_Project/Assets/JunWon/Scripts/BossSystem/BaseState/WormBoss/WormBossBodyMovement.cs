@@ -159,7 +159,6 @@ public class WormBossBodyMovement : MonoBehaviour
             {
                 int z = (int)wormHead.position.x / 2;
                 int x = (int)wormHead.position.z / 2;
-                Debug.Log(hit.transform.name);
                 StartCoroutine(tileManager.CreateShockwave(z, x, 5, 4));
                 Collider[] boom = Physics.OverlapSphere(wormHead.position, 8, LayerMask.GetMask("Character"));
                 if (boom.Length > 0)

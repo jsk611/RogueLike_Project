@@ -9,7 +9,6 @@ public class RunState_Troy : State<Troy>
     }
     public override void Enter()
     {
-        Debug.Log("RUNNN");
     }
     public override void Update()
     {

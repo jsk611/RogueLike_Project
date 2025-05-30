@@ -222,7 +222,7 @@ public class WormBossPrime : BossBase
 
     private void WormPartition()
     {
-
+        ShootToWander();
         isPartitioned = true;
         EnemySpawnLogic logic = EnemySpawnLogic.instance;
         GameObject prefab = logic.GetEnemyPrefab(EnemyType.Wormboss);

@@ -295,7 +295,7 @@ public abstract class MonsterBase : MonoBehaviour
 
         if (state != newState || newState == State.HIT)
         {
-            Debug.Log($"{transform.name} state change: {state} ?? {newState}");
+       //     Debug.Log($"{transform.name} state change: {state} ?? {newState}");
             SetAnimatorState(newState);
             state = newState;
 
@@ -340,7 +340,6 @@ public abstract class MonsterBase : MonoBehaviour
     {
         if (state == State.DIE)
         {
-            Debug.Log("Already dead!");
             return;
         }
 
@@ -414,7 +413,6 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent.speed = 0;
         Renderer[] renderers = GetComponentsInChildren<Renderer>();
         Queue<Material> materials = new Queue<Material>();
-        Debug.Log("spawn started");
         foreach (Renderer renderer in renderers)
         {
             if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;

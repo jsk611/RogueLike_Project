@@ -33,7 +33,7 @@ public class UpgradeManager_New : MonoBehaviour
     public UpgradeTier upgradeTier;
     private float curUpgradeLevel;
 
-    GameObject[] UpgradeSet;
+    private GameObject[] UpgradeSet;
     public List<int> upgradeType;
 
     bool isWaitingInput = false;
@@ -43,15 +43,17 @@ public class UpgradeManager_New : MonoBehaviour
 
     Dictionary<UpgradeTier, Action> upgradeActions;
 
-
     public bool Upgrading => upgrading;
 
 
-
+    private UpgradeDecision decisionTypeInput;
+    private CommonUpgrade commonTypeInput;
+    private WeaponUpgrade weaponTypeInput;
+    private WeaponUpgrade curSelectedType = WeaponUpgrade.Null;
+    //SpecialUpgrade specialUpgrade;
+    int upgradeResult = -1;
     private void Start()
     {
-     //   StartCoroutine(UpgradeDisplay());
-
         upgradeInputField.onEndEdit.AddListener(OnInputEnd);
         decisionInputField.onEndEdit.AddListener(DecisionInputEnd);
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter();
@@ -65,15 +67,9 @@ public class UpgradeManager_New : MonoBehaviour
             {UpgradeTier.common,ApplyCommonUpgrade },
             {UpgradeTier.weapon,ApplyWeaponUpgrade },
         };
+
     }
-    //private void Update()
-    //{
-    //    if(Input.GetKeyDown(KeyCode.Escape) && isWaitingInput)
-    //    {
-    //        isWaitingInput = false;
-    //        OnInputEnd(inputField.text);
-    //    }
-    //}
+
     public IEnumerator DecisionTreeDisplay(int level)
     {
         decisionInputField.transform.gameObject.SetActive(false);
@@ -96,9 +92,10 @@ public class UpgradeManager_New : MonoBehaviour
     public void BasicUpgradeCall()
     {
         terminal1.SetActive(false);
-        curUpgradeLevel = 1;
+        curUpgradeLevel = 2;
         decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
-        StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+        //  StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
+        StartCoroutine(DecisionTreeDisplay(2));
     }
     public IEnumerator UpgradeDisplay(UpgradeTier tier)
     {
@@ -126,7 +123,6 @@ public class UpgradeManager_New : MonoBehaviour
             }
 
         }
-
         upgradeType = new List<int>();
         yield return new WaitForSeconds(0.2f);
 
@@ -144,6 +140,15 @@ public class UpgradeManager_New : MonoBehaviour
             yield break;
         }
 
+        FilterUpgradeSet(UpgradeSet);
+
+        // 3. 인풋필드 활성화
+        upgradeInputField.transform.parent.gameObject.SetActive(true);
+        isWaitingInput = true;
+    }
+
+    void FilterUpgradeSet(GameObject[] UpgradeSet)
+    {
         // 2. 타입 리스트별로 결정할 업그레이드 요소 결정
         foreach (GameObject upgrade in UpgradeSet)
         {
@@ -163,17 +168,7 @@ public class UpgradeManager_New : MonoBehaviour
                 upgradeType.Add(randIdx);
             }
         }
-
-        // 3. 인풋필드 활성화
-        upgradeInputField.transform.parent.gameObject.SetActive(true);
-        isWaitingInput = true;
     }
-
-    UpgradeDecision decisionTypeInput;
-    CommonUpgrade commonTypeInput;
-    WeaponUpgrade weaponTypeInput;
-    //SpecialUpgrade specialUpgrade;
-    int upgradeResult = -1;
 
     void DecisionInputEnd(string input)
     {
@@ -205,6 +200,7 @@ public class UpgradeManager_New : MonoBehaviour
     }
     void DecisionTree()
     {
+        Debug.Log(curSelectedType);
         if (curUpgradeLevel >=1 && decisionTypeInput == UpgradeDecision.BASIC)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
@@ -212,10 +208,33 @@ public class UpgradeManager_New : MonoBehaviour
 
             //upgrade 한 번 더 추가
         }
-        else if (curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
+        else if (curSelectedType == WeaponUpgrade.Null && curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
+        {
+            decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
+            curSelectedType = weaponTypeInput;
+            StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
+        }
+        else if (curSelectedType != WeaponUpgrade.Null && curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
             StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
+            int idx = 0;
+            switch(curSelectedType)
+            {
+                case WeaponUpgrade.Blaze:
+                    weaponUpgradeSet[(int)WeaponUpgrade.Blaze].SetActive(true);
+                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Blaze].transform) UpgradeSet[idx++] = child.gameObject;
+                    break;
+                case WeaponUpgrade.Freeze:
+                    weaponUpgradeSet[(int)WeaponUpgrade.Freeze].SetActive(true);
+                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Freeze].transform) UpgradeSet[idx++] = child.gameObject;
+                    break;
+                case WeaponUpgrade.Shock:
+                    weaponUpgradeSet[(int)WeaponUpgrade.Shock].SetActive(true);
+                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Shock].transform) UpgradeSet[idx++] = child.gameObject;
+                    break;
+            }
+            FilterUpgradeSet(UpgradeSet);
         }
         else if (decisionTypeInput == UpgradeDecision.EXIT)
         {
@@ -273,67 +292,22 @@ public class UpgradeManager_New : MonoBehaviour
     }
     void ApplyWeaponUpgrade()
     {
-        switch(weaponTypeInput)
+        switch ((WeaponUpgradeSet)upgradeResult)
         {
-            case WeaponUpgrade.Blaze:
-                switch ((WeaponUpgradeSet)upgradeResult)
-                {
-                    case WeaponUpgradeSet.damage:
-                        WeaponConditionUpgrade(1, 0, 0, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.interval:
-                        WeaponConditionUpgrade(0, 0, 0, 1, 0);
-                        break;
-                    case WeaponUpgradeSet.effect:
-                        WeaponConditionUpgrade(0, 0, 0, 0, 1);
-                        break;
-                    case WeaponUpgradeSet.probability:
-                        WeaponConditionUpgrade(0, 0, 1, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.duration:
-                        WeaponConditionUpgrade(0, 1, 0, 0, 0);
-                        break;
-                }
+            case WeaponUpgradeSet.damage:
+                WeaponConditionUpgrade(1, 0, 0, 0, 0);
                 break;
-            case WeaponUpgrade.Freeze:
-                switch ((WeaponUpgradeSet)upgradeResult)
-                {
-                    case WeaponUpgradeSet.damage:
-                        WeaponConditionUpgrade(1, 0, 0, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.interval:
-                        WeaponConditionUpgrade(0, 0, 0, 1, 0);
-                        break;
-                    case WeaponUpgradeSet.effect:
-                        WeaponConditionUpgrade(0, 0, 0, 0, 1);
-                        break;
-                    case WeaponUpgradeSet.probability:
-                        WeaponConditionUpgrade(0, 0, 1, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.duration:
-                        WeaponConditionUpgrade(0, 1, 0, 0, 0);
-                        break;
-                }
+            case WeaponUpgradeSet.interval:
+                WeaponConditionUpgrade(0, 0, 0, 1, 0);
                 break;
-            case WeaponUpgrade.Shock:
-                switch ((WeaponUpgradeSet)upgradeResult)
-                {
-                    case WeaponUpgradeSet.damage:
-                        WeaponConditionUpgrade(1, 0, 0, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.interval:
-                        WeaponConditionUpgrade(0, 0, 0, 1, 0);
-                        break;
-                    case WeaponUpgradeSet.effect:
-                        WeaponConditionUpgrade(0, 0, 0, 0, 1);
-                        break;
-                    case WeaponUpgradeSet.probability:
-                        WeaponConditionUpgrade(0, 0, 1, 0, 0);
-                        break;
-                    case WeaponUpgradeSet.duration:
-                        WeaponConditionUpgrade(0, 1, 0, 0, 0);
-                        break;
-                }
+            case WeaponUpgradeSet.effect:
+                WeaponConditionUpgrade(0, 0, 0, 0, 1);
+                break;
+            case WeaponUpgradeSet.probability:
+                WeaponConditionUpgrade(0, 0, 1, 0, 0);
+                break;
+            case WeaponUpgradeSet.duration:
+                WeaponConditionUpgrade(0, 1, 0, 0, 0);
                 break;
         }
     }
@@ -364,17 +338,6 @@ public class UpgradeManager_New : MonoBehaviour
                 break;
         }
     }
-    //void ApplyWeaponUpgrade2()
-    //{
-    //    switch()
-    //    {
-    //        case RareUpgradeSet.damage:
-    //        case RareUpgradeSet.probability:
-    //        case RareUpgradeSet.duration:
-    //        case RareUpgradeSet.interval:
-    //        case RareUpgradeSet.effect:
-    //    }
-    //}
 
     IEnumerator EndUpgrade()
     {
