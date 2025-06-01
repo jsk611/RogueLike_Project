@@ -14,17 +14,24 @@ public class LurkState_Troy : State<Troy>
     {
         copyTroy = owner.TROYBOMB;
         lurkTimer = 0f;
-
+        owner.IdleToLurk();
+        if(owner.COPYCHAIN <=0)
+        {
+            owner.IdleToLurk();
+            return;
+        }
 
 
         GameObject copy = GameObject.Instantiate(owner.gameObject, owner.transform.position, owner.transform.rotation);
         copyState = copy.GetComponent<StatusBehaviour>();
-        copy.GetComponent<Troy>().COPYCHAIN = owner.COPYCHAIN - 1;
+        copy.GetComponent<Troy>().COPYCHAIN = 0;
+        copy.GetComponent<BossStatus>().SetHealth(owner.BossStatus.GetHealth());
         copy.GetComponent<Troy>().HPBar.SetRatio(owner.BossStatus.GetHealth(), owner.BossStatus.GetMaxHealth());
 
         owner.GetComponent<MeshRenderer>().enabled = false;
         owner.HPBar.GetComponent<Canvas>().enabled= false;
         owner.GetComponent<BoxCollider>().enabled = false;
+        owner.transform.Find("EnemyIcon").gameObject.SetActive(false);
         
 
         Vector3 dir = owner.Player.position - owner.transform.position;
@@ -32,7 +39,6 @@ public class LurkState_Troy : State<Troy>
         owner.NmAgent.isStopped = false;
         owner.NmAgent.SetDestination(owner.transform.position + dir*3);
 
-        owner.IdleToLurk();
 
     }
     public override void Update()
@@ -49,6 +55,7 @@ public class LurkState_Troy : State<Troy>
         owner.GetComponent<MeshRenderer>().enabled = true;
         owner.HPBar.GetComponent<Canvas>().enabled = true;
         owner.GetComponent<BoxCollider>().enabled = true;
+        owner.transform.Find("EnemyIcon").gameObject.SetActive(true);
     }
 }
 

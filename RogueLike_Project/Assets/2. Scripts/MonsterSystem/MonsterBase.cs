@@ -153,11 +153,13 @@ public abstract class MonsterBase : MonoBehaviour
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
 
-        float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
-        monsterStatus.SetMaxHealth(hp * HPenforce);
-        monsterStatus.SetHealth(hp* HPenforce);
-        float ATKenforce = (4*(waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
-        monsterStatus.SetAttackDamage(dmg * ATKenforce);
+        //float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
+        //monsterStatus.SetMaxHealth(hp * HPenforce);
+        //monsterStatus.SetHealth(hp* HPenforce);
+        //float ATKenforce = (4*(waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
+        //monsterStatus.SetAttackDamage(dmg * ATKenforce);
+
+        HPBar.SetRatio(monsterStatus.GetHealth(),monsterStatus.GetMaxHealth());
     }
 
     #endregion
