@@ -15,17 +15,14 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
     public override void Enter()
     {
         Debug.Log("UnknownVirus: Map Attack State 진입");
+        VirusCubeAttackEffect vfx = owner.basic.GetComponent<VirusCubeAttackEffect>();
         isAttackFinished = false;
 
         // 이동 멈춤
         owner.NmAgent.isStopped = true;
         owner.Animator.SetBool("IsMoving", false);
 
-        if (owner.AbilityManager.UseAbility("MapAttack"))
-        {
-            owner.TriggerMapAttack();
-
-        }
+        owner.StartCoroutine(ExecuteSequentialAttack());
 
 
         // 공격 애니메이션 & 효과
@@ -49,6 +46,31 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
     public void OnAttackFinished()
     {
         if (isAttackFinished) return;
+        isAttackFinished = true;
+    }
+
+    private IEnumerator ExecuteSequentialAttack()
+    {
+        if (owner.basic != null)
+        {
+            VirusCubeAttackEffect vfx = owner.basic.GetComponent<VirusCubeAttackEffect>();
+            if (vfx == null)
+                vfx = owner.basic.AddComponent<VirusCubeAttackEffect>();
+
+            // 1. 바이러스 큐브 레이저 연출 시작
+            vfx.StartLaserAttack();
+
+            // 2. 연출 완료까지 대기 (3.6초)
+            yield return new WaitForSeconds(3.2f);
+
+            // 3. 맵 공격 실행
+            if (owner.AbilityManager.UseAbility("MapAttack"))
+            {
+                owner.TriggerMapAttack();
+            }
+        }
+
+        // 4. 공격 완료
         isAttackFinished = true;
     }
 

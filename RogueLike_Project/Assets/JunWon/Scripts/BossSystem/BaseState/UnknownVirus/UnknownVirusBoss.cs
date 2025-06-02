@@ -40,9 +40,7 @@ public class UnknownVirusBoss : BossBase
 
     [Header("¸Ê °ø°Ý")]
     [SerializeField] private GameObject mapAttackVFX;
-    [SerializeField] private float mapAttackCooldown = 15f;
     [Range(0, 1)][SerializeField] private float mapAttackChance = 0.7f;
-    private float lastMapAttackTime = 0f;
 
     [Header("Æû º¯°æ")]
     [SerializeField] private GameObject transformationVFX;
