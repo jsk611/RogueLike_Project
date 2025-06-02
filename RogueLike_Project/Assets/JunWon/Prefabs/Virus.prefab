@@ -22924,6 +22924,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCC: 0
   currentCon: 0
+  bossName: 
   Health: 200
   MaxHealth: 200
   CriticalRate: 0
@@ -35218,6 +35219,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6258489173530735470, guid: 0e8f905236e90174283ad4a1d4f9a8e2,
+        type: 3}
+      propertyPath: HPBar
+      value: 
+      objectReference: {fileID: 5611558791429198507}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35309,6 +35315,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 8743431531378698704}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5611558791429198507 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3798410641381620603, guid: 41240e4d1ddbada4e9e3bf08c43e8519,
+    type: 3}
+  m_PrefabInstance: {fileID: 8743431531378698704}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a882bf97c15de47419d357320658bc4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7163613251637473412 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1890576070884137300, guid: 41240e4d1ddbada4e9e3bf08c43e8519,

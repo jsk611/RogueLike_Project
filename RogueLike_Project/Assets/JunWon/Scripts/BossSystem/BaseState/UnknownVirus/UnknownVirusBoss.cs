@@ -135,12 +135,6 @@ public class UnknownVirusBoss : BossBase
         UpdateRandomValue();
         fsm.Update();
 
-        // 현재 활성화된 폼의 체력을 메인 보스에 동기화
-        if (currentForm != BossForm.Basic && currentActiveBoss != null)
-        {
-            SyncHealthFromActiveBoss();
-        }
-
         // 사망 상태 확인
         if (bossStatus.GetHealth() <= 0 && !(fsm.CurrentState is DefeatedState_UnknownVirus))
         {
@@ -343,9 +337,6 @@ public class UnknownVirusBoss : BossBase
         // 현재 활성화된 폼 오브젝트 비활성화
         if (currentActiveFormObject != null)
         {
-            // 체력 상태 동기화
-            SyncHealthFromActiveBoss();
-
             // 폼 오브젝트 비활성화
             currentActiveFormObject.SetActive(false);
         }
@@ -359,50 +350,44 @@ public class UnknownVirusBoss : BossBase
         GameObject targetFormObject = null;
 
         // 폼에 따라 대상 오브젝트 선택
+
         switch (form)
         {
             case BossForm.Basic:
                 targetFormObject = basicFormObject;
-                currentActiveBoss = null;
+                currentActiveBoss = this;
                 break;
 
             case BossForm.Worm:
                 targetFormObject = wormFormObject;
                 currentActiveBoss = wormComponent;
-                if (wormComponent != null)
-                {
-                }
                 break;
 
             case BossForm.Trojan:
                 targetFormObject = trojanFormObject;
                 currentActiveBoss = trojanComponent;
-                if (trojanComponent != null)
-                {
-                    trojanComponent.ResetBoss();
-                }
                 break;
 
             case BossForm.Ransomware:
                 targetFormObject = ransomwareFormObject;
                 currentActiveBoss = ransomwareComponent;
-                if (trojanComponent != null)
-                {
-                }
                 break;
         }
 
         // 대상 폼 오브젝트 활성화
         if (targetFormObject != null)
         {
+            targetFormObject.SetActive(true);
+
+            if (form != BossForm.Basic) 
+                currentActiveBoss.ResetBoss();
+
             // 위치/회전 동기화
             SyncFormTransform(targetFormObject);
 
             // 체력 동기화
             SyncHealthToActiveForm(targetFormObject, form);
 
-            // 활성화
-            targetFormObject.SetActive(true);
 
             // 현재 활성 폼 오브젝트 업데이트
             currentActiveFormObject = targetFormObject;
@@ -427,28 +412,6 @@ public class UnknownVirusBoss : BossBase
         // 대상 폼의 체력 컴포넌트 가져오기
         BossStatus targetStatus = formObject.GetComponent<BossStatus>();
 
-        //switch (form)
-        //{
-        //    case BossForm.Worm:
-        //        if (wormComponent != null)
-        //            targetStatus = wormComponent.BossStatus;
-        //        break;
-
-        //    case BossForm.Trojan:
-        //        if (trojanComponent != null)
-        //            targetStatus = trojanComponent.BossStatus;
-        //        break;
-
-        //    case BossForm.Ransomware:
-        //        if (ransomwareComponent != null)
-        //            targetStatus = ransomwareComponent.BossStatus;
-        //        break;
-            
-        //    default:
-        //        if (bossStatus != null)
-        //            targetStatus = bossStatus;
-        //        break;
-        //}
 
         // 대상 체력 설정 (비율 동일하게)
         if (targetStatus != null)
