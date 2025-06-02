@@ -176,12 +176,11 @@ public class Troy : BossBase
 
     #region Reset
     // 보스 상태 초기화 메서드
-    public void ResetBoss()
+    public override void ResetBoss()
     {
         // 상태 변수들 초기화
         ResetBossState();
 
-        // 체력 복구
         if (bossStatus != null)
         {
             bossStatus.SetHealth(bossStatus.GetMaxHealth());
