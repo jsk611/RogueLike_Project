@@ -44,7 +44,6 @@ public class CamouflageState_Troy : State<Troy>
             CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];
         }
         owner.IdleToCamouflage();
-        Debug.Log(CamouflageObject.name);
     }
     public override void Update()
     {

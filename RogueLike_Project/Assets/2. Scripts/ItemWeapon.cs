@@ -9,6 +9,8 @@ public class ItemWeapon : MonoBehaviour
     Character character;
     Inventory inventory;
 
+    [SerializeField] WeaponType type;
+
     [Header("Weapon Prefab")]
     [SerializeField] GameObject weapon;
 
@@ -19,12 +21,21 @@ public class ItemWeapon : MonoBehaviour
     [Header("Weapon Rotation")]
     [SerializeField]
     Quaternion Rotation;
+
     // Start is called before the first frame update    
     void Start()
     {
+        PermanentUpgradeManager.instance.weaponLockData.UnlockWeapon(WeaponType.grenade);
+        if(PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock(type) == false)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         boxCollider = GetComponent<BoxCollider>();
         character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<Character>();
         inventory = FindAnyObjectByType<Inventory>();
+
     }
 
     // Update is called once per frame

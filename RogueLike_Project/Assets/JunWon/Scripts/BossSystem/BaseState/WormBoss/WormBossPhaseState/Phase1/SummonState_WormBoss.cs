@@ -14,7 +14,9 @@ public class SummonState_WormBoss : State<WormBossPrime>
         GameObject minion = EnemySpawnLogic.instance.SpawnEnemy(TileManager.mapSize / 2, TileManager.mapSize / 2, EnemyType.Hoverbot);
         owner.Summoned.Add(minion);
         minion.GetComponent<MonsterBase>().summonedMonster = true;
-     //   Debug.Log("Summon State Enter");
+        minion.GetComponent<StatusBehaviour>().SetHealth(50);
+        minion.GetComponent<StatusBehaviour>().SetMaxHealth(50);
+        //   Debug.Log("Summon State Enter");
     }
     public override void Update()
     {

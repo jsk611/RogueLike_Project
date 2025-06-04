@@ -92,10 +92,9 @@ public class UpgradeManager_New : MonoBehaviour
     public void BasicUpgradeCall()
     {
         terminal1.SetActive(false);
-        curUpgradeLevel = 2;
+        curUpgradeLevel = 1;
         decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
-        //  StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
-        StartCoroutine(DecisionTreeDisplay(2));
+        StartCoroutine(UpgradeDisplay(UpgradeTier.common));
     }
     public IEnumerator UpgradeDisplay(UpgradeTier tier)
     {
@@ -140,7 +139,24 @@ public class UpgradeManager_New : MonoBehaviour
             yield break;
         }
 
-        FilterUpgradeSet(UpgradeSet);
+        foreach (GameObject upgrade in UpgradeSet)
+        {
+            upgrade.SetActive(true);
+            List<Transform> directChildren = new List<Transform>();
+
+            foreach (Transform child in upgrade.transform)
+            {
+                directChildren.Add(child);
+                child.gameObject.SetActive(false);
+            }
+
+            if (directChildren.Count > 0)
+            {
+                int randIdx = Random.Range(0, directChildren.Count);
+                directChildren[randIdx].gameObject.SetActive(true);
+                upgradeType.Add(randIdx);
+            }
+        }
 
         // 3. 인풋필드 활성화
         upgradeInputField.transform.parent.gameObject.SetActive(true);
@@ -214,35 +230,12 @@ public class UpgradeManager_New : MonoBehaviour
             curSelectedType = weaponTypeInput;
             StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
         }
-        else if (curSelectedType != WeaponUpgrade.Null && curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
-        {
-            decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
-            StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
-            int idx = 0;
-            switch(curSelectedType)
-            {
-                case WeaponUpgrade.Blaze:
-                    weaponUpgradeSet[(int)WeaponUpgrade.Blaze].SetActive(true);
-                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Blaze].transform) UpgradeSet[idx++] = child.gameObject;
-                    break;
-                case WeaponUpgrade.Freeze:
-                    weaponUpgradeSet[(int)WeaponUpgrade.Freeze].SetActive(true);
-                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Freeze].transform) UpgradeSet[idx++] = child.gameObject;
-                    break;
-                case WeaponUpgrade.Shock:
-                    weaponUpgradeSet[(int)WeaponUpgrade.Shock].SetActive(true);
-                    foreach (Transform child in weaponUpgradeSet[(int)WeaponUpgrade.Shock].transform) UpgradeSet[idx++] = child.gameObject;
-                    break;
-            }
-            FilterUpgradeSet(UpgradeSet);
-        }
         else if (decisionTypeInput == UpgradeDecision.EXIT)
         {
             upgradeRootUI.SetActive(false);
             player.SetCursorState(true);
             upgrading = false;
         }
-       
     }
     void ApplyCommonUpgrade()
     {

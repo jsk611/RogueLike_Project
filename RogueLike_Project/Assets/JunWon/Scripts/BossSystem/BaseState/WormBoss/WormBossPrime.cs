@@ -81,6 +81,7 @@ public class WormBossPrime : BossBase
         var wanderState = new WanderingStateWormBoss(this);
         var shootState = new ShootState_WormBoss(this);
         var digState = new DigState_WormBoss(this);
+        var dieState = new DieState_WormBoss(this);
 
         
 
@@ -100,6 +101,7 @@ public class WormBossPrime : BossBase
         Transition<WormBossPrime> WanderToDig;
         Transition<WormBossPrime> DigToWander;
 
+        Transition<WormBossPrime> WanderToDeath;
         
         IntroToWander = new Transition<WormBossPrime>(
             introState,
@@ -146,7 +148,11 @@ public class WormBossPrime : BossBase
             wanderState,
             () => DigToWanTrigger
         );
-
+        WanderToDeath = new Transition<WormBossPrime>(
+          wanderState,
+          dieState,
+          () => bossStatus.GetHealth()<=0
+        );
 
 
 
@@ -159,6 +165,7 @@ public class WormBossPrime : BossBase
         fsm.AddTransition(ChaseToWander);
         fsm.AddTransition(WanderToDig);
         fsm.AddTransition(DigToWander);
+        fsm.AddTransition(WanderToDeath);
     }
 
     private void InitializeComponent()
@@ -205,17 +212,6 @@ public class WormBossPrime : BossBase
             WormPartition();
         }
         
-        if (bossStatus.GetHealth() <= 0)
-        {
-            var dieState = new DieState_WormBoss(this);
-            Transition<WormBossPrime> AnyToDeath;
-            AnyToDeath = new Transition<WormBossPrime>(
-              null,
-              dieState,
-              () => true
-            );
-            fsm.AddTransition(AnyToDeath);
-        }
     }
     public void CoroutineRunner(IEnumerator coroutine)
     {

@@ -3,20 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.Rendering;
+using JetBrains.Annotations;
 public class UpgradeData {
     public float ATKUpgradeRate = 1.0f;
     public float UTLUpgradeRate = 1.0f;
     public float CoinAcquisitionRate = 1.0f;
     public float MaintenanceHealRate = 1.0f;
 }    
+public enum WeaponType
+{
+    fist,
+    pistol,
+    rifle,
+    sniper,
+    shotgun,
+    grenade
+}
 public class WeaponLockData
 {
-    public bool fist = true;
-    public bool pistol = true;
-    public bool rifle = false;
-    public bool sniper = false;
-    public bool shotgun = false;
-    public bool grenade = false;
+    private bool[] weaponLock;
+    public bool fist;
+
+    public bool GetWeaponLock(WeaponType index)
+    {
+        return weaponLock[(int)index];
+    }
+    public void UnlockWeapon(WeaponType index)
+    {
+        weaponLock[(int)index] = true;
+    }
+    public WeaponLockData()
+    {
+        weaponLock = new bool[6];
+        for (int i = 0;i<6;i++) weaponLock[i] = false;
+        weaponLock[(int)WeaponType.fist] = true;
+        weaponLock[(int)WeaponType.pistol] = true;
+    }
 }
 public class SettingData
 {
@@ -36,6 +58,7 @@ public class PermanentUpgradeManager : MonoBehaviour
     public UpgradeData upgradeData;
     public SettingData settingData;
 
+ 
     public void Awake()
     {
         instance = this;

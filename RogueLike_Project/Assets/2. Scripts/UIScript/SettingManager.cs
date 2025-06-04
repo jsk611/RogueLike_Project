@@ -4,21 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using InfimaGames.LowPolyShooterPack;
 
 public class SettingManager : MonoBehaviour
 {
     [SerializeField] GameObject continueButton;
     [SerializeField] Image fade;
+
+    private bool sceneLoading;
+    private void Awake()
+    {
+        sceneLoading = false;
+    }
     private void Start()
     {
         if(!PlayerPrefs.HasKey("packet")) continueButton.SetActive(false);
     }
     public void InitGame()
     {
-        fade.gameObject.SetActive(true);
-        fade.DOFade(1, 1f);
         Debug.Log("Start Game");
-        Invoke("LoadToGame", 1f);
+        StartCoroutine(StartGame());
     }
     void LoadToGame()
     {
@@ -32,13 +37,24 @@ public class SettingManager : MonoBehaviour
         PlayerPrefs.SetInt("isNewGame", 1);
         fade.gameObject.SetActive(true);
 
-        fade.DOFade(1, 1f);
         Debug.Log("New Game");
-        Invoke("LoadToGame", 1f);
+        StartCoroutine(StartGame());
     }
     public void GoToTitle()
     {
         SceneManager.LoadScene("TitleScene");
+    }
+
+    IEnumerator StartGame()
+    {
+        if (!sceneLoading)
+        {
+            sceneLoading = true;
+            fade.gameObject.SetActive(true);
+            fade.DOFade(1, 1f);
+            yield return new WaitForSeconds(1f);
+            LoadToGame();
+        }
     }
 
     public void QuitGame()
@@ -48,5 +64,10 @@ public class SettingManager : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    public void StartTest()
+    {
+        SceneManager.LoadScene("IngameScene");
     }
 }

@@ -27,6 +27,9 @@ public class UIManager : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
+        Time.timeScale = 1.0f;
+        fade.gameObject.SetActive(true);
+        fade.DOFade(0, 1f);
     }
 
     private void Start()
@@ -38,8 +41,7 @@ public class UIManager : MonoBehaviour
         DNAReset(0);
         PacketReset(packet);
         Swapping(0);
-        fade.gameObject.SetActive(true);
-        fade.DOFade(0, 1f);
+
     }
 
     public float stopwatch = 0;
@@ -195,8 +197,7 @@ public class UIManager : MonoBehaviour
 
         if (isBoss) { 
             MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
-            barStk.Clear();
-            foreach (GameObject bar in bossHPBars)
+            foreach(GameObject bar in bossHPBars)
             {
                 bar.SetActive(false);
                 barStk.Push(bar);
@@ -208,6 +209,11 @@ public class UIManager : MonoBehaviour
 
     public void BossSummoned(BossStatus boss)
     {
+        if(barStk.Count <= 0)
+        {
+            Debug.LogWarning("Serious Problem in Boss Stack");
+            return;
+        }
         GameObject bar = barStk.Pop();
         bar.SetActive(true);
         boss_hpBar_Dict.Add(boss, bar);

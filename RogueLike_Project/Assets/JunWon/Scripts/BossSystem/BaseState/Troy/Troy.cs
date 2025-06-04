@@ -129,10 +129,13 @@ public class Troy : BossBase
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
-       
-  
     }
-
+    public void SetCopied(float health)
+    {
+        copyChain = 0;
+        while (lurkHeathBoundary.Count > 0) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
+        bossStatus.SetHealth(health);
+    }
     public bool LurkStateCheck()
     {
         if (copyChain < 0) return false;

@@ -79,19 +79,18 @@ public class BossStatus : StatusBehaviour
     public override void DecreaseHealth(float damage) {
         Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
         
-        HPBar.SetRatio(GetHealth(), GetMaxHealth());
+      //  HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void IncreaseHealth(float health)
     {
         Health += health;
         if (Health > MaxHealth) Health = MaxHealth;
-        HPBar.SetRatio(GetHealth(), GetMaxHealth());
+     //   HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void SetHealth(float health)
     {
         Health = Mathf.Clamp(health, 0, MaxHealth);
-        //if (health <= 0) Destroy(gameObject);
-        HPBar.SetRatio(GetHealth(), GetMaxHealth());
+      //  HPBar.SetRatio(GetHealth(), GetMaxHealth());    
     }
 
 

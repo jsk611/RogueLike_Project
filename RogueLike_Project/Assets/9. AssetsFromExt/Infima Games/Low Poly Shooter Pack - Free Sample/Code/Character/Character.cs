@@ -249,6 +249,7 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Refresh!
             RefreshWeaponSetup();
+
         }
         protected override void Start()
         {

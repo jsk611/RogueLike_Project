@@ -37,7 +37,6 @@ public class MonsterAnimationEventHandler : MonoBehaviour
     }
     void CCbyCondition()
     {
-        Debug.Log("checking condition");
         if (statusBehaviour.currentCon == StatusBehaviour.Condition.Frozen) { StartCoroutine(Frozen()); }
         else if (statusBehaviour.currentCon == StatusBehaviour.Condition.Shocked ) { StartCoroutine(Shocked()); }
 
