@@ -19,6 +19,7 @@ public class Troy : BossBase
     [Header("Camouflage")]
     public List<StatusBehaviour> monsterList = new List<StatusBehaviour>();
 
+
     [SerializeField] float runInterval = 20f;
     [SerializeField] float enemySummonAmount = 4f;
     float runTimer = 0f;
@@ -176,12 +177,11 @@ public class Troy : BossBase
 
     #region Reset
     // 보스 상태 초기화 메서드
-    public void ResetBoss()
+    public override void ResetBoss()
     {
         // 상태 변수들 초기화
         ResetBossState();
 
-        // 체력 복구
         if (bossStatus != null)
         {
             bossStatus.SetHealth(bossStatus.GetMaxHealth());

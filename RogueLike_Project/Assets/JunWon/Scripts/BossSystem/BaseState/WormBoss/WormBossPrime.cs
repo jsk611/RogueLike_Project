@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
+using Unity.Services.Analytics.Platform;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -38,6 +39,7 @@ public class WormBossPrime : BossBase
 
     private bool isPartitioned = false;
     WormBossBodyMovement wormBossBodyMovement;
+
 
     #region ReadOnlyFunc 
 
@@ -253,6 +255,71 @@ public class WormBossPrime : BossBase
         Debug.Log("origin dead");
       
     }
+
+    #region Reset
+    // 보스 상태 초기화 메서드
+    public override void ResetBoss()
+    {
+        // 상태 변수들 초기화
+        ResetBossState();
+
+        if (bossStatus != null)
+        {
+            bossStatus.SetHealth(bossStatus.GetMaxHealth());
+        }
+
+        // 소환된 몬스터들 정리
+        ClearSummonedMonsters();
+
+        // 애니메이터 상태 초기화
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Update(0f);
+        }
+
+        // NavMeshAgent 초기화
+        if (nmAgent != null)
+        {
+            nmAgent.isStopped = false;
+            nmAgent.ResetPath();
+        }
+
+        // FSM을 처음 상태로 되돌리기
+        ResetStateMachine();
+
+        // lurkHeathBoundary 복구 (원본 데이터 백업 필요)
+    }
+
+    private void ResetBossState()
+    {
+      summonTimer = 0f;
+      shootTimer = 0f;
+      chaseTimer = 0f;
+      digTimer = 0f;
+
+      SumToWanTrigger = false;
+      ShtToWanTrigger = false;
+      ChsToWanTrigger = false;
+      DigToWanTrigger = false;
+
+      isPartitioned = false;
+    }
+
+    private void ClearSummonedMonsters()
+    {
+       
+    }
+
+    private void ResetStateMachine()
+    {
+        if (fsm != null)
+        {
+            // FSM을 새로 초기화
+            InitializeFSM();
+        }
+    }
+    #endregion
 
 
 

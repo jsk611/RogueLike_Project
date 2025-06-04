@@ -16,6 +16,9 @@ public class Ransomware : BossBase, IBossEntity
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform explosionPoint;
 
+    [Header("Summoned")]
+    [SerializeField] private List<GameObject> summonedObjects = new List<GameObject>();
+
     [Header("Basic Skill Lock")]
     private Dictionary<SkillType, float> skillUnlockTimes = new Dictionary<SkillType, float>();
 
@@ -216,6 +219,8 @@ public class Ransomware : BossBase, IBossEntity
     public Transform FirePoint => firePoint;
     public GameObject DataPacket => dataPacket;
     public Transform ExplosionPoint => explosionPoint;
+
+    public List<GameObject> SummonedMonsters => summonedObjects;
 
     public float MeeleAttackRange => meeleAttackRange;
     public float RangedAttackRange => rangedAttackRange;
@@ -596,4 +601,65 @@ public class Ransomware : BossBase, IBossEntity
         // 보스가 특수 상태인 경우 true 반환
         return false; // 기본값은 false 또는 로직 구현
     }
+
+    #region Reset
+    // 보스 상태 초기화 메서드
+    public override void ResetBoss()
+    {
+        // 상태 변수들 초기화
+        ResetBossState();
+
+        if (bossStatus != null)
+        {
+            bossStatus.SetHealth(bossStatus.GetMaxHealth());
+        }
+
+        ClearSummonedMonsters();
+
+        // 애니메이터 상태 초기화
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Update(0f);
+        }
+
+        // NavMeshAgent 초기화
+        if (nmAgent != null)
+        {
+            nmAgent.isStopped = false;
+            nmAgent.ResetPath();
+        }
+
+        // FSM을 처음 상태로 되돌리기
+        ResetStateMachine();
+
+    }
+
+    private void ResetBossState()
+    {
+    }
+
+    private void ClearSummonedMonsters()
+    {
+        foreach (GameObject monster in summonedObjects)
+        {
+            if (monster != null)
+                Destroy(monster);
+        }
+        fsm.CurrentState.Interrupt();
+    }
+
+    private void ResetStateMachine()
+    {
+        if (fsm != null)
+        {
+            // FSM을 새로 초기화
+            InitializeFSM();
+        }
+    }
+
+    #endregion
+
+
+
 }

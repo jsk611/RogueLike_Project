@@ -7,7 +7,6 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
 {
     private bool isAttackFinished = false;
     private int shadowCount = 6; // 분열할 조각 수
-    [SerializeField] private List<GameObject> activeShadows = new List<GameObject>();
     private float shadowLifetime = 60f; // 분열 조각 지속 시간
     private float summonDistance = 8f;
     private Vector3 originalPosition; // 보스의 원래 위치 저장
@@ -158,11 +157,11 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
                 // 분열 조각이 죽었을 때 보스에게 신호를 전달하도록 이벤트 구독
                 fragmentComponent.OnShadowDestroyed += HandleShadowDestroyed;
             }
-            activeShadows.Add(fragment);
+            owner.SummonedMonsters.Add(fragment);
         }
 
         owner.ShadowsSpawned = true;
-        Debug.Log($"생성 완료: 총 {activeShadows.Count}개 생성됨");
+        Debug.Log($"생성 완료: 총 {owner.SummonedMonsters.Count}개 생성됨");
     }
 
     private bool CanExecuteAttack()
@@ -224,15 +223,15 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
     {
         if (shadow == null) return;
 
-        if (activeShadows.Contains(shadow))
+        if (owner.SummonedMonsters.Contains(shadow))
         {
-            activeShadows.Remove(shadow);
-            Debug.Log($"그림자 파괴됨. 남은 그림자: {activeShadows.Count}");
+            owner.SummonedMonsters.Remove(shadow);
+            Debug.Log($"그림자 파괴됨. 남은 그림자: {owner.SummonedMonsters.Count}");
         }
 
-        activeShadows.RemoveAll(item => item == null);
+        owner.SummonedMonsters.RemoveAll(item => item == null);
 
-        if (activeShadows.Count == 0)
+        if (owner.SummonedMonsters.Count == 0)
         {
             Debug.Log("모든 분열 조각이 파괴됨. 보스에게 신호 전달.");
             // 보스에게 분열 조각 파괴 완료 신호 전달 (예: 다음 페이즈로 전환)
@@ -243,7 +242,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
 
     private void DestroyAllShadows()
     {
-        foreach (var shadow in activeShadows)
+        foreach (var shadow in owner.SummonedMonsters)
         {
             if (shadow != null)
             {
@@ -253,7 +252,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
             }
         }
 
-        activeShadows.Clear();
+        owner.SummonedMonsters.Clear();
     }
 
     private IEnumerator CheckShadowsRoutine()
@@ -262,7 +261,7 @@ public class Phase2_DigitalShadow_State : BossPhaseBase<Ransomware>
         yield return new WaitForSeconds(shadowLifetime);
 
         // 여기까지 왔는데 아직 그림자가 있으면 제거
-        if (activeShadows.Count > 0)
+        if (owner.SummonedMonsters.Count > 0)
         {
             DestroyAllShadows();
         }

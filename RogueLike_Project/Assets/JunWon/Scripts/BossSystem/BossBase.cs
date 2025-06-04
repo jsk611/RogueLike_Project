@@ -51,6 +51,9 @@ public abstract class BossBase : MonoBehaviour
     public FieldOfView FOV => fov;
 
     public abstract void TakeDamage(float damage, bool showDamage = true);
-   
 
+    public virtual void ResetBoss()
+    {
+        
+    }
 }

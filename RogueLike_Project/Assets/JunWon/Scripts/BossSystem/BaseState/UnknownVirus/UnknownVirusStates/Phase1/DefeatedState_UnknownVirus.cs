@@ -8,10 +8,15 @@ public class DefeatedState_UnknownVirus : BaseState_UnknownVirus
     private const float deathDuration = 5f;
     private bool deathEffectSpawned = false;
 
+    [Header("사망 연출")]
+    [SerializeField] private DeathFragmentSystem fragmentSystem;
+
     public DefeatedState_UnknownVirus(UnknownVirusBoss owner) : base(owner) { }
 
     public override void Enter()
     {
+        fragmentSystem = owner.basic.GetComponent<DeathFragmentSystem>();
+
         Debug.Log("UnknownVirus: Dead State 진입");
         timer = 0f;
         deathEffectSpawned = false;
@@ -34,15 +39,43 @@ public class DefeatedState_UnknownVirus : BaseState_UnknownVirus
         {
             owner.Animator.SetTrigger("Death");
         }
+
+        owner.StartCoroutine(ExecuteSequentialDeath());
     }
 
     public override void Update()
     {
+
        
     }
 
     public override void Exit()
     {
         Debug.Log("UnknownVirus: Dead State 종료");
+    }
+
+    private void HandleDeath()
+    {
+        // 기존 사망 처리...
+
+        // 조각 떨어뜨리기 연출 시작
+        if (fragmentSystem != null)
+        {
+            fragmentSystem.TriggerDeathFragmentation();
+        }
+        else
+        {
+        }
+
+        Debug.Log("[UnknownVirusBoss] 사망 - 조각 떨어뜨리기 연출 시작");
+    }
+
+    private IEnumerator ExecuteSequentialDeath()
+    {
+        HandleDeath();
+
+        yield return new WaitForSeconds(2.0f);
+
+        owner.gameObject.SetActive(false);
     }
 }
