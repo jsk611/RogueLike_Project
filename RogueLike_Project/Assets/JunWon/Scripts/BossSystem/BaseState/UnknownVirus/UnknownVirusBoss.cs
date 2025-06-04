@@ -339,6 +339,11 @@ public class UnknownVirusBoss : BossBase
             currentActiveFormObject.SetActive(false);
         }
 
+        if (currentActiveBoss != null)
+        {
+            currentActiveBoss.ResetBoss();
+        }
+
         // 현재 활성 보스 참조 초기화
         currentActiveBoss = null;
     }
@@ -353,7 +358,7 @@ public class UnknownVirusBoss : BossBase
         {
             case BossForm.Basic:
                 targetFormObject = basicFormObject;
-                currentActiveBoss = this;
+                currentActiveBoss = null;
                 break;
 
             case BossForm.Worm:
@@ -376,9 +381,6 @@ public class UnknownVirusBoss : BossBase
         if (targetFormObject != null)
         {
             targetFormObject.SetActive(true);
-
-            if (form != BossForm.Basic) 
-                currentActiveBoss.ResetBoss();
 
             // 위치/회전 동기화
             SyncFormTransform(targetFormObject);
@@ -451,6 +453,7 @@ public class UnknownVirusBoss : BossBase
             ransomwareFormObject.SetActive(false);
 
         // 참조 초기화
+        basicFormObject.SetActive(true);
         currentActiveFormObject = basicFormObject;
         currentActiveBoss = null;
     }

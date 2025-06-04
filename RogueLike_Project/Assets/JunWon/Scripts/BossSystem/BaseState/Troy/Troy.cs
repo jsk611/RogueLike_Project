@@ -19,6 +19,7 @@ public class Troy : BossBase
     [Header("Camouflage")]
     public List<StatusBehaviour> monsterList = new List<StatusBehaviour>();
 
+
     [SerializeField] float runInterval = 20f;
     [SerializeField] float enemySummonAmount = 4f;
     float runTimer = 0f;

@@ -641,6 +641,11 @@ public class Ransomware : BossBase, IBossEntity
 
     private void ClearSummonedMonsters()
     {
+        foreach (GameObject monster in summonedObjects)
+        {
+            if (monster != null)
+                Destroy(monster);
+        }
         fsm.CurrentState.Interrupt();
     }
 
