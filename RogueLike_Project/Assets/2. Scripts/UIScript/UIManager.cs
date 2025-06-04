@@ -195,7 +195,8 @@ public class UIManager : MonoBehaviour
 
         if (isBoss) { 
             MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
-            foreach(GameObject bar in bossHPBars)
+            barStk.Clear();
+            foreach (GameObject bar in bossHPBars)
             {
                 bar.SetActive(false);
                 barStk.Push(bar);
