@@ -19,6 +19,9 @@ public class Troy : BossBase
     [Header("Camouflage")]
     public List<StatusBehaviour> monsterList = new List<StatusBehaviour>();
 
+    [Header("Copy")]
+    public List<GameObject> copyList = new List<GameObject>();
+
 
     [SerializeField] float runInterval = 20f;
     [SerializeField] float enemySummonAmount = 4f;
@@ -41,6 +44,7 @@ public class Troy : BossBase
     public bool ISCAMOUFLAGED { get => isCamouflaged; set => isCamouflaged = value; }
     public float SUMMONAMOUNT => enemySummonAmount;
     public List<StatusBehaviour> SUMMONEDMONSTERS => monsterList;
+    public List<GameObject> COPYLIST => copyList;
     public bool ISLURKED { get => isLurked; set => isLurked = value; }
     public float COPYCHAIN { get => copyChain; set => copyChain = value; }
     public GameObject TROYBOMB => bomb;
@@ -233,7 +237,16 @@ public class Troy : BossBase
                 Destroy(monster);
             }
         }
+
+        foreach (var monster in copyList)
+        {
+            if (monster != null)
+            {
+                Destroy(monster);
+            }
+        }
         monsterList.Clear();
+        copyList.Clear();
     }
 
     private void ResetStateMachine()

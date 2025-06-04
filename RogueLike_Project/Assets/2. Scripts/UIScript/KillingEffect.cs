@@ -26,7 +26,7 @@ public class KillingEffect : MonoBehaviour
             if (length > 0.075f) length -= Time.deltaTime * 0.2f;
             foreach (Image image in images)
             {
-                image.color = new Color(1, 0, 0, alpha);
+                image.color = new Color(1, 0, 1, alpha);
                 image.gameObject.transform.localScale = new Vector2(0.025f, length);
             }
         }
@@ -46,6 +46,6 @@ public class KillingEffect : MonoBehaviour
     void KillingSuccess(bool tmp)
     {
         alpha = 0.75f;
-        length = 0.34f;
+        length = 0.42f;
     }
 }

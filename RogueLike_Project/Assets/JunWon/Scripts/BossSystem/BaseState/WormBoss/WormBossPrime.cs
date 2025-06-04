@@ -21,7 +21,7 @@ public class WormBossPrime : BossBase
 
     [Header("Minion Settings")]
     public List<GameObject> minions = new List<GameObject>();
-    private List<GameObject> summoned = new List<GameObject>();
+    public List<GameObject> summoned = new List<GameObject>();
 
     [SerializeField] private float summonInterval;
     [SerializeField] private float shootInterval;
@@ -233,6 +233,8 @@ public class WormBossPrime : BossBase
         WormBossPrime subWormPrime = subWorm.GetComponent<WormBossPrime>();
         WormBossBodyMovement subBody = subWorm.GetComponent<WormBossBodyMovement>();
 
+        summoned.Add(subWorm);
+
         
 
         subWormPrime.isPartitioned = true;
@@ -304,7 +306,12 @@ public class WormBossPrime : BossBase
 
     private void ClearSummonedMonsters()
     {
-       
+       foreach (GameObject monster in summoned)
+       {
+            if (monster != null)
+                Destroy(monster);
+       }
+
     }
 
     private void ResetStateMachine()
