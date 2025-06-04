@@ -48,7 +48,6 @@ public class VirusCubeAttackEffect : MonoBehaviour
     private List<Vector3> cubePositions = new List<Vector3>();        // 큐브 형성 위치
     private List<Vector3> compactPositions = new List<Vector3>();     // 압축 위치
     private List<Vector3> expandedPositions = new List<Vector3>();    // 펼침 위치
-    private VoxelFloatEffect floatEffect;
 
     // 레이저 관리
     private Transform target;
@@ -61,10 +60,6 @@ public class VirusCubeAttackEffect : MonoBehaviour
         CollectExistingVoxels();
 
         // 컴포넌트 설정
-        floatEffect = GetComponent<VoxelFloatEffect>();
-        if (floatEffect == null)
-            floatEffect = gameObject.AddComponent<VoxelFloatEffect>();
-
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
 
@@ -408,12 +403,6 @@ public class VirusCubeAttackEffect : MonoBehaviour
         if (expandEffect != null)
             expandEffect.gameObject.SetActive(false);
 
-        // 플로팅 효과 재활성화
-        if (floatEffect != null)
-        {
-            floatEffect.enabled = true;
-            floatEffect.SetFloatIntensity(1f);
-        }
     }
 
 

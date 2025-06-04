@@ -868,4 +868,5 @@ public class UnknownVirusBoss : BossBase
     {
         currentRandomValue = UnityEngine.Random.value;
     }
+
 }
