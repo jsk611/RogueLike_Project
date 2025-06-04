@@ -42,13 +42,21 @@ public class Projectile : MonoBehaviour {
 	//If the bullet collides with anything
 	private void OnCollisionEnter (Collision collision)
 	{
-
 		//Ignore collisions with other projectiles.
 		if (collision.gameObject.GetComponent<Projectile>() != null)
 			return;
 
-		if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
+		
+		if (collision.gameObject.layer == LayerMask.NameToLayer("Head"))
+        {
+			//Debug.Log("Hithhhhhhhh");
+			//collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * 2f);
+			//EventManager.Instance.TriggerMonsterCriticalDamagedEvent();
+			Destroy(gameObject);
+		}
+		else if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
 		{
+			
 			if (collision.gameObject.GetComponent<MonsterBase>() != null)
 			{
 				collision.gameObject.GetComponent<MonsterBase>().TakeDamage((bulletDamage * shooterStatus.GetAttackDamage() / 100) * shooterStatus.CalculateCriticalHit());

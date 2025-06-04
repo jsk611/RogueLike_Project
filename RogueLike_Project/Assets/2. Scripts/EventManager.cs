@@ -22,12 +22,17 @@ public class EventManager : MonoBehaviour
         //}
     }
     public event Action MonsterDamagedEvent;
+    public event Action MonsterCriticalDamagedEvent;
     public event Action EnemyCountReset;
     public event Action<bool> MonsterKilledEvent;
 
     public void TriggerMonsterDamagedEvent()
     {
         MonsterDamagedEvent.Invoke();
+    }
+    public void TriggerMonsterCriticalDamagedEvent()
+    {
+        MonsterCriticalDamagedEvent.Invoke();
     }
     public void TriggerMonsterKilledEvent(bool isEnemyCounted)
     {
