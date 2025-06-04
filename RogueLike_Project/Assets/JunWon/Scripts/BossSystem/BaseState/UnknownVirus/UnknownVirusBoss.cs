@@ -399,9 +399,9 @@ public class UnknownVirusBoss : BossBase
         if (formObject == null || formObject == basicFormObject)
             return;
 
-        // 기본 폼 위치를 기준으로 동기화
-        formObject.transform.position = transform.position;
-        formObject.transform.rotation = transform.rotation;
+        // 현재 폼 위치를 기준으로 동기화
+        formObject.transform.position = currentActiveFormObject.transform.position;
+        formObject.transform.rotation = currentActiveFormObject.transform.rotation;
     }
 
     private void SyncHealthToActiveForm(GameObject formObject, BossForm form)
