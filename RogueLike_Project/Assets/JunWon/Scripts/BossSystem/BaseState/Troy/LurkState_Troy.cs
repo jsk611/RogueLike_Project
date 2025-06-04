@@ -23,6 +23,7 @@ public class LurkState_Troy : State<Troy>
 
 
         GameObject copy = GameObject.Instantiate(owner.gameObject, owner.transform.position, owner.transform.rotation);
+        owner.copyList.Add(copy);
         copyState = copy.GetComponent<StatusBehaviour>();
         copy.GetComponent<Troy>().COPYCHAIN = 0;
         copy.GetComponent<BossStatus>().SetHealth(owner.BossStatus.GetHealth());

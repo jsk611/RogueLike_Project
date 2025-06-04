@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 831a75d54e1b5ab4f864137ac653f9f2, type: 3}
-  m_Name: Transform
+  m_Name: Wander
   m_EditorClassIdentifier: 
-  abilityName: Transform
+  abilityName: 
   abilityDescription: 
-  cooldown: 35
+  cooldown: 8
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0
