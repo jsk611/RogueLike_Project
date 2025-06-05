@@ -14,48 +14,53 @@ public class SettingManager : MonoBehaviour
     private bool sceneLoading;
     private void Awake()
     {
+        Time.timeScale = 1f;
         sceneLoading = false;
     }
     private void Start()
     {
         if(!PlayerPrefs.HasKey("packet")) continueButton.SetActive(false);
     }
+    //continue
     public void InitGame()
     {
         Debug.Log("Start Game");
-        StartCoroutine(StartGame());
+        StartGame();
     }
-    void LoadToGame()
-    {
-        fade.DOFade(0, 0.1f);
-        SceneManager.LoadScene("IngameScene");
-    }
+
+    //new game
     public void NewGame()
     {
         //저장 데이터 초기화
         PlayerPrefs.DeleteAll();
         PlayerPrefs.SetInt("isNewGame", 1);
-        fade.gameObject.SetActive(true);
 
         Debug.Log("New Game");
-        StartCoroutine(StartGame());
-    }
-    public void GoToTitle()
-    {
-        SceneManager.LoadScene("TitleScene");
+        StartGame();
     }
 
-    IEnumerator StartGame()
+    #region SceneLoader
+    private void StartGame()
     {
         if (!sceneLoading)
         {
             sceneLoading = true;
             fade.gameObject.SetActive(true);
-            fade.DOFade(1, 1f);
-            yield return new WaitForSeconds(1f);
-            LoadToGame();
+            fade.DOFade(1, 1f).OnComplete(() => LoadToGame());
         }
     }
+    private void LoadToGame()
+    {
+        fade.DOFade(0, 0.1f);
+        SceneManager.LoadScene("IngameScene");
+    }   
+    #endregion
+
+    public void GoToTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+
 
     public void QuitGame()
     {
@@ -66,8 +71,5 @@ public class SettingManager : MonoBehaviour
         #endif
     }
 
-    public void StartTest()
-    {
-        SceneManager.LoadScene("IngameScene");
-    }
-}
+
+} 
