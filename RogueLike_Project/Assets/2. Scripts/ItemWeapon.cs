@@ -25,7 +25,6 @@ public class ItemWeapon : MonoBehaviour
     // Start is called before the first frame update    
     void Start()
     {
-        PermanentUpgradeManager.instance.weaponLockData.UnlockWeapon(WeaponType.grenade);
         if(PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock(type) == false)
         {
             gameObject.SetActive(false);
