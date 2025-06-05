@@ -168,7 +168,7 @@ public class WaveManager : MonoBehaviour
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
 
-            for (int i = 6; i <= 10; i++)
+            for (int i = 6; i <= 9; i++)
             {
                 currentWave = i;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
