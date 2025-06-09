@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class UnknownVirusBoss : BossBase
 {
@@ -29,6 +30,13 @@ public class UnknownVirusBoss : BossBase
     // 폼 변경 쿨타임 관리
     private float formStayDuration = 15f; // 변신한 폼에 머무는 시간
     private float formTimer = 0f;
+    #endregion
+
+    #region Effect System
+
+    [SerializeField] VoxelFloatEffect vFE;
+    [SerializeField] CubeTransformationDirector cTD;
+
     #endregion
 
     #region 보스 설정
@@ -100,6 +108,11 @@ public class UnknownVirusBoss : BossBase
     public GameObject Troy => trojanFormObject;
     public GameObject Ransomware => ransomwareFormObject;
 
+    public VoxelFloatEffect FLOATINGEFFECT => vFE;
+    public CubeTransformationDirector TRANSFORMDIRECTOR => cTD;
+
+    public StateMachine<UnknownVirusBoss> Fsm => fsm;  // 기존 fsm 필드를 public으로 노출
+
     public float GetFormTimer()
     {
         return formTimer;
@@ -119,6 +132,7 @@ public class UnknownVirusBoss : BossBase
     private void Start()
     {
         InitializeComponents();
+        InitiailzeEffects();
         InitializeFormHierarchy();
         InitializeAbilities();
         InitializeStates();
@@ -142,11 +156,18 @@ public class UnknownVirusBoss : BossBase
     #endregion
 
     #region 초기화 메서드
+
+    private void InitiailzeEffects()
+    {
+        vFE = GetComponentInChildren<VoxelFloatEffect>();
+        cTD = GetComponentInChildren<CubeTransformationDirector>();
+    }
     private void InitializeComponents()
     {
         // 참조 찾기
         tileManager = FindObjectOfType<TileManager>();
         target = GameObject.FindWithTag("Player").transform;
+        vFE = GetComponentInChildren<VoxelFloatEffect>();
 
         // 컴포넌트 가져오기
         anim = GetComponent<Animator>();
@@ -469,6 +490,8 @@ public class UnknownVirusBoss : BossBase
 
     private void HandleDeath()
     {
+        StopAllCoroutines();
+
         // 사망 처리
         DeactivateAllForms();
 
@@ -858,12 +881,6 @@ public class UnknownVirusBoss : BossBase
     // 공격 종료 시 정리 메서드
     public void CleanupMapAttack()
     {
-        // 혹시 남아있는 레이저 이펙트 찾아서 제거
-        GameObject[] lasers = GameObject.FindGameObjectsWithTag("VirusLaser");
-        foreach (var laser in lasers)
-        {
-            if (laser != null) Destroy(laser);
-        }
     }
     #endregion
 
