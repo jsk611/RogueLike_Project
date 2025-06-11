@@ -158,7 +158,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-boss");
+                LoadWaveData($"{currentStage}-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -275,7 +275,7 @@ public class WaveManager : MonoBehaviour
         switch (waveData.mission.type)
         {
             case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
-            case "Boss": StartCoroutine(KillingMission(waveData.mission.count, true)); break;
+            case "Boss": StartCoroutine(BossMission(waveData.mission.count, true)); break;
             case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
             case "Capture": StartCoroutine(CaptureMission(waveData.mission.time, basePos)); break;
             case "Item": StartCoroutine(ItemMission(basePos)); break;
@@ -382,6 +382,15 @@ public class WaveManager : MonoBehaviour
         enemyCountData.enemyCount = count;
         UIManager.instance.KillingMissionStart(isBoss);
         while (enemyCountData.enemyCount > 0)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+        isMissionEnd = true;
+    }
+    IEnumerator BossMission(int count, bool isBoss = true)
+    {
+        UIManager.instance.KillingMissionStart(isBoss);
+        while (!UIManager.instance.isAllBossKilled)
         {
             yield return new WaitForEndOfFrame();
         }

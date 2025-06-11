@@ -188,6 +188,7 @@ public class UIManager : MonoBehaviour
     bool isCaptureMission = false;
     bool isItemMission = false;
     public float time;
+    public bool isAllBossKilled;
     public void KillingMissionStart(bool isBoss = false)
     {
         isKillingMission = true;
@@ -202,6 +203,7 @@ public class UIManager : MonoBehaviour
                 bar.SetActive(false);
                 barStk.Push(bar);
             }
+            isAllBossKilled = false;
         }
         else MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
         KillingMissionUpdate(true);
@@ -220,11 +222,16 @@ public class UIManager : MonoBehaviour
         BossHPBar bossHPBar = bar.GetComponent<BossHPBar>();
         bossHPBar.SetBoss(boss);
     }
-
     public void BossKilled(BossStatus boss)
     {
         boss_hpBar_Dict[boss].SetActive(false);
         barStk.Push(boss_hpBar_Dict[boss]);
+
+        //보스가 다 죽었는지 확인
+        if (boss_hpBar_Dict.Count == 0)
+        {
+            isAllBossKilled = true;
+        }
     }
 
     void KillingMissionUpdate(bool tmp)
