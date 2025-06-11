@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
 {
     private bool isAttackFinished = false;
+    private Coroutine attackCoroutine; // 코루틴 참조 저장
 
     public MapAttackState_UnknownVirus(UnknownVirusBoss owner) : base(owner)
     {
@@ -22,7 +23,7 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
         owner.NmAgent.isStopped = true;
         owner.Animator.SetBool("IsMoving", false);
 
-        owner.StartCoroutine(ExecuteSequentialAttack());
+        attackCoroutine = owner.StartCoroutine(ExecuteSequentialAttack());
 
 
         // 공격 애니메이션 & 효과
@@ -37,11 +38,56 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
     public override void Exit()
     {
         Debug.Log("UnknownVirus: Map Attack State 종료");
-        // 이동 재개
+
+        // 진행 중인 공격 코루틴 중단
+        if (attackCoroutine != null)
+        {
+            owner.StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        // 큐브 공격 효과 중단
+        StopCubeAttackEffect();
+
         owner.NmAgent.isStopped = false;
+
         owner.Animator.ResetTrigger("MapAttack");
     }
 
+    public override void Interrupt()
+    {
+        base.Interrupt();
+
+        Debug.Log("MapAttackState: 강제 중단됨");
+
+        // 진행 중인 공격 즉시 중단
+        if (attackCoroutine != null)
+        {
+            owner.StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        // 큐브 공격 효과 즉시 중단
+        StopCubeAttackEffect();
+
+        // 공격 완료로 표시하여 상태 전환 허용
+        isAttackFinished = true;
+    }
+
+    /// <summary>
+    /// 큐브 공격 효과 중단
+    /// </summary>
+    private void StopCubeAttackEffect()
+    {
+        if (owner.basic != null)
+        {
+            VirusCubeAttackEffect vfx = owner.basic.GetComponent<VirusCubeAttackEffect>();
+            if (vfx != null)
+            {
+                vfx.StopEffect(); // 큐브 효과 중단
+            }
+        }
+    }
     /// <summary>애니메이션 이벤트나 강제 타이머 종료 시 호출</summary>
     public void OnAttackFinished()
     {

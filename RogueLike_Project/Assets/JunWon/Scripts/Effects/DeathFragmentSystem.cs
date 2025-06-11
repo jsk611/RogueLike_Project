@@ -79,11 +79,11 @@ public class DeathFragmentSystem : MonoBehaviour
         StartCoroutine(FallFragments());
 
         // 5. 조각들 페이드아웃 시작
-        if (fadeOutFragments)
-        {
-            yield return new WaitForSeconds(fadeStartTime);
-            StartCoroutine(FadeOutFragments());
-        }
+        //if (fadeOutFragments)
+        //{
+        //    yield return new WaitForSeconds(fadeStartTime);
+        //    StartCoroutine(FadeOutFragments());
+        //}
 
         // 6. 일정 시간 후 모든 조각 제거
         yield return new WaitForSeconds(fragmentLifetime);

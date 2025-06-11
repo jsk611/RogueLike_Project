@@ -6,7 +6,7 @@ using static UnknownVirusBoss;
 public class TransformState_UnknownVirus : BaseState_UnknownVirus
 {
     private float startTime = 0f;
-    private float transformationTime = 1.0f;
+    private float transformationTime = 2.5f;
     private BossForm targetForm;
     private bool isTransforming = false;
     private bool hasTransformed = false;
@@ -25,6 +25,10 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
         if (owner.AbilityManager.UseAbility("Transform"))
         {
+            owner.TRANSFORMDIRECTOR.SetTransformPattern(CubeTransformationDirector.TransformPattern.Implosion);
+            owner.TRANSFORMDIRECTOR.SetTransformDuration(transformationTime);
+            owner.TRANSFORMDIRECTOR.StartCubeTransformation();
+
             owner.ResetFormTimer();
             // 항상 Basic이 아닌 다른 폼으로 변신
             targetForm = DecideNextForm();
@@ -65,6 +69,7 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
         // Transform State에서 나갈 때는 항상 Basic으로 돌아감
         owner.ApplyForm(BossForm.Basic);
+        owner.TRANSFORMDIRECTOR.RevertToOriginal();
         Debug.Log($"[TransformState] Exit - {owner.CurrentForm}에서 Basic으로 복귀");
     }
 

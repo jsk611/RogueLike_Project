@@ -463,11 +463,6 @@ public class VirusCubeAttackEffect : MonoBehaviour
     {
         StopAllCoroutines();
         isExecuting = false;
-
-        if (shouldReturnToOriginal)
-        {
-            RestoreOriginalFloatingState();
-        }
     }
 
     public void SetReturnMode(bool shouldReturn)
