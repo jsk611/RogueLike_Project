@@ -4,69 +4,119 @@ using UnityEngine;
 using DG.Tweening;
 
 /// <summary>
-/// 292Á¶°¢ ¹ÙÀÌ·¯½º Å¥ºê º¯½Å ½Ã½ºÅÛ - Base ÇÏÀ§ °´Ã¼ »ç¿ë
+/// 292ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ - Base ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½
 /// </summary>
 public class CubeTransformationDirector : MonoBehaviour
 {
     [Header("Core References")]
-    [SerializeField] private Transform baseContainer; // Base °´Ã¼ ÂüÁ¶
+    [SerializeField] private Transform baseContainer;
     [SerializeField] private bool autoFindBaseContainer = true;
 
     [Header("Transformation Patterns")]
-    [SerializeField] private TransformPattern currentPattern = TransformPattern.Implosion;
+    [SerializeField] private TransformPattern currentPattern = TransformPattern.DissolveReassemble;
     [SerializeField] private float transformDuration = 3f;
     [SerializeField] private Ease transformEase = Ease.OutCubic;
+
+    [Header("Dissolve Effect Settings")]
+    [SerializeField] private float dissolveRadius = 8f;
+    [SerializeField] private float dissolveDuration = 1.5f;
+    [SerializeField] private AnimationCurve dissolveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] private Material virusInfectedMaterial;
+    [SerializeField] private ParticleSystem virusParticlePrefab;
+    [SerializeField] private bool useWaveDissolve = true;
 
     [Header("Cube Formation Settings")]
     [SerializeField] private Vector3 cubeCenter = Vector3.zero;
     [SerializeField] private float cubeSize = 6f;
-    [SerializeField] private Vector3Int cubeGridSize = new Vector3Int(8, 8, 8); // 8x8x8 = 512, ÇÏÁö¸¸ 292°³¸¸ »ç¿ë
+    [SerializeField] private Vector3Int cubeGridSize = new Vector3Int(8, 8, 8);
     [SerializeField] private float voxelSpacing = 0.8f;
 
     [Header("Visual Effects")]
     [SerializeField] private ParticleSystem assemblyEffect;
     [SerializeField] private ParticleSystem energyAura;
     [SerializeField] private ParticleSystem completionBurst;
+    [SerializeField] private ParticleSystem dataStreamEffect;
     [SerializeField] private Light coreLight;
     [SerializeField] private AnimationCurve lightIntensityCurve = AnimationCurve.EaseInOut(0, 1, 1, 5);
     [SerializeField] private Color[] transformColors = { Color.cyan, Color.yellow, Color.red };
 
+    [Header("Cyberpunk Effects")]
+    [SerializeField] private Material hologramMaterial;
+    [SerializeField] private Material glitchMaterial;
+    [SerializeField] private bool enableCyberEffects = true;
+    [SerializeField] private float glitchIntensity = 0.3f;
+
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip[] transformSounds;
+    [SerializeField] private AudioClip dissolveSound;
+    [SerializeField] private AudioClip assembleSound;
     [SerializeField] private AudioClip completionSound;
 
     [Header("Performance")]
-    [SerializeField] private int batchSize = 10; // µ¿½Ã¿¡ ÀÌµ¿ÇÒ º¹¼¿ ¼ö
-    [SerializeField] private float batchDelay = 0.05f; // ¹èÄ¡ °£ µô·¹ÀÌ
+    [SerializeField] private int batchSize = 10;
+    [SerializeField] private float batchDelay = 0.05f;
 
-    // ÇÙ½É ÄÄÆ÷³ÍÆ®µé
+    [Header("Enhanced Transformation Effects")]
+    [SerializeField] private bool enableCameraEffects = true;
+    [SerializeField] private float cameraShakeDuration = 1f;
+    [SerializeField] private float cameraShakeStrength = 0.5f;
+    [SerializeField] private AnimationCurve transformProgressCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] private ParticleSystem anticipationEffect;
+    [SerializeField] private ParticleSystem morphingEffect;
+    [SerializeField] private ParticleSystem stabilizationEffect;
+    
+    [Header("Natural Transition Effects")]
+    [SerializeField] private TransformationEffectManager effectManager;
+    [SerializeField] private Material mimicPlantDissolveMaterial;
+    [SerializeField] private bool useNaturalTransitions = true;
+
+    // ë³€ì‹  ë‹¨ê³„ë³„ ìƒíƒœ ê´€ë¦¬
+    private enum TransformationPhase
+    {
+        None,
+        Anticipation,    // ì˜ˆê³ /ì¤€ë¹„
+        Dissolution,     // í•´ì²´
+        Morphing,        // ë³€í˜•
+        Reassembly,      // ì¬ì¡°ë¦½
+        Stabilization    // ì•ˆì •í™”
+    }
+
+    private TransformationPhase currentTransformPhase = TransformationPhase.None;
+    private float phaseStartTime = 0f;
+
+    // Ù½ Æ®ï¿½ï¿½
     private VoxelFloatEffect floatEffect;
     private VirusCubeStateManager stateManager;
 
-    // 292°³ º¹¼¿ °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [SerializeField] private List<Transform> voxels = new List<Transform>();
     private Dictionary<Transform, Vector3> originalPositions = new Dictionary<Transform, Vector3>();
     private Dictionary<Transform, Vector3> formationPositions = new Dictionary<Transform, Vector3>();
     private Dictionary<Transform, int> voxelIndices = new Dictionary<Transform, int>();
+    private Dictionary<Transform, Material> originalMaterials = new Dictionary<Transform, Material>();
 
-    // º¯½Å »óÅÂ °ü¸®
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool isTransforming = false;
     private bool isInCubeForm = false;
+    private bool isDissolving = false;
 
-    // Å¥ºê Çü¼º ÁÂÇ¥ ÀúÀå
+    // Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½
     private List<Vector3> availableCubePositions = new List<Vector3>();
 
     public enum TransformPattern
     {
-        Spiral,      // ³ª¼±ÇüÀ¸·Î Á¶¸³
-        Wave,        // ÆÄµµÃ³·³ ¼øÂ÷Àû Á¶¸³  
-        Implosion,   // Áß½ÉÀ¸·Î ±Ş¼Ó ¼öÃà
-        Organic,     // À¯±âÃ¼Ã³·³ ÀÚ¿¬½º·¯¿î º¯Çü
-        Glitch,      // ±Û¸®Ä¡ È¿°ú¿Í ÇÔ²² º¯Çü
-        Magnetic,    // ÀÚ±âÀåÃ³·³ ²ø·Á°¡´Â È¿°ú
-        Sequential,  // ¼øÂ÷Àû Á¶¸³
-        Explosion    // Æø¹ß ÈÄ ÀçÁ¶¸³
+        DissolveReassemble,  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½âº»)
+        Spiral,              // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Wave,                // ï¿½Äµï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½  
+        Implosion,           // ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Organic,             // ï¿½ï¿½ï¿½ï¿½Ã¼Ã³ï¿½ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Glitch,              // ï¿½Û¸ï¿½Ä¡ È¿ï¿½ï¿½ï¿½ï¿½ ï¿½Ô²ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Magnetic,            // ï¿½Ú±ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+        Sequential,          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Explosion,           // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        VirusSpread,         // Ì·  È® 
+        MimicPlantEmergence  // ì˜íƒœì‹ë¬¼ ë“±ì¥ ì—°ì¶œ
     }
 
     #region Initialization
@@ -78,8 +128,9 @@ public class CubeTransformationDirector : MonoBehaviour
         CollectVoxelsFromBase();
         CalculateAllCubePositions();
         AssignFormationPositions();
+        StoreOriginalMaterials();
 
-        Debug.Log($"[CubeTransformation] ÃÊ±âÈ­ ¿Ï·á - {voxels.Count}°³ º¹¼¿ ¹ß°ß");
+        Debug.Log($"[EnhancedCubeTransformation] ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½ - {voxels.Count}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½");
     }
 
     private void InitializeComponents()
@@ -90,7 +141,6 @@ public class CubeTransformationDirector : MonoBehaviour
         if (audioSource == null)
             audioSource = gameObject.AddComponent<AudioSource>();
 
-        // DOTween ÃÊ±âÈ­
         DOTween.Init();
     }
 
@@ -98,32 +148,24 @@ public class CubeTransformationDirector : MonoBehaviour
     {
         if (baseContainer == null && autoFindBaseContainer)
         {
-            // Base¶ó´Â ÀÌ¸§ÀÇ ÇÏÀ§ °´Ã¼ Ã£±â
             baseContainer = transform.Find("Base");
-
             if (baseContainer == null)
             {
-                Debug.LogError("[CubeTransformation] Base ÄÁÅ×ÀÌ³Ê¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+                Debug.LogError("[EnhancedCubeTransformation] Base ï¿½ï¿½ï¿½ï¿½ï¿½Ì³Ê¸ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
                 return;
             }
         }
-
-        Debug.Log($"[CubeTransformation] Base ÄÁÅ×ÀÌ³Ê ¼³Á¤: {baseContainer.name}");
+        Debug.Log($"[EnhancedCubeTransformation] Base ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½ ï¿½ï¿½ï¿½ï¿½: {baseContainer.name}");
     }
 
     private void CollectVoxelsFromBase()
     {
-        if (baseContainer == null)
-        {
-            Debug.LogError("[CubeTransformation] Base ÄÁÅ×ÀÌ³Ê°¡ ¼³Á¤µÇÁö ¾Ê¾Ò½À´Ï´Ù!");
-            return;
-        }
+        if (baseContainer == null) return;
 
         voxels.Clear();
         originalPositions.Clear();
         voxelIndices.Clear();
 
-        // Base ÇÏÀ§ÀÇ ¸ğµç ÀÚ½Ä °´Ã¼¸¦ º¹¼¿·Î ¼öÁı
         int index = 0;
         foreach (Transform child in baseContainer)
         {
@@ -133,21 +175,32 @@ public class CubeTransformationDirector : MonoBehaviour
             index++;
         }
 
-        Debug.Log($"[CubeTransformation] {voxels.Count}°³ º¹¼¿À» Base¿¡¼­ ¼öÁıÇß½À´Ï´Ù.");
+        Debug.Log($"[EnhancedCubeTransformation] {voxels.Count}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Baseï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+    }
+
+    private void StoreOriginalMaterials()
+    {
+        originalMaterials.Clear();
+        foreach (var voxel in voxels)
+        {
+            var renderer = voxel.GetComponent<Renderer>();
+            if (renderer != null)
+            {
+                originalMaterials[voxel] = renderer.material;
+            }
+        }
     }
 
     private void CalculateAllCubePositions()
     {
         availableCubePositions.Clear();
 
-        // 8x8x8 Á¤À°¸éÃ¼ÀÇ ¿Ü°û ¸é¸¸ »ç¿ëÇÏ¿© À§Ä¡ °è»ê
         for (int x = 0; x < cubeGridSize.x; x++)
         {
             for (int y = 0; y < cubeGridSize.y; y++)
             {
                 for (int z = 0; z < cubeGridSize.z; z++)
                 {
-                    // Á¤À°¸éÃ¼ÀÇ ¿Ü°ûÀÎÁö È®ÀÎ (6¸é Áß ÇÏ³ª ÀÌ»ó¿¡ ¼ÓÇÔ)
                     bool isOnFace = (x == 0 || x == cubeGridSize.x - 1) ||
                                     (y == 0 || y == cubeGridSize.y - 1) ||
                                     (z == 0 || z == cubeGridSize.z - 1);
@@ -166,20 +219,12 @@ public class CubeTransformationDirector : MonoBehaviour
             }
         }
 
-        Debug.Log($"[CubeTransformation] {availableCubePositions.Count}°³ÀÇ Å¥ºê À§Ä¡ °è»ê ¿Ï·á");
+        Debug.Log($"[EnhancedCubeTransformation] {availableCubePositions.Count}ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½");
     }
 
     private void AssignFormationPositions()
     {
         formationPositions.Clear();
-
-        // »ç¿ë °¡´ÉÇÑ À§Ä¡°¡ º¹¼¿ ¼öº¸´Ù ÀûÀ¸¸é °æ°í
-        if (availableCubePositions.Count < voxels.Count)
-        {
-            Debug.LogWarning($"[CubeTransformation] º¹¼¿ ¼ö({voxels.Count})°¡ »ç¿ë °¡´ÉÇÑ À§Ä¡ ¼ö({availableCubePositions.Count})º¸´Ù ¸¹½À´Ï´Ù!");
-        }
-
-        // °¢ º¹¼¿¿¡ ´ëÇØ °¡Àå °¡±î¿î Å¥ºê À§Ä¡ ÇÒ´ç
         var assignedPositions = new HashSet<Vector3>();
 
         for (int i = 0; i < voxels.Count && i < availableCubePositions.Count; i++)
@@ -188,7 +233,6 @@ public class CubeTransformationDirector : MonoBehaviour
             Vector3 bestPosition = Vector3.zero;
             float minDistance = float.MaxValue;
 
-            // ¾ÆÁ÷ ÇÒ´çµÇÁö ¾ÊÀº À§Ä¡ Áß¿¡¼­ °¡Àå °¡±î¿î °÷ Ã£±â
             foreach (var pos in availableCubePositions)
             {
                 if (assignedPositions.Contains(pos)) continue;
@@ -208,125 +252,490 @@ public class CubeTransformationDirector : MonoBehaviour
             }
         }
 
-        Debug.Log($"[CubeTransformation] {formationPositions.Count}°³ º¹¼¿¿¡ ´ëÇØ Çü¼º À§Ä¡ ÇÒ´ç ¿Ï·á");
+        Debug.Log($"[EnhancedCubeTransformation] {formationPositions.Count}ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ò´ï¿½ ï¿½Ï·ï¿½");
     }
 
     #endregion
 
     #region Public API
 
-    /// <summary>
-    /// Å¥ºê ÇüÅÂ·Î º¯½Å ½ÃÀÛ
-    /// </summary>
-    public void StartCubeTransformation()
+        public void StartCubeTransformation()
     {
-        if (isTransforming)
-        {
-            Debug.LogWarning("[CubeTransformation] ÀÌ¹Ì º¯½Å ÁßÀÔ´Ï´Ù!");
-            return;
-        }
-
-        Debug.Log($"[CubeTransformation] Å¥ºê º¯½Å ½ÃÀÛ - ÆĞÅÏ: {currentPattern}");
-        StartCoroutine(ExecuteTransformation());
+        if (isTransforming) return;
+        
+        Debug.Log($"[EnhancedCubeTransformation] íë¸Œ ë³€ì‹  ì‹œì‘ - íŒ¨í„´: {currentPattern}");
+        StartCoroutine(ExecutePatternTransformation());
     }
 
-    /// <summary>
-    /// ¿ø·¡ ÇüÅÂ·Î µÇµ¹¸®±â
-    /// </summary>
+    public void StartSmoothTransformation(TransformPattern pattern = TransformPattern.VirusSpread)
+    {
+        if (isTransforming) return;
+        
+        SetTransformPattern(pattern);
+        StartCoroutine(ExecuteSmoothTransformation());
+    }
+
     public void RevertToOriginal()
     {
         if (isTransforming)
         {
-            Debug.LogWarning("[CubeTransformation] º¯½Å Áß¿¡´Â µÇµ¹¸± ¼ö ¾ø½À´Ï´Ù!");
+            Debug.LogWarning("[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½ß¿ï¿½ï¿½ï¿½ ï¿½Çµï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
 
-        Debug.Log("[CubeTransformation] ¿øÇü º¹±Í ½ÃÀÛ");
+        Debug.Log("[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         StartCoroutine(ExecuteReversion());
     }
 
-    /// <summary>
-    /// º¯½Å ÆĞÅÏ ¼³Á¤
-    /// </summary>
     public void SetTransformPattern(TransformPattern pattern)
     {
         currentPattern = pattern;
-        Debug.Log($"[CubeTransformation] º¯½Å ÆĞÅÏ º¯°æ: {pattern}");
+        Debug.Log($"[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {pattern}");
     }
 
-    /// <summary>
-    /// º¯½Å Áö¼Ó ½Ã°£ ¼³Á¤
-    /// </summary>
-    public void SetTransformDuration(float duration)
-    {
-        transformDuration = Mathf.Max(0.5f, duration);
-    }
-
-    /// <summary>
-    /// ÇöÀç º¯½Å »óÅÂ È®ÀÎ
-    /// </summary>
     public bool IsInCubeForm => isInCubeForm;
     public bool IsTransforming => isTransforming;
 
     #endregion
 
+    #region Dissolve Effects
+
+    /// <summary>
+    /// ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+    /// </summary>
+    private IEnumerator DissolveCubes(Transform epicenter = null)
+    {
+        isDissolving = true;
+
+        if (epicenter == null)
+            epicenter = transform;
+
+        PlayDissolveSound();
+
+        var sequence = DOTween.Sequence();
+        var sortedVoxels = SortVoxelsByDistanceFromEpicenter(epicenter);
+
+        foreach (var voxel in sortedVoxels)
+        {
+            float distance = Vector3.Distance(voxel.position, epicenter.position);
+            float delay = useWaveDissolve ? (distance / dissolveRadius) * 0.3f : Random.Range(0f, 0.5f);
+            float scaleDuration = dissolveDuration * dissolveCurve.Evaluate(distance / dissolveRadius);
+
+            // ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            sequence.Insert(delay, CreateDissolveSequence(voxel, scaleDuration, delay));
+        }
+
+        yield return sequence.WaitForCompletion();
+        isDissolving = false;
+    }
+
+    private Sequence CreateDissolveSequence(Transform voxel, float duration, float delay)
+    {
+        var sequence = DOTween.Sequence();
+
+        // 1. ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        sequence.AppendCallback(() => ApplyVirusEffect(voxel));
+
+        // 2. ï¿½Û¸ï¿½Ä¡ È¿ï¿½ï¿½ (ï¿½ï¿½ï¿½Ì¹ï¿½ ï¿½×¸ï¿½)
+        if (enableCyberEffects)
+        {
+            sequence.Append(CreateGlitchEffect(voxel, duration * 0.3f));
+        }
+
+        // 3. ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
+        sequence.Append(voxel.DOScale(Vector3.zero, duration * 0.7f)
+            .SetEase(Ease.InBack)
+            .OnComplete(() => PrepareForReconstruction(voxel)));
+
+        return sequence;
+    }
+
+    private void ApplyVirusEffect(Transform voxel)
+    {
+        // ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        var renderer = voxel.GetComponent<Renderer>();
+        if (renderer != null && virusInfectedMaterial != null)
+        {
+            renderer.material = virusInfectedMaterial;
+
+            // È¦ï¿½Î±×·ï¿½ È¿ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            if (virusInfectedMaterial.HasProperty("_GlitchStrength"))
+            {
+                virusInfectedMaterial.SetFloat("_GlitchStrength", glitchIntensity);
+            }
+        }
+
+        // ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼Å¬ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (virusParticlePrefab != null)
+        {
+            var particles = Instantiate(virusParticlePrefab, voxel.position, Quaternion.identity);
+            particles.Play();
+            Destroy(particles.gameObject, 3f);
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ È¿ï¿½ï¿½
+        if (dataStreamEffect != null)
+        {
+            StartCoroutine(CreateDataStreamToCenter(voxel));
+        }
+    }
+
+    private Tween CreateGlitchEffect(Transform voxel, float duration)
+    {
+        var sequence = DOTween.Sequence();
+
+        // ï¿½ï¿½Ä¡ ï¿½Û¸ï¿½Ä¡
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 glitchOffset = Random.insideUnitSphere * 0.2f;
+            sequence.Append(voxel.DOLocalMove(voxel.localPosition + glitchOffset, duration / 10f))
+                   .Append(voxel.DOLocalMove(voxel.localPosition, duration / 10f));
+        }
+
+        // È¸ï¿½ï¿½ ï¿½Û¸ï¿½Ä¡
+        sequence.Join(voxel.DOLocalRotate(Random.insideUnitSphere * 360f, duration)
+                          .SetEase(Ease.InOutQuad));
+
+        return sequence;
+    }
+
+    private void PrepareForReconstruction(Transform voxel)
+    {
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
+        voxel.gameObject.SetActive(false);
+    }
+
+    private IEnumerator CreateDataStreamToCenter(Transform voxel)
+    {
+        if (dataStreamEffect == null) yield break;
+
+        Vector3 startPos = voxel.position;
+        Vector3 endPos = transform.position + cubeCenter;
+
+        var streamInstance = Instantiate(dataStreamEffect, startPos, Quaternion.identity);
+        var trails = streamInstance.trails;
+        trails.enabled = true;
+
+        float duration = 0.8f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            streamInstance.transform.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        streamInstance.Stop();
+        Destroy(streamInstance.gameObject, 2f);
+    }
+
+    #endregion
+
+    #region Reconstruction Effects
+
+    /// <summary>
+    /// Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    /// </summary>
+    private IEnumerator ReconstructToCube()
+    {
+        PlayAssembleSound();
+
+        // ï¿½ß½É¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+        if (completionBurst != null)
+        {
+            completionBurst.transform.position = transform.position + cubeCenter;
+            completionBurst.Play();
+        }
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¡ï¿½Ï°ï¿½ È°ï¿½ï¿½È­
+        var reconstructionSequence = DOTween.Sequence();
+
+        foreach (var voxel in voxels)
+        {
+            if (!formationPositions.ContainsKey(voxel)) continue;
+
+            Vector3 targetPos = formationPositions[voxel];
+
+            // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
+            reconstructionSequence.AppendCallback(() => {
+                voxel.gameObject.SetActive(true);
+                voxel.localPosition = cubeCenter; // ï¿½ß½É¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                voxel.localScale = Vector3.zero;
+
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (È¦ï¿½Î±×·ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
+                RestoreOriginalMaterial(voxel, true);
+            });
+
+            // ï¿½ï¿½Ç¥ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            reconstructionSequence.Append(voxel.DOLocalMove(targetPos, 0.8f).SetEase(Ease.OutElastic));
+            reconstructionSequence.Join(voxel.DOScale(Vector3.one, 0.6f).SetEase(Ease.OutBack));
+
+            // ï¿½à°£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+            reconstructionSequence.AppendInterval(Random.Range(0.02f, 0.08f));
+        }
+
+        yield return reconstructionSequence.WaitForCompletion();
+    }
+
+    private void RestoreOriginalMaterial(Transform voxel, bool withHologramEffect = false)
+    {
+        var renderer = voxel.GetComponent<Renderer>();
+        if (renderer != null && originalMaterials.ContainsKey(voxel))
+        {
+            if (withHologramEffect && hologramMaterial != null)
+            {
+                renderer.material = hologramMaterial;
+
+                // È¦ï¿½Î±×·ï¿½ È¿ï¿½ï¿½ ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                if (hologramMaterial.HasProperty("_FresnelColor"))
+                {
+                    hologramMaterial.SetColor("_FresnelColor", transformColors[1]);
+                }
+            }
+            else
+            {
+                renderer.material = originalMaterials[voxel];
+            }
+        }
+    }
+
+    #endregion
+
     #region Transformation Execution
 
-    private IEnumerator ExecuteTransformation()
+    private IEnumerator ExecuteSmoothTransformation()
     {
         isTransforming = true;
+        isInCubeForm = false;
+        currentTransformPhase = TransformationPhase.Anticipation;
+        phaseStartTime = Time.time;
 
-        // 1. ÁØºñ ´Ü°è
-        PrepareTransformation();
-        yield return new WaitForSeconds(0.5f);
+        // 1ë‹¨ê³„: ì˜ˆê³ /ì¤€ë¹„ íš¨ê³¼
+        yield return StartCoroutine(AnticipationPhase());
 
-        // 2. ÆĞÅÏº° º¯È¯ ½ÇÇà
-        yield return StartCoroutine(ExecutePatternTransformation());
+        // 2ë‹¨ê³„: í•´ì²´ ë‹¨ê³„
+        currentTransformPhase = TransformationPhase.Dissolution;
+        phaseStartTime = Time.time;
+        yield return StartCoroutine(DissolutionPhase());
 
-        // 3. ¿Ï¼º ´Ü°è
-        yield return StartCoroutine(FinalizeFormation());
+        // 3ë‹¨ê³„: ë³€í˜• ë‹¨ê³„
+        currentTransformPhase = TransformationPhase.Morphing;
+        phaseStartTime = Time.time;
+        yield return StartCoroutine(MorphingPhase());
 
-        // 4. ¿Ï¼º È¿°ú
-        PlayCompletionEffects();
+        // 4ë‹¨ê³„: ì¬ì¡°ë¦½ ë‹¨ê³„
+        currentTransformPhase = TransformationPhase.Reassembly;
+        phaseStartTime = Time.time;
+        yield return StartCoroutine(ReassemblyPhase());
 
+        // 5ë‹¨ê³„: ì•ˆì •í™” ë‹¨ê³„
+        currentTransformPhase = TransformationPhase.Stabilization;
+        phaseStartTime = Time.time;
+        yield return StartCoroutine(StabilizationPhase());
+
+        // ì™„ë£Œ
+        currentTransformPhase = TransformationPhase.None;
         isInCubeForm = true;
         isTransforming = false;
-
-        Debug.Log("[CubeTransformation] Å¥ºê º¯½Å ¿Ï·á!");
     }
 
-    private void PrepareTransformation()
+    private IEnumerator AnticipationPhase()
     {
-        // ºÎÀ¯ È¿°ú¸¦ ÃæÀü ¸ğµå·Î ÀüÈ¯
-        if (floatEffect != null)
+        Debug.Log("[CubeTransformation] ë³€ì‹  ì˜ˆê³  ë‹¨ê³„ ì‹œì‘");
+
+        // ì˜ˆê³  íš¨ê³¼
+        if (anticipationEffect != null)
         {
-            floatEffect.SetChargingMode(true);
+            anticipationEffect.transform.position = transform.position;
+            anticipationEffect.Play();
         }
 
-        // ÄÚ¾î ¶óÀÌÆ® È°¼ºÈ­
+        // ì¹´ë©”ë¼ ë¯¸ë¬˜í•œ ì§„ë™
+        if (enableCameraEffects)
+        {
+            //Camera.main?.transform?.DOShakePosition(0.5f, 0.1f, 20, 90, false, true);
+        }
+
+        // ë¼ì´íŠ¸ íš¨ê³¼ ê°•í™”
         if (coreLight != null)
         {
-            coreLight.enabled = true;
-            coreLight.color = transformColors[0]; // ½ÃÀÛ »ö»ó
-            coreLight.transform.position = transform.position + cubeCenter;
-
-            DOTween.To(() => coreLight.intensity, x => coreLight.intensity = x, 3f, 0.5f);
+            coreLight.DOIntensity(lightIntensityCurve.Evaluate(0.2f), 0.5f);
         }
 
-        // Á¶¸³ ÆÄÆ¼Å¬ ½ÃÀÛ
-        if (assemblyEffect != null)
+        // ë³µì…€ë“¤ ë¯¸ë¬˜í•œ í”ë“¤ë¦¼
+        foreach (var voxel in voxels)
         {
-            assemblyEffect.transform.position = transform.position + cubeCenter;
-            assemblyEffect.Play();
+            voxel.DOShakePosition(0.5f, 0.05f, 10, 90, false, true);
         }
 
-        PlayRandomTransformSound();
+        yield return new WaitForSeconds(0.8f);
     }
+
+    private IEnumerator DissolutionPhase()
+    {
+        Debug.Log("[CubeTransformation] í•´ì²´ ë‹¨ê³„ ì‹œì‘");
+
+        // í•´ì²´ ì‚¬ìš´ë“œ
+        PlayDissolveSound();
+
+        // í•´ì²´ íš¨ê³¼ì— ë”°ë¼ ë‹¤ë¥¸ íŒ¨í„´ ì ìš©
+        switch (currentPattern)
+        {
+            case TransformPattern.VirusSpread:
+                yield return StartCoroutine(ViralDissolution());
+                break;
+            case TransformPattern.MimicPlantEmergence:
+                yield return StartCoroutine(MimicPlantEmergenceTransformation());
+                break;
+            default:
+                yield return StartCoroutine(StandardDissolution());
+                break;
+        }
+    }
+
+    private IEnumerator ViralDissolution()
+    {
+        // ë°”ì´ëŸ¬ìŠ¤ì‹ í•´ì²´: ê°ì—¼ í™•ì‚°
+        var sortedVoxels = SortVoxelsByDistanceFromCenter();
+
+        if (sortedVoxels.Count > 0)
+        {
+            // ì²« ê°ì—¼
+            yield return StartCoroutine(InfectAndDissolve(sortedVoxels[0], 0f));
+
+            // ê°ì—¼ í™•ì‚°
+            int infectionRadius = 1;
+            List<Transform> infected = new List<Transform> { sortedVoxels[0] };
+
+            while (infected.Count < voxels.Count)
+            {
+                List<Transform> newInfections = new List<Transform>();
+
+                foreach (var infectedVoxel in infected)
+                {
+                    foreach (var voxel in voxels)
+                    {
+                        if (!infected.Contains(voxel) && !newInfections.Contains(voxel))
+                        {
+                            float distance = Vector3.Distance(infectedVoxel.position, voxel.position);
+                            if (distance <= infectionRadius * 2f)
+                            {
+                                newInfections.Add(voxel);
+                            }
+                        }
+                    }
+                }
+
+                // ìƒˆë¡œìš´ ê°ì—¼ë“¤ì„ ë™ì‹œì— ì²˜ë¦¬
+                foreach (var voxel in newInfections)
+                {
+                    StartCoroutine(InfectAndDissolve(voxel, Random.Range(0f, 0.3f)));
+                }
+
+                infected.AddRange(newInfections);
+                yield return new WaitForSeconds(0.4f);
+            }
+        }
+    }
+
+    private IEnumerator InfectAndDissolve(Transform voxel, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // ê°ì—¼ íš¨ê³¼
+        yield return StartCoroutine(InfectVoxel(voxel, 0f));
+
+        // í•´ì²´ íš¨ê³¼
+        voxel.DOScale(Vector3.zero, 0.3f).SetEase(Ease.InBack);
+        voxel.DOLocalRotate(Random.insideUnitSphere * 180f, 0.3f);
+    }
+
+    private IEnumerator StandardDissolution()
+    {
+        // ê¸°ì¡´ í•´ì²´ ë°©ì‹
+        yield return StartCoroutine(DissolveCubes());
+    }
+
+    private IEnumerator MorphingPhase()
+    {
+        Debug.Log("[CubeTransformation] ë³€í˜• ë‹¨ê³„ ì‹œì‘");
+
+        // ë³€í˜• íš¨ê³¼
+        if (morphingEffect != null)
+        {
+            morphingEffect.transform.position = transform.position;
+            morphingEffect.Play();
+        }
+
+        // ì—ë„ˆì§€ ì§‘ì¤‘ íš¨ê³¼
+        if (coreLight != null)
+        {
+            coreLight.DOIntensity(lightIntensityCurve.Evaluate(0.8f), 0.5f);
+            coreLight.DOColor(Color.red, 0.5f);
+        }
+
+        // ê°•í•œ ì¹´ë©”ë¼ ì§„ë™
+        if (enableCameraEffects)
+        {
+            Camera.main?.transform?.DOShakePosition(cameraShakeDuration, cameraShakeStrength, 20, 90, false, true);
+        }
+
+        yield return new WaitForSeconds(1f);
+    }
+
+    private IEnumerator ReassemblyPhase()
+    {
+        Debug.Log("[CubeTransformation] ì¬ì¡°ë¦½ ë‹¨ê³„ ì‹œì‘");
+
+        // ì¬ì¡°ë¦½ ì‚¬ìš´ë“œ
+        PlayAssembleSound();
+
+        // íŒ¨í„´ì— ë”°ë¥¸ ì¬ì¡°ë¦½
+        yield return StartCoroutine(ExecutePatternTransformation());
+    }
+
+    private IEnumerator StabilizationPhase()
+    {
+        Debug.Log("[CubeTransformation] ì•ˆì •í™” ë‹¨ê³„ ì‹œì‘");
+
+        // ì•ˆì •í™” íš¨ê³¼
+        if (stabilizationEffect != null)
+        {
+            stabilizationEffect.transform.position = transform.position;
+            stabilizationEffect.Play();
+        }
+
+        // ë¼ì´íŠ¸ ì•ˆì •í™”
+        if (coreLight != null)
+        {
+            coreLight.DOIntensity(lightIntensityCurve.Evaluate(1f), 0.8f);
+            coreLight.DOColor(Color.white, 0.8f);
+        }
+
+        // ìµœì¢… ì •ë ¬
+        yield return StartCoroutine(FinalizeFormation());
+
+        // ì™„ë£Œ íš¨ê³¼
+        PlayCompletionEffects();
+
+        yield return new WaitForSeconds(0.5f);
+    }
+
+    #endregion
+
+    #region Pattern Implementations
 
     private IEnumerator ExecutePatternTransformation()
     {
         switch (currentPattern)
         {
+            case TransformPattern.DissolveReassemble:
+                yield return StartCoroutine(DissolveCubes());
+                yield return StartCoroutine(ReconstructToCube());
+                break;
             case TransformPattern.Spiral:
                 yield return StartCoroutine(SpiralTransformation());
                 break;
@@ -351,17 +760,18 @@ public class CubeTransformationDirector : MonoBehaviour
             case TransformPattern.Explosion:
                 yield return StartCoroutine(ExplosionTransformation());
                 break;
+            case TransformPattern.VirusSpread:
+                yield return StartCoroutine(VirusSpreadTransformation());
+                break;
+            case TransformPattern.MimicPlantEmergence:
+                yield return StartCoroutine(MimicPlantEmergenceTransformation());
+                break;
         }
     }
-
-    #endregion
-
-    #region Transformation Patterns
 
     private IEnumerator SpiralTransformation()
     {
         var sortedVoxels = SortVoxelsByDistanceFromCenter();
-        int batchCount = 0;
 
         for (int i = 0; i < sortedVoxels.Count; i++)
         {
@@ -374,12 +784,8 @@ public class CubeTransformationDirector : MonoBehaviour
 
             StartCoroutine(MoveVoxelAlongPath(voxel, spiralWaypoint, targetPos, delay));
 
-            batchCount++;
-            if (batchCount >= batchSize)
-            {
+            if (i % batchSize == 0)
                 yield return new WaitForSeconds(batchDelay);
-                batchCount = 0;
-            }
         }
 
         yield return new WaitForSeconds(transformDuration);
@@ -400,11 +806,9 @@ public class CubeTransformationDirector : MonoBehaviour
                 Vector3 targetPos = formationPositions[voxel];
                 Vector3 waveHeight = targetPos + Vector3.up * (3f + layerIndex * 0.5f);
 
-                // ÆÄµµ È¿°ú·Î ÀÌµ¿
                 var sequence = DOTween.Sequence();
                 sequence.Append(voxel.DOLocalMove(waveHeight, transformDuration * 0.4f).SetEase(Ease.OutQuad));
                 sequence.Append(voxel.DOLocalMove(targetPos, transformDuration * 0.6f).SetEase(Ease.InOutBounce));
-
                 voxel.DOLocalRotate(Vector3.zero, transformDuration);
             }
 
@@ -416,15 +820,12 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private IEnumerator ImplosionTransformation()
     {
-        List<Tween> allTweens = new List<Tween>();
-
         foreach (var voxel in voxels)
         {
             if (!formationPositions.ContainsKey(voxel)) continue;
 
             Vector3 targetPos = formationPositions[voxel];
 
-            // ±Ş¼ÓÇÑ ¼öÃà È¿°ú
             var moveTween = voxel.DOLocalMove(targetPos, transformDuration * 0.7f)
                                  .SetEase(Ease.InExpo);
 
@@ -434,9 +835,6 @@ public class CubeTransformationDirector : MonoBehaviour
                                       voxel.DOScale(Vector3.one, transformDuration * 0.5f)
                                            .SetEase(Ease.OutBounce);
                                   });
-
-            allTweens.Add(moveTween);
-            allTweens.Add(scaleTween);
         }
 
         yield return new WaitForSeconds(transformDuration);
@@ -460,7 +858,6 @@ public class CubeTransformationDirector : MonoBehaviour
             floatEffect.SetGlitchMode(true, 3f);
         }
 
-        // º¹¼¿À» ¹«ÀÛÀ§ ¼ø¼­·Î ±Û¸®Ä¡ ÅÚ·¹Æ÷Æ®
         var shuffledVoxels = new List<Transform>(voxels);
         for (int i = 0; i < shuffledVoxels.Count; i++)
         {
@@ -503,7 +900,6 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private IEnumerator SequentialTransformation()
     {
-        // ÀÎµ¦½º ¼ø¼­´ë·Î Â÷·ÊÂ÷·Ê ÀÌµ¿
         for (int i = 0; i < voxels.Count; i++)
         {
             var voxel = voxels[i];
@@ -515,7 +911,6 @@ public class CubeTransformationDirector : MonoBehaviour
             voxel.DOScale(Vector3.one * 1.2f, 0.1f).SetEase(Ease.OutQuad)
                  .OnComplete(() => voxel.DOScale(Vector3.one, 0.2f));
 
-            // ÀÏÁ¤ °£°İÀ¸·Î ¹èÄ¡ Ã³¸®
             if (i % batchSize == 0)
                 yield return new WaitForSeconds(batchDelay);
         }
@@ -525,7 +920,7 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private IEnumerator ExplosionTransformation()
     {
-        // 1´Ü°è: Æø¹ßÇÏ¿© Èğ¾îÁü
+        // 1ë‹¨ê³„: í­ë°œí•˜ì—¬ í©ì–´ì§
         foreach (var voxel in voxels)
         {
             Vector3 explosionDirection = Random.insideUnitSphere.normalized;
@@ -537,7 +932,7 @@ public class CubeTransformationDirector : MonoBehaviour
 
         yield return new WaitForSeconds(transformDuration * 0.4f);
 
-        // 2´Ü°è: Å¥ºê ÇüÅÂ·Î ÀçÁ¶¸³
+        // 2ë‹¨ê³„: íë¸Œ í˜•íƒœë¡œ ì¬ì¡°ë¦½
         foreach (var voxel in voxels)
         {
             if (formationPositions.ContainsKey(voxel))
@@ -551,22 +946,365 @@ public class CubeTransformationDirector : MonoBehaviour
         yield return new WaitForSeconds(transformDuration * 0.6f);
     }
 
+    private IEnumerator VirusSpreadTransformation()
+    {
+        isTransforming = true;
+        isInCubeForm = false;
+
+        PlayRandomTransformSound();
+
+        // ë°”ì´ëŸ¬ìŠ¤ í™•ì‚° íŒ¨í„´: ì¤‘ì‹¬ë¶€í„° ê°ì—¼ì´ í¼ì ¸ë‚˜ê°€ëŠ” ë°©ì‹
+        Vector3 centerWorld = transform.TransformPoint(cubeCenter);
+        var sortedVoxels = SortVoxelsByDistanceFromCenter();
+
+        // ê°ì—¼ ì‹œì‘ì  (ì¤‘ì‹¬ì—ì„œ ê°€ì¥ ê°€ê¹Œìš´ ë³µì…€)
+        if (sortedVoxels.Count > 0)
+        {
+            Transform patientZero = sortedVoxels[0];
+            
+            // 1ë‹¨ê³„: ì²« ê°ì—¼
+            yield return StartCoroutine(InfectVoxel(patientZero, 0f));
+            
+            // 2ë‹¨ê³„: ê°ì—¼ í™•ì‚° (ì›¨ì´ë¸Œ í˜•íƒœë¡œ)
+            int waveSize = 3;
+            int currentWave = 1;
+            
+            while (currentWave * waveSize < sortedVoxels.Count)
+            {
+                int startIdx = currentWave * waveSize;
+                int endIdx = Mathf.Min(startIdx + waveSize, sortedVoxels.Count);
+                
+                // ë™ì‹œì— ì—¬ëŸ¬ ë³µì…€ ê°ì—¼
+                for (int i = startIdx; i < endIdx; i++)
+                {
+                    float waveDelay = (i - startIdx) * 0.1f;
+                    StartCoroutine(InfectVoxel(sortedVoxels[i], waveDelay));
+                }
+                
+                yield return new WaitForSeconds(0.5f);
+                currentWave++;
+            }
+            
+            // 3ë‹¨ê³„: ëª¨ë“  ê°ì—¼ëœ ë³µì…€ë“¤ì´ íë¸Œ í˜•íƒœë¡œ ì¬ë°°ì—´
+            yield return new WaitForSeconds(0.5f);
+            yield return StartCoroutine(VirusReassembly());
+        }
+
+        yield return StartCoroutine(FinalizeFormation());
+        PlayCompletionEffects();
+
+        isInCubeForm = true;
+        isTransforming = false;
+    }
+    
+    private IEnumerator InfectVoxel(Transform voxel, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        // ê°ì—¼ íš¨ê³¼: ë¹¨ê°„ìƒ‰ìœ¼ë¡œ ë³€í•˜ë©° ì§„ë™
+        var renderer = voxel.GetComponent<Renderer>();
+        if (renderer != null && virusInfectedMaterial != null)
+        {
+            renderer.material = virusInfectedMaterial;
+        }
+        
+        // ê°ì—¼ ì§„ë™ íš¨ê³¼
+        voxel.DOShakePosition(0.3f, 0.2f, 10, 90, false, true);
+        
+        // ê°ì—¼ íŒŒí‹°í´ íš¨ê³¼
+        if (virusParticlePrefab != null)
+        {
+            var particle = Instantiate(virusParticlePrefab, voxel.position, Quaternion.identity);
+            particle.Play();
+            Destroy(particle.gameObject, 2f);
+        }
+        
+        // ìŠ¤ì¼€ì¼ í„ìŠ¤ íš¨ê³¼
+        var originalScale = voxel.localScale;
+        voxel.DOScale(originalScale * 1.3f, 0.2f)
+             .SetEase(Ease.OutQuad)
+             .OnComplete(() => {
+                 voxel.DOScale(originalScale, 0.3f).SetEase(Ease.InQuad);
+             });
+    }
+    
+    private IEnumerator VirusReassembly()
+    {
+        // ê°ì—¼ëœ ë³µì…€ë“¤ì´ íë¸Œ í˜•íƒœë¡œ ì¬ì¡°ë¦½
+        foreach (var voxel in voxels)
+        {
+            if (!formationPositions.ContainsKey(voxel)) continue;
+            
+            Vector3 targetPos = formationPositions[voxel];
+            float randomDelay = Random.Range(0f, 0.8f);
+            
+            // ë³µì…€ë“¤ì´ ì„œë¡œ ë‹¤ë¥¸ ê²½ë¡œë¡œ ëª©í‘œ ì§€ì ì— ë„ë‹¬
+            Vector3 currentPos = voxel.localPosition;
+            Vector3 midPoint = Vector3.Lerp(currentPos, targetPos, 0.5f) + 
+                              Random.insideUnitSphere * 2f;
+            
+            // ê³¡ì„  ê²½ë¡œë¡œ ì´ë™
+            var sequence = DOTween.Sequence();
+            sequence.SetDelay(randomDelay);
+            sequence.Append(voxel.DOLocalMove(midPoint, transformDuration * 0.4f).SetEase(Ease.OutQuad));
+            sequence.Append(voxel.DOLocalMove(targetPos, transformDuration * 0.6f).SetEase(Ease.InOutCubic));
+            
+            // íšŒì „ íš¨ê³¼
+            sequence.Join(voxel.DOLocalRotate(Vector3.zero, transformDuration).SetEase(Ease.OutQuart));
+            
+            // ì¬ë£Œì§ˆ ë³µì› (ê°ì—¼ í•´ì œ)
+            sequence.OnComplete(() => RestoreOriginalMaterial(voxel, true));
+        }
+        
+        yield return new WaitForSeconds(transformDuration);
+    }
+
+    /// <summary>
+    /// ì˜íƒœì‹ë¬¼ ë“±ì¥ ì—°ì¶œ - ìì—°ìŠ¤ëŸ¬ìš´ ìˆ¨ê¹€ê³¼ í­ë°œì  ë“±ì¥
+    /// </summary>
+    private IEnumerator MimicPlantEmergenceTransformation()
+    {
+        Debug.Log("[MimicPlant] ì˜íƒœì‹ë¬¼ ë“±ì¥ ì—°ì¶œ ì‹œì‘");
+        
+        // 1ë‹¨ê³„: ì§€í•˜ë¡œ ìˆ¨ê¸°ê¸° (ì™„ì „íˆ ìì—°ìŠ¤ëŸ¬ìš´ ë””ì¡¸ë¸Œ)
+        yield return StartCoroutine(NaturalDissolveToGround());
+        
+        // 2ë‹¨ê³„: ì§€ë©´ íš¨ê³¼ ë° ê°ì§€ ì—°ì¶œ
+        yield return StartCoroutine(GroundDetectionPhase());
+        
+        // 3ë‹¨ê³„: í­ë°œì  ë“±ì¥
+        yield return StartCoroutine(ExplosiveEmergenceFromGround());
+        
+        Debug.Log("[MimicPlant] ì˜íƒœì‹ë¬¼ ë“±ì¥ ì—°ì¶œ ì™„ë£Œ");
+    }
+    
+    /// <summary>
+    /// 1ë‹¨ê³„: ìì—°ìŠ¤ëŸ½ê²Œ ì§€í•˜ë¡œ ë””ì¡¸ë¸Œí•˜ë©° ìˆ¨ê¸°ê¸°
+    /// </summary>
+    private IEnumerator NaturalDissolveToGround()
+    {
+        Debug.Log("[MimicPlant] ì§€í•˜ë¡œ ìˆ¨ê¸°ê¸° ì‹œì‘");
+        
+        // ê° ë³µì…€ì— ë””ì¡¸ë¸Œ ë¨¸í‹°ë¦¬ì–¼ ì ìš©
+        foreach (var voxel in voxels)
+        {
+            if (useNaturalTransitions && mimicPlantDissolveMaterial != null)
+            {
+                var renderer = voxel.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    renderer.material = mimicPlantDissolveMaterial;
+                    
+                    // ë””ì¡¸ë¸Œ íŒŒë¼ë¯¸í„° ì´ˆê¸°í™”
+                    if (mimicPlantDissolveMaterial.HasProperty("_DissolveAmount"))
+                    {
+                        mimicPlantDissolveMaterial.SetFloat("_DissolveAmount", 0f);
+                    }
+                    if (mimicPlantDissolveMaterial.HasProperty("_GroundLevel"))
+                    {
+                        mimicPlantDissolveMaterial.SetFloat("_GroundLevel", transform.position.y);
+                    }
+                }
+            }
+        }
+        
+        // ì´í™íŠ¸ ë§¤ë‹ˆì €ë¡œ ìì—°ìŠ¤ëŸ¬ìš´ ë””ì¡¸ë¸Œ ì‹¤í–‰
+        if (effectManager != null)
+        {
+            foreach (var voxel in voxels)
+            {
+                effectManager.PlayDigitalDissolve(voxel, dissolveDuration);
+                yield return new WaitForSeconds(0.03f); // ì•½ê°„ì˜ ë”œë ˆì´ë¡œ ìì—°ìŠ¤ëŸ¬ìš´ íë¦„
+            }
+        }
+        else
+        {
+            // ê¸°ë³¸ ë””ì¡¸ë¸Œ (ì´í™íŠ¸ ë§¤ë‹ˆì €ê°€ ì—†ëŠ” ê²½ìš°)
+            yield return StartCoroutine(BasicGroundDissolve());
+        }
+        
+        yield return new WaitForSeconds(dissolveDuration);
+        
+        // ëª¨ë“  ë³µì…€ì„ ì§€í•˜ ìœ„ì¹˜ë¡œ ì´ë™ í›„ ë¹„í™œì„±í™”
+        foreach (var voxel in voxels)
+        {
+            voxel.localPosition = voxel.localPosition + Vector3.down * 3f; // ì§€í•˜ë¡œ ì´ë™
+            voxel.gameObject.SetActive(false);
+        }
+        
+        Debug.Log("[MimicPlant] ì§€í•˜ ìˆ¨ê¹€ ì™„ë£Œ");
+    }
+    
+    /// <summary>
+    /// 2ë‹¨ê³„: ì§€ë©´ ê°ì§€ ë° ê²½ê³  íš¨ê³¼
+    /// </summary>
+    private IEnumerator GroundDetectionPhase()
+    {
+        Debug.Log("[MimicPlant] ì§€ë©´ ê°ì§€ ë‹¨ê³„ ì‹œì‘");
+        
+        Vector3 emergenceCenter = transform.position + cubeCenter;
+        
+        // ì´í™íŠ¸ ë§¤ë‹ˆì €ë¡œ ì˜íƒœì‹ë¬¼ ë“±ì¥ íš¨ê³¼ ì‹¤í–‰
+        if (effectManager != null)
+        {
+            effectManager.PlayMimicPlantEmergence(emergenceCenter, 2f);
+        }
+        else
+        {
+            // ê¸°ë³¸ ê²½ê³  íš¨ê³¼
+            yield return StartCoroutine(BasicWarningEffect(emergenceCenter));
+        }
+        
+        yield return new WaitForSeconds(2f);
+        Debug.Log("[MimicPlant] ì§€ë©´ ê°ì§€ ì™„ë£Œ");
+    }
+    
+    /// <summary>
+    /// 3ë‹¨ê³„: í­ë°œì  ë“±ì¥ ë° íë¸Œ í˜•ì„±
+    /// </summary>
+    private IEnumerator ExplosiveEmergenceFromGround()
+    {
+        Debug.Log("[MimicPlant] í­ë°œì  ë“±ì¥ ì‹œì‘");
+        
+        Vector3 emergenceCenter = transform.position + cubeCenter;
+        
+        // ê°•í•œ ì¹´ë©”ë¼ ì§„ë™
+        if (enableCameraEffects && Camera.main != null)
+        {
+            Camera.main.transform.DOShakePosition(0.8f, 1.2f, 30, 90, false, true);
+        }
+        
+        // ë“±ì¥ ì‚¬ìš´ë“œ
+        PlayAssembleSound();
+        
+        // ì¤‘ì‹¬ì—ì„œ ë°”ê¹¥ìª½ìœ¼ë¡œ í™•ì‚°ë˜ë©° ë“±ì¥
+        var sortedVoxels = SortVoxelsByDistanceFromCenter();
+        
+        for (int i = 0; i < sortedVoxels.Count; i++)
+        {
+            var voxel = sortedVoxels[i];
+            if (!formationPositions.ContainsKey(voxel)) continue;
+            
+            Vector3 targetPos = formationPositions[voxel];
+            float emergenceDelay = (i / (float)sortedVoxels.Count) * 0.8f;
+            
+            StartCoroutine(EmergeSingleVoxel(voxel, targetPos, emergenceDelay));
+        }
+        
+        yield return new WaitForSeconds(1.5f);
+        
+        // ìµœì¢… ì •ë ¬ ë° ì•ˆì •í™”
+        yield return StartCoroutine(FinalizeFormation());
+        PlayCompletionEffects();
+        
+        Debug.Log("[MimicPlant] í­ë°œì  ë“±ì¥ ì™„ë£Œ");
+    }
+    
+    /// <summary>
+    /// ê°œë³„ ë³µì…€ì˜ ë“±ì¥ ì—°ì¶œ
+    /// </summary>
+    private IEnumerator EmergeSingleVoxel(Transform voxel, Vector3 targetPos, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        // í™œì„±í™” ë° ì§€í•˜ì—ì„œ ì‹œì‘
+        voxel.gameObject.SetActive(true);
+        voxel.localPosition = targetPos + Vector3.down * 4f;
+        voxel.localScale = Vector3.zero;
+        
+        // í™€ë¡œê·¸ë¨ ì¬ì¡°ë¦½ íš¨ê³¼
+        if (effectManager != null && useNaturalTransitions)
+        {
+            effectManager.PlayHologramReassembly(voxel, targetPos, 0.8f);
+        }
+        
+        // í­ë°œì  ë“±ì¥ ì• ë‹ˆë©”ì´ì…˜
+        var sequence = DOTween.Sequence();
+        
+        // 1. ë•…ì—ì„œ íŠ€ì–´ë‚˜ì˜¤ë“¯ ë¹ ë¥´ê²Œ ìƒìŠ¹
+        sequence.Append(voxel.DOLocalMove(targetPos + Vector3.up * 1f, 0.3f)
+                            .SetEase(Ease.OutBack));
+        
+        // 2. í¬ê¸° í™•ì¥ (ì•½ê°„ì˜ ì˜¤ë²„ìŠˆíŠ¸)
+        sequence.Join(voxel.DOScale(Vector3.one * 1.3f, 0.3f)
+                          .SetEase(Ease.OutElastic));
+        
+        // 3. ëª©í‘œ ìœ„ì¹˜ë¡œ ì•ˆì°©
+        sequence.Append(voxel.DOLocalMove(targetPos, 0.2f)
+                            .SetEase(Ease.OutQuad));
+        
+        // 4. ì •ìƒ í¬ê¸°ë¡œ ë³µì›
+        sequence.Join(voxel.DOScale(Vector3.one, 0.2f)
+                          .SetEase(Ease.OutBounce));
+        
+        // ë¨¸í‹°ë¦¬ì–¼ ë³µì›
+        yield return new WaitForSeconds(0.6f);
+        RestoreOriginalMaterial(voxel, false);
+    }
+    
+    /// <summary>
+    /// ê¸°ë³¸ ì§€ë©´ ë””ì¡¸ë¸Œ (ì´í™íŠ¸ ë§¤ë‹ˆì €ê°€ ì—†ëŠ” ê²½ìš°)
+    /// </summary>
+    private IEnumerator BasicGroundDissolve()
+    {
+        foreach (var voxel in voxels)
+        {
+            // ê¸°ë³¸ ìŠ¤ì¼€ì¼ ì¶•ì†Œ ì• ë‹ˆë©”ì´ì…˜
+            voxel.DOScale(Vector3.zero, dissolveDuration * 0.8f)
+                 .SetEase(Ease.InBack);
+            
+            // ì§€í•˜ë¡œ ì´ë™
+            voxel.DOLocalMove(voxel.localPosition + Vector3.down * 2f, dissolveDuration)
+                 .SetEase(Ease.InQuad);
+                 
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+    
+    /// <summary>
+    /// ê¸°ë³¸ ê²½ê³  íš¨ê³¼ (ì´í™íŠ¸ ë§¤ë‹ˆì €ê°€ ì—†ëŠ” ê²½ìš°)
+    /// </summary>
+    private IEnumerator BasicWarningEffect(Vector3 center)
+    {
+        // ë¯¸ë¬˜í•œ ì§„ë™ íš¨ê³¼
+        if (enableCameraEffects && Camera.main != null)
+        {
+            Camera.main.transform.DOShakePosition(1.5f, 0.1f, 20, 90, false, true);
+        }
+        
+        // ë¼ì´íŠ¸ íš¨ê³¼
+        if (coreLight != null)
+        {
+            coreLight.transform.position = center;
+            coreLight.color = Color.yellow;
+            coreLight.enabled = true;
+            
+            // ê¹œë¹¡ì´ëŠ” ê²½ê³  íš¨ê³¼
+            for (int i = 0; i < 6; i++)
+            {
+                coreLight.DOIntensity(3f, 0.15f).OnComplete(() => {
+                    coreLight.DOIntensity(0.5f, 0.15f);
+                });
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+        
+        yield return new WaitForSeconds(0.5f);
+    }
+
     #endregion
 
     #region Helper Methods
 
-    private Vector3 CalculateSpiralPath(int index, int totalCount)
+    private List<Transform> SortVoxelsByDistanceFromEpicenter(Transform epicenter)
     {
-        float progress = index / (float)totalCount;
-        float angle = progress * Mathf.PI * 6f; // 3¹ÙÄû ³ª¼±
-        float radius = 4f * (1f - progress);
-        float height = Mathf.Sin(progress * Mathf.PI) * 3f;
-
-        return cubeCenter + new Vector3(
-            Mathf.Cos(angle) * radius,
-            height,
-            Mathf.Sin(angle) * radius
-        );
+        var sorted = new List<Transform>(voxels);
+        sorted.Sort((a, b) => {
+            float distA = Vector3.Distance(a.position, epicenter.position);
+            float distB = Vector3.Distance(b.position, epicenter.position);
+            return distA.CompareTo(distB);
+        });
+        return sorted;
     }
 
     private List<Transform> SortVoxelsByDistanceFromCenter()
@@ -583,15 +1321,27 @@ public class CubeTransformationDirector : MonoBehaviour
         return sorted;
     }
 
+    private Vector3 CalculateSpiralPath(int index, int totalCount)
+    {
+        float progress = index / (float)totalCount;
+        float angle = progress * Mathf.PI * 6f; // 3ë²ˆì˜ íšŒì „
+        float radius = 4f * (1f - progress);
+        float height = Mathf.Sin(progress * Mathf.PI) * 3f;
+
+        return cubeCenter + new Vector3(
+            Mathf.Cos(angle) * radius,
+            height,
+            Mathf.Sin(angle) * radius
+        );
+    }
+
     private List<List<Transform>> GroupVoxelsByLayer()
     {
         var layers = new List<List<Transform>>();
         var sorted = new List<Transform>(voxels);
 
-        // Y ÁÂÇ¥ ±âÁØÀ¸·Î Á¤·Ä
         sorted.Sort((a, b) => a.localPosition.y.CompareTo(b.localPosition.y));
 
-        // Ãşº°·Î ±×·ìÈ­ (´õ ¼¼¹ĞÇÑ ·¹ÀÌ¾î¸µ)
         float layerThickness = 1f;
         var currentLayer = new List<Transform>();
         float currentY = sorted[0].localPosition.y;
@@ -620,12 +1370,9 @@ public class CubeTransformationDirector : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
 
-        // ¿şÀÌÆ÷ÀÎÆ®¸¦ °ÅÃÄ ¸ñÇ¥Á¡À¸·Î ÀÌµ¿
         var sequence = DOTween.Sequence();
         sequence.Append(voxel.DOLocalMove(waypoint, transformDuration * 0.4f).SetEase(Ease.OutQuad));
         sequence.Append(voxel.DOLocalMove(target, transformDuration * 0.6f).SetEase(Ease.InOutCubic));
-
-        // È¸Àüµµ ºÎµå·´°Ô
         sequence.Join(voxel.DOLocalRotate(Vector3.zero, transformDuration));
     }
 
@@ -636,7 +1383,6 @@ public class CubeTransformationDirector : MonoBehaviour
         Vector3 targetPos = formationPositions[voxel];
         Vector3 glitchOffset = Random.insideUnitSphere * 1f;
 
-        // ±Û¸®Ä¡ È¿°ú: Àá±ñ »ç¶óÁ³´Ù°¡ ¸ñÇ¥ À§Ä¡ ±ÙÃ³¿¡ ³ªÅ¸³²
         voxel.DOScale(Vector3.zero, 0.1f).OnComplete(() => {
             voxel.localPosition = targetPos + glitchOffset;
             voxel.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack);
@@ -653,7 +1399,6 @@ public class CubeTransformationDirector : MonoBehaviour
         Vector3 targetPos = formationPositions[voxel];
         Vector3 currentPos = voxel.localPosition;
 
-        // ÀÚ±âÀå È¿°ú: °î¼± °æ·Î·Î ²ø·Á°¨
         Vector3 midPoint1 = Vector3.Lerp(currentPos, targetPos, 0.33f) + Random.insideUnitSphere * 2f;
         Vector3 midPoint2 = Vector3.Lerp(currentPos, targetPos, 0.66f) + Random.insideUnitSphere * 1f;
 
@@ -677,7 +1422,6 @@ public class CubeTransformationDirector : MonoBehaviour
             cluster.Add(seed);
             remaining.Remove(seed);
 
-            // ±ÙÃ³ÀÇ º¹¼¿µéÀ» Å¬·¯½ºÅÍ¿¡ Ãß°¡ (´õ ÀÛÀº Å¬·¯½ºÅÍ Å©±â)
             int clusterSize = Random.Range(5, 15);
             for (int i = 0; i < clusterSize && remaining.Count > 0; i++)
             {
@@ -715,7 +1459,6 @@ public class CubeTransformationDirector : MonoBehaviour
 
             Vector3 targetPos = formationPositions[voxel];
 
-            // À¯±âÀû ¼ºÀå È¿°ú
             voxel.DOScale(Vector3.zero, 0.1f).OnComplete(() => {
                 voxel.localPosition = targetPos;
                 voxel.DOScale(Vector3.one, 0.4f).SetEase(Ease.OutElastic);
@@ -731,7 +1474,6 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private IEnumerator FinalizeFormation()
     {
-        // ¸ğµç Á¶°¢À» Á¤È®ÇÑ À§Ä¡·Î ¹Ì¼¼ Á¶Á¤
         foreach (var voxel in voxels)
         {
             if (formationPositions.ContainsKey(voxel))
@@ -747,7 +1489,6 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private void PlayCompletionEffects()
     {
-        // ¿Ï¼º ÆÄÆ¼Å¬ È¿°ú
         if (completionBurst != null)
         {
             completionBurst.transform.position = transform.position + cubeCenter;
@@ -760,28 +1501,25 @@ public class CubeTransformationDirector : MonoBehaviour
             energyAura.Play();
         }
 
-        // ¶óÀÌÆ® È¿°ú
         if (coreLight != null)
         {
-            coreLight.color = transformColors[2]; // ¿Ï¼º »ö»ó (»¡°£»ö)
+            coreLight.color = transformColors[2];
             coreLight.DOIntensity(8f, 0.2f).OnComplete(() => {
                 coreLight.DOIntensity(3f, 0.8f);
             });
         }
 
-        // ¿Ï¼º »ç¿îµå
         if (completionSound != null && audioSource != null)
         {
             audioSource.PlayOneShot(completionSound);
         }
 
-        // ºÎÀ¯ È¿°ú¸¦ °ø°İ ¸ğµå·Î ÀüÈ¯
         if (floatEffect != null)
         {
             floatEffect.SetAttackMode(true);
         }
 
-        Debug.Log("[CubeTransformation] Å¥ºê Çü¼º ¿Ï·á!");
+        Debug.Log("[EnhancedCubeTransformation] Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½!");
     }
 
     #endregion
@@ -792,68 +1530,80 @@ public class CubeTransformationDirector : MonoBehaviour
     {
         isTransforming = true;
 
-        Debug.Log("[CubeTransformation] ¿øÇü º¹±Í ½ÃÀÛ");
+        Debug.Log("[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 
-        // º¹±Í ÁØºñ
         PrepareReversion();
         yield return new WaitForSeconds(0.3f);
 
-        // ¿øÇü º¹±Í ½ÇÇà
-        yield return StartCoroutine(RevertToOriginalPositions());
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: Å¥ï¿½ê¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        yield return StartCoroutine(ReverseDissolution());
 
-        // º¹±Í ¿Ï·á Ã³¸®
         CompleteReversion();
 
         isInCubeForm = false;
         isTransforming = false;
 
-        Debug.Log("[CubeTransformation] ¿øÇü º¹±Í ¿Ï·á!");
+        Debug.Log("[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½!");
     }
 
     private void PrepareReversion()
     {
-        // ¶óÀÌÆ® È¿°ú º¯°æ
         if (coreLight != null)
         {
-            coreLight.color = transformColors[0]; // ¿ø·¡ »ö»óÀ¸·Î
+            coreLight.color = transformColors[0];
             coreLight.DOIntensity(1f, 0.5f);
         }
 
-        // º¹±Í »ç¿îµå
         PlayRandomTransformSound();
     }
 
-    private IEnumerator RevertToOriginalPositions()
+    private IEnumerator ReverseDissolution()
     {
-        if (stateManager != null)
+        // 1ï¿½Ü°ï¿½: Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        var contractionSequence = DOTween.Sequence();
+
+        foreach (var voxel in voxels)
         {
-            // StateManager¸¦ »ç¿ëÇÑ ºÎµå·¯¿î º¹±Í
-            yield return StartCoroutine(stateManager.RestoreOriginalStateSmooth(transformDuration));
-        }
-        else
-        {
-            // Á÷Á¢ º¹±Í Ã³¸®
-            foreach (var voxel in voxels)
+            if (originalPositions.ContainsKey(voxel))
             {
-                if (originalPositions.ContainsKey(voxel))
-                {
-                    voxel.DOLocalMove(originalPositions[voxel], transformDuration)
-                         .SetEase(Ease.OutCubic);
-
-                    voxel.DOLocalRotate(Vector3.zero, transformDuration * 0.8f);
-
-                    // ¾à°£ÀÇ Áö¿¬À» ÁÖ¾î ÀÚ¿¬½º·¯¿î ÇØÃ¼ È¿°ú
-                    yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
-                }
+                // ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+                contractionSequence.Join(voxel.DOLocalMove(cubeCenter, transformDuration * 0.4f)
+                    .SetEase(Ease.InQuad));
+                contractionSequence.Join(voxel.DOScale(Vector3.zero, transformDuration * 0.3f)
+                    .SetEase(Ease.InBack));
             }
-
-            yield return new WaitForSeconds(transformDuration);
         }
+
+        yield return contractionSequence.WaitForCompletion();
+
+        // 2ï¿½Ü°ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+        var expansionSequence = DOTween.Sequence();
+
+        foreach (var voxel in voxels)
+        {
+            if (originalPositions.ContainsKey(voxel))
+            {
+                Vector3 originalPos = originalPositions[voxel];
+
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                expansionSequence.AppendCallback(() => RestoreOriginalMaterial(voxel, false));
+
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È®ï¿½ï¿½
+                expansionSequence.Join(voxel.DOLocalMove(originalPos, transformDuration * 0.6f)
+                    .SetEase(Ease.OutElastic));
+                expansionSequence.Join(voxel.DOScale(Vector3.one, transformDuration * 0.5f)
+                    .SetEase(Ease.OutBack));
+
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
+                yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
+            }
+        }
+
+        yield return new WaitForSeconds(transformDuration * 0.6f);
     }
 
     private void CompleteReversion()
     {
-        // ¶óÀÌÆ® ²ô±â
         if (coreLight != null)
         {
             coreLight.DOIntensity(0f, 0.5f).OnComplete(() => {
@@ -861,7 +1611,6 @@ public class CubeTransformationDirector : MonoBehaviour
             });
         }
 
-        // ÆÄÆ¼Å¬ Á¤Áö
         if (assemblyEffect != null && assemblyEffect.isPlaying)
         {
             assemblyEffect.Stop();
@@ -872,7 +1621,6 @@ public class CubeTransformationDirector : MonoBehaviour
             energyAura.Stop();
         }
 
-        // ºÎÀ¯ È¿°ú º¹¿ø
         if (floatEffect != null)
         {
             floatEffect.SetFloatIntensity(1f);
@@ -893,6 +1641,22 @@ public class CubeTransformationDirector : MonoBehaviour
         }
     }
 
+    private void PlayDissolveSound()
+    {
+        if (audioSource != null && dissolveSound != null)
+        {
+            audioSource.PlayOneShot(dissolveSound);
+        }
+    }
+
+    private void PlayAssembleSound()
+    {
+        if (audioSource != null && assembleSound != null)
+        {
+            audioSource.PlayOneShot(assembleSound);
+        }
+    }
+
     #endregion
 
     #region Debug & Testing
@@ -908,10 +1672,9 @@ public class CubeTransformationDirector : MonoBehaviour
             HandleTestInput();
         }
 
-        // µ¿ÀûÀ¸·Î ¶óÀÌÆ® °­µµ Á¶Àı (Å¥ºê ÇüÅÂÀÏ ¶§)
         if (isInCubeForm && coreLight != null && lightIntensityCurve != null)
         {
-            float normalizedTime = (Time.time % 4f) / 4f; // 4ÃÊ ÁÖ±â
+            float normalizedTime = (Time.time % 4f) / 4f;
             float intensity = lightIntensityCurve.Evaluate(normalizedTime) * 3f + 2f;
             coreLight.intensity = intensity;
         }
@@ -919,65 +1682,55 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private void HandleTestInput()
     {
-        // TÅ°·Î º¯½Å Å×½ºÆ®
         if (Input.GetKeyDown(KeyCode.K))
         {
             if (!isTransforming)
             {
                 if (isInCubeForm)
                 {
-                    Debug.Log("=== TÅ° ´­¸²: ¿øÇü º¹±Í ½ÃÀÛ ===");
+                    Debug.Log("=== KÅ° ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ===");
                     RevertToOriginal();
                 }
                 else
                 {
-                    Debug.Log("=== TÅ° ´­¸²: Å¥ºê º¯½Å ½ÃÀÛ ===");
+                    Debug.Log("=== KÅ° ï¿½ï¿½ï¿½ï¿½: Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ===");
                     StartCubeTransformation();
                 }
             }
         }
 
-        // RÅ°·Î °­Á¦ º¹±Í
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (!isTransforming && isInCubeForm)
             {
-                Debug.Log("=== RÅ° ´­¸²: °­Á¦ ¿øÇü º¹±Í ===");
+                Debug.Log("=== RÅ° ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ===");
                 RevertToOriginal();
             }
         }
 
-        // ¼ıÀÚ Å°·Î ÆĞÅÏ º¯°æ
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { SetTransformPattern(TransformPattern.Spiral); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { SetTransformPattern(TransformPattern.Wave); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { SetTransformPattern(TransformPattern.Implosion); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { SetTransformPattern(TransformPattern.Organic); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { SetTransformPattern(TransformPattern.Glitch); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { SetTransformPattern(TransformPattern.Magnetic); }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) { SetTransformPattern(TransformPattern.Sequential); }
-        if (Input.GetKeyDown(KeyCode.Alpha8)) { SetTransformPattern(TransformPattern.Explosion); }
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { SetTransformPattern(TransformPattern.DissolveReassemble); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { SetTransformPattern(TransformPattern.Spiral); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { SetTransformPattern(TransformPattern.Wave); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) { SetTransformPattern(TransformPattern.Implosion); }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) { SetTransformPattern(TransformPattern.Organic); }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) { SetTransformPattern(TransformPattern.Glitch); }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) { SetTransformPattern(TransformPattern.Magnetic); }
+        if (Input.GetKeyDown(KeyCode.Alpha8)) { SetTransformPattern(TransformPattern.Sequential); }
+        if (Input.GetKeyDown(KeyCode.Alpha9)) { SetTransformPattern(TransformPattern.Explosion); }
+        if (Input.GetKeyDown(KeyCode.Alpha0)) { SetTransformPattern(TransformPattern.VirusSpread); }
+        if (Input.GetKeyDown(KeyCode.Minus)) { SetTransformPattern(TransformPattern.MimicPlantEmergence); }
 
-        // +/- Å°·Î º¯½Å ¼Óµµ Á¶Àı
-        if (Input.GetKeyDown(KeyCode.Equals)) // + Å°
-        {
-            SetTransformDuration(transformDuration - 0.5f);
-            Debug.Log($"º¯½Å ¼Óµµ Áõ°¡: {transformDuration}ÃÊ");
-        }
-        if (Input.GetKeyDown(KeyCode.Minus))
-        {
-            SetTransformDuration(transformDuration + 0.5f);
-            Debug.Log($"º¯½Å ¼Óµµ °¨¼Ò: {transformDuration}ÃÊ");
-        }
-
-        // CÅ°·Î º¹¼¿ ¼ö È®ÀÎ
         if (Input.GetKeyDown(KeyCode.C))
         {
-            Debug.Log($"=== º¹¼¿ Á¤º¸ ===");
-            Debug.Log($"ÀüÃ¼ º¹¼¿ ¼ö: {voxels.Count}");
-            Debug.Log($"Çü¼º À§Ä¡ ÇÒ´ç ¼ö: {formationPositions.Count}");
-            Debug.Log($"»ç¿ë °¡´ÉÇÑ Å¥ºê À§Ä¡ ¼ö: {availableCubePositions.Count}");
-            Debug.Log($"ÇöÀç »óÅÂ: {(isInCubeForm ? "Å¥ºê" : "¿øÇü")}");
-            Debug.Log($"º¯½Å Áß: {isTransforming}");
+            Debug.Log($"=== ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ===");
+            Debug.Log($"ï¿½ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {voxels.Count}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½Ò´ï¿½ ï¿½ï¿½: {formationPositions.Count}");
+            Debug.Log($"ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½: {availableCubePositions.Count}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {(isInCubeForm ? "Å¥ï¿½ï¿½" : "ï¿½ï¿½ï¿½ï¿½")}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {isTransforming}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½: {isDissolving}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½: {currentPattern}");
         }
     }
 
@@ -989,22 +1742,26 @@ public class CubeTransformationDirector : MonoBehaviour
     {
         if (!showDebugGizmos) return;
 
-        // Å¥ºê ÇüÅÂ ¹Ì¸®º¸±â
+        // Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireCube(transform.position + cubeCenter, Vector3.one * cubeSize);
 
-        // Å¥ºê Áß½ÉÁ¡
+        // Å¥ï¿½ï¿½ ï¿½ß½ï¿½ï¿½ï¿½
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position + cubeCenter, 0.2f);
 
-        // Base ÄÁÅ×ÀÌ³Ê Ç¥½Ã
+        // Base ï¿½ï¿½ï¿½ï¿½ï¿½Ì³ï¿½
         if (baseContainer != null)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawWireCube(baseContainer.position, Vector3.one * 0.5f);
         }
 
-        // »ç¿ë °¡´ÉÇÑ Å¥ºê À§Ä¡µé Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½İ°ï¿½ Ç¥ï¿½ï¿½
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + cubeCenter, dissolveRadius);
+
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½
         if (availableCubePositions.Count > 0)
         {
             Gizmos.color = Color.yellow;
@@ -1014,7 +1771,7 @@ public class CubeTransformationDirector : MonoBehaviour
             }
         }
 
-        // ÇöÀç ÇÒ´çµÈ Çü¼º À§Ä¡µé Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ò´ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½
         if (formationPositions.Count > 0)
         {
             Gizmos.color = Color.magenta;
@@ -1024,7 +1781,7 @@ public class CubeTransformationDirector : MonoBehaviour
             }
         }
 
-        // º¹¼¿µéÀÇ ÇöÀç À§Ä¡ Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡
         if (voxels.Count > 0)
         {
             Gizmos.color = isInCubeForm ? Color.blue : Color.white;
@@ -1038,55 +1795,24 @@ public class CubeTransformationDirector : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        // Ç×»ó Ç¥½ÃµÇ´Â ±âº» Á¤º¸
-        if (baseContainer != null)
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position, baseContainer.position);
-        }
-    }
-
     #endregion
 
     #region Utility Methods
 
-    /// <summary>
-    /// º¹¼¿ ¼öÁıÀ» ´Ù½Ã ¼öÇà (·±Å¸ÀÓ¿¡ Base ³»¿ëÀÌ º¯°æµÈ °æ¿ì)
-    /// </summary>
     public void RefreshVoxelCollection()
     {
         CollectVoxelsFromBase();
         CalculateAllCubePositions();
         AssignFormationPositions();
+        StoreOriginalMaterials();
 
-        Debug.Log($"[CubeTransformation] º¹¼¿ ÄÃ·º¼Ç »õ·Î°íÄ§ ¿Ï·á - {voxels.Count}°³");
+        Debug.Log($"[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î°ï¿½Ä§ ï¿½Ï·ï¿½ - {voxels.Count}ï¿½ï¿½");
     }
 
-    /// <summary>
-    /// Æ¯Á¤ º¹¼¿ÀÇ Á¤º¸ Á¶È¸
-    /// </summary>
-    public VoxelInfo GetVoxelInfo(Transform voxel)
-    {
-        var info = new VoxelInfo();
-        info.voxel = voxel;
-        info.index = voxelIndices.ContainsKey(voxel) ? voxelIndices[voxel] : -1;
-        info.originalPosition = originalPositions.ContainsKey(voxel) ? originalPositions[voxel] : Vector3.zero;
-        info.formationPosition = formationPositions.ContainsKey(voxel) ? formationPositions[voxel] : Vector3.zero;
-        info.isAssigned = formationPositions.ContainsKey(voxel);
-
-        return info;
-    }
-
-    /// <summary>
-    /// º¯½Å ÁøÇà·ü È®ÀÎ (0~1)
-    /// </summary>
     public float GetTransformationProgress()
     {
         if (!isTransforming) return isInCubeForm ? 1f : 0f;
 
-        // °¢ º¹¼¿ÀÇ ¸ñÇ¥ À§Ä¡ ´ëºñ ÇöÀç À§Ä¡·Î ÁøÇà·ü °è»ê
         float totalProgress = 0f;
         int validVoxels = 0;
 
@@ -1112,15 +1838,82 @@ public class CubeTransformationDirector : MonoBehaviour
         return validVoxels > 0 ? totalProgress / validVoxels : 0f;
     }
 
-    /// <summary>
-    /// ±ä±Ş Á¤Áö (¸ğµç Æ®À© Áß´Ü)
-    /// </summary>
     public void EmergencyStop()
     {
         DOTween.KillAll();
         isTransforming = false;
+        isDissolving = false;
 
-        Debug.LogWarning("[CubeTransformation] ±ä±Ş Á¤Áö ½ÇÇà!");
+        Debug.LogWarning("[EnhancedCubeTransformation] ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!");
+    }
+
+    /// <summary>
+    /// ì§„í–‰ë¥  ì¶”ì ì„ ìœ„í•œ ë©”ì„œë“œ
+    /// </summary>
+    public float GetCurrentPhaseProgress()
+    {
+        if (currentTransformPhase == TransformationPhase.None) return 0f;
+
+        float phaseElapsed = Time.time - phaseStartTime;
+        float phaseDuration = transformDuration / 5f; // 5ë‹¨ê³„ë¡œ ë‚˜ëˆ„ì–´ì§„ ì‹œê°„
+
+        return Mathf.Clamp01(phaseElapsed / phaseDuration);
+    }
+
+    public string GetCurrentPhaseDescription()
+    {
+        switch (currentTransformPhase)
+        {
+            case TransformationPhase.Anticipation: return "ë³€ì‹  ì¤€ë¹„ ì¤‘...";
+            case TransformationPhase.Dissolution: return "êµ¬ì¡° í•´ì²´ ì¤‘...";
+            case TransformationPhase.Morphing: return "í˜•íƒœ ë³€í™˜ ì¤‘...";
+            case TransformationPhase.Reassembly: return "ì¬ì¡°ë¦½ ì¤‘...";
+            case TransformationPhase.Stabilization: return "ì•ˆì •í™” ì¤‘...";
+            default: return "ëŒ€ê¸° ì¤‘";
+        }
+    }
+
+    /// <summary>
+    /// ë³€ì‹  ê³¼ì •ì„ ë” ë¶€ë“œëŸ½ê²Œ ë§Œë“¤ê¸° ìœ„í•´ í˜ì´ì¦ˆ ê¸°ë°˜ ë³€ì‹ ê³¼ ì¹´ë©”ë¼ íš¨ê³¼, í™”ë©´ ì§„ë™ ë“±ì„ ì¶”ê°€í•©ë‹ˆë‹¤
+    /// </summary>
+    public void QuickTransform(TransformPattern pattern)
+    {
+        if (isTransforming) return;
+
+        SetTransformPattern(pattern);
+        StartSmoothTransformation();
+    }
+
+    /// <summary>
+    /// ë°”ì´ëŸ¬ìŠ¤ íš¨ê³¼ë¥¼ í…ŒìŠ¤íŠ¸í•˜ê¸° ìœ„í•œ ë©”ì„œë“œ
+    /// </summary>
+    public void TestVirusEffect()
+    {
+        if (isTransforming) return;
+        StartCoroutine(DissolveCubes());
+    }
+
+    /// <summary>
+    /// ë³€ì‹  ì†ë„ ì„¤ì •
+    /// </summary>
+    public void SetTransformDuration(float duration)
+    {
+        transformDuration = Mathf.Max(0.5f, duration);
+    }
+
+    /// <summary>
+    /// íŠ¹ì • ë³µì…€ì˜ ì •ë³´ ì¡°íšŒ
+    /// </summary>
+    public VoxelInfo GetVoxelInfo(Transform voxel)
+    {
+        var info = new VoxelInfo();
+        info.voxel = voxel;
+        info.index = voxelIndices.ContainsKey(voxel) ? voxelIndices[voxel] : -1;
+        info.originalPosition = originalPositions.ContainsKey(voxel) ? originalPositions[voxel] : Vector3.zero;
+        info.formationPosition = formationPositions.ContainsKey(voxel) ? formationPositions[voxel] : Vector3.zero;
+        info.isAssigned = formationPositions.ContainsKey(voxel);
+
+        return info;
     }
 
     #endregion
