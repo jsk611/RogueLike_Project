@@ -70,6 +70,22 @@ public class CubeTransformationDirector : MonoBehaviour
     [SerializeField] private TransformationEffectManager effectManager;
     [SerializeField] private Material mimicPlantDissolveMaterial;
     [SerializeField] private bool useNaturalTransitions = true;
+    
+    [Header("Cyber Dust Effects")]
+    [SerializeField] private CyberDustParticle cyberDustPrefab;
+    [SerializeField] private bool enableCyberDust = true;
+    [SerializeField] private float dustEmissionIntensity = 1f;
+    
+    [Header("Mimic Plant Effects")]
+    [SerializeField] private MimicTransformationEffect mimicTransformEffect;
+    [SerializeField] private bool useMimicPlantStyle = true;      // 의태식물 스타일 사용 여부
+    
+    [Header("Aurora Effects")]
+    [SerializeField] private AuroraTransformationEffect auroraTransformEffect;
+    [SerializeField] private bool useAuroraStyle = false;         // 오로라 스타일 사용 여부
+    
+    // 사이버 더스트 인스턴스들
+    private List<CyberDustParticle> activeDustParticles = new List<CyberDustParticle>();
 
     // 변신 단계별 상태 관리
     private enum TransformationPhase
@@ -352,20 +368,25 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private void ApplyVirusEffect(Transform voxel)
     {
-        // ���̷��� ���� ��Ƽ���� ����
+        // 사이버 더스트 파티클 생성
+        if (enableCyberDust && cyberDustPrefab != null)
+        {
+            CreateCyberDustAt(voxel.position);
+        }
+        
+        // 기존 바이러스 감염 머티리얼 적용
         var renderer = voxel.GetComponent<Renderer>();
         if (renderer != null && virusInfectedMaterial != null)
         {
             renderer.material = virusInfectedMaterial;
 
-            // Ȧ�α׷� ȿ�� �Ķ���� ����
             if (virusInfectedMaterial.HasProperty("_GlitchStrength"))
             {
                 virusInfectedMaterial.SetFloat("_GlitchStrength", glitchIntensity);
             }
         }
 
-        // ���̷��� ��ƼŬ ȿ�� ����
+        // 바이러스 파티클 효과 생성
         if (virusParticlePrefab != null)
         {
             var particles = Instantiate(virusParticlePrefab, voxel.position, Quaternion.identity);
@@ -373,7 +394,7 @@ public class CubeTransformationDirector : MonoBehaviour
             Destroy(particles.gameObject, 3f);
         }
 
-        // ������ ��Ʈ�� ȿ��
+        // 데이터 스트림 효과
         if (dataStreamEffect != null)
         {
             StartCoroutine(CreateDataStreamToCenter(voxel));
@@ -1066,16 +1087,217 @@ public class CubeTransformationDirector : MonoBehaviour
     {
         Debug.Log("[MimicPlant] 의태식물 등장 연출 시작");
         
-        // 1단계: 지하로 숨기기 (완전히 자연스러운 디졸브)
-        yield return StartCoroutine(NaturalDissolveToGround());
-        
-        // 2단계: 지면 효과 및 감지 연출
-        yield return StartCoroutine(GroundDetectionPhase());
-        
-        // 3단계: 폭발적 등장
-        yield return StartCoroutine(ExplosiveEmergenceFromGround());
+        // 오로라 효과 우선 사용
+        if (useAuroraStyle && auroraTransformEffect != null)
+        {
+            yield return StartCoroutine(NewAuroraTransformation());
+        }
+        // 새로운 의태식물 효과 사용
+        else if (useMimicPlantStyle && mimicTransformEffect != null)
+        {
+            yield return StartCoroutine(NewMimicPlantTransformation());
+        }
+        else
+        {
+            // 기존 방식 사용
+            // 1단계: 지하로 숨기기 (완전히 자연스러운 디졸브)
+            yield return StartCoroutine(NaturalDissolveToGround());
+            
+            // 2단계: 지면 효과 및 감지 연출
+            yield return StartCoroutine(GroundDetectionPhase());
+            
+            // 3단계: 폭발적 등장
+            yield return StartCoroutine(ExplosiveEmergenceFromGround());
+        }
         
         Debug.Log("[MimicPlant] 의태식물 등장 연출 완료");
+    }
+    
+    /// <summary>
+    /// 새로운 의태식물 변신 효과 - 뿌연 연기로 자연스럽게 가리고 변신
+    /// </summary>
+    private IEnumerator NewMimicPlantTransformation()
+    {
+        Debug.Log("[MimicPlant] 새로운 의태식물 변신 시작");
+        
+        // 효과 영역 자동 설정
+        Vector3 transformArea = CalculateVoxelBounds();
+        mimicTransformEffect.SetEffectArea(transformArea);
+        
+        bool transformCompleted = false;
+        
+        // 뿌연 연기 효과 시작 (콜백으로 실제 변신 실행)
+        mimicTransformEffect.StartMimicTransformation(() => {
+            StartCoroutine(ExecuteMimicTransformation(() => {
+                transformCompleted = true;
+            }));
+        });
+        
+        // 변신이 완료될 때까지 대기
+        yield return new WaitUntil(() => transformCompleted);
+        
+        Debug.Log("[MimicPlant] 새로운 의태식물 변신 완료");
+    }
+    
+    /// <summary>
+    /// 연기 속에서 실제 변신 실행
+    /// </summary>
+    private IEnumerator ExecuteMimicTransformation(System.Action onComplete)
+    {
+        Debug.Log("[MimicPlant] 연기 속에서 변신 실행");
+        
+        // 1단계: 원본 voxel들 즉시 비활성화 (연기가 가려준 상태)
+        foreach (var voxel in voxels)
+        {
+            if (voxel != null) voxel.gameObject.SetActive(false);
+        }
+        
+        yield return new WaitForSeconds(0.3f); // 잠시 대기
+        
+        // 2단계: 새로운 형태로 즉시 배치 (여전히 연기 속)
+        var sortedVoxels = SortVoxelsByDistanceFromCenter();
+        
+        for (int i = 0; i < sortedVoxels.Count; i++)
+        {
+            var voxel = sortedVoxels[i];
+            if (!formationPositions.ContainsKey(voxel)) continue;
+            
+            Vector3 targetPos = formationPositions[voxel];
+            
+            // 즉시 큐브 위치로 이동 (연기가 가려져 있어서 안 보임)
+            voxel.localPosition = targetPos;
+            voxel.gameObject.SetActive(true);
+            
+            // 작은 딜레이로 자연스러운 등장
+            yield return new WaitForSeconds(0.02f);
+        }
+        
+        // 완료 사운드
+        PlayAssembleSound();
+        
+        // 상태 업데이트
+        isInCubeForm = true;
+        isTransforming = false;
+        
+        onComplete?.Invoke();
+        
+        Debug.Log("[MimicPlant] 연기 속 변신 실행 완료");
+    }
+    
+    /// <summary>
+    /// Voxel들의 전체 바운딩 박스 계산
+    /// </summary>
+    private Vector3 CalculateVoxelBounds()
+    {
+        if (voxels == null || voxels.Count == 0)
+            return new Vector3(6f, 4f, 6f); // 기본 크기
+        
+        Bounds bounds = new Bounds(transform.position, Vector3.zero);
+        bool boundsInitialized = false;
+        
+        foreach (var voxel in voxels)
+        {
+            if (voxel == null) continue;
+            
+            Vector3 worldPos = voxel.position;
+            
+            if (!boundsInitialized)
+            {
+                bounds = new Bounds(worldPos, Vector3.one);
+                boundsInitialized = true;
+            }
+            else
+            {
+                bounds.Encapsulate(worldPos);
+            }
+        }
+        
+        // 큐브 형성 위치들도 포함
+        foreach (var formationPos in formationPositions.Values)
+        {
+            Vector3 worldPos = transform.TransformPoint(formationPos);
+            bounds.Encapsulate(worldPos);
+        }
+        
+        // 최소 크기 보장 및 여유 공간 추가
+        Vector3 size = bounds.size;
+        size.x = Mathf.Max(size.x, 3f) + 3f;  // 여유 공간
+        size.y = Mathf.Max(size.y, 3f) + 2f;
+        size.z = Mathf.Max(size.z, 3f) + 3f;
+        
+        Debug.Log($"[MimicPlant] 계산된 변신 영역: {size}");
+        return size;
+    }
+    
+    /// <summary>
+    /// 새로운 오로라 변신 효과 - 신비로운 오로라로 가리고 변신
+    /// </summary>
+    private IEnumerator NewAuroraTransformation()
+    {
+        Debug.Log("[Aurora] 새로운 오로라 변신 시작");
+        
+        // 효과 영역 자동 설정
+        Vector3 transformArea = CalculateVoxelBounds();
+        auroraTransformEffect.SetEffectArea(transformArea);
+        
+        bool transformCompleted = false;
+        
+        // 오로라 효과 시작 (콜백으로 실제 변신 실행)
+        auroraTransformEffect.StartAuroraTransformation(() => {
+            StartCoroutine(ExecuteAuroraTransformation(() => {
+                transformCompleted = true;
+            }));
+        });
+        
+        // 변신이 완료될 때까지 대기
+        yield return new WaitUntil(() => transformCompleted);
+        
+        Debug.Log("[Aurora] 새로운 오로라 변신 완료");
+    }
+    
+    /// <summary>
+    /// 오로라 속에서 실제 변신 실행
+    /// </summary>
+    private IEnumerator ExecuteAuroraTransformation(System.Action onComplete)
+    {
+        Debug.Log("[Aurora] 오로라 속에서 변신 실행");
+        
+        // 1단계: 원본 voxel들 즉시 비활성화 (오로라가 가려준 상태)
+        foreach (var voxel in voxels)
+        {
+            if (voxel != null) voxel.gameObject.SetActive(false);
+        }
+        
+        yield return new WaitForSeconds(0.4f); // 잠시 대기 (오로라 커튼 효과)
+        
+        // 2단계: 새로운 형태로 즉시 배치 (여전히 오로라 속)
+        var sortedVoxels = SortVoxelsByDistanceFromCenter();
+        
+        for (int i = 0; i < sortedVoxels.Count; i++)
+        {
+            var voxel = sortedVoxels[i];
+            if (!formationPositions.ContainsKey(voxel)) continue;
+            
+            Vector3 targetPos = formationPositions[voxel];
+            
+            // 즉시 큐브 위치로 이동 (오로라가 가려져 있어서 안 보임)
+            voxel.localPosition = targetPos;
+            voxel.gameObject.SetActive(true);
+            
+            // 작은 딜레이로 자연스러운 등장
+            yield return new WaitForSeconds(0.02f);
+        }
+        
+        // 완료 사운드
+        PlayAssembleSound();
+        
+        // 상태 업데이트
+        isInCubeForm = true;
+        isTransforming = false;
+        
+        onComplete?.Invoke();
+        
+        Debug.Log("[Aurora] 오로라 속 변신 실행 완료");
     }
     
     /// <summary>
@@ -1732,6 +1954,12 @@ public class CubeTransformationDirector : MonoBehaviour
             Debug.Log($"���� ��: {isDissolving}");
             Debug.Log($"���� ����: {currentPattern}");
         }
+        
+        // 사이버 더스트 테스트 (D키)
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            TestCyberDustEffect();
+        }
     }
 
     #endregion
@@ -1930,5 +2158,152 @@ public class CubeTransformationDirector : MonoBehaviour
         public bool isAssigned;
     }
 
+    #endregion
+
+    #region Cyber Dust Effects
+    
+    /// <summary>
+    /// 특정 위치에 사이버 더스트 파티클 생성
+    /// </summary>
+    private void CreateCyberDustAt(Vector3 position)
+    {
+        if (cyberDustPrefab == null) return;
+        
+        var dustInstance = Instantiate(cyberDustPrefab, position, Quaternion.identity);
+        dustInstance.transform.SetParent(transform);
+        
+        // 강도 설정
+        dustInstance.AdjustIntensity(dustEmissionIntensity);
+        
+        // 사이버 색상 테마 설정
+        Color[] virusColors = { 
+            Color.red, 
+            new Color(1, 0.5f, 0, 1), // 오렌지
+            Color.magenta,
+            new Color(1, 0, 0.5f, 1)  // 핑크
+        };
+        dustInstance.SetColorTheme(virusColors);
+        
+        // 재생 시작
+        dustInstance.PlayCyberDust();
+        
+        // 활성 리스트에 추가
+        activeDustParticles.Add(dustInstance);
+        
+        // 일정 시간 후 정리
+        StartCoroutine(CleanupDustParticle(dustInstance, 5f));
+    }
+    
+    /// <summary>
+    /// 폭발적 더스트 효과 (의태식물 등장 시)
+    /// </summary>
+    private void CreateExplosiveDustAt(Vector3 position, int particleCount = 100)
+    {
+        if (cyberDustPrefab == null) return;
+        
+        var dustInstance = Instantiate(cyberDustPrefab, position, Quaternion.identity);
+        dustInstance.transform.SetParent(transform);
+        
+        // 폭발적 등장용 색상 테마
+        Color[] emergenceColors = { 
+            Color.cyan, 
+            Color.white, 
+            new Color(0.5f, 1, 1, 1), // 라이트 시안
+            new Color(0.8f, 0.9f, 1, 1) // 블루 화이트
+        };
+        dustInstance.SetColorTheme(emergenceColors);
+        
+        // 강한 강도로 설정
+        dustInstance.AdjustIntensity(2f);
+        
+        // 폭발적 방출
+        dustInstance.ExplodeAt(position, particleCount);
+        
+        activeDustParticles.Add(dustInstance);
+        StartCoroutine(CleanupDustParticle(dustInstance, 3f));
+    }
+    
+    /// <summary>
+    /// 모든 사이버 더스트 정리
+    /// </summary>
+    private void CleanupAllDustParticles()
+    {
+        foreach (var dust in activeDustParticles)
+        {
+            if (dust != null)
+            {
+                dust.StopCyberDust();
+                Destroy(dust.gameObject, 1f);
+            }
+        }
+        activeDustParticles.Clear();
+    }
+    
+    /// <summary>
+    /// 개별 더스트 파티클 정리
+    /// </summary>
+    private IEnumerator CleanupDustParticle(CyberDustParticle dustParticle, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        if (dustParticle != null)
+        {
+            dustParticle.StopCyberDust();
+            activeDustParticles.Remove(dustParticle);
+            
+            // 페이드 아웃 후 제거
+            yield return new WaitForSeconds(1f);
+            Destroy(dustParticle.gameObject);
+        }
+    }
+    
+    /// <summary>
+    /// 변신 중 연속적인 더스트 효과
+    /// </summary>
+    private IEnumerator ContinuousVirusDustEffect()
+    {
+        while (isTransforming)
+        {
+            // 랜덤한 복셀 위치에서 더스트 생성
+            if (voxels.Count > 0)
+            {
+                var randomVoxel = voxels[Random.Range(0, voxels.Count)];
+                CreateCyberDustAt(randomVoxel.position);
+            }
+            
+            yield return new WaitForSeconds(Random.Range(0.3f, 0.8f));
+        }
+    }
+    
+    /// <summary>
+    /// 사이버 더스트 효과 테스트
+    /// </summary>
+    public void TestCyberDustEffect()
+    {
+        if (cyberDustPrefab == null)
+        {
+            Debug.LogWarning("[CyberDust] CyberDustPrefab이 할당되지 않았습니다!");
+            return;
+        }
+        
+        Vector3 testPosition = transform.position + cubeCenter;
+        
+        Debug.Log("[CyberDust] 사이버 더스트 효과 테스트 시작");
+        CreateExplosiveDustAt(testPosition, 50);
+        
+        // 연속 효과도 테스트
+        StartCoroutine(TestContinuousDust());
+    }
+    
+    private IEnumerator TestContinuousDust()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 randomPos = transform.position + Random.insideUnitSphere * 3f;
+            CreateCyberDustAt(randomPos);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+    
     #endregion
 }
