@@ -1,6 +1,7 @@
 ﻿// Copyright 2021, Infima Games. All Rights Reserved.
 
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -10,12 +11,16 @@ namespace InfimaGames.LowPolyShooterPack
     public class CameraLook : MonoBehaviour
     {
         #region FIELDS SERIALIZED
-        
+
         [Header("Settings")]
-        
+
+        [SerializeField] Slider cursorSlide;
+
         [Tooltip("Sensitivity when looking around.")]
         [SerializeField]
         private Vector2 sensitivity = new Vector2(1, 1);
+
+        private float sensitivityAmp = 1.0f;
 
         [Tooltip("Minimum and maximum up/down rotation angle the camera can have.")]
         [SerializeField]
@@ -77,7 +82,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Frame Input. The Input to add this frame!
             Vector2 frameInput = playerCharacter.IsCursorLocked() ? playerCharacter.GetInputLook() : default;
             //Sensitivity.
-            frameInput *= sensitivity;
+            frameInput *= sensitivity * sensitivityAmp;
 
             //Yaw.
             Quaternion rotationYaw = Quaternion.Euler(0.0f, frameInput.x, 0.0f);
@@ -120,6 +125,10 @@ namespace InfimaGames.LowPolyShooterPack
 
         #region FUNCTIONS
 
+        public void UpdateSensitivity()
+        {
+            sensitivityAmp = cursorSlide.value;
+        }
         /// <summary>
         /// Clamps the pitch of a quaternion according to our clamps.
         /// </summary>

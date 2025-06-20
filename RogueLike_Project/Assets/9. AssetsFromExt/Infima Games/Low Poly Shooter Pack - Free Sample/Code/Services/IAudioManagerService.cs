@@ -14,7 +14,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         /// <param name="clip">Clip to play.</param>
         /// <param name="settings">Audio Settings.</param>
-        void PlayOneShot(AudioClip clip, AudioSettings settings = default);
+        void PlayOneShot(AudioClip clip, int soundType);
 
         /// <summary>
         /// Plays a one shot of the AudioClip, but waits for <paramref name="delay"/> before doing so.

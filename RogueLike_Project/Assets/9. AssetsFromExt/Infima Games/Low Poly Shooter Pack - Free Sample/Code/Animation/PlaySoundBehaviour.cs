@@ -36,7 +36,7 @@ namespace InfimaGames.LowPolyShooterPack
             audioManagerService ??= ServiceLocator.Current.Get<IAudioManagerService>();
 
             //Play!
-            audioManagerService?.PlayOneShot(clip, settings);
+            audioManagerService?.PlayOneShot(clip, 2);
         }
 
         #endregion

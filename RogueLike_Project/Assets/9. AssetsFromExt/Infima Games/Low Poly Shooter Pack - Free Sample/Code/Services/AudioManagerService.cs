@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 namespace InfimaGames.LowPolyShooterPack
 {
@@ -41,6 +42,12 @@ namespace InfimaGames.LowPolyShooterPack
                 Delay = delay;
             }
         }
+     
+
+        /// SOUNDTYPE
+        /// MAIN : 1
+        /// BGM : 2
+        /// EFFECT : 3
 
         /// <summary>
         /// Destroys the audio source once it has finished playing.
@@ -59,23 +66,27 @@ namespace InfimaGames.LowPolyShooterPack
         /// <summary>
         /// Waits for a certain amount of time before starting to play a one shot sound.
         /// </summary>
-        private IEnumerator PlayOneShotAfterDelay(OneShotCoroutine value)
+        private IEnumerator PlayOneShotAfterDelay(OneShotCoroutine value, int soundType)
         {
             //Wait for the delay.
             yield return new WaitForSeconds(value.Delay);
             //Play.
-            PlayOneShot_Internal(value.Clip, value.Settings);
+            PlayOneShot_Internal(value.Clip, soundType);
         }
         
         /// <summary>
         /// Internal PlayOneShot. Basically does the whole function's name!
         /// </summary>
-        private void PlayOneShot_Internal(AudioClip clip, AudioSettings settings)
+        private void PlayOneShot_Internal(AudioClip clip, int soundType)
         {
             //No need to do absolutely anything if the clip is null.
             if (clip == null)
                 return;
-            
+            ExternSoundManager soundManager = ExternSoundManager.instance;
+            AudioSettings settings = new AudioSettings(soundManager.Main_Volume*soundManager.Effect_Volume);
+
+            Debug.Log("volume : " + settings.Volume);
+
             //Spawn a game object for the audio source.
             var newSourceObject = new GameObject($"Audio Source -> {clip.name}");
             //Add an audio source component to that object.
@@ -93,16 +104,16 @@ namespace InfimaGames.LowPolyShooterPack
 
         #region Audio Manager Service Interface
 
-        public void PlayOneShot(AudioClip clip, AudioSettings settings = default)
+        public void PlayOneShot(AudioClip clip, int soundType)
         {
             //Play.
-            PlayOneShot_Internal(clip, settings);
+            PlayOneShot_Internal(clip, soundType);
         }
 
         public void PlayOneShotDelayed(AudioClip clip, AudioSettings settings = default, float delay = 1.0f)
         {
             //Play.
-            StartCoroutine(nameof(PlayOneShotAfterDelay), new OneShotCoroutine(clip, settings, delay));
+            StartCoroutine(PlayOneShotAfterDelay(new OneShotCoroutine(clip, settings, delay),2));
         }
 
         #endregion
