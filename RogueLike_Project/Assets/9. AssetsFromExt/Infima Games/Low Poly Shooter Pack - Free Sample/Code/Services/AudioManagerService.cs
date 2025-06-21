@@ -96,7 +96,9 @@ namespace InfimaGames.LowPolyShooterPack
             newAudioSource.volume = settings.Volume;
             //Set spatial blend.
             newAudioSource.spatialBlend = settings.SpatialBlend;
-            
+            //Set AudioMixer Group.
+            newAudioSource.outputAudioMixerGroup = soundManager.Effect_MixerGroup;
+
             //Play the clip!
             newAudioSource.PlayOneShot(clip);
             Destroy(newSourceObject, clip.length);

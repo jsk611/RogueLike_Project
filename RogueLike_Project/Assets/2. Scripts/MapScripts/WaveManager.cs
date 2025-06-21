@@ -129,8 +129,9 @@ public class WaveManager : MonoBehaviour
        //if (currentStage == 1) RenderSettings.ambientIntensity = Mathf.PingPong(Time.time, 1);
     }
 
-    void ChangeSkyBox(float duration = 3f)
+    void ChangeStage(float duration = 3f)
     {
+        //하늘 색 변경
         Color skycolor = skyboxMaterials[currentStage - 1].GetColor("_SkyColor");
         Color Horizon = skyboxMaterials[currentStage - 1].GetColor("_HorizonColor");
         float horizonStrength = skyboxMaterials[currentStage - 1].GetFloat("_HorizonStrength");
@@ -139,6 +140,9 @@ public class WaveManager : MonoBehaviour
         defaultSkybox.DOColor(Horizon, "_HorizonColor", duration);
         defaultSkybox.DOFloat(horizonStrength, "_HorizonStrength", duration);
         defaultSkybox.DOFloat(horizonHeight, "_HorizonHeight", duration);
+
+        //BGM 변경
+        ExternSoundManager.instance.ChangeBGM(currentStage - 1, duration/2);
     }
 
     IEnumerator RunStage()
@@ -149,7 +153,7 @@ public class WaveManager : MonoBehaviour
         for(currentStage = debugStage; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
-            ChangeSkyBox();
+            ChangeStage();
             for (int i = 1; i <= 5; i++)
             {
                 currentWave = i;
