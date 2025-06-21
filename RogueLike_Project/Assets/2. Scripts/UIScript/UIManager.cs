@@ -226,6 +226,7 @@ public class UIManager : MonoBehaviour
     {
         boss_hpBar_Dict[boss].SetActive(false);
         barStk.Push(boss_hpBar_Dict[boss]);
+        boss_hpBar_Dict.Remove(boss);
 
         //보스가 다 죽었는지 확인
         if (boss_hpBar_Dict.Count == 0)
