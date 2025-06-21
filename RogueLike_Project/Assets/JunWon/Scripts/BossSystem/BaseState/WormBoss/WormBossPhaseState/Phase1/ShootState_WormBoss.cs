@@ -9,10 +9,12 @@ public class ShootState_WormBoss : State<WormBossPrime>
 
     private float attackTimer = 0f;
     private float attackTime = 2f;
-    List<Transform> bodyList;
+    private List<Transform> bodyList;
+    private int bodyCount;
     public override void Enter()
     {
         bodyList = owner.GetComponent<WormBossBodyMovement>().BodyList;
+        bodyCount = bodyList.Count;
         attackTimer = 0f;
         attackTime = 3f;
         owner.ShootToWander();
@@ -33,8 +35,10 @@ public class ShootState_WormBoss : State<WormBossPrime>
             attackTimer+= Time.deltaTime;
             if (attackTimer >= 1f)
             {
-                foreach (Transform t in bodyList)
+                for (int i = 0; i< bodyList.Count; i++) 
                 {
+                    if (bodyList.Count != bodyCount) yield break;
+                    Transform t = bodyList[i];
                     if (t == null) yield break;
                     t.GetComponent<EnemyWeapon>().Fire();
                     yield return new WaitForSeconds(0.2f);

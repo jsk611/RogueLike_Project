@@ -16,23 +16,25 @@ public class DieState_WormBoss : State<WormBossPrime>
         wormBossBodyMovement = owner.GetComponent<WormBossBodyMovement>();
         wormBossBodyMovement.ChangeState(WormBossBodyMovement.actionType.Dying, owner.BossStatus.GetMovementSpeed()/2);
   
-        owner.Summoned.RemoveAll(x => x == null);
+        
     }
     public override void Update()
     {
         deadTimer += Time.deltaTime;
         if(deadTimer>=6f) { 
+            owner.Summoned.RemoveAll(x => x == null);
             foreach (GameObject minion in owner.Summoned)
             {
-                minion?.GetComponent<MonsterBase>().TakeDamage(9999, false);
+                minion.GetComponent<MonsterBase>()?.TakeDamage(9999, false);
             }
 
             if(!deadCounted)
             {
                 deadCounted = true;
                 owner.EnemyCountData.enemyCount--;
+                GameObject.Destroy(owner.gameObject,0.2f);
+                Debug.LogError("WORM DEAD");
             }
-            GameObject.Destroy(owner.gameObject,0.2f);
         }
     }
     

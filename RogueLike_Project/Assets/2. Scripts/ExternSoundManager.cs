@@ -51,7 +51,7 @@ public class ExternSoundManager : MonoBehaviour
         {
             BGM.clip = BGM_List[stage];
             BGM.Play();
-            BGM.volume = 1;
+            BGM.volume = Main_Volume * BGM_Volume;
         });
     }
     public void PlayBGM()

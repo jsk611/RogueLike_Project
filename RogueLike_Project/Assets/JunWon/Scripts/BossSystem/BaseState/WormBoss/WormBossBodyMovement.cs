@@ -181,6 +181,7 @@ public class WormBossBodyMovement : MonoBehaviour
         deathTimer += Time.deltaTime;
         if(deathTimer >= 6f/bodyCount)
         {
+            if (bodyList.Count -1 < 0) return;
             deathTimer = 0;
             bodyList[bodyList.Count - 1].gameObject.SetActive(false);
             bodyList.Remove(bodyList[bodyList.Count-1]);
