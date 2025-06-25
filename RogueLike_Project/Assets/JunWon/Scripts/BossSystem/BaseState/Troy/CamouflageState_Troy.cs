@@ -35,12 +35,12 @@ public class CamouflageState_Troy : State<Troy>
             for (int i = 0;i<owner.SUMMONAMOUNT;i++)
             {
                 Vector3 randomPos = owner.transform.position + new Vector3(Random.Range(-4f,4f),0,Random.Range(-4f,4f));
-                GameObject obj = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.MeeleeSoldier), randomPos, Quaternion.identity);
+                GameObject obj = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.SpiderMinion), randomPos, Quaternion.identity);
                 StatusBehaviour enemy = obj.GetComponent<StatusBehaviour>();
                 owner.COPYLIST.Add(obj);
                 enemy.SetHealth(50);
                 enemy.SetMaxHealth(50);
-                enemy.GetComponent<MonsterBase>().summonedMonster = true;
+                enemy.GetComponent<SpiderPrime>().isBoss = false;
                 owner.SUMMONEDMONSTERS.Add(enemy.GetComponent<StatusBehaviour>());
             }
             CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];

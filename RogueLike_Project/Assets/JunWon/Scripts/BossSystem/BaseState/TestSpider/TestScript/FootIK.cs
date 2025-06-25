@@ -75,6 +75,10 @@ public class FootIK : MonoBehaviour
             state = FootState.End;
         }
     }
+    public void LegControl(bool val)
+    {
+        moveLock = val;
+    }
 
     void UpdateNextFootpos(out RaycastHit hit)
     {

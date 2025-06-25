@@ -95,11 +95,9 @@ public abstract class StatusBehaviour : MonoBehaviour
     public IEnumerator SlowCoroutine(float effect, float duration)
     {
         currentCC = CC.entangled;
-        Debug.Log("slow");
         DecreaseMovementSpeed(effect);
         yield return new WaitForSeconds(duration);
         IncreaseMovementSpeed(effect);
-        Debug.Log("Slow off");
         currentCC = CC.normal;
     }
     

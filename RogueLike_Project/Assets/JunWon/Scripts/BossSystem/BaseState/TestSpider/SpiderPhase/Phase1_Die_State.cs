@@ -21,16 +21,14 @@ public class Phase1_DIe_State : State<SpiderPrime>
             rigidBody.mass = 60f;
         }
         elapsedTIme = 0f;
-        Debug.Log("die");
     }
     public override void Update()
     {
         if (elapsedTIme < deathTIme)
         {
             owner.transform.Rotate(new Vector3(0, 0, 180) * Time.deltaTime*deathTIme);
-            
         }
-        if (elapsedTIme > 6f && !deadCounted)
+        if ((elapsedTIme > 6f || !owner.isBoss) && !deadCounted)
         {
             deadCounted = true;
             owner.EnemyCountData.enemyCount--;

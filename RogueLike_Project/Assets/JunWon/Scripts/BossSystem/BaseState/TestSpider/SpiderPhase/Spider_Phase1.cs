@@ -34,7 +34,7 @@ public class Spider_Phase1 : BossPhaseBase<SpiderPrime>
     }
     private void InitializeState()
     {
-
+        meleeAttackRange = owner.isBoss ? 8f : 4f;
     }
     private void InitializeSubFSM()
     {

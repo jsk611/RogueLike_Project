@@ -74,8 +74,11 @@ public class EnemySpawnLogic : MonoBehaviour
             case EnemyType.Thrower: return enemyPrefabs[7];
             case EnemyType.Summoner: return enemyPrefabs[8];
             case EnemyType.FieldMage: return enemyPrefabs[9];
+            case EnemyType.SpiderMinion: return enemyPrefabs[10];
             case EnemyType.Wormboss: return bossPrefabs[0];
             case EnemyType.Troyboss: return bossPrefabs[1];
+            case EnemyType.Ransomware: return bossPrefabs[2];
+            case EnemyType.Spider: return bossPrefabs[3];
             default: return null;
         }
     }

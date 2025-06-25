@@ -282,8 +282,9 @@ MonoBehaviour:
     type: 3}
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   monsterList: []
+  copyList: []
   runInterval: 7
-  enemySummonAmount: 1
+  enemySummonAmount: 3
   lurkHeathBoundary:
   - 30
   - 60

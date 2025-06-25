@@ -9,6 +9,9 @@ public class Phase1_AirAssault : State<SpiderPrime>
 {
     public Phase1_AirAssault(SpiderPrime owner) : base(owner) { }
     private string AerialAttack = "SpiderAerialAttack";
+    private float CrashRange = 14f;
+    private float JumpHeight = 40f;
+    private bool LegLocked = false;
 
     TileManager tileManager;
     Transform Player;
@@ -32,11 +35,13 @@ public class Phase1_AirAssault : State<SpiderPrime>
             playerStatus = Player.GetComponent<PlayerStatus>(); 
             bossStatus = owner.BossStatus;
         }
-
+        CrashRange = owner.isBoss ? 14f : 4f;
+        JumpHeight = owner.isBoss ? 40f : 10f;
+        LegLocked = false;
 
         endPos = Player.position;
         curPos = owner.transform.position;
-        midPos = (endPos+curPos)/2+Vector3.up*40;
+        midPos = (endPos+curPos)/2+Vector3.up*JumpHeight;
 
         glideTime = 0f;
 
@@ -46,7 +51,7 @@ public class Phase1_AirAssault : State<SpiderPrime>
     public override void Update()
     {
         float elapsedTIme = glideTime / aerialDuration;
-        if (elapsedTIme >= 1f || Vector3.Distance(Player.position, owner.transform.position) <= 2f)
+        if (elapsedTIme >= 1f)// && Vector3.Distance(Player.position, owner.transform.position) <= 2f)
         {
             isAttackFinished = true;
             RaycastHit hit;
@@ -58,28 +63,31 @@ public class Phase1_AirAssault : State<SpiderPrime>
                 {
                     int z = (int)tile.transform.position.x / 2;
                     int x = (int)tile.transform.position.z / 2;
-                    Debug.Log(hit.transform.name);
-                    owner.CoroutineRunner(tileManager.CreateShockwave(z, x, 6, 3, 0.05f));
-                    Collider[] boom = Physics.OverlapSphere(owner.transform.position, 14, LayerMask.GetMask("Character"));
+                    if (owner.isBoss) owner.CoroutineRunner(tileManager.CreateShockwave(z, x, 6, 3, 0.05f));
+                    Collider[] boom = Physics.OverlapSphere(owner.transform.position, CrashRange, LayerMask.GetMask("Character"));
                     if (boom.Length > 0)
                     {
                         playerStatus.DecreaseHealth(bossStatus.GetAttackDamage());
-                        if (playerStatus.currentCC != StatusBehaviour.CC.entangled)
+                        if (owner.isBoss && playerStatus.currentCC != StatusBehaviour.CC.entangled)
                         {
                             float speed = playerStatus.GetMovementSpeed() / 3;
                             playerStatus.CoroutineEngine(playerStatus.SlowCoroutine(speed, 3));
                         }
                     }
-                
                 }
             }
+        }
+        else if (elapsedTIme >= 0.2f && !LegLocked)
+        {
+            owner.LegIKManager.LegStop();
+            LegLocked = true;
         }
         else
         {
             owner.transform.rotation = Quaternion.LookRotation(Player.position - owner.transform.position);
             owner.transform.position = Vector3.Lerp(
-                Vector3.Lerp(curPos,midPos,elapsedTIme),
-                Vector3.Lerp(midPos,endPos,elapsedTIme),
+                Vector3.Lerp(curPos, midPos, elapsedTIme),
+                Vector3.Lerp(midPos, endPos, elapsedTIme),
                 elapsedTIme
             );
         }
@@ -87,6 +95,7 @@ public class Phase1_AirAssault : State<SpiderPrime>
     }
     public override void Exit() {
         isAttackFinished = false;
+        owner.LegIKManager.LegMove();
         owner.AbilityManager.SetMaxCoolTime(AerialAttack);
         owner.NmAgent.isStopped = false;
     }

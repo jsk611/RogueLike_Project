@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SpiderWeb : MonoBehaviour
 {
-    public float slowTime = 3f;
+    public float slowTime = 1f;
     PlayerStatus player;
     private void OnTriggerEnter(Collider other)
     {

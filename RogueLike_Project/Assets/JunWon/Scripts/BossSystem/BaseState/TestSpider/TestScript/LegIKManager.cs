@@ -27,4 +27,18 @@ public class LegIKManager : MonoBehaviour
         Foots.Add(midLeft);
         Foots.Add(midRight);
     }
+    public void LegStop()
+    {
+        foreach (FootIK foot in Foots)
+        {
+            foot.LegControl(true);
+        }
+    }
+    public void LegMove()
+    {
+        foreach(FootIK foot in Foots)
+        {
+            foot.LegControl(false);
+        }
+    }
 }
