@@ -25,6 +25,7 @@ public class LurkState_Troy : State<Troy>
         owner.NmAgent.SetDestination(owner.transform.position + dir*3);
         GameObject copy = GameObject.Instantiate(EnemySpawnLogic.instance.GetEnemyPrefab(EnemyType.Wormboss), owner.transform.position, owner.transform.rotation);
         copyState = copy.GetComponent<StatusBehaviour>();
+        copy.GetComponent<Troy>().COPYCHAIN = 0;
      //   copy.GetComponent<Troy>().SetCopied(owner.BossStatus.GetHealth());
      //   Debug.Log(copyState.name);
         Debug.Log(copyState.GetHealth());

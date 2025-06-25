@@ -128,7 +128,7 @@ public class Troy : BossBase
 
         bossStatus.DecreaseHealth(damage);
 
-        if(lurkHeathBoundary.Count>0)
+        if(lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count-1])
         bossStatus.SetHealth(Mathf.Max(bossStatus.GetHealth(), lurkHeathBoundary[lurkHeathBoundary.Count-1]/100f*bossStatus.GetMaxHealth()));
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
