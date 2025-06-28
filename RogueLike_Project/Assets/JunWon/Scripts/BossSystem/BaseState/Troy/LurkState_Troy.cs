@@ -18,7 +18,7 @@ public class LurkState_Troy : State<Troy>
             owner.IdleToLurk();
             return;
         }
-        HideAndSeek(false);
+        owner.HideAndSeek(false);
         Vector3 dir = owner.Player.position - owner.transform.position;
         dir.y = 0;
         owner.NmAgent.isStopped = false;
@@ -42,13 +42,8 @@ public class LurkState_Troy : State<Troy>
     public override void Exit()
     {
         owner.NmAgent.ResetPath();
-        HideAndSeek(true);
+        owner.HideAndSeek(true);
     }
-    private void HideAndSeek(bool val)
-    {
-        owner.GetComponent<MeshRenderer>().enabled = val;
-        owner.GetComponent<BoxCollider>().enabled = val;
-        owner.transform.Find("EnemyIcon").gameObject.SetActive(val);
-    }
+
 }
 

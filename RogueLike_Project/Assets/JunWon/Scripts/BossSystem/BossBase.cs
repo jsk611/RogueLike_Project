@@ -13,6 +13,7 @@ public abstract class BossBase : MonoBehaviour
     [SerializeField] protected Transform head; // Head or torso (vertical rotation)
     [SerializeField] protected float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
+    public bool isBoss = true;
  
 
 

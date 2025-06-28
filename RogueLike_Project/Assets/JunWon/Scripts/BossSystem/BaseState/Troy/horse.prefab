@@ -264,6 +264,7 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  isBoss: 1
   anim: {fileID: 8014969182548315342}
   nmAgent: {fileID: 2060712348202889373}
   fov: {fileID: 7595934697553528114}

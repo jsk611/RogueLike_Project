@@ -41,4 +41,11 @@ public class LegIKManager : MonoBehaviour
             foot.LegControl(false);
         }
     }
+    public void LegReset()
+    {
+        foreach(FootIK foot in Foots)
+        {
+            foot.LegReset();
+        }
+    }
 }

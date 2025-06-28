@@ -19,7 +19,9 @@ public class FootIK : MonoBehaviour
     private Vector3 nextFootpos;
     private Vector3 nextHintpos;
 
-    float stepInterval;
+    private float stepInterval;
+    private Vector3 originPos;
+    private Quaternion originRot;
 
     [SerializeField] Transform LegHint;
     float hintOffSet;
@@ -49,20 +51,24 @@ public class FootIK : MonoBehaviour
         nextFootpos = transform.position;
         state = FootState.Default;
         stepInterval = spiderStatus.GetMovementSpeed() / 4f;
+
+        originPos = transform.localPosition;
+        originRot = transform.localRotation;
     }
     private void Update()
     {
         bodySpeed = spiderPrime.BossStatus.GetMovementSpeed();
-        stepInterval = spiderStatus.GetMovementSpeed() / 4f;
+        stepInterval = spiderStatus.GetMovementSpeed() / 4f + UnityEngine.Random.Range(-0.3f,0.3f);
     }
     // Update is called once per frame
     void LateUpdate()
     {
-        if (moveLock) return;
+      //  if (moveLock) return;
 
-        else if (state == FootState.Default)
+        if (state == FootState.Default)
         {
             UpdateNextFootpos(out RaycastHit hit);
+            if (moveLock) return;
             transform.position = fixedFootpos;
             if (Vector3.Distance(fixedFootpos, nextFootpos) > stepInterval && !isMoving && oppositeLeg.GetLegMoving == false)
                 StartCoroutine(LegMove(fixedFootpos));
@@ -78,6 +84,11 @@ public class FootIK : MonoBehaviour
     public void LegControl(bool val)
     {
         moveLock = val;
+    }
+    public void LegReset()
+    {
+        transform.localPosition = originPos;
+        transform.localRotation = originRot;
     }
 
     void UpdateNextFootpos(out RaycastHit hit)
@@ -149,14 +160,14 @@ public class FootIK : MonoBehaviour
     }
     
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawCube(fixedFootpos, Vector3.one*0.1f);
-        Gizmos.color = Color.green;
-        if(nextFootpos != null)
-            Gizmos.DrawWireCube(nextFootpos, Vector3.one * 0.1f);
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(nextHintpos,  0.1f);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+    //    Gizmos.DrawCube(fixedFootpos, Vector3.one*0.1f);
+    //    Gizmos.color = Color.green;
+    //    if(nextFootpos != null)
+    //        Gizmos.DrawWireCube(nextFootpos, Vector3.one * 0.1f);
+    //    Gizmos.color = Color.blue;
+    //    Gizmos.DrawWireSphere(nextHintpos,  0.1f);
+    //}
 }

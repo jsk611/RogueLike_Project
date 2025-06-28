@@ -46,6 +46,7 @@ public class CamouflageState_Troy : State<Troy>
             CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];
         }
         owner.IdleToCamouflage();
+        owner.HideAndSeek(false);
     }
     public override void Update()
     {
@@ -76,6 +77,7 @@ public class CamouflageState_Troy : State<Troy>
     public override void Exit()
     {
         owner.NmAgent.SetDestination(owner.transform.position);
+        owner.HideAndSeek(true);
     }
     void OnCollisionEnter(Collision collision)
     {

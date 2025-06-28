@@ -169,7 +169,12 @@ public class Troy : BossBase
         runTimer = 0f;
         isRushing = !isRushing;
     }
-
+    public void HideAndSeek(bool val)
+    {
+        GetComponent<MeshRenderer>().enabled = val;
+        GetComponent<BoxCollider>().enabled = val;
+        transform.Find("EnemyIcon").gameObject.SetActive(val);
+    }
     public void CoroutineRunner(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);

@@ -10,15 +10,17 @@ public class DieState_Troy : State<Troy>
     PlayerStatus player;
     public override void Enter()
     {
-        Debug.Log("SDFDF");
-
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
         GameObject.Instantiate(owner.BOMBEFFECT, owner.transform.position,Quaternion.Euler(Vector3.left*90));
         Collider[] targets = Physics.OverlapSphere(owner.transform.position, 12f, LayerMask.GetMask("Character"));
         if (targets.Length > 0) owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(owner.BossStatus.GetAttackDamage());
         foreach (StatusBehaviour enemies in owner.SUMMONEDMONSTERS)
         {
-            if (enemies != null) enemies.GetComponent<MonsterBase>().TakeDamage(9999, false, true);
+            if (enemies != null)
+            {
+                if(enemies.TryGetComponent<MonsterBase>(out MonsterBase enem)) enem.TakeDamage(9999, false, true);
+                if(enemies.TryGetComponent<BossBase>(out BossBase boss)) boss.TakeDamage(9999, false);
+            }
         }
         GameObject.Destroy(owner.gameObject);
     }

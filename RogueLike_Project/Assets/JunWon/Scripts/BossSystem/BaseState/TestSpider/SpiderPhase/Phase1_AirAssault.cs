@@ -96,6 +96,7 @@ public class Phase1_AirAssault : State<SpiderPrime>
     public override void Exit() {
         isAttackFinished = false;
         owner.LegIKManager.LegMove();
+        owner.LegIKManager.LegReset();
         owner.AbilityManager.SetMaxCoolTime(AerialAttack);
         owner.NmAgent.isStopped = false;
     }

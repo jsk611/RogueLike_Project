@@ -71,8 +71,11 @@ public class BossStatus : StatusBehaviour
         monsterAnimator = GetComponent<Animator>();
         eventHandler = GetComponent<MonsterAnimationEventHandler>();
         HPBar = bossBase.HPBar;
-        UIManager.instance.BossSummoned(this);
-        Debug.Log("Boss Summoned: " + bossName);
+        if (bossBase.isBoss)
+        {
+            UIManager.instance.BossSummoned(this);
+            Debug.Log("Boss Summoned: " + bossName);
+        }
     }
 
     // Current Health
@@ -341,6 +344,6 @@ public class BossStatus : StatusBehaviour
 
     void OnDestroy()
     {
-        UIManager.instance.BossKilled(this);
+        if(bossBase.isBoss) UIManager.instance.BossKilled(this);
     }
 }

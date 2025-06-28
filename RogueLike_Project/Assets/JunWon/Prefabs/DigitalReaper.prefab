@@ -536,6 +536,7 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  isBoss: 1
   anim: {fileID: 4120758790155891585}
   nmAgent: {fileID: 1850453462129640537}
   fov: {fileID: 2343698480761838433}
@@ -556,6 +557,7 @@ MonoBehaviour:
   abilityManager: {fileID: 3249761337790021742}
   firePoint: {fileID: 7494765328391050869}
   explosionPoint: {fileID: 6302444479095177544}
+  summonedObjects: []
   shadowPrefab: {fileID: 6282819528194173987, guid: e40fc687be7d8f84abc21f71319f54bc,
     type: 3}
   dataPacket: {fileID: 8953811634019910561, guid: d7cd674c9321c1f46949a5b3254566c3,
@@ -617,6 +619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCC: 0
   currentCon: 0
+  bossName: 
   Health: 400
   MaxHealth: 400
   CriticalRate: 0

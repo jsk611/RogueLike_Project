@@ -16,10 +16,9 @@ public class SpiderPrime : BossBase
     public EnemyWeapon HeadWeapon => headWeapon;
     public LegIKManager LegIKManager => legIKManager;
 
-    public bool isBoss = true;
     private StateMachine<SpiderPrime> fsm;
 
-    void Start()
+    void Start() 
     {
         InitializeComponents();
         InitializeFSM();
