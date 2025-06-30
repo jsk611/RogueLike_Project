@@ -27,7 +27,7 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-        meshRenderer.material = Instantiate(meshRenderer.material);
+        //meshRenderer.material = Instantiate(meshRenderer.material);
     }
 
     public bool IsSetActive
@@ -253,24 +253,5 @@ public class Tile : MonoBehaviour
         heal.SetActive(isHeal);
     }
 
-    public IEnumerator CreateShockwave()
-    {
-        if (canShockWave)
-        {
-            canShockWave = false;
-            float duration = 1f;
-            float time = 0;
-            float PI = Mathf.PI;
-            Vector3 origin = transform.position;
-            while (time < duration)
-            {
-                float y = Mathf.Sin(PI * time / duration);
-                transform.position = origin + new Vector3(0, y, 0);
-                time += Time.deltaTime;
-                yield return null;
-            }
-            transform.position = origin;
-            canShockWave = true;
-        }
-    }
+    
 }

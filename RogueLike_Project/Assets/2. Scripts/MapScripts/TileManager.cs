@@ -285,7 +285,7 @@ public class TileManager : MonoBehaviour
                         bool isTooHigh = IsHighPos(i,j);
           
                         tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
-                        yield return null;
+                        if(j % 2 == 2) yield return null;
                     }
                 }
                 
