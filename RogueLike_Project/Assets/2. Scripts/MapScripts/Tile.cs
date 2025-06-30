@@ -27,7 +27,7 @@ public class Tile : MonoBehaviour
     private void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-        //meshRenderer.material = Instantiate(meshRenderer.material);
+        meshRenderer.material = Instantiate(meshRenderer.material);
     }
 
     public bool IsSetActive
@@ -36,7 +36,15 @@ public class Tile : MonoBehaviour
     }
     public void MovePosition(float pos_y, float duration = 2f)
     {
-        StartCoroutine(MoveCoroutine(pos_y, duration));
+        //StartCoroutine(MoveCoroutine(pos_y, duration));
+        Vector3 newPosition = new Vector3(transform.position.x, pos_y, transform.position.z);
+        transform.position = newPosition;
+        minimapTile.color = pos_y <= 0 ? Color.black : Color.white * 1.7f * transform.position.y / maxHeight;
+        Color tmp2 = minimapTile.color;
+        tmp2.a = 0.6f;
+        minimapTile.color = tmp2;
+        ChangeSpikeMode(false);
+        ChangeHealMode(false);
     }
     public void AlertChanging(float time = 1.6f, int warningMode = 0)
     {
@@ -100,7 +108,10 @@ public class Tile : MonoBehaviour
     }
     public void ChangeHeight(float size_y, float duration = 2f)
     {
-        StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+        //StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+        Vector3 newSize = new Vector3(transform.localScale.x, size_y, transform.localScale.z);
+        
+        transform.localScale = newSize;
     }
     IEnumerator ChangeSizeCoroutine(float size_y, float duration)
     {
@@ -193,8 +204,11 @@ public class Tile : MonoBehaviour
     public void ChangeHeightWithFixedBase(float size_y, float duration = 3f, bool isSpike = false)
     {
         ChangeSpikeMode(isSpike);
-        StartCoroutine(MoveCoroutine(size_y/2f, duration));
-        StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+        //StartCoroutine(MoveCoroutine(size_y/2f, duration));
+        //StartCoroutine(ChangeSizeCoroutine(size_y, duration));
+
+        MovePosition(size_y / 2f, duration);
+        ChangeHeight(size_y, duration);
     }
 
     public void Wave(float height, float duration = 0.25f, int repetition = 1)
@@ -253,5 +267,24 @@ public class Tile : MonoBehaviour
         heal.SetActive(isHeal);
     }
 
-    
+    public IEnumerator CreateShockwave()
+    {
+        if (canShockWave)
+        {
+            canShockWave = false;
+            float duration = 1f;
+            float time = 0;
+            float PI = Mathf.PI;
+            Vector3 origin = transform.position;
+            while (time < duration)
+            {
+                float y = Mathf.Sin(PI * time / duration);
+                transform.position = origin + new Vector3(0, y, 0);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            transform.position = origin;
+            canShockWave = true;
+        }
+    }
 }
