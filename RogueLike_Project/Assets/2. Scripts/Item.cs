@@ -38,23 +38,26 @@ public class Item : MonoBehaviour
             imageRenderer.color = Color.green;
             imageRenderer.sprite = progressImages[5];
             isDone = true;
-            beacon.material = beaconMaterials[1];
+            beacon.material = beaconMaterials[3];
             UIManager.instance.ItemMissionUpdate();
             return;
         }
         if (!(isPlayerHolding ^ isEnemyHolding))
         {
             imageRenderer.color = Color.yellow;
+            beacon.material = beaconMaterials[0];
         }
         else if (isPlayerHolding)
         {
             time = time < maxTime ? time + Time.deltaTime : maxTime;
             imageRenderer.color = Color.blue;
+            beacon.material = beaconMaterials[1];
         }
         else if (isEnemyHolding)
         {
             time = time > 0 ? time - Time.deltaTime / 2 : 0;
             imageRenderer.color = Color.red;
+            beacon.material = beaconMaterials[2];
         }
 
         progress = time / maxTime;

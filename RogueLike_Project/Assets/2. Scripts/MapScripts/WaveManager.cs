@@ -162,7 +162,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                LoadWaveData($"{currentStage}-boss");
+                LoadWaveData($"{currentStage}-6");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -384,7 +384,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator KillingMission(int count, bool isBoss = false)
     {
         enemyCountData.enemyCount = count;
-        UIManager.instance.KillingMissionStart(isBoss);
+        UIManager.instance.KillingMissionStart();
         while (enemyCountData.enemyCount > 0)
         {
             yield return new WaitForEndOfFrame();
@@ -393,7 +393,7 @@ public class WaveManager : MonoBehaviour
     }
     IEnumerator BossMission(int count, bool isBoss = true)
     {
-        UIManager.instance.KillingMissionStart(isBoss);
+        UIManager.instance.BossMissionStart();
         while (!UIManager.instance.isAllBossKilled)
         {
             yield return new WaitForEndOfFrame();
@@ -427,7 +427,7 @@ public class WaveManager : MonoBehaviour
         isMissionEnd = true;
         Destroy(fh.gameObject, 2f);
     }
-    IEnumerator ItemMission(Vector2Int basePos, float time = 6f)
+    IEnumerator ItemMission(Vector2Int basePos, float time = 4f)
     {
         MissionInfo info = waveData.mission;
         UIManager.instance.ItemMissionStart(info.count);

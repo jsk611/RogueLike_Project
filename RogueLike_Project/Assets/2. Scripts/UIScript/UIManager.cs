@@ -189,24 +189,29 @@ public class UIManager : MonoBehaviour
     bool isItemMission = false;
     public float time;
     public bool isAllBossKilled;
-    public void KillingMissionStart(bool isBoss = false)
+    public void KillingMissionStart()
     {
         isKillingMission = true;
         Animator missionUIAnim = missionUI.GetComponent<Animator>();
         missionUIAnim.SetTrigger("MissionStart");
         maxEnemyCount = enemyCountData.enemyCount;
-
-        if (isBoss) { 
-            MissionText.text = "<b><color=orange>목표: </color></b> 보스 처치하기";
-            foreach(GameObject bar in bossHPBars)
-            {
-                bar.SetActive(false);
-                barStk.Push(bar);
-            }
-            isAllBossKilled = false;
-        }
-        else MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
+        MissionText.text = "<b><color=orange>목표: </color></b> 적 처치하기";
         KillingMissionUpdate(true);
+    }
+    public void BossMissionStart()
+    {
+        isKillingMission = true;
+        Animator missionUIAnim = missionUI.GetComponent<Animator>();
+        missionUIAnim.SetTrigger("MissionStart");
+        
+        MissionText.text = "<b><color=orange>목표: </color></b> 모든 보스 처치하기";
+        foreach (GameObject bar in bossHPBars)
+        {
+            bar.SetActive(false);
+            barStk.Push(bar);
+        }
+        isAllBossKilled = false;
+        ProgressText.text = "";
     }
 
     public void BossSummoned(BossStatus boss)

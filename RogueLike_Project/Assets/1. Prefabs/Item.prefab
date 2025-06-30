@@ -310,6 +310,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 4f21aab22562181448516fa15782bad7, type: 3}
   beaconMaterials:
   - {fileID: 2100000, guid: 0c98ec6f8a83a344fa8270d8b11199dc, type: 2}
+  - {fileID: 2100000, guid: 4873d44e2a4d7c046a46d32ba5355736, type: 2}
+  - {fileID: 2100000, guid: 759d63fda18e354468d4dec938bb5195, type: 2}
   - {fileID: 2100000, guid: b026be6e6250d9c488bbb1320052b1ce, type: 2}
   beacon: {fileID: 2169102401478527828}
   imageRenderer: {fileID: 6973790945962347110}
