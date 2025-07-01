@@ -13782,8 +13782,8 @@ GameObject:
   - component: {fileID: 229883767390737039}
   - component: {fileID: 7939380932321877403}
   - component: {fileID: 2992842360121899409}
-  - component: {fileID: 5930567322626526377}
-  - component: {fileID: 361869615403164136}
+  - component: {fileID: 949210525800716463}
+  - component: {fileID: 6690449033090639111}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -13877,7 +13877,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!198 &5930567322626526377
+--- !u!198 &949210525800716463
 ParticleSystem:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -18600,7 +18600,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &361869615403164136
+--- !u!199 &6690449033090639111
 ParticleSystemRenderer:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -24804,11 +24804,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2533164439562656077}
   - component: {fileID: 8626970287411708640}
-  - component: {fileID: 7894981109646947325}
   - component: {fileID: 2578511908125047282}
   - component: {fileID: 1867034262066404413}
   - component: {fileID: 6811265221255261972}
-  - component: {fileID: 6034471989261322569}
   - component: {fileID: 6342484621870264877}
   m_Layer: 16
   m_Name: Base
@@ -25158,22 +25156,6 @@ MonoBehaviour:
   formationSound: {fileID: 0}
   chargeSound: {fileID: 0}
   expandSound: {fileID: 0}
---- !u!114 &7894981109646947325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4194501817522591024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 911fa665f052c884ca58eadd883a279f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spreadPattern: 1
-  spreadIntensity: 3
-  addRandomOffset: 1
-  randomOffsetAmount: 0.5
 --- !u!114 &2578511908125047282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25350,57 +25332,6 @@ MonoBehaviour:
   voxels: []
   enableTestKeys: 1
   showDebugGizmos: 1
---- !u!114 &6034471989261322569
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4194501817522591024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03bd124ff923ed34f83a6e69a2b3b8d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dissolveDustEffect: {fileID: 0}
-  digitalFragmentEffect: {fileID: 0}
-  energyRippleEffect: {fileID: 0}
-  groundCrackEffect: {fileID: 0}
-  earthDebrisEffect: {fileID: 0}
-  emergenceShockwaveEffect: {fileID: 0}
-  steamEffect: {fileID: 0}
-  coreEnergyEffect: {fileID: 0}
-  dataStreamEffect: {fileID: 0}
-  hologramGlitchEffect: {fileID: 0}
-  dissolveMaterial: {fileID: 2100000, guid: d2cc08c46ef738c4e8616c05c3671664, type: 2}
-  hologramMaterial: {fileID: 0}
-  emergenceMaterial: {fileID: 0}
-  effectDuration: 2
-  intensityCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  useScreenSpaceEffect: 1
 --- !u!114 &6342484621870264877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25438,7 +25369,98 @@ MonoBehaviour:
   compilationFX: {fileID: 0}
   hologramUIPrefab: {fileID: 0}
   cubeSize: 6
-  debugMode: 0
+  debugMode: 1
+  spiralRadius: 8
+  spiralHeight: 4
+  spiralLayers: 10
+  spiralCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spiralTightness: 1.2
+  enableGoldenRatio: 1
+  mysticalVeilPrefab: {fileID: 0}
+  innerMistFX: {fileID: 0}
+  veilDissolveFX: {fileID: 0}
+  veilFormTime: 1
+  veilRevealTime: 2.5
+  monsterRevealDelay: 1
+  veilCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  mistColor: {r: 0.3, g: 0.8, b: 1, a: 0.7}
+  capsuleRadius: 4
+  capsuleHeight: 8
+  capsuleLayers: 12
+  ringsPerLayer: 8
+  capsulelayerDelay: 0.2
+  dissolutionDelay: 0.15
+  capsuleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  useSphericalCaps: 1
 --- !u!1 &4220429061205073386
 GameObject:
   m_ObjectHideFlags: 0
@@ -34700,6 +34722,7 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  isBoss: 1
   anim: {fileID: 5398492563166563184}
   nmAgent: {fileID: 7611377601127404154}
   fov: {fileID: 4398667820017210537}

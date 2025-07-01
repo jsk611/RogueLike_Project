@@ -1904,62 +1904,62 @@ public class CubeTransformationDirector : MonoBehaviour
 
     private void HandleTestInput()
     {
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            if (!isTransforming)
-            {
-                if (isInCubeForm)
-                {
-                    Debug.Log("=== KŰ ����: ���� ���� ���� ===");
-                    RevertToOriginal();
-                }
-                else
-                {
-                    Debug.Log("=== KŰ ����: ť�� ���� ���� ===");
-                    StartCubeTransformation();
-                }
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    if (!isTransforming)
+        //    {
+        //        if (isInCubeForm)
+        //        {
+        //            Debug.Log("=== KŰ ����: ���� ���� ���� ===");
+        //            RevertToOriginal();
+        //        }
+        //        else
+        //        {
+        //            Debug.Log("=== KŰ ����: ť�� ���� ���� ===");
+        //            StartCubeTransformation();
+        //        }
+        //    }
+        //}
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (!isTransforming && isInCubeForm)
-            {
-                Debug.Log("=== RŰ ����: ���� ���� ���� ===");
-                RevertToOriginal();
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.R))
+        //{
+        //    if (!isTransforming && isInCubeForm)
+        //    {
+        //        Debug.Log("=== RŰ ����: ���� ���� ���� ===");
+        //        RevertToOriginal();
+        //    }
+        //}
 
-        // ���� ����
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { SetTransformPattern(TransformPattern.DissolveReassemble); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { SetTransformPattern(TransformPattern.Spiral); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { SetTransformPattern(TransformPattern.Wave); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { SetTransformPattern(TransformPattern.Implosion); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { SetTransformPattern(TransformPattern.Organic); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { SetTransformPattern(TransformPattern.Glitch); }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) { SetTransformPattern(TransformPattern.Magnetic); }
-        if (Input.GetKeyDown(KeyCode.Alpha8)) { SetTransformPattern(TransformPattern.Sequential); }
-        if (Input.GetKeyDown(KeyCode.Alpha9)) { SetTransformPattern(TransformPattern.Explosion); }
-        if (Input.GetKeyDown(KeyCode.Alpha0)) { SetTransformPattern(TransformPattern.VirusSpread); }
-        if (Input.GetKeyDown(KeyCode.Minus)) { SetTransformPattern(TransformPattern.MimicPlantEmergence); }
+        //// ���� ����
+        //if (Input.GetKeyDown(KeyCode.Alpha1)) { SetTransformPattern(TransformPattern.DissolveReassemble); }
+        //if (Input.GetKeyDown(KeyCode.Alpha2)) { SetTransformPattern(TransformPattern.Spiral); }
+        //if (Input.GetKeyDown(KeyCode.Alpha3)) { SetTransformPattern(TransformPattern.Wave); }
+        //if (Input.GetKeyDown(KeyCode.Alpha4)) { SetTransformPattern(TransformPattern.Implosion); }
+        //if (Input.GetKeyDown(KeyCode.Alpha5)) { SetTransformPattern(TransformPattern.Organic); }
+        //if (Input.GetKeyDown(KeyCode.Alpha6)) { SetTransformPattern(TransformPattern.Glitch); }
+        //if (Input.GetKeyDown(KeyCode.Alpha7)) { SetTransformPattern(TransformPattern.Magnetic); }
+        //if (Input.GetKeyDown(KeyCode.Alpha8)) { SetTransformPattern(TransformPattern.Sequential); }
+        //if (Input.GetKeyDown(KeyCode.Alpha9)) { SetTransformPattern(TransformPattern.Explosion); }
+        //if (Input.GetKeyDown(KeyCode.Alpha0)) { SetTransformPattern(TransformPattern.VirusSpread); }
+        //if (Input.GetKeyDown(KeyCode.Minus)) { SetTransformPattern(TransformPattern.MimicPlantEmergence); }
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Debug.Log($"=== ���� ���� ===");
-            Debug.Log($"��ü ���� ��: {voxels.Count}");
-            Debug.Log($"���� ��ġ �Ҵ� ��: {formationPositions.Count}");
-            Debug.Log($"��� ������ ť�� ��ġ ��: {availableCubePositions.Count}");
-            Debug.Log($"���� ����: {(isInCubeForm ? "ť��" : "����")}");
-            Debug.Log($"���� ��: {isTransforming}");
-            Debug.Log($"���� ��: {isDissolving}");
-            Debug.Log($"���� ����: {currentPattern}");
-        }
+        //if (Input.GetKeyDown(KeyCode.C))
+        //{
+        //    Debug.Log($"=== ���� ���� ===");
+        //    Debug.Log($"��ü ���� ��: {voxels.Count}");
+        //    Debug.Log($"���� ��ġ �Ҵ� ��: {formationPositions.Count}");
+        //    Debug.Log($"��� ������ ť�� ��ġ ��: {availableCubePositions.Count}");
+        //    Debug.Log($"���� ����: {(isInCubeForm ? "ť��" : "����")}");
+        //    Debug.Log($"���� ��: {isTransforming}");
+        //    Debug.Log($"���� ��: {isDissolving}");
+        //    Debug.Log($"���� ����: {currentPattern}");
+        //}
         
-        // 사이버 더스트 테스트 (D키)
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            TestCyberDustEffect();
-        }
+        //// 사이버 더스트 테스트 (D키)
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    TestCyberDustEffect();
+        //}
     }
 
     #endregion

@@ -10,8 +10,8 @@ public class MProjectile : MonoBehaviour
    
     [Header("Settings")]
     [SerializeField] float lifetime = 20f; // 투사체의 수명
-    [SerializeField] float speed = 0.05f; // 투사체의 속도
-    [SerializeField] Vector3 dir = Vector3.forward;
+    [SerializeField] protected float speed = 0.05f; // 투사체의 속도
+    [SerializeField] protected Vector3 dir = Vector3.forward;
 
     void Start()
     {
@@ -19,7 +19,7 @@ public class MProjectile : MonoBehaviour
         Destroy(gameObject, lifetime); // 일정 시간 후 투사체 파괴
     }
 
-    void Update()
+    protected void Update()
     {
         Move();
     }
