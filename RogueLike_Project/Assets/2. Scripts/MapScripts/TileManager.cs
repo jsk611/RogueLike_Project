@@ -16,6 +16,7 @@ public class TileManager : MonoBehaviour
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
     [SerializeField] GameObject tilePreview;
+    [SerializeField] GameObject tileWarningPreview;
 
     float[,] tileMap = new float[mapSize, mapSize];
     Color32[,] baseColors = new Color32[mapSize,mapSize];
@@ -24,6 +25,7 @@ public class TileManager : MonoBehaviour
 
     [SerializeField] Material[] defaultMaterials;
     [SerializeField] private Material tileMakingMaterial;
+    [SerializeField] private Material tileDeletingMaterial;
     CSVToArray CTA;
     public int GetMapSize
     {
@@ -69,6 +71,7 @@ public class TileManager : MonoBehaviour
             {
                 tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0,j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
                 tiles[i, j].preview = Instantiate(tilePreview, this.transform);
+                tiles[i, j].warningPreview = Instantiate(tileWarningPreview, this.transform);
                 tiles[i,j].gameObject.name = j.ToString() + "," + i.ToString();
                 tiles[i, j].isSetActive = false;
                 tiles[i,j].gameObject.SetActive(false);
@@ -266,7 +269,9 @@ public class TileManager : MonoBehaviour
             yield return new WaitForSeconds(alertTime);
 
             tileMakingMaterial.SetFloat("_Progress", -0.6f);
+            tileDeletingMaterial.SetFloat("_Progress", 0.6f);
             tileMakingMaterial.DOFloat(0.6f, "_Progress", 4f);
+            tileDeletingMaterial.DOFloat(-0.6f, "_Progress", 4f);
             yield return new WaitForSeconds(4f);
         }
 

@@ -162,7 +162,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                LoadWaveData($"{currentStage}-6");
+                //LoadWaveData($"{currentStage}-6");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -485,19 +485,10 @@ public class WaveManager : MonoBehaviour
         StopCoroutine("HoleCrisis");
         StopCoroutine("SpikeCrisis");
 
-        //Item[] items = FindObjectsOfType<Item>();
-        //foreach(Item item in items) { 
-        //    item.isChasing = true;
-        //    item.velocity *= 2;
-        //}
-        //tileManager.InitializeArray(currentStage,4);
-        //yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
 
-        //upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
-        //if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);
-        //else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
-        //else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
-        //StartCoroutine(upgradeManager.UpgradeDisplay(UpgradeTier.common));
+        yield return new WaitForSeconds(1f);
+
+
         upgradeManager.BasicUpgradeCall();
 
         yield return null;

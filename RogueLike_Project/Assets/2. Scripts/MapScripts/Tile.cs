@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
     //[SerializeField] Material warningMaterial;
     public bool isSetActive = true;
     public GameObject preview;
+    public GameObject warningPreview;
 
     [SerializeField] SpriteRenderer minimapTile;
     [SerializeField] GameObject spike;
@@ -50,15 +51,23 @@ public class Tile : MonoBehaviour
     public void AlertChanging(float newYScale, float time = 1.6f, int warningMode = 0)
     {
         // 0: no warning 1: 주의 2: 가시주의 3: 낙사주의 4: 마법사 디버프 필드
+        PreviewSetActiveFalse();
         if (isSetActive)
         {
             StartCoroutine(AlertChangingCoroutine(time, warningMode));
+            if (newYScale < 0) newYScale = 0;
             float previewScale = (newYScale - transform.localScale.y);
-            if(previewScale > 0 && time > 0)
+            if(previewScale > 0.2f && time > 0f)
             {
                 preview.SetActive(true);
                 preview.transform.localScale = new Vector3(1.99f, previewScale, 1.99f);
                 preview.transform.position = this.transform.position + new Vector3(0, previewScale / 2f + transform.localScale.y /2f, 0);
+            }
+            else if(previewScale < 0.2f && time > 0f)
+            {
+                warningPreview.SetActive(true);
+                warningPreview.transform.localScale = new Vector3(1.99f, -previewScale, 1.99f);
+                warningPreview.transform.position = this.transform.position + new Vector3(0, previewScale / 2f + transform.localScale.y / 2f, 0);
             }
         }
     }
@@ -147,33 +156,26 @@ public class Tile : MonoBehaviour
     }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
-        if(duration > 0) MovePosition(transform.position.y + 0.5f, 0.3f);
         MovePosition(-20f, duration);
+        ChangeHeight(0, duration);
 
-        float tmp = duration;
-        while(tmp > 0f)
+        isSetActive = false;
+        try
         {
-            tmp -= Time.deltaTime;
+            GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
+            if (player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
             
-            Color newColor = meshRenderer.material.GetColor("_GridColor");
-            if (newColor.a > 0) newColor = newColor - new Color(0, 0, 0, 3 * Time.deltaTime / duration);
-            else 
-            { 
-                isSetActive = false;
-                try
-                {
-                    GameObject player = gameObject.GetComponentInChildren<PlayerControl>().gameObject;
-                    if (player != null) { player.transform.parent = FindObjectOfType<TileManager>().transform; }
-                    
-                }
-                catch(NullReferenceException)
-                {
-                }
-                gameObject.SetActive(false);
-            }
-                meshRenderer.material.SetColor("_GridColor", newColor);
-            yield return new WaitForSeconds(Time.deltaTime);
         }
+        catch(NullReferenceException)
+        {
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        PreviewSetActiveFalse();
+        gameObject.SetActive(false);
+            
+        
         //gameObject.SetActive(false);
         //isSetActive = false;
     }
@@ -267,6 +269,7 @@ public class Tile : MonoBehaviour
     public void PreviewSetActiveFalse()
     {
         preview.SetActive(false);
+        warningPreview.SetActive(false);
     }
 
 }
