@@ -322,6 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isSetActive: 1
+  preview: {fileID: 0}
   minimapTile: {fileID: 6946046808946640772}
   spike: {fileID: 4723277465107756343}
   heal: {fileID: 7469272909054619873}

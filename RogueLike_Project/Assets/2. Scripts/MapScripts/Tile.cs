@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     //[SerializeField] Material watchOutMaterial;
     //[SerializeField] Material warningMaterial;
     public bool isSetActive = true;
+    public GameObject preview;
 
     [SerializeField] SpriteRenderer minimapTile;
     [SerializeField] GameObject spike;
@@ -46,10 +47,20 @@ public class Tile : MonoBehaviour
         ChangeSpikeMode(false);
         ChangeHealMode(false);
     }
-    public void AlertChanging(float time = 1.6f, int warningMode = 0)
+    public void AlertChanging(float newYScale, float time = 1.6f, int warningMode = 0)
     {
         // 0: no warning 1: 주의 2: 가시주의 3: 낙사주의 4: 마법사 디버프 필드
-        if(isSetActive) StartCoroutine(AlertChangingCoroutine(time, warningMode));
+        if (isSetActive)
+        {
+            StartCoroutine(AlertChangingCoroutine(time, warningMode));
+            float previewScale = (newYScale - transform.localScale.y);
+            if(previewScale > 0 && time > 0)
+            {
+                preview.SetActive(true);
+                preview.transform.localScale = new Vector3(1.99f, previewScale, 1.99f);
+                preview.transform.position = this.transform.position + new Vector3(0, previewScale / 2f + transform.localScale.y /2f, 0);
+            }
+        }
     }
     IEnumerator AlertChangingCoroutine(float time, int warningMode)
     {
@@ -287,4 +298,9 @@ public class Tile : MonoBehaviour
             canShockWave = true;
         }
     }
+    public void PreviewSetActiveFalse()
+    {
+        preview.SetActive(false);
+    }
+
 }

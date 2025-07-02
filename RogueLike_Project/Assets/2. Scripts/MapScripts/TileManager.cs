@@ -1,4 +1,5 @@
 
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,15 @@ public class TileManager : MonoBehaviour
     public static int mapSize = 45;
     Tile[,] tiles = new Tile[mapSize, mapSize];
     [SerializeField] GameObject tile;
+    [SerializeField] GameObject tilePreview;
+
     float[,] tileMap = new float[mapSize, mapSize];
     Color32[,] baseColors = new Color32[mapSize,mapSize];
     Color32[,] emissionColors = new Color32[mapSize, mapSize];
     Color32[,] gridColors = new Color32[mapSize, mapSize];
+
     [SerializeField] Material[] defaultMaterials;
+    [SerializeField] private Material tileMakingMaterial;
     CSVToArray CTA;
     public int GetMapSize
     {
@@ -63,6 +68,7 @@ public class TileManager : MonoBehaviour
             for (int j = 0; j < mapSize; j++)
             {
                 tiles[i, j] = Instantiate(tile, new Vector3(i * 2, 0,j * 2), Quaternion.identity, this.transform).GetComponent<Tile>();
+                tiles[i, j].preview = Instantiate(tilePreview, this.transform);
                 tiles[i,j].gameObject.name = j.ToString() + "," + i.ToString();
                 tiles[i, j].isSetActive = false;
                 tiles[i,j].gameObject.SetActive(false);
@@ -236,6 +242,7 @@ public class TileManager : MonoBehaviour
     }
     public IEnumerator MoveTilesByArray(float durationAboutCoroutine = 1.25f, float durationAboutTile = 1f, float alertTime = 1f)
     {
+        tileMakingMaterial.SetFloat("_Progress", -0.6f);
         float maxTileHeight = GetMaxTileHeight();
         if(alertTime > 0)
         {
@@ -250,14 +257,17 @@ public class TileManager : MonoBehaviour
 
                     if (tileMap[i, j]/2f != tiles[i, j].transform.position.y)
                     {
-                        if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, 3);
-                        else if (isTooHigh) tiles[i, j].AlertChanging(alertTime, 2);
-                        else tiles[i, j].AlertChanging(alertTime, 1);
+                        if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(tileMap[i, j], alertTime, 3);
+                        else if (isTooHigh) tiles[i, j].AlertChanging(tileMap[i, j], alertTime, 2);
+                        else tiles[i, j].AlertChanging(tileMap[i, j], alertTime, 1);
                     }
                 }
             }
             yield return new WaitForSeconds(alertTime);
 
+            tileMakingMaterial.SetFloat("_Progress", -0.6f);
+            tileMakingMaterial.DOFloat(0.6f, "_Progress", 4f);
+            yield return new WaitForSeconds(4f);
         }
 
         //타일 위치 변경
@@ -285,7 +295,8 @@ public class TileManager : MonoBehaviour
                         bool isTooHigh = IsHighPos(i,j);
           
                         tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
-                        yield return null;
+                        tiles[i, j].PreviewSetActiveFalse();
+                        //yield return null;
                     }
                 }
                 
@@ -304,8 +315,8 @@ public class TileManager : MonoBehaviour
             {
                 if (tileMap[i, j] / 2f != tiles[i, j].transform.position.y)
                 {
-                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(alertTime, 3);
-                    else tiles[i, j].AlertChanging(alertTime,1);
+                    if (tileMap[i, j] <= 0) tiles[i, j].AlertChanging(tileMap[i, j], alertTime, 3);
+                    else tiles[i, j].AlertChanging(tileMap[i, j], alertTime,1);
                 }
             }
         }
@@ -405,7 +416,7 @@ public class TileManager : MonoBehaviour
                 if (targetTile == null || !targetTile.IsSetActive)
                     continue;
 
-                targetTile.AlertChanging(duration, 4);
+                targetTile.AlertChanging(tileMap[i,j], duration, 4);
             }
 
         }
