@@ -96,46 +96,12 @@ public class Tile : MonoBehaviour
         
     }
 
-    IEnumerator MoveCoroutine(float pos_y, float duration)
-    { 
-        //타일 움직이기
-        Vector3 newPosition = new Vector3(transform.position.x, pos_y, transform.position.z);
-
-        if(duration > 0)
-        {
-            transform.DOMoveY(pos_y, duration);
-            yield return new WaitForSeconds(duration);
-        }
-
-        transform.position = newPosition;
-        minimapTile.color = pos_y <= 0 ? Color.black : Color.white * 1.7f * transform.position.y / maxHeight;
-        Color tmp2 = minimapTile.color;
-        tmp2.a = 0.6f;
-        minimapTile.color = tmp2;
-
-        if(isSpike) yield return new WaitForSeconds(1f);
-        ChangeSpikeMode(false);
-        ChangeHealMode(false);
-    }
+    
     public void ChangeHeight(float size_y, float duration = 2f)
     {
         //StartCoroutine(ChangeSizeCoroutine(size_y, duration));
         Vector3 newSize = new Vector3(transform.localScale.x, size_y, transform.localScale.z);
         
-        transform.localScale = newSize;
-    }
-    IEnumerator ChangeSizeCoroutine(float size_y, float duration)
-    {
-        //타일 움직이기
-        Vector3 newSize = new Vector3(transform.localScale.x, size_y, transform.localScale.z);
-        if(duration > 0)
-        {
-            yield return new WaitForEndOfFrame();
-            transform.DOScaleY(size_y, duration);
-            meshRenderer.material.DOColor(Color.yellow, "_GridColor", 0.4f);
-            yield return new WaitForSeconds(duration);
-            meshRenderer.material.DOColor(Color.white, "_GridColor", 0.4f);
-        }
         transform.localScale = newSize;
     }
 
@@ -161,10 +127,10 @@ public class Tile : MonoBehaviour
     {
 
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
-        StartCoroutine(ChangeSizeCoroutine(size_y, 0));
+        ChangeHeight(size_y, 0);
         if(duration > 0f)
         {
-            StartCoroutine(MoveCoroutine(size_y / 2f, 0));
+            MovePosition(size_y / 2f, 0);
             float tmp = duration;
             while (tmp > 0f)
             {
@@ -176,13 +142,13 @@ public class Tile : MonoBehaviour
             meshRenderer.material.SetColor("_GridColor", new Color(1,1,1,1));
             //StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
         }
-        else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
+        else MovePosition(size_y / 2f, duration);
 
     }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)
     {
-        if(duration > 0) yield return StartCoroutine(MoveCoroutine(transform.position.y + 0.5f, 0.3f));
-        StartCoroutine(MoveCoroutine(-20f, duration));
+        if(duration > 0) MovePosition(transform.position.y + 0.5f, 0.3f);
+        MovePosition(-20f, duration);
 
         float tmp = duration;
         while(tmp > 0f)

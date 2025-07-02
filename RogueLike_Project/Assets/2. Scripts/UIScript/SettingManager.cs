@@ -16,7 +16,7 @@ public class SettingManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         sceneLoading = false;
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = 60;
     }
     private void Start()
     {
