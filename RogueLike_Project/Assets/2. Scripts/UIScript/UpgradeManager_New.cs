@@ -220,9 +220,8 @@ public class UpgradeManager_New : MonoBehaviour
         if (curUpgradeLevel >=1 && decisionTypeInput == UpgradeDecision.BASIC)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
-            StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+            StartCoroutine(DecisionBasic());
 
-            //upgrade 한 번 더 추가
         }
         else if (curSelectedType == WeaponUpgrade.Null && curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
         {
@@ -236,6 +235,12 @@ public class UpgradeManager_New : MonoBehaviour
             player.SetCursorState(true);
             upgrading = false;
         }
+    }
+    IEnumerator DecisionBasic()
+    {
+        StartCoroutine(UpgradeDisplay(UpgradeTier.common));
+        yield return new WaitUntil(() => !upgrading);
+        StartCoroutine(UpgradeDisplay(UpgradeTier.common));
     }
     void ApplyCommonUpgrade()
     {

@@ -2,12 +2,14 @@ using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class HealTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
-    [SerializeField] int healCost = 200; 
+    [SerializeField] int healCost = 200;
+    Color originColor;
     string uiText = "Recovery - 100DNA";
     bool isHealed = false;
     
@@ -17,13 +19,14 @@ public class HealTrigger : MonoBehaviour
     {
         ps = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
         isHealed = false;
+        originColor = GetComponent<MeshRenderer>().material.color;
     }
 
     private void OnEnable()
     {
         isHealed = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
-        GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
+        GetComponent<MeshRenderer>().material.color = originColor;
     }
 
     private void OnTriggerStay(Collider other)

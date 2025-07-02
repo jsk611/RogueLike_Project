@@ -804,7 +804,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public void OnTryPlaySkill(InputAction.CallbackContext context)
         {
-            if (!cursorLocked)
+            if (!cursorLocked || GetComponent<SkillBehaviour>() == null)
                 return;
             if (!CanPlaySkillAnimation())
             {
