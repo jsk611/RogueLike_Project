@@ -1,1052 +1,1304 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine.UI;
+using System.Linq;
 
 /// <summary>
-/// 🏢 15층 건물 캡슐 변신 시스템 - 큐브들이 나선형으로 배치되어 15층 건물 캡슐을 형성하고 층별로 해체되며 몬스터 등장
-/// 각 층이 명확하게 구분되어 15층부터 1층까지 순서대로 해체됩니다.
+/// 몬스터별 캡슐 변신 정보
+/// </summary>
+[System.Serializable]
+public class MonsterCapsuleData
+{
+    public float radius = 3f;           // 캡슐 반지름
+    public float height = 6f;           // 캡슐 총 높이
+    public Vector3 scale = Vector3.one; // 추가 스케일링
+    public float transformTime = 1.5f;  // 변신 시간
+    
+    [Header("Capsule Orientation")]
+    public Vector3 direction = Vector3.up;      // 캡슐 형성 방향 (기본: 위쪽)
+    public Vector3 forwardAxis = Vector3.forward; // 캡슐 앞면 방향 (회전 기준)
+    
+    [Header("Fog Effects")]
+    public bool enableFogEffect = true;         // 안개 효과 사용 여부
+    public Color fogColor = Color.cyan;         // 안개 색상
+    public float fogDensity = 0.5f;             // 안개 밀도
+    public float fogFadeTime = 1.2f;            // 안개 페이드아웃 시간
+}
+
+/// <summary>
+/// 🔄 사이버 변신 공간 시스템 (Cyber Transformation Space)
+/// 
+/// ▶ 시스템 개요:
+/// 복셀(Voxel) 오브젝트들을 활용한 3단계 변신 시퀀스로 몬스터를 극적으로 등장시키는 시스템
+/// 
+/// ▶ 변신 단계:
+/// 【1단계】 구형 집결 (Sphere Formation)
+///   - Fibonacci-sphere 알고리즘으로 복셀들을 구 표면에 균등 분포 배치
+///   - 원래 위치에서 구 표면으로 부드러운 이동 애니메이션
+///   - 설정 가능한 구 반지름과 형성 시간
+/// 
+/// 【2단계】 캡슐 변형 (Capsule Transformation)
+///   - 구 형태에서 캡슐(원통 + 상하 반구) 형태로 3D 맵핑 변환
+///   - 복셀들이 캡슐 표면을 따라 재배치되며 법선 방향으로 회전
+///   - 동적으로 조절 가능한 캡슐 높이와 반지름
+/// 
+/// 【3단계】 순차 해체 & 몬스터 등장 (Dissolve & Monster Reveal)
+///   - Y축 상단부터 하단으로 순차적 해체 (연속 0.015초 간격)
+///   - 해체 과정: 위치 이동 + 크기 축소 + 알파 페이드아웃
+///   - 상단 30% 해체 시점에 몬스터 등장 (스케일링 + 위치 보간)
+///   - 완료 후 자동 원상 복귀 옵션
+/// 
+/// ▶ 주요 특징:
+/// - 실시간 파라미터 조정 가능 (인스펙터 노출)
+/// - 수학적 정확도: Fibonacci 나선, 캡슐 기하학 활용
+/// - 부드러운 애니메이션: AnimationCurve 기반 알파 보간
+/// - 디버그 모드: U키 실행, 자동 시작 옵션
 /// </summary>
 public class CyberTransformationSpace : MonoBehaviour
 {
-    [Header("🌀 Spiral Capsule Settings")]
-    [SerializeField] private float capsuleRadius = 4f;          // 캡슐 반지름
-    [SerializeField] private float capsuleHeight = 8f;          // 캡슐 높이
-    [SerializeField] private int buildingFloors = 15;           // 🏢 건물 층수 (15층 건물)
-    [SerializeField] private float spiralTightness = 2f;        // 나선 밀도 (높을수록 촘촘)
-    [SerializeField] private float goldenAngle = 137.507764f;   // 황금각도
-    
-    [Header("🎬 Animation Settings")]
-    [SerializeField] private float formationTime = 3f;         // 캡슐 형성 시간
-    [SerializeField] private float maintainTime = 2f;          // 유지 시간
-    [SerializeField] private float dissolutionTime = 4f;       // 해체 시간
-    [SerializeField] private float layerDelay = 0.2f;          // 레이어간 딜레이
-    [SerializeField] private AnimationCurve spiralCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-    
-    [Header("👁️ Visibility Settings")]
-    [SerializeField] private float innerVisibility = 0.3f;     // 내부 투명도 (0=완전투명, 1=불투명)
-    [SerializeField] private Color capsuleColor = new Color(0.2f, 0.8f, 1f, 0.7f);
-    [SerializeField] private Color glowColor = new Color(0.4f, 1f, 0.8f, 1f);
-    
-    [Header("🎭 Monster Reveal")]
-    [SerializeField] private GameObject[] monstersToReveal;     // 등장할 몬스터들
-    [SerializeField] private ParticleSystem revealEffectPrefab; // 등장 효과
-    [SerializeField] private float monsterRevealDelay = 0.5f;   // 몬스터 등장 딜레이
-    
-    [Header("🔊 Audio")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip formationSound;
-    [SerializeField] private AudioClip dissolutionSound;
-    [SerializeField] private AudioClip revealSound;
-    
-    [Header("🛠️ Debug")]
-    [SerializeField] private bool debugMode = true;
-    [SerializeField] private bool showGizmos = true;
-    
-    // Core Variables
-    private List<Transform> voxelCubes = new List<Transform>();
-    private Dictionary<Transform, Vector3> originalPositions = new Dictionary<Transform, Vector3>();
-    private Dictionary<Transform, Vector3> originalRotations = new Dictionary<Transform, Vector3>();
-    private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
-    private Dictionary<Transform, SpiralData> spiralPositions = new Dictionary<Transform, SpiralData>();
-    private Dictionary<Transform, int> voxelFloors = new Dictionary<Transform, int>();          // 🏢 각 큐브의 층수 (1~15층)
-    private List<List<Transform>> floorGroups = new List<List<Transform>>();                   // 🏢 층별 큐브 그룹
-    
-    // State
-    private bool isTransforming = false;
-    private bool isRevealing = false;
-    private Coroutine currentTransformation;
-    
-    // Spiral Data Structure
-    [System.Serializable]
-    private struct SpiralData
+    // ------------------------------------------------------------------
+    // ✨ 인스펙터 노출 변수
+    // ------------------------------------------------------------------
+
+    [Header("Voxel Source")]
+    [SerializeField] private Transform voxelRoot;                  // 큐브 모음 루트 (없으면 자기 자신)
+
+    [Header("Sphere Formation")]
+    [SerializeField] private float sphereRadius = 4f;              // 구 반지름
+    [SerializeField] private float sphereFormationTime = 2f;       // 구형태로 뭉치는 시간
+
+    [Header("Capsule Settings")]
+    [SerializeField] private MonsterCapsuleData defaultCapsule;    // 기본 캡슐 설정
+
+    [Header("Dissolve")]
+    [SerializeField] private float dissolveTimePerVoxel = 0.6f;    // 개별 큐브 해체 시간
+    [SerializeField]
+    private AnimationCurve dissolveAlpha =        // 알파 변곡
+        AnimationCurve.Linear(0, 1, 1, 0);
+
+    [Header("Monster Reveal")]
+    [SerializeField] private GameObject monster;                   // 등장할 몬스터 오브젝트
+    [SerializeField] private float monsterRevealTime = 1.4f;       // 몬스터 등장 시간
+
+    [Header("Fog Effects")]
+    [SerializeField] private GameObject fogParticlePrefab;         // 안개 파티클 프리팹
+    [SerializeField] private Material fogMaterial;                // 안개 전용 머티리얼 (CyberFogMaterial 권장)
+    [SerializeField] private bool enableCustomFogShape = true;    // 캡슐 모양 안개 사용
+    [SerializeField] private bool useVolumetricShader = true;     // 볼류메트릭 셰이더 사용 여부
+    [SerializeField] private bool enableCapsuleMask = true;       // 캡슐 메시 마스크 사용 여부
+
+    [Header("Debug")]
+    [SerializeField] private bool autoStart = true;                // 자동 실행 여부
+
+    // ------------------------------------------------------------------
+    // 🔒 내부 상태
+    // ------------------------------------------------------------------
+
+    private readonly List<Transform> voxels = new();               // 큐브 Transform 목록
+    private readonly Dictionary<Transform, Vector3> originPos =    // 원래 위치 백업
+        new();
+
+    private Vector3[] spherePos;                                   // 구 표면 위치
+    private Vector3[] capsulePos;                                  // 캡슐 표면 위치
+    private MonsterCapsuleData currentCapsule;                     // 현재 변신할 캡슐 데이터
+    private bool isBusy;
+
+    // 안개 효과 관련
+    private ParticleSystem fogParticleSystem;                      // 안개 파티클 시스템
+    [SerializeField] private GameObject fogContainer;              // 안개 컨테이너 오브젝트
+    private bool fogActive = false;                                // 안개 활성 상태
+    private Coroutine fogTransformCoroutine;                       // 안개 변형 코루틴
+
+    //-------------------------------------------------------------------
+    // 🏁 초기화
+    //-------------------------------------------------------------------
+
+    void Awake()
     {
-        public Vector3 position;        // 나선 위치
-        public float angle;             // 회전 각도
-        public int floor;               // 🏢 건물 층수 (1~15층)
-        public float height;            // 높이
-        public float radius;            // 반지름
-        public float spiralProgress;    // 나선 진행도 (0-1)
+        if (voxelRoot == null) voxelRoot = transform;
+        CacheVoxels();
+        
+        // 기본 캡슐 데이터 초기화
+        if (defaultCapsule == null)
+        {
+            defaultCapsule = new MonsterCapsuleData();
+        }
+        currentCapsule = defaultCapsule;
+        PrecomputeTargets(currentCapsule);
+        
+        if (monster) monster.SetActive(false);
     }
-    
+
     void Start()
     {
-        InitializeSystem();
+        if (autoStart) StartTransformation();
     }
-    
-    void Update()
+
+    private void Update()
     {
-        if (debugMode)
+        if (Input.GetKeyDown(KeyCode.U))
+            StartTransformation();
+
+        if (Input.GetKeyDown(KeyCode.R))
+            ResetToOriginal();
+    }
+
+    //-------------------------------------------------------------------
+    // 📦 큐브 수집 및 목표 위치 선계산
+    //-------------------------------------------------------------------
+
+    private void CacheVoxels()
+    {
+        voxels.Clear();
+        foreach (Transform t in voxelRoot.GetComponentsInChildren<Transform>())
         {
-            HandleDebugInput();
-        }
-    }
-    
-    #region Initialization
-    
-    private void InitializeSystem()
-    {
-        FindAllVoxels();
-        StoreOriginalTransforms();
-        CalculateSpiralFormation();
-        HideAllMonsters();
-        
-        if (audioSource == null)
-            audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
-        
-        Debug.Log($"[BuildingCapsule] 🏢 시스템 초기화 완료 - {voxelCubes.Count}개 큐브, {buildingFloors}층 건물");
-    }
-    
-    private void FindAllVoxels()
-    {
-        voxelCubes.Clear();
-        
-        // 자식 객체에서 모든 큐브 찾기
-        Transform[] allChildren = GetComponentsInChildren<Transform>();
-        foreach (Transform child in allChildren)
-        {
-            if (child != transform && IsVoxelCube(child))
+            if (t != voxelRoot)
             {
-                voxelCubes.Add(child);
+                voxels.Add(t);
+                originPos[t] = t.localPosition;
             }
         }
-        
-        Debug.Log($"[BuildingCapsule] {voxelCubes.Count}개 큐브 발견");
     }
-    
-    private bool IsVoxelCube(Transform obj)
+
+    private void PrecomputeTargets(MonsterCapsuleData capsuleData)
     {
-        // 큐브 식별 조건 (이름, 태그, 컴포넌트 등)
-        return obj.name.ToLower().Contains("cube") ||
-               obj.name.ToLower().Contains("voxel") ||
-               obj.name.ToLower().Contains("block") ||
-               obj.GetComponent<MeshRenderer>() != null;
-    }
-    
-    private void StoreOriginalTransforms()
-    {
-        originalPositions.Clear();
-        originalRotations.Clear();
-        originalScales.Clear();
-        
-        foreach (Transform voxel in voxelCubes)
+        int n = voxels.Count;
+        spherePos = new Vector3[n];
+        capsulePos = new Vector3[n];
+
+        // Fibonacci‑sphere로 균등 분포 좌표 계산
+        for (int i = 0; i < n; i++)
         {
-            originalPositions[voxel] = voxel.localPosition;
-            originalRotations[voxel] = voxel.localEulerAngles;
-            originalScales[voxel] = voxel.localScale;
-        }
-    }
-    
-    #endregion
-    
-    #region Spiral Formation Calculation
-    
-    private void CalculateSpiralFormation()
-    {
-        spiralPositions.Clear();
-        voxelFloors.Clear();
-        floorGroups.Clear();
-        
-        // 🏢 15층 건물 그룹 초기화 (1층~15층)
-        for (int i = 0; i < buildingFloors; i++)
-        {
-            floorGroups.Add(new List<Transform>());
-        }
-        
-        int voxelCount = voxelCubes.Count;
-        
-        for (int i = 0; i < voxelCount; i++)
-        {
-            Transform voxel = voxelCubes[i];
-            
-            // 나선 진행도 (0-1)
-            float spiralProgress = (float)i / (voxelCount - 1);
-            
-            // 🏢 건물 층별 나선 데이터 계산
-            SpiralData spiralData = CalculateBuildingFloorPosition(i, voxelCount, spiralProgress);
-            
-            spiralPositions[voxel] = spiralData;
-            voxelFloors[voxel] = spiralData.floor;
-            floorGroups[spiralData.floor - 1].Add(voxel); // 0-based index (1층 = index 0)
-        }
-        
-        // 🏢 층별 통계 출력 (15층부터 1층까지)
-        for (int floor = buildingFloors; floor >= 1; floor--)
-        {
-            int floorIndex = floor - 1; // 0-based
-            if (floorGroups[floorIndex].Count > 0)
+            float k = (i + 0.5f) / n;
+            float theta = Mathf.Acos(1 - 2 * k);
+            float phi = Mathf.PI * (1 + Mathf.Sqrt(5)) * i;
+
+            Vector3 dir = new(
+                Mathf.Sin(theta) * Mathf.Cos(phi),
+                Mathf.Cos(theta),
+                Mathf.Sin(theta) * Mathf.Sin(phi));
+
+            // ① 구 표면 위치
+            spherePos[i] = dir * sphereRadius;
+
+            // ② 캡슐 표면 위치 계산 (원통 + 반구) - 전달받은 데이터 사용
+            Vector3 p = dir * capsuleData.radius;
+            float halfCyl = capsuleData.height * 0.5f - capsuleData.radius;
+            p.y = dir.y * halfCyl;
+
+            if (Mathf.Abs(p.y) > halfCyl)               // 반구 영역 보정
             {
-                Debug.Log($"[BuildingCapsule] {floor}층: {floorGroups[floorIndex].Count}개 큐브");
+                float sign = Mathf.Sign(p.y);
+                Vector3 capCenter = new(0, sign * halfCyl, 0);
+                Vector3 radial = new Vector3(p.x, 0, p.z).normalized * capsuleData.radius;
+                p = capCenter + radial;
+            }
+            
+            // 캡슐 방향 회전 적용
+            p = RotateCapsulePosition(p, capsuleData.direction, capsuleData.forwardAxis);
+            
+            // 추가 스케일 적용
+            p = Vector3.Scale(p, capsuleData.scale);
+            capsulePos[i] = p;
+        }
+    }
+
+    /// <summary>
+    /// 캡슐 위치를 지정된 방향으로 회전
+    /// </summary>
+    private Vector3 RotateCapsulePosition(Vector3 position, Vector3 targetDirection, Vector3 forwardAxis)
+    {
+        // 기본 방향 (Y축 위쪽)에서 목표 방향으로의 회전 계산
+        Vector3 defaultDirection = Vector3.up;
+        targetDirection = targetDirection.normalized;
+        
+        // 방향이 같으면 회전하지 않음
+        if (Vector3.Dot(defaultDirection, targetDirection) > 0.99f)
+            return position;
+            
+        // 기본 방향에서 목표 방향으로의 회전 쿼터니언 생성
+        Quaternion rotation = Quaternion.FromToRotation(defaultDirection, targetDirection);
+        
+        // 추가 회전축 고려 (forwardAxis가 지정된 경우)
+        if (forwardAxis != Vector3.forward && forwardAxis.sqrMagnitude > 0.1f)
+        {
+            Vector3 currentForward = rotation * Vector3.forward;
+            Vector3 desiredForward = forwardAxis.normalized;
+            
+            // 목표 방향 축 주위로 추가 회전
+            Vector3 axis = targetDirection;
+            float angle = Vector3.SignedAngle(currentForward, desiredForward, axis);
+            Quaternion additionalRotation = Quaternion.AngleAxis(angle, axis);
+            
+            rotation = additionalRotation * rotation;
+        }
+        
+        // 위치에 회전 적용
+        return rotation * position;
+    }
+
+    //-------------------------------------------------------------------
+    // 🌫️ 안개 효과 시스템
+    //-------------------------------------------------------------------
+
+    /// <summary>
+    /// 캡슐 내부 안개 효과 생성 및 컨테이너 설정
+    /// </summary>
+    private void CreateCapsuleFog()
+    {
+        if (!currentCapsule.enableFogEffect) return;
+
+        // fogContainer가 설정되어 있는지 확인
+        if (fogContainer == null)
+        {
+            Debug.LogWarning("[CyberTransformationSpace] FogContainer가 설정되지 않았습니다. 자동 생성합니다.");
+            fogContainer = new GameObject("CapsuleFog");
+            fogContainer.transform.SetParent(transform);
+        }
+
+        // fogContainer가 비활성화되어 있으면 활성화
+        if (!fogContainer.activeInHierarchy)
+        {
+            fogContainer.SetActive(true);
+        }
+
+        // fogContainer 위치와 크기 설정
+        ConfigureFogContainer();
+
+        // 파티클 시스템 생성
+        if (fogParticleSystem == null)
+        {
+            if (fogParticlePrefab != null)
+            {
+                GameObject fogObj = Instantiate(fogParticlePrefab, fogContainer.transform);
+                fogParticleSystem = fogObj.GetComponent<ParticleSystem>();
+            }
+            else
+            {
+                // 기본 파티클 시스템 생성
+                GameObject fogObj = new GameObject("FogParticles");
+                fogObj.transform.SetParent(fogContainer.transform);
+                fogObj.transform.localPosition = Vector3.zero;
+                fogParticleSystem = fogObj.AddComponent<ParticleSystem>();
             }
         }
-        
-        Debug.Log($"[BuildingCapsule] 🏢 {buildingFloors}층 건물 완성! 총 {voxelCount}개 큐브");
+
+        ConfigureFogParticleSystem();
     }
-    
-    private SpiralData CalculateBuildingFloorPosition(int index, int totalVoxels, float spiralProgress)
+
+    /// <summary>
+    /// FogContainer(캡슐 마스크)의 위치와 크기를 캡슐 데이터에 맞춰 설정
+    /// </summary>
+    private void ConfigureFogContainer()
     {
-        SpiralData data = new SpiralData();
-        data.spiralProgress = spiralProgress;
+        if (fogContainer == null) return;
+
+        // 위치 설정 - 변신 중심점에 위치
+        fogContainer.transform.position = transform.position;
+        fogContainer.transform.localPosition = Vector3.zero;
+
+        // 회전 초기화 (구형 단계에서는 회전 없음)
+        fogContainer.transform.localRotation = Quaternion.identity;
+
+        // CapsuleData 기반 스케일 설정
+        UpdateFogContainerScale();
+
+        Debug.Log($"[CyberTransformationSpace] FogContainer 설정 완료 - 위치: {fogContainer.transform.position}");
+    }
+
+    /// <summary>
+    /// FogContainer(캡슐 마스크)의 스케일을 캡슐 데이터에 맞춰 업데이트
+    /// </summary>
+    private void UpdateFogContainerScale()
+    {
+        if (!enableCapsuleMask || fogContainer == null) return;
+
+        // CapsuleData 기반 스케일 (Unity Capsule의 기본 크기는 반지름 0.5, 높이 2)
+        float diameterX = currentCapsule.radius * 2f * currentCapsule.scale.x;
+        float diameterZ = currentCapsule.radius * 2f * currentCapsule.scale.z;
+        float heightY = currentCapsule.height * currentCapsule.scale.y;
+
+        fogContainer.transform.localScale = new Vector3(diameterX, heightY * 0.5f, diameterZ);
         
-        // 🏢 건물 층수 계산 (1층~15층)
-        data.floor = Mathf.FloorToInt(spiralProgress * buildingFloors) + 1; // 1층부터 시작
-        data.floor = Mathf.Clamp(data.floor, 1, buildingFloors);
+        // direction으로 회전 (초기에는 회전 없음, 나중에 캡슐 변형시 적용)
+        fogContainer.transform.localRotation = Quaternion.identity;
+
+        Debug.Log($"[CyberTransformationSpace] FogContainer 스케일 업데이트 - 크기: {fogContainer.transform.localScale}");
+    }
+
+    /// <summary>
+    /// FogContainer의 목표 스케일 계산 (캡슐 데이터 기반)
+    /// </summary>
+    private Vector3 GetTargetFogContainerScale()
+    {
+        // CapsuleData 기반 스케일 (Unity Capsule의 기본 크기는 반지름 0.5, 높이 2)
+        float diameterX = currentCapsule.radius * 2f * currentCapsule.scale.x;
+        float diameterZ = currentCapsule.radius * 2f * currentCapsule.scale.z;
+        float heightY = currentCapsule.height * currentCapsule.scale.y;
+
+        return new Vector3(diameterX, heightY * 0.5f, diameterZ);
+    }
+
+    /// <summary>
+    /// 안개 파티클 시스템 기본 설정 (공통 설정만)
+    /// </summary>
+    private void ConfigureFogParticleSystem()
+    {
+        if (fogParticleSystem == null) return;
+
+        var main = fogParticleSystem.main;
+        var velocityOverLifetime = fogParticleSystem.velocityOverLifetime;
+        var colorOverLifetime = fogParticleSystem.colorOverLifetime;
+
+        // 메인 설정 (공통)
+        main.startLifetime = 3f;
+        main.startSpeed = 0.2f;
+        main.startSize = 0.8f;
+        main.maxParticles = 200;
+        main.simulationSpace = ParticleSystemSimulationSpace.Local;
+
+        // 속도 설정 (안개가 천천히 움직임)
+        velocityOverLifetime.enabled = true;
+        velocityOverLifetime.space = ParticleSystemSimulationSpace.Local;
         
-        // 🏢 층별 고정 높이 계산 (각 층이 명확하게 구분됨)
-        data.height = CalculateBuildingFloorHeight(data.floor);
+        AnimationCurve velocityCurve = new AnimationCurve();
+        velocityCurve.AddKey(0f, 0f);
+        velocityCurve.AddKey(1f, 0.1f);
         
-        // 🏢 층별 반지름 계산 (캡슐 모양 유지)
-        float normalizedFloorHeight = (float)(data.floor - 1) / (buildingFloors - 1); // 0~1
-        data.radius = CalculateCapsuleRadius(normalizedFloorHeight);
-        
-        // 나선 각도 계산 (황금비율 기반)
-        data.angle = (index * goldenAngle) % 360f;
-        
-        // 최종 3D 위치 계산
-        float angleRad = data.angle * Mathf.Deg2Rad;
-        data.position = new Vector3(
-            Mathf.Cos(angleRad) * data.radius,
-            data.height,
-            Mathf.Sin(angleRad) * data.radius
+        velocityOverLifetime.x = new ParticleSystem.MinMaxCurve(0f, velocityCurve);
+        velocityOverLifetime.y = new ParticleSystem.MinMaxCurve(-0.1f, 0.1f);
+        velocityOverLifetime.z = new ParticleSystem.MinMaxCurve(0f, velocityCurve);
+
+        // 색상 및 투명도 변화 (기본 그라데이션)
+        colorOverLifetime.enabled = true;
+        Gradient gradient = new Gradient();
+        gradient.SetKeys(
+            new GradientColorKey[] { 
+                new GradientColorKey(currentCapsule.fogColor, 0.0f), 
+                new GradientColorKey(currentCapsule.fogColor, 1.0f) 
+            },
+            new GradientAlphaKey[] { 
+                new GradientAlphaKey(0.0f, 0.0f), 
+                new GradientAlphaKey(currentCapsule.fogDensity, 0.3f),
+                new GradientAlphaKey(currentCapsule.fogDensity * 0.8f, 0.7f),
+                new GradientAlphaKey(0.0f, 1.0f) 
+            }
         );
+        colorOverLifetime.color = gradient;
+
+        // 머티리얼 적용 및 셰이더 프로퍼티 설정
+        ConfigureFogMaterial();
         
-        return data;
+        Debug.Log("[CyberTransformationSpace] 안개 파티클 시스템 기본 설정 완료");
+    }
+
+    /// <summary>
+    /// 안개 머티리얼의 셰이더 프로퍼티 설정
+    /// </summary>
+    private void ConfigureFogMaterial()
+    {
+        if (fogMaterial == null) return;
+
+        var renderer = fogParticleSystem.GetComponent<ParticleSystemRenderer>();
+        if (renderer == null) return;
+
+        // 머티리얼 인스턴스 생성 (원본 보호)
+        Material fogMatInstance = new Material(fogMaterial);
+        renderer.material = fogMatInstance;
+
+        // 볼류메트릭 셰이더 프로퍼티 설정
+        if (useVolumetricShader && fogMatInstance.HasProperty("_FogColor"))
+        {
+            // 기본 안개 색상 및 밀도
+            fogMatInstance.SetColor("_FogColor", currentCapsule.fogColor);
+            fogMatInstance.SetFloat("_Density", currentCapsule.fogDensity);
+            
+            // 방출 색상 (더 밝은 색상으로)
+            Color emissionColor = currentCapsule.fogColor * 1.5f;
+            emissionColor.a = 1f;
+            if (fogMatInstance.HasProperty("_EmissionColor"))
+                fogMatInstance.SetColor("_EmissionColor", emissionColor);
+
+            // 사이버 효과 강도 조절
+            if (fogMatInstance.HasProperty("_PulseIntensity"))
+                fogMatInstance.SetFloat("_PulseIntensity", 0.2f + currentCapsule.fogDensity * 0.3f);
+            
+            if (fogMatInstance.HasProperty("_FlickerIntensity"))
+                fogMatInstance.SetFloat("_FlickerIntensity", 0.05f + currentCapsule.fogDensity * 0.1f);
+                
+            // 투명도 설정
+            if (fogMatInstance.HasProperty("_Alpha"))
+                fogMatInstance.SetFloat("_Alpha", currentCapsule.fogDensity * 0.8f);
+        }
+        else
+        {
+            // 기본 파티클 셰이더의 경우
+            if (fogMatInstance.HasProperty("_Color"))
+                fogMatInstance.SetColor("_Color", currentCapsule.fogColor);
+            if (fogMatInstance.HasProperty("_TintColor"))
+                fogMatInstance.SetColor("_TintColor", currentCapsule.fogColor);
+        }
+
+        Debug.Log($"[CyberTransformationSpace] 안개 머티리얼 설정 완료 - 색상: {currentCapsule.fogColor}, 밀도: {currentCapsule.fogDensity}");
+    }
+
+    /// <summary>
+    /// 캡슐 내부 크기 계산 (모든 캡슐 데이터 반영)
+    /// </summary>
+    private Vector3 CalculateCapsuleInnerSize()
+    {
+        // 기본 내부 크기 계산
+        float innerRadius = currentCapsule.radius * 0.7f; // 내부 공간 (30% 여백)
+        float innerHeight = currentCapsule.height * 0.8f; // 내부 높이 (20% 여백)
+        
+        // 기본 박스 크기
+        Vector3 baseSize = new Vector3(innerRadius * 2f, innerHeight, innerRadius * 2f);
+        
+        // 캡슐의 스케일 적용
+        Vector3 scaledSize = Vector3.Scale(baseSize, currentCapsule.scale);
+        
+        Debug.Log($"[CyberTransformationSpace] 캡슐 내부 크기 계산 - 기본: {baseSize}, 스케일 적용 후: {scaledSize}");
+        
+        return scaledSize;
+    }
+
+    /// <summary>
+    /// 안개 효과 활성화 (구형부터 시작)
+    /// </summary>
+    private IEnumerator ActivateFog()
+    {
+        if (!currentCapsule.enableFogEffect) yield break;
+
+        CreateCapsuleFog();
+        
+        if (fogParticleSystem != null)
+        {
+            // 구형 모양으로 시작 (투명도 낮게)
+            ConfigureFogForSphere();
+            
+            fogParticleSystem.gameObject.SetActive(true);
+            fogParticleSystem.Play();
+            fogActive = true;
+            
+            Debug.Log("[CyberTransformationSpace] 안개 효과 활성화 (구형 단계)");
+        }
+        
+        yield return null;
+    }
+
+    /// <summary>
+    /// 구형 단계 안개 설정 (캡슐 크기 기반)
+    /// </summary>
+    private void ConfigureFogForSphere()
+    {
+        if (fogParticleSystem == null) return;
+
+        var shape = fogParticleSystem.shape;
+        var main = fogParticleSystem.main;
+        var emission = fogParticleSystem.emission;
+
+        // 구형 모양 설정 - 캡슐 데이터 기반 크기 계산
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        
+        // 캡슐 크기를 고려한 구형 반지름 (캡슐 반지름과 높이의 평균 사용)
+        float capsuleBasedRadius = (currentCapsule.radius + currentCapsule.height * 0.3f) * 0.7f;
+        float scaleFactor = Mathf.Max(currentCapsule.scale.x, currentCapsule.scale.z); // X, Z 중 큰 값 사용
+        shape.radius = capsuleBasedRadius * scaleFactor;
+        shape.radiusThickness = 0.8f; // 가장자리 중심
+
+        // 초기 투명도 낮게 (서서히 나타나도록)
+        Color startColor = currentCapsule.fogColor;
+        startColor.a *= 0.3f; // 30% 투명도로 시작
+        main.startColor = startColor;
+        
+        // 방출량 낮게 시작 (캡슐 크기에 비례)
+        float sizeMultiplier = (currentCapsule.radius * currentCapsule.height) / (3f * 6f); // 기본 크기 대비
+        emission.rateOverTime = 15f * currentCapsule.fogDensity * sizeMultiplier;
+
+        // fogContainer 구형 크기 및 위치 업데이트
+        if (fogContainer != null && enableCapsuleMask)
+        {
+            fogContainer.transform.localPosition = Vector3.zero;
+            fogContainer.transform.localRotation = Quaternion.identity;
+            
+            // 구형 단계에서는 구 반지름에 맞춘 크기
+            float sphereRadius = capsuleBasedRadius * scaleFactor;
+            Vector3 sphereScale = Vector3.one * sphereRadius;
+            fogContainer.transform.localScale = sphereScale;
+            
+            Debug.Log($"[CyberTransformationSpace] FogContainer 구형 변형 - 크기: {sphereScale}");
+        }
+            
+        Debug.Log($"[CyberTransformationSpace] 구형 안개 크기: {shape.radius}, 마스크 크기: {fogContainer?.transform.localScale}");
+    }
+
+    /// <summary>
+    /// 안개를 캡슐 모양으로 변형 (캡슐 변형과 동시에) - 캡슐 크기 연동
+    /// </summary>
+    private IEnumerator TransformFogWithCapsule()
+    {
+        if (!fogActive || fogParticleSystem == null) yield break;
+
+        float transformTime = currentCapsule.transformTime;
+        float elapsed = 0f;
+        
+        var shape = fogParticleSystem.shape;
+        var main = fogParticleSystem.main;
+        var emission = fogParticleSystem.emission;
+        
+        // 시작 값들 (현재 구형 상태 기반)
+        float startRadius = (currentCapsule.radius + currentCapsule.height * 0.3f) * 0.7f;
+        float scaleFactor = Mathf.Max(currentCapsule.scale.x, currentCapsule.scale.z);
+        startRadius *= scaleFactor;
+        
+        Color startColor = currentCapsule.fogColor;
+        startColor.a *= 0.3f;
+        
+        float sizeMultiplier = (currentCapsule.radius * currentCapsule.height) / (3f * 6f);
+        float startEmissionRate = 15f * currentCapsule.fogDensity * sizeMultiplier;
+        
+        // 목표 값들 (캡슐 크기 기반)
+        Vector3 targetCapsuleSize = CalculateCapsuleInnerSize();
+        Color targetColor = currentCapsule.fogColor;
+        float targetEmissionRate = 30f * currentCapsule.fogDensity * sizeMultiplier;
+        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.up, currentCapsule.direction);
+
+        // fogContainer의 시작값과 목표값
+        Vector3 startContainerScale = fogContainer?.transform.localScale ?? Vector3.one;
+        Vector3 targetContainerScale = GetTargetFogContainerScale();
+        Quaternion startContainerRotation = fogContainer?.transform.localRotation ?? Quaternion.identity;
+        Quaternion targetContainerRotation = Quaternion.FromToRotation(Vector3.up, currentCapsule.direction);
+
+        Debug.Log($"[CyberTransformationSpace] 안개 캡슐 변형 시작 - 시작반지름: {startRadius}, 목표크기: {targetCapsuleSize}");
+
+        while (elapsed < transformTime)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / transformTime;
+            
+            // 구형에서 박스(캡슐 내부)로 모양 변경
+            if (progress > 0.3f && shape.shapeType == ParticleSystemShapeType.Sphere)
+            {
+                shape.shapeType = ParticleSystemShapeType.Box;
+                Debug.Log("[CyberTransformationSpace] 안개 모양 변경: 구형 → 박스");
+            }
+            
+            if (shape.shapeType == ParticleSystemShapeType.Box)
+            {
+                // 박스 크기 점진적 변경 (캡슐 크기 반영)
+                Vector3 startBoxSize = Vector3.one * startRadius * 2f;
+                Vector3 currentSize = Vector3.Lerp(startBoxSize, targetCapsuleSize, progress);
+                shape.scale = currentSize;
+                
+                // fogContainer 크기와 회전 실시간 업데이트
+                if (fogContainer != null && enableCapsuleMask)
+                {
+                    // 크기 적용 (파티클 스케일에 맞춤)
+                    Vector3 containerScale = currentSize / 6f; // 6은 기본 박스 크기
+                    fogContainer.transform.localScale = containerScale;
+                    
+                    // 회전 적용
+                    fogContainer.transform.localRotation = Quaternion.Lerp(
+                        Quaternion.identity, 
+                        targetRotation, 
+                        progress
+                    );
+                }
+            }
+            else
+            {
+                // 구형 단계에서 크기만 조절 (캡슐 크기 고려)
+                float currentRadius = Mathf.Lerp(startRadius, startRadius * 1.2f, progress);
+                shape.radius = currentRadius;
+                
+                // fogContainer 구형 크기 실시간 업데이트
+                if (fogContainer != null && enableCapsuleMask)
+                {
+                    Vector3 sphereScale = Vector3.one * currentRadius;
+                    fogContainer.transform.localScale = sphereScale;
+                }
+            }
+            
+            // 색상 및 투명도 점진적 증가
+            Color currentColor = Color.Lerp(startColor, targetColor, progress);
+            main.startColor = currentColor;
+            
+            // 방출량 점진적 증가 (캡슐 크기 반영)
+            emission.rateOverTime = Mathf.Lerp(startEmissionRate, targetEmissionRate, progress);
+
+            // fogContainer 실시간 업데이트
+            if (fogContainer != null && enableCapsuleMask)
+            {
+                // 크기 변형
+                Vector3 currentContainerScale = Vector3.Lerp(startContainerScale, targetContainerScale, progress);
+                fogContainer.transform.localScale = currentContainerScale;
+                
+                // 회전 변형
+                Quaternion currentContainerRotation = Quaternion.Lerp(startContainerRotation, targetContainerRotation, progress);
+                fogContainer.transform.localRotation = currentContainerRotation;
+            }
+            
+            yield return null;
+        }
+
+        // 최종 캡슐 설정 적용
+        ConfigureFogForCapsule();
+        
+        // fogContainer 최종 설정
+        if (fogContainer != null && enableCapsuleMask)
+        {
+            fogContainer.transform.localScale = targetContainerScale;
+            fogContainer.transform.localRotation = targetContainerRotation;
+        }
+        
+        Debug.Log("[CyberTransformationSpace] 안개 캡슐 변형 완료 (마스크 포함)");
+    }
+
+    /// <summary>
+    /// 캡슐 단계 최종 안개 설정 (캡슐 크기 완전 연동)
+    /// </summary>
+    private void ConfigureFogForCapsule()
+    {
+        if (fogParticleSystem == null) return;
+
+        var shape = fogParticleSystem.shape;
+        var main = fogParticleSystem.main;
+        var emission = fogParticleSystem.emission;
+
+        // 캡슐 모양 설정
+        shape.enabled = true;
+        shape.shapeType = ParticleSystemShapeType.Box;
+        
+        // 캡슐 크기에 맞춘 박스 형태
+        Vector3 capsuleSize = CalculateCapsuleInnerSize();
+        shape.scale = capsuleSize;
+        
+        // fogContainer 최종 크기와 회전 설정
+        if (fogContainer != null && enableCapsuleMask)
+        {
+            // 최종 크기 설정 (파티클 스케일과 동기화)
+            Vector3 containerScale = capsuleSize / 6f; // 6은 기본 박스 크기
+            fogContainer.transform.localScale = containerScale;
+            
+            // 캡슐 방향에 맞춘 회전
+            Quaternion rotation = Quaternion.FromToRotation(Vector3.up, currentCapsule.direction);
+            fogContainer.transform.localRotation = rotation;
+            
+            // 위치 재확인
+            fogContainer.transform.localPosition = Vector3.zero;
+        }
+
+        // 최대 투명도 및 방출량 (캡슐 크기 반영)
+        main.startColor = currentCapsule.fogColor;
+        float sizeMultiplier = (currentCapsule.radius * currentCapsule.height) / (3f * 6f); // 기본 크기 대비
+        emission.rateOverTime = 30f * currentCapsule.fogDensity * sizeMultiplier;
+        
+        Debug.Log($"[CyberTransformationSpace] 최종 캡슐 안개 - 파티클크기: {capsuleSize}, 마스크크기: {fogContainer?.transform.localScale}, 방출량: {emission.rateOverTime.constant}");
+    }
+
+    /// <summary>
+    /// 안개를 해체와 함께 축소 (캡슐 크기 및 방향 반영)
+    /// </summary>
+    private IEnumerator ShrinkFogWithDissolve()
+    {
+        if (!fogActive || fogParticleSystem == null) yield break;
+
+        float dissolveTime = voxels.Count * 0.015f + dissolveTimePerVoxel;
+        float elapsed = 0f;
+        
+        var shape = fogParticleSystem.shape;
+        var main = fogParticleSystem.main;
+        var emission = fogParticleSystem.emission;
+        
+        // 시작 값들 (현재 캡슐 상태)
+        Vector3 startScale = shape.scale;
+        Color startColor = main.startColor.color;
+        float startEmissionRate = emission.rateOverTime.constant;
+        
+        // fogContainer 해체용 시작값
+        Vector3 startContainerScale = fogContainer?.transform.localScale ?? Vector3.one;
+        
+        // 캡슐 크기 기반 최소 크기 계산
+        float minScaleFactor = Mathf.Min(currentCapsule.scale.x, currentCapsule.scale.y, currentCapsule.scale.z) * 0.15f;
+        Vector3 minScale = startScale * minScaleFactor;
+        
+        Debug.Log($"[CyberTransformationSpace] 안개 해체 축소 시작 - 시작크기: {startScale}, 최소크기: {minScale}");
+
+        while (elapsed < dissolveTime)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / dissolveTime;
+            
+            // 크기 점진적 축소 (캡슐 크기 반영)
+            Vector3 currentScale = Vector3.Lerp(startScale, minScale, progress);
+            
+            // 캡슐 방향을 고려한 축소 (방향별 다른 축소 속도)
+            Vector3 capsuleDirection = currentCapsule.direction.normalized;
+            
+            // 캡슐 방향축은 더 빠르게 축소 (해체 방향과 일치)
+            float directionAxisScale = Vector3.Dot(capsuleDirection, Vector3.up);
+            float heightReduction = Mathf.Lerp(1f, 0.05f, progress * (1.5f + Mathf.Abs(directionAxisScale)));
+            
+            // 방향에 따른 축소 적용
+            if (Mathf.Abs(capsuleDirection.y) > 0.7f) // 주로 Y축 방향
+            {
+                currentScale.y *= heightReduction;
+            }
+            else if (Mathf.Abs(capsuleDirection.x) > 0.7f) // 주로 X축 방향
+            {
+                currentScale.x *= heightReduction;
+            }
+            else if (Mathf.Abs(capsuleDirection.z) > 0.7f) // 주로 Z축 방향
+            {
+                currentScale.z *= heightReduction;
+            }
+            else // 대각선 방향
+            {
+                // 방향 벡터에 비례해서 축소
+                currentScale.x *= Mathf.Lerp(1f, 0.1f, progress * Mathf.Abs(capsuleDirection.x) * 2f);
+                currentScale.y *= heightReduction;
+                currentScale.z *= Mathf.Lerp(1f, 0.1f, progress * Mathf.Abs(capsuleDirection.z) * 2f);
+            }
+            
+            shape.scale = Vector3.Max(currentScale, Vector3.one * 0.01f); // 최소 크기 보장
+            
+            // 파티클과 fogContainer 모두 축소
+            
+            // fogContainer도 동시에 축소
+            if (fogContainer != null && enableCapsuleMask)
+            {
+                Vector3 currentContainerScale = Vector3.Lerp(startContainerScale, minScale, progress);
+                
+                
+                if (Mathf.Abs(capsuleDirection.y) > 0.7f) // 주로 Y축 방향
+                {
+                    currentContainerScale.y *= heightReduction;
+                }
+                else if (Mathf.Abs(capsuleDirection.x) > 0.7f) // 주로 X축 방향
+                {
+                    currentContainerScale.x *= heightReduction;
+                }
+                else if (Mathf.Abs(capsuleDirection.z) > 0.7f) // 주로 Z축 방향
+                {
+                    currentContainerScale.z *= heightReduction;
+                }
+                else // 대각선 방향
+                {
+                    currentContainerScale.x *= Mathf.Lerp(1f, 0.1f, progress * Mathf.Abs(capsuleDirection.x) * 2f);
+                    currentContainerScale.y *= heightReduction;
+                    currentContainerScale.z *= Mathf.Lerp(1f, 0.1f, progress * Mathf.Abs(capsuleDirection.z) * 2f);
+                }
+                
+                fogContainer.transform.localScale = Vector3.Max(currentContainerScale, Vector3.one * 0.01f);
+            }
+            
+            // 투명도 감소 (캡슐 밀도 고려)
+            float fadeSpeed = 0.7f * (1f + currentCapsule.fogDensity * 0.5f);
+            Color currentColor = Color.Lerp(startColor, Color.clear, progress * fadeSpeed);
+            main.startColor = currentColor;
+            
+            // 방출량 감소 (캡슐 크기 고려한 감소 속도)
+            float emissionFadeSpeed = 1f + (currentCapsule.radius * currentCapsule.height) / 18f; // 큰 캡슐일수록 느리게 감소
+            emission.rateOverTime = Mathf.Lerp(startEmissionRate, 0f, progress * emissionFadeSpeed);
+            
+            yield return null;
+        }
+
+        // 완전 투명하게
+        emission.rateOverTime = 0f;
+        main.startColor = Color.clear;
+        
+        Debug.Log("[CyberTransformationSpace] 안개 해체 축소 완료");
+    }
+
+    /// <summary>
+    /// 안개 효과 페이드아웃 (몬스터 등장과 함께)
+    /// </summary>
+    private IEnumerator FadeOutFog()
+    {
+        if (!fogActive || fogParticleSystem == null) yield break;
+
+        float fadeTime = currentCapsule.fogFadeTime;
+        float elapsed = 0f;
+        
+        var emission = fogParticleSystem.emission;
+        float originalRate = emission.rateOverTime.constant;
+
+        Debug.Log("[CyberTransformationSpace] 안개 페이드아웃 시작");
+
+        while (elapsed < fadeTime)
+        {
+            elapsed += Time.deltaTime;
+            float progress = elapsed / fadeTime;
+
+            // 방출량 감소
+            emission.rateOverTime = Mathf.Lerp(originalRate, 0f, progress);
+            
+            yield return null;
+        }
+
+        // 완전히 중지
+        emission.rateOverTime = 0f;
+        
+        // 남은 파티클이 자연스럽게 사라질 때까지 대기
+        yield return new WaitForSeconds(2f);
+        
+        if (fogParticleSystem != null)
+        {
+            fogParticleSystem.Stop();
+            fogParticleSystem.gameObject.SetActive(false);
+        }
+        
+        fogActive = false;
+        Debug.Log("[CyberTransformationSpace] 안개 효과 완전 종료");
+    }
+
+    /// <summary>
+    /// 안개 즉시 제거
+    /// </summary>
+    private void ClearFog()
+    {
+        // 진행 중인 안개 변형 코루틴 중단
+        if (fogTransformCoroutine != null)
+        {
+            StopCoroutine(fogTransformCoroutine);
+            fogTransformCoroutine = null;
+        }
+
+        if (fogParticleSystem != null)
+        {
+            fogParticleSystem.Stop();
+            fogParticleSystem.gameObject.SetActive(false);
+            
+            // 파티클 시스템이 fogContainer의 자식이라면 개별 삭제하지 않음
+            if (fogParticleSystem.transform.parent != fogContainer?.transform)
+            {
+                Destroy(fogParticleSystem.gameObject);
+            }
+            fogParticleSystem = null;
+        }
+        
+
+
+        // fogContainer는 사용자가 설정한 것이므로 삭제하지 말고 비활성화만
+        if (fogContainer != null)
+        {
+            // 자식 파티클들만 정리
+            foreach (Transform child in fogContainer.transform)
+            {
+                if (child.GetComponent<ParticleSystem>())
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+            
+            // 컨테이너는 비활성화만 (재사용을 위해)
+            fogContainer.SetActive(false);
+            
+            // 위치, 회전, 크기 초기화
+            fogContainer.transform.localPosition = Vector3.zero;
+            fogContainer.transform.localRotation = Quaternion.identity;
+            fogContainer.transform.localScale = Vector3.one;
+        }
+        
+        fogActive = false;
+        Debug.Log("[CyberTransformationSpace] 안개 완전 정리 완료 (컨테이너는 보존)");
+    }
+
+    //-------------------------------------------------------------------
+    // 🌟 퍼블릭 인터페이스 (보스 시스템에서 호출)
+    //-------------------------------------------------------------------
+    
+    /// <summary>
+    /// 몬스터별 캡슐 데이터로 변신 시작
+    /// </summary>
+    public void StartTransformation(MonsterCapsuleData capsuleData, GameObject targetMonster = null)
+    {
+        if (isBusy) return;
+        
+        // 몬스터 교체
+        if (targetMonster != null)
+        {
+            if (monster != null) monster.SetActive(false);
+            monster = targetMonster;
+        }
+        
+        // 새로운 캡슐 데이터로 목표 위치 재계산
+        currentCapsule = capsuleData;
+        PrecomputeTargets(currentCapsule);
+        
+        StartCoroutine(TransformSequence());
     }
     
     /// <summary>
-    /// 🏢 건물 층별 고정 높이 계산 (각 층이 명확하게 구분)
+    /// 기본 설정으로 변신 시작
     /// </summary>
-    private float CalculateBuildingFloorHeight(int floor)
-    {
-        // 1층~15층을 캡슐 높이에 균등 분배
-        float floorHeight = capsuleHeight / buildingFloors;
-        
-        // 바닥(1층)부터 위(15층)까지 배치
-        float bottomY = -capsuleHeight * 0.5f;
-        float currentFloorY = bottomY + (floor - 0.5f) * floorHeight; // 층 중앙에 배치
-        
-        return currentFloorY;
-    }
-    
-    private float CalculateCapsuleHeight(float normalizedHeight)
-    {
-        // 캡슐 중심을 0으로 하는 높이 (-height/2 ~ +height/2)
-        return (normalizedHeight - 0.5f) * capsuleHeight;
-    }
-    
-    private float CalculateCapsuleRadius(float normalizedHeight)
-    {
-        float halfHeight = capsuleHeight * 0.5f;
-        float cylinderHeight = capsuleHeight - (capsuleRadius * 2f);
-        float halfCylinderHeight = cylinderHeight * 0.5f;
-        
-        float currentHeight = CalculateCapsuleHeight(normalizedHeight);
-        
-        // 중간 원통 부분
-        if (Mathf.Abs(currentHeight) <= halfCylinderHeight)
-        {
-            return capsuleRadius;
-        }
-        
-        // 위아래 둥근 캡 부분
-        float capHeight = Mathf.Abs(currentHeight) - halfCylinderHeight;
-        float radius = Mathf.Sqrt(Mathf.Max(0, capsuleRadius * capsuleRadius - capHeight * capHeight));
-        return Mathf.Max(0.1f, radius);
-    }
-    
-    #endregion
-    
-    #region Public API
-    
     public void StartTransformation()
     {
-        if (isTransforming) return;
-        
-        if (currentTransformation != null)
-            StopCoroutine(currentTransformation);
-        
-        currentTransformation = StartCoroutine(TransformationSequence());
+        StartTransformation(defaultCapsule);
     }
     
-    public void StopTransformation()
+    /// <summary>
+    /// 큐브들을 원래 상태로 복귀 (다시 변신할 때 필요)
+    /// </summary>
+    public void ResetToOriginal()
     {
-        if (currentTransformation != null)
+        if (isBusy) return;
+        
+        foreach (var kvp in originPos)
         {
-            StopCoroutine(currentTransformation);
-            currentTransformation = null;
+            kvp.Key.localPosition = kvp.Value;
+            kvp.Key.localScale = Vector3.one;
+            SetAlpha(kvp.Key, 1f);
+            kvp.Key.gameObject.SetActive(true);
         }
+        if (monster) monster.SetActive(false);
         
-        StartCoroutine(RestoreOriginalState());
-    }
-    
-    public bool IsTransforming => isTransforming;
-    public bool IsRevealing => isRevealing;
-    
-    #endregion
-    
-    #region Main Transformation Sequence
-    
-    private IEnumerator TransformationSequence()
-    {
-        isTransforming = true;
+        // 안개 효과 정리
+        ClearFog();
         
-        Debug.Log("[BuildingCapsule] 🏢 15층 건물 캡슐 변신 시작!");
-        
-        // Phase 1: 🏢 15층 건물 캡슐 형성
-        yield return StartCoroutine(FormBuildingCapsule());
-        
-        // Phase 2: 캡슐 유지 (내부 살짝 보이게)
-        yield return StartCoroutine(MaintainCapsule());
-        
-        // Phase 3: 🏢 층별 해체 및 몬스터 등장 (15층→1층)
-        yield return StartCoroutine(DissolveCapsuleAndRevealMonster());
-        
-        // Phase 4: 원래 상태 복원
-        yield return StartCoroutine(RestoreOriginalState());
-        
-        isTransforming = false;
-        Debug.Log("[BuildingCapsule] ✨ 15층 건물 변신 완료!");
-    }
-    
-    #endregion
-    
-    #region Phase 1: Spiral Capsule Formation
-    
-    private IEnumerator FormBuildingCapsule()
-    {
-        Debug.Log("[BuildingCapsule] 🏢 Phase 1: 15층 건물 캡슐 형성");
-        
-        PlaySound(formationSound);
-        
-        float timer = 0f;
-        
-        while (timer < formationTime)
+        // VoxelFloatEffect 재개
+        var floatEffect = GetComponent<VoxelFloatEffect>();
+        if (floatEffect != null)
         {
-            float progress = timer / formationTime;
-            float curvedProgress = spiralCurve.Evaluate(progress);
-            
-            // 🏢 모든 큐브를 층별 나선 위치로 이동
-            foreach (Transform voxel in voxelCubes)
-            {
-                if (voxel != null && spiralPositions.ContainsKey(voxel))
-                {
-                    AnimateVoxelToBuildingPosition(voxel, curvedProgress);
-                }
-            }
-            
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        
-        // 최종 위치 보정
-        foreach (Transform voxel in voxelCubes)
-        {
-            if (voxel != null && spiralPositions.ContainsKey(voxel))
-            {
-                SpiralData data = spiralPositions[voxel];
-                voxel.localPosition = data.position;
-                voxel.localRotation = Quaternion.Euler(0, data.angle, 0);
-            }
-        }
-        
-        Debug.Log("[BuildingCapsule] ✅ 15층 건물 캡슐 형성 완료");
-    }
-    
-    private void AnimateVoxelToBuildingPosition(Transform voxel, float progress)
-    {
-        if (!originalPositions.ContainsKey(voxel) || !spiralPositions.ContainsKey(voxel))
-            return;
-        
-        Vector3 startPos = originalPositions[voxel];
-        SpiralData targetData = spiralPositions[voxel];
-        
-        // 나선형 경로 계산
-        Vector3 spiralPath = CalculateSpiralPath(startPos, targetData, progress);
-        voxel.localPosition = spiralPath;
-        
-        // 회전 애니메이션
-        float targetAngle = targetData.angle * progress;
-        voxel.localRotation = Quaternion.Euler(0, targetAngle, 0);
-        
-        // 스케일 효과
-        float scale = Mathf.Lerp(1f, 0.9f, progress * 0.5f);
-        voxel.localScale = originalScales[voxel] * scale;
-        
-        // 투명도 조절 (내부 가시성)
-        SetVoxelTransparency(voxel, progress, targetData.floor);
-    }
-    
-    private Vector3 CalculateSpiralPath(Vector3 startPos, SpiralData targetData, float progress)
-    {
-        // 기본 선형 보간
-        Vector3 linearPath = Vector3.Lerp(startPos, targetData.position, progress);
-        
-        // 나선형 곡선 추가
-        float spiralOffset = Mathf.Sin(progress * Mathf.PI * spiralTightness) * 0.5f;
-        Vector3 spiralDirection = new Vector3(
-            Mathf.Sin(targetData.angle * Mathf.Deg2Rad),
-            0,
-            Mathf.Cos(targetData.angle * Mathf.Deg2Rad)
-        );
-        
-        return linearPath + spiralDirection * spiralOffset;
-    }
-    
-    private void SetVoxelTransparency(Transform voxel, float formationProgress, int floor)
-    {
-        var renderer = voxel.GetComponent<Renderer>();
-        if (renderer == null) return;
-        
-        // 🏢 층수에 따른 투명도 계산 (낮은 층은 더 투명하게 - 내부 가시성)
-        float floorProgress = (float)(floor - 1) / (buildingFloors - 1); // 0~1 (1층=0, 15층=1)
-        float targetAlpha = Mathf.Lerp(innerVisibility, 1f, floorProgress); // 1층은 투명, 15층은 불투명
-        
-        // 형성 과정에서의 투명도
-        float currentAlpha = Mathf.Lerp(1f, targetAlpha, formationProgress);
-        
-        // 머티리얼 투명도 적용
-        ApplyTransparency(renderer, currentAlpha);
-    }
-    
-    private void ApplyTransparency(Renderer renderer, float alpha)
-    {
-        Material[] materials = renderer.materials;
-        
-        for (int i = 0; i < materials.Length; i++)
-        {
-            Material mat = materials[i];
-            
-            // 투명 모드 설정
-            if (alpha < 1f)
-            {
-                mat.SetFloat("_Mode", 3); // Transparent
-                mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                mat.SetInt("_ZWrite", 0);
-                mat.EnableKeyword("_ALPHABLEND_ON");
-                mat.renderQueue = 3000;
-            }
-            
-            // 색상과 투명도 적용
-            Color color = mat.color;
-            color.a = alpha;
-            mat.color = color;
+            floatEffect.SetPaused(false);
+            Debug.Log("[CyberTransformationSpace] VoxelFloatEffect 재개");
         }
     }
-    
-    #endregion
-    
-    #region Phase 2: Maintain Capsule
-    
-    private IEnumerator MaintainCapsule()
-    {
-        Debug.Log("[BuildingCapsule] 🏢 Phase 2: 15층 건물 캡슐 유지 (내부 살짝 보이게)");
-        
-        float timer = 0f;
-        
-        while (timer < maintainTime)
-        {
-            // 부드러운 회전 효과
-            float rotationSpeed = 30f; // 도/초
-            float currentRotation = (timer / maintainTime) * rotationSpeed * maintainTime;
-            
-            foreach (Transform voxel in voxelCubes)
-            {
-                if (voxel != null && spiralPositions.ContainsKey(voxel))
-                {
-                    SpiralData data = spiralPositions[voxel];
-                    
-                    // 부드러운 회전
-                    float totalAngle = data.angle + currentRotation;
-                    voxel.localRotation = Quaternion.Euler(0, totalAngle, 0);
-                    
-                    // 🏢 층별 살짝 위아래로 움직이는 효과
-                    float wave = Mathf.Sin(Time.time * 2f + data.spiralProgress * Mathf.PI) * 0.05f;
-                    Vector3 pos = data.position;
-                    pos.y += wave;
-                    voxel.localPosition = pos;
-                }
-            }
-            
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        
-        Debug.Log("[BuildingCapsule] ✅ 15층 건물 캡슐 유지 완료");
-    }
-    
-    #endregion
-    
-    #region Phase 3: Dissolution and Monster Reveal
-    
-    private IEnumerator DissolveCapsuleAndRevealMonster()
-    {
-        Debug.Log("[BuildingCapsule] 🎭 Phase 3: 15층 건물 해체 및 몬스터 등장 (15층→1층)");
-        
-        isRevealing = true;
-        PlaySound(dissolutionSound);
-        
-        // 몬스터 등장 준비
-        PrepareMonsterReveal();
-        
-        // 🏢 15층 건물 방식으로 층별 해체 (15층→1층)
-        yield return StartCoroutine(DissolveByFloors());
-        
-        // 몬스터 완전 등장
-        yield return StartCoroutine(CompleteMonsterReveal());
-        
-        isRevealing = false;
-        Debug.Log("[BuildingCapsule] ✅ 몬스터 등장 완료");
-    }
-    
-    private IEnumerator DissolveByFloors()
-    {
-        Debug.Log($"[BuildingCapsule] 🏢 {buildingFloors}층 건물 해체 시작 (15층→1층)");
-        
-        // 15층부터 1층까지 순차적으로 해체
-        for (int floor = buildingFloors; floor >= 1; floor--)
-        {
-            int floorIndex = floor - 1; // 0-based index
-            List<Transform> floorVoxels = floorGroups[floorIndex];
-            
-            if (floorVoxels.Count > 0)
-            {
-                yield return StartCoroutine(DissolveFloor(floor, floorVoxels));
-                yield return new WaitForSeconds(layerDelay);
-                
-                // 몬스터 점진적 등장 진행도 계산 (15층부터 해체되므로)
-                float dissolvedFloors = buildingFloors - floor + 1; // 해체된 층 수
-                float revealProgress = dissolvedFloors / buildingFloors;
-                RevealMonstersGradually(revealProgress);
-            }
-        }
-        
-        Debug.Log("[BuildingCapsule] 🏢 모든 층 해체 완료!");
-    }
-    
 
-    
-    private IEnumerator DissolveFloor(int floor, List<Transform> floorVoxels)
+    //-------------------------------------------------------------------
+    // 🎬 메인 시퀸스 (구형 → 캡슐 → 해체 & 몬스터)
+    //-------------------------------------------------------------------
+
+    public IEnumerator TransformSequence()
     {
-        Debug.Log($"[BuildingCapsule] 🏢 {floor}층 해체 시작 - {floorVoxels.Count}개 큐브");
-        
-        // 해당 층의 모든 큐브를 동시에 해체 시작
-        foreach (Transform voxel in floorVoxels)
+        if (isBusy) yield break;
+        isBusy = true;
+
+        // VoxelFloatEffect와의 충돌 방지 - 일시 정지
+        var floatEffect = GetComponent<VoxelFloatEffect>();
+        if (floatEffect != null)
         {
-            if (voxel != null)
-            {
-                StartCoroutine(DissolveFloorVoxel(voxel, floor));
-            }
+            floatEffect.SetPaused(true);
+            floatEffect.RefreshVoxelList(); // 현재 위치를 기준으로 재설정
+            Debug.Log("[CyberTransformationSpace] VoxelFloatEffect 일시 정지 및 위치 갱신");
         }
+
+        // 1단계: 구형 안개 시작과 함께 구형 형성
+        yield return ActivateFog(); // 구형 안개부터 시작
+        yield return SphereFormation();
         
-        yield return new WaitForSeconds(0.4f); // 층 해체 완료 대기
-        Debug.Log($"[BuildingCapsule] ✅ {floor}층 해체 완료!");
+        // 2단계: 캡슐 변형과 안개 변형 동시 진행
+        yield return StartParallelTransforms();
+        
+        // 3단계: 완성된 캡슐 안개 속에서 잠시 대기 (신비로운 효과)
+        yield return new WaitForSeconds(0.8f);
+        
+        // 4단계: 해체와 안개 축소 동시 진행
+        yield return StartParallelDissolve();
+
+        // 변신 완료! 몬스터만 남김 (VoxelFloatEffect는 재개하지 않음)
+        isBusy = false;
     }
-    
-    private void PrepareMonsterReveal()
+
+    /// <summary>
+    /// 캡슐 변형과 안개 변형을 동시에 실행
+    /// </summary>
+    private IEnumerator StartParallelTransforms()
     {
-        Debug.Log("[SpiralCapsule] 몬스터 등장 준비");
+        Debug.Log("[CyberTransformationSpace] 병렬 변형 시작: 복셀 캡슐화 + 안개 변형");
         
-        foreach (GameObject monster in monstersToReveal)
-        {
-            if (monster != null)
-            {
-                // 몬스터를 투명하게 시작
-                SetMonsterTransparency(monster, 0f);
-                monster.SetActive(true);
-            }
-        }
+        // 코루틴 동시 시작
+        Coroutine voxelTransform = StartCoroutine(MapToCapsule());
+        fogTransformCoroutine = StartCoroutine(TransformFogWithCapsule());
+        
+        // 두 변형이 모두 완료될 때까지 대기
+        yield return voxelTransform;
+        if (fogTransformCoroutine != null)
+            yield return fogTransformCoroutine;
+            
+        Debug.Log("[CyberTransformationSpace] 병렬 변형 완료");
     }
-    
-    private IEnumerator DissolveFloorVoxel(Transform voxel, int floor)
+
+    /// <summary>
+    /// 해체와 안개 축소를 동시에 실행
+    /// </summary>
+    private IEnumerator StartParallelDissolve()
     {
-        float dissolveDuration = 0.8f;
-        float timer = 0f;
+        Debug.Log("[CyberTransformationSpace] 병렬 해체 시작: 복셀 해체 + 안개 축소");
         
-        Vector3 startPos = voxel.localPosition;
-        Vector3 startScale = voxel.localScale;
+        // 코루틴 동시 시작
+        Coroutine voxelDissolve = StartCoroutine(DissolveAndReveal());
+        Coroutine fogShrink = StartCoroutine(ShrinkFogWithDissolve());
         
-        // 🏢 층별 개별 딜레이 (같은 층 내에서도 약간의 시차로 자연스럽게)
-        float randomDelay = Random.Range(0f, layerDelay * 0.3f);
-        yield return new WaitForSeconds(randomDelay);
-        
-        while (timer < dissolveDuration && voxel != null)
+        // 두 해체가 모두 완료될 때까지 대기
+        yield return voxelDissolve;
+        yield return fogShrink;
+            
+        Debug.Log("[CyberTransformationSpace] 병렬 해체 완료");
+    }
+
+    //-------------------------------------------------------------------
+    // Phase 1 : 구형태 만들기
+    //-------------------------------------------------------------------
+
+    private IEnumerator SphereFormation()
+    {
+        float t = 0f;
+        int n = voxels.Count;
+        while (t < sphereFormationTime)
         {
-            float progress = timer / dissolveDuration;
-            
-            // 🏢 층별 떨어지는 효과 (위층일수록 더 높은 곳에서 떨어짐)
-            Vector3 currentPos = startPos;
-            
-            // Y축 아래로 떨어지는 효과 (위층일수록 더 멀리 떨어짐)
-            float fallDistance = -2f - (floor * 0.2f); // 위층일수록 더 멀리
-            currentPos.y += Mathf.Lerp(0f, fallDistance, progress * progress); // 가속도 효과
-            
-            // 약간의 바깥쪽 퍼짐 효과 (층수에 비례)
-            Vector3 outwardDirection = new Vector3(startPos.x, 0, startPos.z).normalized;
-            float spreadStrength = 0.3f + (floor * 0.05f); // 위층일수록 더 퍼짐
-            currentPos += outwardDirection * (progress * spreadStrength);
-            
-            // 🏢 층별 회전 효과 (위층일수록 더 빠르게 회전)
-            float rotationMultiplier = Mathf.Lerp(1f, 2f + floor * 0.1f, progress);
-            voxel.Rotate(Vector3.up * Time.deltaTime * 180f * rotationMultiplier);
-            voxel.Rotate(Vector3.right * Time.deltaTime * 90f * rotationMultiplier);
-            
-            voxel.localPosition = currentPos;
-            
-            // 스케일 축소 (떨어지면서 작아짐)
-            float scale = Mathf.Lerp(1f, 0.1f, progress);
-            voxel.localScale = startScale * scale;
-            
-            // 투명도 감소 (서서히 사라짐)
-            var renderer = voxel.GetComponent<Renderer>();
-            if (renderer != null)
+            float p = t / sphereFormationTime;
+            for (int i = 0; i < n; i++)
             {
-                float alpha = Mathf.Lerp(1f, 0f, progress * progress); // 빠르게 투명해짐
-                ApplyTransparency(renderer, alpha);
+                voxels[i].localPosition = Vector3.Lerp(originPos[voxels[i]], spherePos[i], p);
             }
-            
-            timer += Time.deltaTime;
+            t += Time.deltaTime;
             yield return null;
         }
-        
-        // 큐브 비활성화
-        if (voxel != null)
-        {
-            voxel.gameObject.SetActive(false);
-        }
+        for (int i = 0; i < n; i++) voxels[i].localPosition = spherePos[i];
     }
-    
-    private void RevealMonstersGradually(float revealProgress)
+
+    //-------------------------------------------------------------------
+    // Phase 2 : 구 → 캡슐 맵핑
+    //-------------------------------------------------------------------
+
+    private IEnumerator MapToCapsule()
     {
-        foreach (GameObject monster in monstersToReveal)
+        float t = 0f;
+        int n = voxels.Count;
+        float transformTime = currentCapsule.transformTime;
+        
+        while (t < transformTime)
         {
-            if (monster != null)
+            float p = t / transformTime;
+            for (int i = 0; i < n; i++)
             {
-                SetMonsterTransparency(monster, revealProgress);
-                
-                // 등장 효과
-                if (revealProgress > 0.5f && revealEffectPrefab != null)
-                {
-                    SpawnRevealEffect(monster.transform.position);
-                }
+                voxels[i].localPosition = Vector3.Lerp(spherePos[i], capsulePos[i], p);
+                Vector3 normal = capsulePos[i].normalized;
+                if (normal.sqrMagnitude > 0.001f)
+                    voxels[i].rotation = Quaternion.LookRotation(normal);
             }
-        }
-    }
-    
-    private IEnumerator CompleteMonsterReveal()
-    {
-        Debug.Log("[SpiralCapsule] 몬스터 완전 등장");
-        
-        PlaySound(revealSound);
-        
-        foreach (GameObject monster in monstersToReveal)
-        {
-            if (monster != null)
-            {
-                yield return StartCoroutine(FinalMonsterReveal(monster));
-                yield return new WaitForSeconds(monsterRevealDelay);
-            }
-        }
-    }
-    
-    private IEnumerator FinalMonsterReveal(GameObject monster)
-    {
-        float revealDuration = 1f;
-        float timer = 0f;
-        
-        Vector3 originalPos = monster.transform.position;
-        Vector3 startPos = originalPos + Vector3.up * 0.5f;
-        monster.transform.position = startPos;
-        
-        while (timer < revealDuration)
-        {
-            float progress = timer / revealDuration;
-            
-            // 위에서 아래로 등장
-            monster.transform.position = Vector3.Lerp(startPos, originalPos, progress);
-            
-            // 투명도 증가
-            SetMonsterTransparency(monster, progress);
-            
-            // 스케일 효과
-            float scale = Mathf.Lerp(0.8f, 1f, progress);
-            monster.transform.localScale = Vector3.one * scale;
-            
-            timer += Time.deltaTime;
+            t += Time.deltaTime;
             yield return null;
         }
-        
-        // 최종 설정
-        monster.transform.position = originalPos;
-        monster.transform.localScale = Vector3.one;
-        SetMonsterTransparency(monster, 1f);
-        
-        // 등장 효과
-        SpawnRevealEffect(monster.transform.position);
+        for (int i = 0; i < n; i++) voxels[i].localPosition = capsulePos[i];
     }
-    
-    private void SetMonsterTransparency(GameObject monster, float alpha)
+
+    //-------------------------------------------------------------------
+    // Phase 3 : Y축 상단부터 해체 + 몬스터 등장
+    //-------------------------------------------------------------------
+
+    private IEnumerator DissolveAndReveal()
     {
-        Renderer[] renderers = monster.GetComponentsInChildren<Renderer>();
-        foreach (Renderer renderer in renderers)
+        // 캡슐 방향을 고려한 정렬 (캡슐 상단 → 하단)
+        Vector3 capsuleDirection = currentCapsule.direction.normalized;
+        voxels.Sort((a, b) => {
+            float dotA = Vector3.Dot(a.localPosition, capsuleDirection);
+            float dotB = Vector3.Dot(b.localPosition, capsuleDirection);
+            return dotB.CompareTo(dotA); // 캡슐 방향 기준 상단부터
+        });
+        int n = voxels.Count;
+
+        // 몬스터 출현 시점 (상단 30% 해체 후)
+        int revealIndex = Mathf.FloorToInt(n * 0.3f);
+
+        for (int i = 0; i < n; i++)
         {
-            ApplyTransparency(renderer, alpha);
+            StartCoroutine(DissolveVoxel(voxels[i]));
+            if (i == revealIndex && monster != null)
+                StartCoroutine(RevealMonster());
+            yield return new WaitForSeconds(0.015f); // 연속 해체 간격
         }
+
+        // 모든 해체 끝날 때까지 대기
+        yield return new WaitForSeconds(dissolveTimePerVoxel + 0.2f);
     }
-    
-    private void SpawnRevealEffect(Vector3 position)
+
+    private IEnumerator DissolveVoxel(Transform v)
     {
-        if (revealEffectPrefab != null)
-        {
-            var effect = Instantiate(revealEffectPrefab, position, Quaternion.identity);
-            Destroy(effect.gameObject, 3f);
-        }
-    }
-    
-    #endregion
-    
-    #region Phase 4: Restore Original State
-    
-    private IEnumerator RestoreOriginalState()
-    {
-        Debug.Log("[BuildingCapsule] 🔄 원래 상태 복원");
+        float t = 0f;
+        Vector3 start = v.localPosition;
         
-        float restoreDuration = 1f;
-        float timer = 0f;
+        // 캡슐 방향의 반대로 해체 (더 자연스러운 효과)
+        Vector3 capsuleDirection = currentCapsule.direction.normalized;
+        Vector3 dissolveDirection = -capsuleDirection * 2f; // 캡슐 방향 반대로
+        Vector3 end = start + dissolveDirection + Random.insideUnitSphere * 0.3f;
         
-        // 비활성화된 큐브들 다시 활성화
-        foreach (Transform voxel in voxelCubes)
+        while (t < dissolveTimePerVoxel)
         {
-            if (voxel != null && !voxel.gameObject.activeInHierarchy)
-            {
-                voxel.gameObject.SetActive(true);
-            }
-        }
-        
-        while (timer < restoreDuration)
-        {
-            float progress = timer / restoreDuration;
-            
-            foreach (Transform voxel in voxelCubes)
-            {
-                if (voxel != null)
-                {
-                    // 원래 위치로 복원
-                    if (originalPositions.ContainsKey(voxel))
-                    {
-                        Vector3 currentPos = voxel.localPosition;
-                        Vector3 targetPos = originalPositions[voxel];
-                        voxel.localPosition = Vector3.Lerp(currentPos, targetPos, progress);
-                    }
-                    
-                    // 원래 회전으로 복원
-                    if (originalRotations.ContainsKey(voxel))
-                    {
-                        Vector3 targetRotation = originalRotations[voxel];
-                        voxel.localEulerAngles = Vector3.Lerp(voxel.localEulerAngles, targetRotation, progress);
-                    }
-                    
-                    // 원래 스케일로 복원
-                    if (originalScales.ContainsKey(voxel))
-                    {
-                        Vector3 targetScale = originalScales[voxel];
-                        voxel.localScale = Vector3.Lerp(voxel.localScale, targetScale, progress);
-                    }
-                    
-                    // 투명도 복원
-                    var renderer = voxel.GetComponent<Renderer>();
-                    if (renderer != null)
-                    {
-                        ApplyTransparency(renderer, 1f);
-                    }
-                }
-            }
-            
-            timer += Time.deltaTime;
+            float p = t / dissolveTimePerVoxel;
+            v.localPosition = Vector3.Lerp(start, end, p);
+            v.localScale = Vector3.one * (1 - p);
+            SetAlpha(v, dissolveAlpha.Evaluate(1 - p));
+            t += Time.deltaTime;
             yield return null;
         }
-        
-        Debug.Log("[BuildingCapsule] ✅ 원래 상태 복원 완료");
+        v.gameObject.SetActive(false);
     }
-    
-    #endregion
-    
-    #region Monster Management
-    
-    private void HideAllMonsters()
+
+    private IEnumerator RevealMonster()
     {
-        foreach (GameObject monster in monstersToReveal)
+        // 안개는 ShrinkFogWithDissolve()에서 이미 처리되므로 별도 페이드아웃 불필요
+
+        monster.SetActive(true);
+        float t = 0f;
+        Vector3 oriScale = monster.transform.localScale;
+        monster.transform.localScale = Vector3.zero;
+        Vector3 startPos = monster.transform.position + Vector3.up * 1f;
+        Vector3 oriPos = monster.transform.position;
+
+        while (t < monsterRevealTime)
         {
-            if (monster != null)
-            {
-                monster.SetActive(false);
-            }
+            float p = t / monsterRevealTime;
+            monster.transform.localScale = Vector3.Lerp(Vector3.zero, oriScale, p);
+            monster.transform.position = Vector3.Lerp(startPos, oriPos, p);
+            t += Time.deltaTime;
+            yield return null;
         }
+        monster.transform.localScale = oriScale;
+        monster.transform.position = oriPos;
+        
+        Debug.Log("[CyberTransformationSpace] 몬스터 등장 완료");
     }
-    
-    #endregion
-    
-    #region Audio
-    
-    private void PlaySound(AudioClip clip)
+
+    //-------------------------------------------------------------------
+    // 🎯 몬스터별 헬퍼 메서드 (보스 시스템에서 쉽게 사용)
+    //-------------------------------------------------------------------
+
+    /// <summary>
+    /// Worm 몬스터용 변신 시작 - 생물학적 위험 테마
+    /// </summary>
+    public void StartWormTransformation(GameObject wormMonster = null)
     {
-        if (audioSource != null && clip != null)
+        var wormData = new MonsterCapsuleData
         {
-            audioSource.PlayOneShot(clip);
-        }
-    }
-    
-    #endregion
-    
-    #region Debug & Testing
-    
-    private void HandleDebugInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Debug.Log("[Debug] 🏢 15층 건물 캡슐 변신 시작! (15층→1층 해체)");
-            StartTransformation();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Debug.Log("[Debug] ⏹️ 변신 중단!");
-            StopTransformation();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("[Debug] 🔄 15층 건물 구조 재계산!");
-            CalculateSpiralFormation();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Debug.Log("[Debug] 👁️ 몬스터 숨기기/보이기 토글!");
-            ToggleMonsterVisibility();
-        }
-        
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            Debug.Log("[Debug] 🏢 15층 건물 구조 미리보기!");
-            PreviewBuildingFloors();
-        }
-    }
-    
-    private void PreviewBuildingFloors()
-    {
-        if (!Application.isPlaying) return;
-        
-        Debug.Log($"=== 🏢 {buildingFloors}층 건물 구조 미리보기 ===");
-        
-        // 15층부터 1층까지 해체 순서로 출력
-        for (int floor = buildingFloors; floor >= 1; floor--)
-        {
-            int floorIndex = floor - 1; // 0-based
-            int cubeCount = floorGroups[floorIndex].Count;
-            float floorHeight = CalculateBuildingFloorHeight(floor);
+            radius = 3.2f,
+            height = 5.5f,
+            scale = new Vector3(1.1f, 0.9f, 1.1f),
+            transformTime = 1.8f,
             
-            Debug.Log($"해체 순서 {buildingFloors - floor + 1}: {floor}층 (높이 {floorHeight:F2}) - {cubeCount}개 큐브");
-        }
-        
-        Debug.Log($"💡 총 {buildingFloors}개 층으로 구성된 캡슐 건물입니다!");
-    }
-    
-    private void ToggleMonsterVisibility()
-    {
-        foreach (GameObject monster in monstersToReveal)
-        {
-            if (monster != null)
-            {
-                monster.SetActive(!monster.activeInHierarchy);
-            }
-        }
-    }
-    
-    #endregion
-    
-    #region Context Menu Tests
-    
-    [ContextMenu("🏢 Test Building Capsule (15F→1F Dissolution)")]
-    private void TestBuildingCapsuleTransformation()
-    {
-        if (!Application.isPlaying)
-        {
-            Debug.LogWarning("플레이 모드에서만 테스트 가능합니다!");
-            return;
-        }
-        
-        Debug.Log("[ContextMenu] 🏢 15층 건물 캡슐 변신 시작 (15층→1층 층별 해체)");
-        StartTransformation();
-    }
-    
-    [ContextMenu("⏹️ Stop All")]
-    private void TestStopAll()
-    {
-        if (!Application.isPlaying)
-        {
-            Debug.LogWarning("플레이 모드에서만 테스트 가능합니다!");
-            return;
-        }
-        
-        StopTransformation();
-    }
-    
-    [ContextMenu("🔄 Recalculate Spiral")]
-    private void TestRecalculateSpiral()
-    {
-        if (!Application.isPlaying)
-        {
-            Debug.LogWarning("플레이 모드에서만 테스트 가능합니다!");
-            return;
-        }
-        
-        InitializeSystem();
-    }
-    
-    [ContextMenu("📊 Show Statistics")]
-    private void ShowStatistics()
-    {
-        Debug.Log($"=== 🏢 15층 건물 캡슐 변신 시스템 통계 ===");
-        Debug.Log($"총 큐브 수: {voxelCubes.Count}");
-        Debug.Log($"건물 층수: {buildingFloors}층");
-        Debug.Log($"캡슐 크기: 반지름 {capsuleRadius}, 높이 {capsuleHeight}");
-        Debug.Log($"등장할 몬스터: {monstersToReveal.Length}개");
-        Debug.Log($"현재 상태: 변신 중 = {isTransforming}, 등장 중 = {isRevealing}");
-        Debug.Log($"해체 방식: 🏢 {buildingFloors}층→1층 순서대로 층별 해체");
-        
-        // 층별 분포 정보
-        if (Application.isPlaying && voxelCubes.Count > 0)
-        {
-            Debug.Log("\n--- 🏢 건물 층별 구조 ---");
-            for (int floor = buildingFloors; floor >= 1; floor--)
-            {
-                int floorIndex = floor - 1; // 0-based
-                int cubeCount = floorGroups[floorIndex].Count;
-                float floorHeight = CalculateBuildingFloorHeight(floor);
-                
-                Debug.Log($"{floor}층: {cubeCount}개 큐브 (높이: {floorHeight:F2})");
-            }
+            // 대각선 방향 (뱀처럼 누워있는 형태)
+            direction = new Vector3(0.3f, 0.7f, 0f).normalized,
+            forwardAxis = Vector3.forward,
             
-            Debug.Log("\n--- 🎬 해체 순서 ---");
-            for (int floor = buildingFloors; floor >= 1; floor--)
-            {
-                int dissolveOrder = buildingFloors - floor + 1;
-                int floorIndex = floor - 1;
-                int cubeCount = floorGroups[floorIndex].Count;
-                
-                Debug.Log($"해체 {dissolveOrder}단계: {floor}층 - {cubeCount}개 큐브");
-            }
-            
-            Debug.Log($"\n💡 총 {buildingFloors}개 층으로 구성된 명확한 층별 해체 시스템입니다!");
-        }
+            // 독성 녹색 안개
+            enableFogEffect = true,
+            fogColor = new Color(0.2f, 0.8f, 0.3f, 0.5f),
+            fogDensity = 0.4f,
+            fogFadeTime = 0.8f
+        };
+        
+        StartTransformation(wormData, wormMonster);
+        Debug.Log("[CyberTransformationSpace] Worm 변신 시작 - 독성 녹색 안개");
     }
-    
-    #endregion
-    
-    #region Gizmos
-    
-    void OnDrawGizmosSelected()
+
+    /// <summary>
+    /// Trojan 몬스터용 변신 시작 - 시스템 침입 테마
+    /// </summary>
+    public void StartTrojanTransformation(GameObject trojanMonster = null)
     {
-        if (!showGizmos) return;
-        
-        // 캡슐 외곽선 그리기
-        Gizmos.color = capsuleColor;
-        Gizmos.DrawWireSphere(transform.position, capsuleRadius);
-        
-        // 캡슐 높이 표시
-        Vector3 topPoint = transform.position + Vector3.up * (capsuleHeight * 0.5f);
-        Vector3 bottomPoint = transform.position + Vector3.down * (capsuleHeight * 0.5f);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(topPoint, bottomPoint);
-        
-        // 🏢 나선 위치들 표시 (층별 색상 구분)
-        if (Application.isPlaying && spiralPositions.Count > 0)
+        var trojanData = new MonsterCapsuleData
         {
-            foreach (var kvp in spiralPositions)
-            {
-                if (kvp.Key != null)
-                {
-                    Vector3 worldPos = transform.TransformPoint(kvp.Value.position);
-                    
-                    // 🏢 층수에 따른 색상 (15층=빨강/먼저 해체, 1층=파랑/나중에 해체)
-                    float floorProgress = (float)(kvp.Value.floor - 1) / (buildingFloors - 1); // 0~1
-                    
-                    // 해체 순서에 따른 색상 (빨강=먼저 사라짐, 파랑=나중에 사라짐)
-                    Gizmos.color = Color.Lerp(Color.blue, Color.red, floorProgress);
-                    Gizmos.DrawWireSphere(worldPos, 0.12f);
-                    
-                    // 🏢 층별 해체 순서 표시 (작은 큐브로)
-                    Gizmos.color = Color.Lerp(Color.cyan, Color.magenta, floorProgress);
-                    Gizmos.DrawCube(worldPos, Vector3.one * 0.08f);
-                    
-                    // 원래 위치에서 나선 위치로의 연결선
-                    if (originalPositions.ContainsKey(kvp.Key))
-                    {
-                        Vector3 originalWorldPos = transform.TransformPoint(originalPositions[kvp.Key]);
-                        Gizmos.color = new Color(1, 1, 1, 0.2f);
-                        Gizmos.DrawLine(originalWorldPos, worldPos);
-                    }
-                }
-            }
+            radius = 3.0f,
+            height = 6.5f,
+            scale = Vector3.one,
+            transformTime = 1.5f,
             
-            // 🏢 층별 구분선 그리기 (각 층을 명확히 표시)
-            for (int floor = 1; floor <= buildingFloors; floor++)
-            {
-                float floorHeight = CalculateBuildingFloorHeight(floor);
-                Vector3 floorCenter = transform.position + Vector3.up * floorHeight;
-                
-                // 층별 구분 원 그리기 (해체 순서 색상으로)
-                float floorProgress = (float)(floor - 1) / (buildingFloors - 1);
-                Gizmos.color = Color.Lerp(new Color(0, 0, 1, 0.3f), new Color(1, 0, 0, 0.3f), floorProgress);
-                DrawGizmosCircle(floorCenter, capsuleRadius, Vector3.up);
-                
-                // 층수 표시
-                Gizmos.color = Color.white;
-                //Gizmos.DrawSphere(floorCenter, 0.1f); // 층 중심점
-            }
-        }
+            // 수직 방향 (전통적인 직립 형태)
+            direction = Vector3.up,
+            forwardAxis = Vector3.forward,
+            
+            // 경고 노란색 안개
+            enableFogEffect = true,
+            fogColor = new Color(1.0f, 0.8f, 0.2f, 0.5f),
+            fogDensity = 0.3f,
+            fogFadeTime = 1.2f
+        };
         
-        // 몬스터 위치 표시
-        Gizmos.color = Color.green;
-        foreach (GameObject monster in monstersToReveal)
-        {
-            if (monster != null)
-            {
-                Gizmos.DrawWireCube(monster.transform.position, Vector3.one * 0.5f);
-                
-                // 몬스터 등장 방향 표시 (위에서 아래로)
-                Vector3 startPos = monster.transform.position + Vector3.up * 0.5f;
-                Gizmos.color = new Color(0, 1, 0, 0.6f);
-                Gizmos.DrawLine(startPos, monster.transform.position);
-                Gizmos.DrawSphere(startPos, 0.1f);
-            }
-        }
+        StartTransformation(trojanData, trojanMonster);
+        Debug.Log("[CyberTransformationSpace] Trojan 변신 시작 - 경고 노란색 안개");
     }
-    
-    // Gizmos용 원 그리기 헬퍼 함수
-    private void DrawGizmosCircle(Vector3 center, float radius, Vector3 normal)
+
+    /// <summary>
+    /// Ransomware 몬스터용 변신 시작 - 데이터 암호화 테마
+    /// </summary>
+    public void StartRansomwareTransformation(GameObject ransomwareMonster = null)
     {
-        Vector3 forward = Vector3.Slerp(Vector3.forward, -normal, 0.5f);
-        Vector3 right = Vector3.Cross(normal, forward).normalized * radius;
-        forward = Vector3.Cross(right, normal).normalized * radius;
-        
-        Matrix4x4 matrix = new Matrix4x4();
-        matrix[0] = right.x; matrix[1] = right.y; matrix[2] = right.z;
-        matrix[4] = normal.x; matrix[5] = normal.y; matrix[6] = normal.z;
-        matrix[8] = forward.x; matrix[9] = forward.y; matrix[10] = forward.z;
-        matrix[12] = center.x; matrix[13] = center.y; matrix[14] = center.z;
-        matrix[15] = 1;
-        
-        Vector3 lastPoint = center + right;
-        for (int i = 1; i <= 32; i++)
+        var ransomwareData = new MonsterCapsuleData
         {
-            float angle = (float)i / 32f * 2f * Mathf.PI;
-            Vector3 newPoint = center + right * Mathf.Cos(angle) + forward * Mathf.Sin(angle);
-            Gizmos.DrawLine(lastPoint, newPoint);
-            lastPoint = newPoint;
+            radius = 3.5f,
+            height = 6.0f,
+            scale = new Vector3(1.2f, 1.0f, 1.2f),
+            transformTime = 2.0f,
+            
+            // 기울어진 방향 (불안정하고 위협적인 형태)
+            direction = new Vector3(-0.4f, 0.8f, 0.2f).normalized,
+            forwardAxis = new Vector3(0.1f, 0f, 1f).normalized,
+            
+            // 위험 빨간색 안개 (높은 밀도)
+            enableFogEffect = true,
+            fogColor = new Color(0.9f, 0.2f, 0.3f, 0.6f),
+            fogDensity = 0.7f,
+            fogFadeTime = 1.8f
+        };
+        
+        StartTransformation(ransomwareData, ransomwareMonster);
+        Debug.Log("[CyberTransformationSpace] Ransomware 변신 시작 - 위험 빨간색 안개");
+    }
+
+    /// <summary>
+    /// 커스텀 사이버 안개 설정으로 변신 시작
+    /// </summary>
+    public void StartCustomCyberTransformation(
+        GameObject targetMonster, 
+        Color cyberColor, 
+        Vector3 capsuleDirection, 
+        float fogDensity = 0.5f,
+        float capsuleRadius = 3f, 
+        float capsuleHeight = 6f)
+    {
+        var customData = new MonsterCapsuleData
+        {
+            radius = capsuleRadius,
+            height = capsuleHeight,
+            scale = Vector3.one,
+            transformTime = 1.5f,
+            
+            direction = capsuleDirection.normalized,
+            forwardAxis = Vector3.forward,
+            
+            enableFogEffect = true,
+            fogColor = cyberColor,
+            fogDensity = fogDensity,
+            fogFadeTime = 1.2f
+        };
+        
+        StartTransformation(customData, targetMonster);
+        Debug.Log($"[CyberTransformationSpace] 커스텀 변신 시작 - 색상: {cyberColor}, 방향: {capsuleDirection}");
+    }
+
+    //-------------------------------------------------------------------
+    // 🔧 알파 유틸리티
+    //-------------------------------------------------------------------
+
+    private static void SetAlpha(Transform tf, float a)
+    {
+        var r = tf.GetComponent<Renderer>();
+        if (!r) return;
+        foreach (var m in r.materials)
+        {
+            if (a < 1f)
+            {
+                m.SetFloat("_Mode", 3);
+                m.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+                m.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+                m.SetInt("_ZWrite", 0);
+                m.EnableKeyword("_ALPHABLEND_ON");
+                m.renderQueue = 3000;
+            }
+            else m.renderQueue = -1;
         }
     }
-    
-    #endregion
 }

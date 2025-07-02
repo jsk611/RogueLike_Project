@@ -35,7 +35,6 @@ public class UnknownVirusBoss : BossBase
     #region Effect System
 
     [SerializeField] VoxelFloatEffect vFE;
-    [SerializeField] CubeTransformationDirector cTD;
 
     #endregion
 
@@ -109,7 +108,6 @@ public class UnknownVirusBoss : BossBase
     public GameObject Ransomware => ransomwareFormObject;
 
     public VoxelFloatEffect FLOATINGEFFECT => vFE;
-    public CubeTransformationDirector TRANSFORMDIRECTOR => cTD;
 
     public StateMachine<UnknownVirusBoss> Fsm => fsm;  // 기존 fsm 필드를 public으로 노출
 
@@ -160,7 +158,6 @@ public class UnknownVirusBoss : BossBase
     private void InitiailzeEffects()
     {
         vFE = GetComponentInChildren<VoxelFloatEffect>();
-        cTD = GetComponentInChildren<CubeTransformationDirector>();
     }
     private void InitializeComponents()
     {

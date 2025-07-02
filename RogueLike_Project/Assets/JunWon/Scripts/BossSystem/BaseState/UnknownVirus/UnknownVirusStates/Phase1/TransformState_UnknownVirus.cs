@@ -112,9 +112,33 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
     {
         currentPhase = TransformPhase.Dissolution;
         
-        // 더 드라마틱한 패턴으로 변경 - 부드러운 변신 사용
-        owner.TRANSFORMDIRECTOR.SetTransformPattern(CubeTransformationDirector.TransformPattern.Implosion);
-        owner.TRANSFORMDIRECTOR.StartCubeTransformation();
+        // 새로운 CyberTransformationSpace 시스템 사용
+        var cyberSpace = owner.GetComponent<CyberTransformationSpace>();
+        if (cyberSpace != null)
+        {
+            // 몬스터별 캡슐 데이터 생성
+            MonsterCapsuleData customCapsule = new MonsterCapsuleData()
+            {
+                radius = GetFormRadius(targetForm),
+                height = GetFormHeight(targetForm),
+                scale = GetFormScale(targetForm),
+                transformTime = 1.5f,
+                direction = GetFormDirection(targetForm),
+                forwardAxis = GetFormForwardAxis(targetForm),
+                
+                // 안개 효과 설정
+                enableFogEffect = true,
+                fogColor = GetFormFogColor(targetForm),
+                fogDensity = GetFormFogDensity(targetForm),
+                fogFadeTime = GetFormFogFadeTime(targetForm)
+            };
+            
+            cyberSpace.StartTransformation(customCapsule, GetFormMonster(targetForm));
+        }
+        else
+        {
+            // 기존 시스템 백업용
+        }
         
         // 라이트 색상 변화 (준비 -> 해체)
         transformLight.DOColor(Color.red, 0.5f);
@@ -250,7 +274,7 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
         
         // Transform State에서 나갈 때 항상 Basic으로 돌아감
         owner.ApplyForm(BossForm.Basic);
-        owner.TRANSFORMDIRECTOR.RevertToOriginal();
+        // owner.TRANSFORMDIRECTOR.RevertToOriginal(); // CyberTransformationSpace 사용시 비활성화
         
         // 라이트 완전히 끄기
         transformLight.DOIntensity(0f, 0.5f);
@@ -277,4 +301,154 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
         return availableForms[UnityEngine.Random.Range(0, availableForms.Count)];
     }
+    
+    // 몬스터별 캡슐 설정 헬퍼 메소드들
+    private float GetFormRadius(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: return 4f;      // 웜은 좀 더 슬림
+            case BossForm.Trojan: return 5f;    // 트로이안은 중간 크기
+            case BossForm.Ransomware: return 6f; // 랜섬웨어는 크고 위협적
+            default: return 3f;
+        }
+    }
+    
+    private float GetFormHeight(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: return 10f;     // 웜은 길고 높게
+            case BossForm.Trojan: return 7f;    // 트로이안은 균형잡힌 높이
+            case BossForm.Ransomware: return 8f; // 랜섬웨어는 묵직하게
+            default: return 6f;
+        }
+    }
+    
+    private Vector3 GetFormScale(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: return new Vector3(0.8f, 1.5f, 0.8f);      // 세로로 길게
+            case BossForm.Trojan: return new Vector3(1.2f, 1f, 1.2f);      // 옆으로 넓게
+            case BossForm.Ransomware: return new Vector3(1.3f, 0.9f, 1.3f); // 크고 낮게
+            default: return Vector3.one;
+        }
+    }
+    
+    private GameObject GetFormMonster(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: return owner.Worm;
+            case BossForm.Trojan: return owner.Troy;
+            case BossForm.Ransomware: return owner.Ransomware;
+            default: return null;
+        }
+    }
+    
+    private Vector3 GetFormDirection(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: 
+                // 웜: 수평으로 길게 누워있는 느낌 (뱀처럼 유연함)
+                return new Vector3(0.3f, 0.7f, 0f).normalized;
+                
+            case BossForm.Trojan: 
+                // 트로이안: 전통적이고 견고한 수직 방향
+                return Vector3.up;
+                
+            case BossForm.Ransomware: 
+                // 랜섬웨어: 불안정하고 위협적인 비스듬한 각도
+                return new Vector3(-0.4f, 0.8f, 0.2f).normalized;
+                
+            default: 
+                return Vector3.up;
+        }
+    }
+    
+    private Vector3 GetFormForwardAxis(BossForm form)
+    {
+        switch (form)
+        {
+            case BossForm.Worm: 
+                // 웜: 앞으로 기어가는 방향
+                return Vector3.forward;
+                
+            case BossForm.Trojan: 
+                // 트로이안: 정면을 향한 안정적인 방향
+                return Vector3.forward;
+                
+            case BossForm.Ransomware: 
+                // 랜섬웨어: 비틀어진 불안정한 축
+                return new Vector3(0.2f, 0f, 0.8f).normalized;
+                
+            default: 
+                                 return Vector3.forward;
+         }
+     }
+     
+     private Color GetFormFogColor(BossForm form)
+     {
+         switch (form)
+         {
+             case BossForm.Worm: 
+                 // 웜: 독성 녹색 안개 (생물학적 위험)
+                 return new Color(0.2f, 0.8f, 0.3f, 0.6f);
+                 
+             case BossForm.Trojan: 
+                 // 트로이안: 경고 노란색 안개 (시스템 침입)
+                 return new Color(1f, 0.8f, 0.2f, 0.6f);
+                 
+             case BossForm.Ransomware: 
+                 // 랜섬웨어: 위협적인 빨간색 안개 (데이터 암호화)
+                 return new Color(0.9f, 0.2f, 0.3f, 0.7f);
+                 
+             default: 
+                 return new Color(0f, 0.7f, 1f, 0.5f); // 기본 사이안
+         }
+     }
+     
+     private float GetFormFogDensity(BossForm form)
+     {
+         switch (form)
+         {
+             case BossForm.Worm: 
+                 // 웜: 중간 밀도 (은밀함)
+                 return 0.4f;
+                 
+             case BossForm.Trojan: 
+                 // 트로이안: 낮은 밀도 (정직한 침입?)
+                 return 0.3f;
+                 
+             case BossForm.Ransomware: 
+                 // 랜섬웨어: 높은 밀도 (완전한 은폐)
+                 return 0.7f;
+                 
+             default: 
+                 return 0.5f;
+         }
+     }
+     
+     private float GetFormFogFadeTime(BossForm form)
+     {
+         switch (form)
+         {
+             case BossForm.Worm: 
+                 // 웜: 빠른 페이드 (재빠른 등장)
+                 return 0.8f;
+                 
+             case BossForm.Trojan: 
+                 // 트로이안: 중간 페이드 (안정적 등장)
+                 return 1.2f;
+                 
+             case BossForm.Ransomware: 
+                 // 랜섬웨어: 느린 페이드 (극적인 등장)
+                 return 1.8f;
+                 
+             default: 
+                 return 1.2f;
+         }
+     }
 }
