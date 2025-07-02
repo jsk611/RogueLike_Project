@@ -13,10 +13,13 @@ public class UpgradeTrigger : MonoBehaviour
     UpgradeManager_New UpgradeManager;
     int canUpgrade;
     bool isUpgrading;
+    Color originColor;
     // Start is called before the first frame update
     void Start()
     {
         UpgradeManager = ServiceLocator.Current.Get<IGameModeService>().GetUpgradeManager();
+        originColor = GetComponent<MeshRenderer>().material.color;
+     
     }
 
     private void OnEnable()
@@ -24,7 +27,7 @@ public class UpgradeTrigger : MonoBehaviour
         canUpgrade = 2;
         isUpgrading = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
-        GetComponent<MeshRenderer>().material.color += new Color(0, 0, 0, 0.125f);
+        GetComponent<MeshRenderer>().material.color = originColor;
     }
 
     private void OnTriggerStay(Collider other)
@@ -34,7 +37,7 @@ public class UpgradeTrigger : MonoBehaviour
             helpUI.text = uiText + canUpgrade +" left";
             helpUI.enabled = true;
             helpUI.color = Color.cyan;
-            if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F))
+            if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F) && !UpgradeManager.Upgrading)
             {
                 StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
                 canUpgrade= 0;

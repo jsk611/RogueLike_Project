@@ -5,6 +5,9 @@ using System.IO;
 using UnityEngine.Rendering;
 using JetBrains.Annotations;
 public class UpgradeData {
+    public int CurrentDNA = 0;
+    public float Basic_ATK = 100.0f;
+    public float Basic_HP = 100.0f;
     public float ATKUpgradeRate = 1.0f;
     public float UTLUpgradeRate = 1.0f;
     public float CoinAcquisitionRate = 1.0f;
@@ -22,7 +25,6 @@ public enum WeaponType
 public class WeaponLockData
 {
     private bool[] weaponLock;
-    public bool fist;
 
     public bool GetWeaponLock(WeaponType index)
     {
@@ -62,7 +64,7 @@ public class PermanentUpgradeManager : MonoBehaviour
     public void Awake()
     {
         instance = this;
-
+        DontDestroyOnLoad(gameObject);
         weaponLockData = new WeaponLockData();
         upgradeData = new UpgradeData();
         LoadData();
