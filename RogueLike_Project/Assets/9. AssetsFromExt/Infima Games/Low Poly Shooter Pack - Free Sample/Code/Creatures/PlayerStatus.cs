@@ -111,6 +111,12 @@ public class PlayerStatus : StatusBehaviour
         OriginMoveSpeed = MoveSpeed;
 
         postProcessingManager = FindObjectOfType<PostProcessingManager>();
+
+        SetMaxHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
+        SetHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
+        SetAttackDamage(PermanentUpgradeManager.instance.upgradeData.Basic_ATK);
+
+        SetPermanentCoin(PermanentUpgradeManager.instance.upgradeData.CurrentDNA);
     }
 
     private void Update()
@@ -172,7 +178,7 @@ public class PlayerStatus : StatusBehaviour
    
     public override void IncreaseHealth(float health)
     {
-        Health += health;
+        Health += health * PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate;
         if (Health > MaxHealth) Health = MaxHealth;
         if (Health / MaxHealth > 0.33f)
         {
@@ -292,7 +298,7 @@ public class PlayerStatus : StatusBehaviour
 
     // Movement Speed
     public override void IncreaseMovementSpeed(float moveSpeed)
-    { MoveSpeed += moveSpeed; }
+    { MoveSpeed += moveSpeed * PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate; }
     public override void DecreaseMovementSpeed(float moveSpeed)
     {
         MoveSpeed -= moveSpeed;
@@ -304,13 +310,11 @@ public class PlayerStatus : StatusBehaviour
         if (MoveSpeed < 0) MoveSpeed = 0;
     }
    
-
     // Reload Speed
     public override void IncreaseReloadSpeed(float reloadSpeed)
     { 
-        ReloadSpeed += reloadSpeed;
+        ReloadSpeed += reloadSpeed * PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate;
         StatusAnimatorChange(HashReloadSpeed, ReloadSpeed / 100f);
-
     }
     public override void DecreaseReloadSpeed(float reloadSpeed)
     {
@@ -327,7 +331,7 @@ public class PlayerStatus : StatusBehaviour
 
     // Attack Damage
     public override void IncreaseAttackDamage(float attackDamage)
-    { Damage += attackDamage; }
+    { Damage += attackDamage*PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate; }
     public override void DecreaseAttackDamage(float attackDamage)
     {
         Damage -= attackDamage;
@@ -342,7 +346,7 @@ public class PlayerStatus : StatusBehaviour
     // Attack Speed
     public override void IncreaseAttackSpeed(float attackSpeed)
     {
-        AttackSpeed += attackSpeed;
+        AttackSpeed += attackSpeed * PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate;
         StatusAnimatorChange(HashAttackSpeed, AttackSpeed / 100f);
     }
     public override void DecreaseAttackSpeed(float attackSpeed)
@@ -398,17 +402,23 @@ public class PlayerStatus : StatusBehaviour
     { 
         PermanentCoins += packet;
         UIManager.instance.packetIncrease(packet);
+        PermanentUpgradeManager.instance.upgradeData.CurrentDNA = PermanentCoins;
     }
     public void DecreasePermanentCoin(int packet)
     { 
         PermanentCoins -= packet;
         UIManager.instance.packetIncrease(-packet);
+        PermanentUpgradeManager.instance.upgradeData.CurrentDNA = PermanentCoins;
     }
     public void SetPermanentCoin(int coin)
-    { PermanentCoins = coin; }
+    { 
+        PermanentCoins = coin;
+        UIManager.instance.PacketReset(PermanentCoins);
+        PermanentUpgradeManager.instance.upgradeData.CurrentDNA = PermanentCoins;
+    }
 
     public void IncreaseAcquisitionRate(float rate)
-    { CoinAcquisitionRate += rate; }
+    { CoinAcquisitionRate += rate * PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate; }
     public void DecreaseAcquisitionRate(float rate)
     { CoinAcquisitionRate -= rate; }
     public void SetAcquisitionRate(float rate)

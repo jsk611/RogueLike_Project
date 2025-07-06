@@ -250,6 +250,8 @@ namespace InfimaGames.LowPolyShooterPack
             //Refresh!
             RefreshWeaponSetup();
 
+            //Upgrade Call
+            PermanentUpgradeManager.instance.LoadData();
         }
         protected override void Start()
         {

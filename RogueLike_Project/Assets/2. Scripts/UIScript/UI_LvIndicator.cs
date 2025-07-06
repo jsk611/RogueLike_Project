@@ -35,11 +35,13 @@ public class UI_LvIndicator : MonoBehaviour
 
     private Dictionary<PerUpgradeType, Action> UpgradeAction;
     private Dictionary<PerUpgradeType, float> UpgradeRateSet;
+    private PlayerStatus player;
 
     private void Start()
     {
         Initialization();
         DoLVSet();
+        player = FindAnyObjectByType<PlayerStatus>();
     }
 
     #region LevelSet
@@ -134,7 +136,14 @@ public class UI_LvIndicator : MonoBehaviour
     #endregion
     public void DoPermanentUpgrade()
     {
+        if (PermanentUpgradeManager.instance.upgradeData.CurrentDNA < upgradeCost)
+        {
+            Debug.Log("Not enough minerals");
+            return;
+        }
+        player.DecreasePermanentCoin(upgradeCost);
         UpgradeAction[upgradeType].Invoke();
+        upgradeCost += costIncreaseRate;
     }
     private void Initialization()
     {

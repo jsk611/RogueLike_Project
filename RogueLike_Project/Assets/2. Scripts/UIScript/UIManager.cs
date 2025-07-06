@@ -126,7 +126,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    public TMP_Text packetText;
+    public TMP_Text[] packetText;
     public TMP_Text dnaText;
     public void DNAReset(int curDNA)
     {
@@ -140,9 +140,15 @@ public class UIManager : MonoBehaviour
         PlayerPrefs.SetInt("packet", curpacket);
 
         if (curpacket == 0)
-            packetText.text = "0";
+        {
+            foreach(TMP_Text temp in packetText)
+            temp.text = "0";
+        }
         else
-            packetText.text = GetThousandCommaText(curpacket).ToString();
+        {
+            foreach(TMP_Text temp in packetText)
+            temp.text = GetThousandCommaText(curpacket).ToString();
+        }
     }
     public void dnaIncrease(int amount)
     {

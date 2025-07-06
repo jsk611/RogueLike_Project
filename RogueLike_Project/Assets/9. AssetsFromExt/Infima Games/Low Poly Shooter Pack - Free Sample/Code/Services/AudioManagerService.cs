@@ -85,7 +85,6 @@ namespace InfimaGames.LowPolyShooterPack
             ExternSoundManager soundManager = ExternSoundManager.instance;
             AudioSettings settings = new AudioSettings(soundManager.Main_Volume*soundManager.Effect_Volume);
 
-            Debug.Log("volume : " + settings.Volume);
 
             //Spawn a game object for the audio source.
             var newSourceObject = new GameObject($"Audio Source -> {clip.name}");

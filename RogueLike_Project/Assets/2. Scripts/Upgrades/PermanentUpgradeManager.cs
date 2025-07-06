@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine.Rendering;
 using JetBrains.Annotations;
 public class UpgradeData {
-    public int CurrentDNA = 0;
+    public int CurrentDNA = 100;
     public float Basic_ATK = 100.0f;
     public float Basic_HP = 100.0f;
     public float ATKUpgradeRate = 1.0f;
@@ -24,7 +24,7 @@ public enum WeaponType
 }
 public class WeaponLockData
 {
-    private bool[] weaponLock;
+    [SerializeField] private bool[] weaponLock;
 
     public bool GetWeaponLock(WeaponType index)
     {
@@ -63,11 +63,14 @@ public class PermanentUpgradeManager : MonoBehaviour
  
     public void Awake()
     {
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-        weaponLockData = new WeaponLockData();
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
         upgradeData = new UpgradeData();
-        LoadData();
+        weaponLockData = new WeaponLockData();
+        settingData = new SettingData();
     }
     public void SaveData()
     {
@@ -79,14 +82,14 @@ public class PermanentUpgradeManager : MonoBehaviour
         File.WriteAllText (pathUpgrade, upgradeJSON);
         Debug.Log("File Saved");
     }
-    private void LoadData()
+    public void LoadData()
     {
         if (PlayerPrefs.GetInt("isNewGame") == 1)
         {
             PlayerPrefs.SetInt("isNewGame", 0);
-            WeaponLockData weaponLockData = new WeaponLockData();
-            UpgradeData upgradeData = new UpgradeData();
-            SettingData settingData = new SettingData();
+            weaponLockData = new WeaponLockData();
+            upgradeData = new UpgradeData();
+            settingData = new SettingData();
         }
         else
         {
@@ -97,11 +100,13 @@ public class PermanentUpgradeManager : MonoBehaviour
             string upgradeJSON;
             if (File.Exists(pathWeapon))
             {
+                Debug.Log("Weapon File Exist");
                 weaponLockJSON = File.ReadAllText(pathWeapon);
                 weaponLockData = JsonUtility.FromJson<WeaponLockData>(weaponLockJSON);
             }
             if (File.Exists(pathUpgrade))
             {
+                Debug.Log("Upgrade File Exist");
                 upgradeJSON = File.ReadAllText(pathUpgrade);
                 upgradeData = JsonUtility.FromJson<UpgradeData>(upgradeJSON);
             }

@@ -18,19 +18,16 @@ public class StartUpgradeTrigger : MonoBehaviour
             {
                 time = Time.time;
                 if (!UIenabled)
-                {
-                    UIenabled = !UIenabled;
-                    player.SetCursorState(false);
-                    upgradeUI.SetActive(true);
-                }
+                    UIEnable(true);
                 else
-                {
-                    UIenabled = !UIenabled;
-                    player.SetCursorState(true);
-                    upgradeUI.SetActive(false);
-                }
+                    UIEnable(false);
             }
         }
     }
-
+    public void UIEnable(bool val)
+    {
+        UIenabled = val;
+        player.SetCursorState(!val);
+        upgradeUI.SetActive(val);
+    }
 }

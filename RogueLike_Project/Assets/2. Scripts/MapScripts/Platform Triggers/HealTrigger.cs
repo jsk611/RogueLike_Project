@@ -39,7 +39,7 @@ public class HealTrigger : MonoBehaviour
             if (!isHealed && Input.GetKeyDown(KeyCode.F) && ps.GetCoin()>=200)
             {
                 isHealed = true;
-                ps.IncreaseHealth(ps.GetMaxHealth() * 0.25f);
+                ps.IncreaseHealth(ps.GetMaxHealth() * 0.25f * PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate);
                 ps.DecreaseCoin(healCost);
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);

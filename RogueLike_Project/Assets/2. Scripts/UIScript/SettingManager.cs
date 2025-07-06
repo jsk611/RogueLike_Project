@@ -25,6 +25,7 @@ public class SettingManager : MonoBehaviour
     //continue
     public void InitGame()
     {
+        PlayerPrefs.SetInt("isNewGame", 0);
         Debug.Log("Start Game");
         StartGame();
     }
