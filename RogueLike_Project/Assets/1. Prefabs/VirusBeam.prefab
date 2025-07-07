@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 648972004136366924}
   - component: {fileID: 7960195241704990165}
   m_Layer: 0
-  m_Name: TeleportBeam
+  m_Name: VirusBeam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f896141d944bd4845ada4a4309961e8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canAttackPlayer: 0
   damage: 20
   lifeTime: 1.5
   applyKnockback: 1

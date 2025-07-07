@@ -232,6 +232,7 @@ public class WormBossPrime : BossBase
         GameObject subWorm = GameObject.Instantiate(prefab, partition.position,partition.rotation,null);
         WormBossPrime subWormPrime = subWorm.GetComponent<WormBossPrime>();
         WormBossBodyMovement subBody = subWorm.GetComponent<WormBossBodyMovement>();
+        subWormPrime.GetComponent<BossStatus>().SetHealth(bossStatus.GetHealth());
 
         summoned.Add(subWorm);
 
@@ -247,11 +248,6 @@ public class WormBossPrime : BossBase
         }
         subBody.BodyList.RemoveRange(subBody.BodyList.Count/2, subBody.BodyList.Count-bodyList.Count/2);
         bodyList.RemoveRange(bodyList.Count/2,bodyList.Count-bodyList.Count/2);
-        
-
-
-        Debug.Log("origin dead");
-      
     }
 
     #region Reset

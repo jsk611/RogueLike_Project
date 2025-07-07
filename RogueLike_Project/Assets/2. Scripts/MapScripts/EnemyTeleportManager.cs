@@ -36,6 +36,7 @@ public class EnemyTeleportManager : MonoBehaviour
                 MonsterBase monster = monsterQueue.Peek();
                 monsterQueue.Dequeue();
                 monsterSet.Remove(monster);
+                monster.ChangeStateToIdle();
                 //       Vector3 newPosition = tileManager.GetTiles[playerPositionData.playerTilePosition.y, playerPositionData.playerTilePosition.x].transform.position+Vector3.up*4;
                 RaycastHit hit;
                 Physics.Raycast(player.transform.position, Vector3.down, out hit, 8f, LayerMask.GetMask("Wall"));

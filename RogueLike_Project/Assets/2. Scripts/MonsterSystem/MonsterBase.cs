@@ -57,7 +57,7 @@ public abstract class MonsterBase : MonoBehaviour
     [Header("Timings")]
     [SerializeField] private float hitCooldown = 1.0f;
     [SerializeField] private float hitDuration = 0.8f;
-    [SerializeField] private float dieDuration = 1f;
+    [SerializeField] private float dieDuration = 0f;
     [SerializeField] private float transitionCooldown = 0.3f;
     [SerializeField] private float teleportCooldown = 4f;
     private float teleportTimer = 0f;
@@ -152,7 +152,7 @@ public abstract class MonsterBase : MonoBehaviour
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
 
-        float HPenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
+        float HPenforce = (8 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
         monsterStatus.SetMaxHealth(hp * HPenforce);
         monsterStatus.SetHealth(hp * HPenforce);
         float ATKenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
@@ -284,11 +284,7 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent.isStopped = true;
 
         dieTimer += Time.deltaTime;
-        if (dieTimer >= dieDuration)
-        {
-            transform.position = new Vector3(-100, -100, -100);
-            HandleDeath();
-        }
+        StartCoroutine(HandleDeath());
     }
     #endregion
 
@@ -381,8 +377,10 @@ public abstract class MonsterBase : MonoBehaviour
         }
     }
 
-    private void HandleDeath()
+    private IEnumerator HandleDeath()
     {
+        yield return new WaitForSeconds(dieDuration);
+        transform.position = new Vector3(-100, -100, -100);
         if (summonedMonster)
         {
             dropDNA = false;
@@ -454,4 +452,9 @@ public abstract class MonsterBase : MonoBehaviour
        // ChangeState(State.CHASE);
     }
     public float GetRange() => attackRange;
+    
+    public void ChangeStateToIdle()
+    {
+        ChangeState(State.IDLE);
+    }
 }

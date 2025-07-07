@@ -6343,8 +6343,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCC: 0
   currentCon: 0
-  Health: 200
-  MaxHealth: 200
+  Health: 100
+  MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 12

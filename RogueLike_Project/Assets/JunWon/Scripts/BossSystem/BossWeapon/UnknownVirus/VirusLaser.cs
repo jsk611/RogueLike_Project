@@ -5,6 +5,7 @@ using UnityEngine;
 public class VirusLaser : MonoBehaviour
 {
     [Header("레이저 설정")]
+    [SerializeField] bool canAttackPlayer = true;
     [SerializeField] private float damage = 10f;          // 레이저가 입히는 데미지
     [SerializeField] private float lifeTime = 1.5f;       // 레이저 지속 시간
     [SerializeField] private bool applyKnockback = true;  // 넉백 적용 여부
@@ -168,6 +169,7 @@ public class VirusLaser : MonoBehaviour
             if (playerStatus != null)
             {
                 // 데미지 적용
+                if(canAttackPlayer)
                 playerStatus.DecreaseHealth(damage);
                 hasDamaged = true;
 
