@@ -9,7 +9,7 @@ public class WaveData
     public bool isMultiMap;
     public bool isRepeating=false;
     public List<MapInfo> maps;
-    public bool isRandomEnemy;
+    public bool isRandomEnemy=false;
     public bool isRandomPos=false;
     public List<EnemyInfo> enemies;
     public MissionInfo mission;
