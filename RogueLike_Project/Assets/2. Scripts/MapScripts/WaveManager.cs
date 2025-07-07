@@ -75,7 +75,7 @@ public class WaveManager : MonoBehaviour
     #region WaveDataSetting
     void LoadWaveData(string fileTitle)
     {
-        string path = Path.Combine(Application.streamingAssetsPath, $"WaveData/Wave_{fileTitle}.json");
+        string path = Path.Combine(Application.streamingAssetsPath, $"WaveData/wave_{fileTitle}.json");
         if (File.Exists(path))
         {
             string jsonText = File.ReadAllText(path);
@@ -163,6 +163,7 @@ public class WaveManager : MonoBehaviour
 
                 LoadWaveData($"{currentStage}-{randNum}");
                 //LoadWaveData($"{currentStage}-6");
+                LoadWaveData($"2-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
