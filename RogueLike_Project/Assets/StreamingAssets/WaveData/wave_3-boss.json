@@ -1,0 +1,42 @@
+{
+  "waveIndex": 5,
+  "isMultiMap": true,
+  "maps": [
+    {
+      "file": "3_boss_1",
+      "duration": 30
+    },
+    {
+      "file": "3_boss_2",
+      "duration": 30
+    },
+    {
+      "file": "3_boss_3",
+      "duration": 30
+    }
+  ],
+  "isRandomEnemy": false,
+  "enemies": [
+    {
+      "type": 331,
+      "count": 1,
+      "spawnPoints": [
+        {
+          "x": 20,
+          "y": 20
+        }
+      ],
+      "spawnDelay": 8
+    }
+  ],
+  "mission":
+  {
+    "type": "Boss",
+    "count": 1
+  },
+  
+  "isRandomEvent": false,
+  "events": [
+    
+  ]
+}

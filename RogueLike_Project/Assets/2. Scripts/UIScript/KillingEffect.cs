@@ -6,14 +6,12 @@ using UnityEngine.UI;
 public class KillingEffect : MonoBehaviour
 {
     float alpha = 0.75f;
-    float length = 0.24f;
-    Image[] images;
+    float length = 0.75f;
+    [SerializeField] Image image;
     int tmp = 0;
-    [SerializeField] EnemyCountData enemyCountData;
     // Start is called before the first frame update
     void Start()
     {
-        images = GetComponentsInChildren<Image>();
         EventManager.Instance.MonsterKilledEvent += KillingSuccess;
     }
 
@@ -24,11 +22,11 @@ public class KillingEffect : MonoBehaviour
         {
             alpha -= Time.deltaTime;
             if (length > 0.075f) length -= Time.deltaTime * 0.2f;
-            foreach (Image image in images)
-            {
-                image.color = new Color(1, 0, 1, alpha);
-                image.gameObject.transform.localScale = new Vector2(0.025f, length);
-            }
+
+            
+            image.color = new Color(1, 0.66f, 0, alpha);
+            image.gameObject.transform.localScale = new Vector2(length, length);
+            
         }
         //if (enemyCountData.enemyCount < tmp)
         //{
@@ -46,6 +44,6 @@ public class KillingEffect : MonoBehaviour
     void KillingSuccess(bool tmp)
     {
         alpha = 0.75f;
-        length = 0.42f;
+        length = 0.66f;
     }
 }

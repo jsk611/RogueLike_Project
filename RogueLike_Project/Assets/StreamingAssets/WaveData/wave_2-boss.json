@@ -3,14 +3,14 @@
   "isMultiMap": false,
   "maps": [
     {
-      "file": "1_boss",
+      "file": "2_boss",
       "duration": 60
     }
   ],
   "isRandomEnemy": false,
   "enemies": [
     {
-      "type": 131,
+      "type": 231,
       "count": 1,
       "spawnPoints": [
         {
