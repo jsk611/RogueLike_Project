@@ -55,6 +55,7 @@ public class PauseUIManager : MonoBehaviour
         ResetDisplay();
         Time.timeScale = 0f;
         gameObject.SetActive(true);
+        character.SetInteractingUI(true);
     }
     public void CancelDisplay()
     {
@@ -66,6 +67,7 @@ public class PauseUIManager : MonoBehaviour
         character.SetCursorState(true);
         gameObject.SetActive(false);
         Time.timeScale = 1f;
+        character.SetInteractingUI(false);
     }
     public void Exit()
     {

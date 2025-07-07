@@ -167,6 +167,7 @@ public class PlayerStatus : StatusBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        PermanentUpgradeManager.instance.SaveData();
         StartCoroutine(UIManager.instance.DieBuffering());
     }
 

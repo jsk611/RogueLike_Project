@@ -2589,8 +2589,8 @@ MonoBehaviour:
   currentCC: 0
   currentCon: 0
   bossName: 
-  Health: 10
-  MaxHealth: 10
+  Health: 100
+  MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 3
@@ -2636,6 +2636,7 @@ MonoBehaviour:
   head: {fileID: 0}
   maxVerticalAngle: 60
   rotateSpeed: 2
+  isBoss: 0
   anim: {fileID: 1907372844534673819}
   nmAgent: {fileID: 3529113191450723981}
   fov: {fileID: 6737020689261539520}
@@ -2656,7 +2657,6 @@ MonoBehaviour:
   abilityManager: {fileID: 8829762350533336468}
   headWeapon: {fileID: 1773538348880160473}
   legIKManager: {fileID: 1050011804758591003}
-  isBoss: 0
 --- !u!114 &6737020689261539520
 MonoBehaviour:
   m_ObjectHideFlags: 0

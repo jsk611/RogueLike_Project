@@ -378,7 +378,6 @@ public abstract class MonsterBase : MonoBehaviour
 
             DigitalStripeDissolveEffect.ApplyDeathEffect(this);
 
-
         }
     }
 

@@ -27,7 +27,8 @@ public class StartUpgradeTrigger : MonoBehaviour
     public void UIEnable(bool val)
     {
         UIenabled = val;
-        player.SetCursorState(!val);
         upgradeUI.SetActive(val);
+        player.SetCursorState(!val);
+        player.SetInteractingUI(val);
     }
 }

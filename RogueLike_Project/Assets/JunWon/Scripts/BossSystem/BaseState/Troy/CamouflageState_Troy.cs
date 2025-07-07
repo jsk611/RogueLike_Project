@@ -38,8 +38,8 @@ public class CamouflageState_Troy : State<Troy>
                 GameObject obj = GameObject.Instantiate(enemyManager.GetEnemyPrefab(EnemyType.SpiderMinion), randomPos, Quaternion.identity);
                 StatusBehaviour enemy = obj.GetComponent<StatusBehaviour>();
                 owner.COPYLIST.Add(obj);
-                enemy.SetHealth(50);
-                enemy.SetMaxHealth(50);
+                enemy.SetHealth(100);
+                enemy.SetMaxHealth(100);
                 enemy.GetComponent<SpiderPrime>().isBoss = false;
                 owner.SUMMONEDMONSTERS.Add(enemy.GetComponent<StatusBehaviour>());
             }
@@ -53,14 +53,14 @@ public class CamouflageState_Troy : State<Troy>
         bombThrowTimer += Time.deltaTime;
         rushTimer += Time.deltaTime;
 
-        //if(rushTimer >= rushInterval)
-        //{
-        //    if (!isRushing)
-        //    {
-        //        isRushing = true;
-        //        owner.CoroutineRunner(RushToPlayer());
-        //    }
-        //}
+        if (rushTimer >= rushInterval)
+        {
+            if (!isRushing)
+            {
+                isRushing = true;
+                owner.CoroutineRunner(RushToPlayer());
+            }
+        }
         //if (bombThrowTimer >= bombThrowInterval)
         //{
         //    Debug.Log(bombThrowInterval);

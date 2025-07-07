@@ -78,6 +78,7 @@ public class UpgradeManager_New : MonoBehaviour
         decisionInputField.text = "";
         decisionInputField.onEndEdit.AddListener(DecisionInputEnd);
         upgrading = true;
+        player.SetInteractingUI(upgrading);
         curUpgradeLevel = level;
         foreach (GameObject types in UpgradeDecisionSet) types.SetActive(false);
 
@@ -102,6 +103,7 @@ public class UpgradeManager_New : MonoBehaviour
         decisionInputField.transform.gameObject.SetActive(false);
 
         upgrading = true;
+        player.SetInteractingUI(upgrading);
         upgradeInputField.text = "";
         upgradeInputField.onEndEdit.AddListener(OnInputEnd);
         upgradeTier = tier;
@@ -217,13 +219,13 @@ public class UpgradeManager_New : MonoBehaviour
     void DecisionTree()
     {
         Debug.Log(curSelectedType);
-        if (curUpgradeLevel >=1 && decisionTypeInput == UpgradeDecision.BASIC)
+        if (decisionTypeInput == UpgradeDecision.BASIC)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
             StartCoroutine(DecisionBasic());
 
         }
-        else if (curSelectedType == WeaponUpgrade.Null && curUpgradeLevel >=2 && decisionTypeInput == UpgradeDecision.WEAPON)
+        else if (decisionTypeInput == UpgradeDecision.WEAPON)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
             curSelectedType = weaponTypeInput;
@@ -234,6 +236,7 @@ public class UpgradeManager_New : MonoBehaviour
             upgradeRootUI.SetActive(false);
             player.SetCursorState(true);
             upgrading = false;
+            player.SetCursorState(upgrading);
         }
     }
     IEnumerator DecisionBasic()
@@ -364,6 +367,7 @@ public class UpgradeManager_New : MonoBehaviour
         upgradeRootUI.SetActive(false);
         player.SetCursorState(true);
         upgrading = false;
+        player.SetInteractingUI(upgrading);
     }
 
 }

@@ -197,7 +197,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         private bool dashLocked;
 
-
+        private bool interactingUI;
 
 
         Coroutine zoomStateCoroutine;
@@ -335,7 +335,9 @@ namespace InfimaGames.LowPolyShooterPack
         public override bool IsTutorialTextVisible() => tutorialTextVisible;
 
         public override Vector2 GetInputMovement() => axisMovement;
-        public override Vector2 GetInputLook() => axisLook; 
+        public override Vector2 GetInputLook() => axisLook;
+
+        public override bool GetInteractingUI() => interactingUI;
 
         #endregion
 
@@ -537,7 +539,10 @@ namespace InfimaGames.LowPolyShooterPack
             const string boolName = "Holstered";
             characterAnimator.SetBool(boolName, holstered);
         }
-
+        public override void SetInteractingUI(bool val)
+        {
+            interactingUI = val; 
+        }
         #region ACTION CHECKS
 
         /// <summary>
@@ -1005,7 +1010,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public void OnLockCursor(InputAction.CallbackContext context)
         {
-            //Switch.
+            if (interactingUI) return;
             switch (context)
             {
                 //Performed.

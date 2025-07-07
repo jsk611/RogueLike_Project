@@ -39,13 +39,13 @@ public class UpgradeTrigger : MonoBehaviour
             helpUI.color = Color.cyan;
             if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F) && !UpgradeManager.Upgrading)
             {
-                StartCoroutine(UpgradeManager.DecisionTreeDisplay(canUpgrade));
+                StartCoroutine(UpgradeManager.DecisionTreeDisplay(2));
                 canUpgrade= 0;
             }
             else if (canUpgrade <= 0)
             {
                 GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
-                GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
+                GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(false);
             }
         }
     }

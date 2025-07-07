@@ -127,6 +127,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public abstract Animator GetPlayerAnimator();
         public abstract Animator GetWeaponAnimator();
+        public abstract bool GetInteractingUI();
 
 
 
@@ -137,5 +138,6 @@ namespace InfimaGames.LowPolyShooterPack
         public abstract void OnTryExchangeWeapon(GameObject otherWeapon, Vector3 Position, Quaternion Rotation);
 
         public abstract bool GetHoldingFire();
+        public abstract void SetInteractingUI(bool val);
     }
 }

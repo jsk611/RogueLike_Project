@@ -77,12 +77,12 @@ public class BossStatus : StatusBehaviour
             Debug.Log("Boss Summoned: " + bossName);
         }
     }
-
     // Current Health
     public override void DecreaseHealth(float damage) {
         Health -= damage; //* (100f - DamageAlleviation / 100.0f) * Mathf.Pow(Mathf.Pow(0.5f,0.005f),Defence);
         
-      //  HPBar.SetRatio(GetHealth(), GetMaxHealth());
+        if(HPBar != null) 
+        HPBar.SetRatio(GetHealth(), GetMaxHealth());
     }
     public override void IncreaseHealth(float health)
     {
