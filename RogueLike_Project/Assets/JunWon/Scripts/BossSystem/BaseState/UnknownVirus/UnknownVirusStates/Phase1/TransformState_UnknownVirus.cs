@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnknownVirusBoss;
 using DG.Tweening;
+using Unity.VisualScripting;
 
 public class TransformState_UnknownVirus : BaseState_UnknownVirus
 {
@@ -116,24 +117,6 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
         var cyberSpace = owner.GetComponent<CyberTransformationSpace>();
         if (cyberSpace != null)
         {
-            // 몬스터별 캡슐 데이터 생성
-            MonsterCapsuleData customCapsule = new MonsterCapsuleData()
-            {
-                radius = GetFormRadius(targetForm),
-                height = GetFormHeight(targetForm),
-                scale = GetFormScale(targetForm),
-                transformTime = 1.5f,
-                direction = GetFormDirection(targetForm),
-                forwardAxis = GetFormForwardAxis(targetForm),
-                
-                // 안개 효과 설정
-                enableFogEffect = true,
-                fogColor = GetFormFogColor(targetForm),
-                fogDensity = GetFormFogDensity(targetForm),
-                fogFadeTime = GetFormFogFadeTime(targetForm)
-            };
-            
-            cyberSpace.StartTransformation(customCapsule, GetFormMonster(targetForm));
         }
         else
         {
@@ -266,20 +249,133 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
     
     private IEnumerator NaturalReversion()
     {
-        // 복귀 준비 효과
-        transformLight.DOIntensity(1.5f, 0.3f);
-        transformLight.DOColor(Color.white, 0.3f);
+        Debug.Log("[TransformState] 자연스러운 복귀 연출 시작");
         
-        yield return new WaitForSeconds(0.3f);
-        
-        // Transform State에서 나갈 때 항상 Basic으로 돌아감
+        // Basic 폼으로 전환
         owner.ApplyForm(BossForm.Basic);
-        // owner.TRANSFORMDIRECTOR.RevertToOriginal(); // CyberTransformationSpace 사용시 비활성화
         
-        // 라이트 완전히 끄기
-        transformLight.DOIntensity(0f, 0.5f);
+        // VoxelFloatEffect에서 드롭앤라이즈 이펙트 실행
+        if (owner.FLOATINGEFFECT != null)
+        {
+            owner.FLOATINGEFFECT.StartDropAndRiseEffect();
+        }
+        else
+        {
+            Debug.LogWarning("[TransformState] VoxelFloatEffect를 찾을 수 없어 기본 복귀 처리");
+        }
         
-        Debug.Log($"[TransformState] Exit - {owner.CurrentForm}에서 Basic으로 복귀");
+        CompleteReversion();
+        
+        Debug.Log("[TransformState] 복귀 연출 완료");
+ 
+        yield return null;
+    }
+    private void CompleteReversion()
+    {
+        Debug.Log("[TransformState] 5단계: 복귀 완료");
+        
+        // 라이트 끄기
+        transformLight.DOIntensity(0f, 1f);
+        
+        Debug.Log($"[TransformState] Exit - {owner.CurrentForm}에서 Basic으로 복귀 완료");
+    }
+    
+    // 땅에서 파티클 생성
+    private void CreateGroundParticles()
+    {
+        Vector3 bossPosition = owner.transform.position;
+        
+        // 간단한 파티클 시뮬레이션 (실제로는 파티클 시스템 사용 권장)
+        for (int i = 0; i < 20; i++)
+        {
+            // 땅 주변에서 랜덤 위치
+            Vector3 randomPos = bossPosition + new Vector3(
+                UnityEngine.Random.Range(-3f, 3f), 
+                0f, 
+                UnityEngine.Random.Range(-3f, 3f)
+            );
+            
+            // 작은 큐브 조각 생성 (시각적 효과용)
+            CreateFloatingFragmentEffect(randomPos);
+        }
+    }
+    
+    // 개별 조각 생성 (시각적 효과용)
+    private void CreateFloatingFragmentEffect(Vector3 startPosition)
+    {
+        GameObject fragment = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        fragment.transform.position = startPosition;
+        fragment.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.1f, 0.3f);
+        
+        // 머티리얼 설정
+        var renderer = fragment.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = Color.cyan;
+        }
+        
+        // 위로 올라가는 애니메이션
+        fragment.transform.DOMoveY(startPosition.y + UnityEngine.Random.Range(2f, 4f), 1.5f)
+            .SetEase(Ease.OutQuart);
+            
+        // 회전 애니메이션
+        fragment.transform.DORotate(
+            new Vector3(
+                UnityEngine.Random.Range(0f, 360f),
+                UnityEngine.Random.Range(0f, 360f), 
+                UnityEngine.Random.Range(0f, 360f)
+            ), 
+            1.5f, 
+            RotateMode.FastBeyond360
+        );
+        
+        // 페이드 아웃 후 삭제
+        owner.StartCoroutine(FadeAndDestroy(fragment, 1.5f));
+    }
+    
+    // 조각 생성 (모으기용)
+    private GameObject CreateFloatingFragment(Vector3 startPosition)
+    {
+        GameObject fragment = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        fragment.transform.position = startPosition;
+        fragment.transform.localScale = Vector3.one * UnityEngine.Random.Range(0.15f, 0.35f);
+        
+        // 머티리얼 설정
+        var renderer = fragment.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material = new Material(Shader.Find("Standard"));
+            renderer.material.color = Color.cyan;
+        }
+        
+        return fragment;
+    }
+    
+    // 조각 페이드 아웃 및 삭제
+    private IEnumerator FadeAndDestroy(GameObject fragment, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        var renderer = fragment.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            float fadeTime = 0.5f;
+            float elapsed = 0f;
+            Color originalColor = renderer.material.color;
+            
+            while (elapsed < fadeTime)
+            {
+                float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeTime);
+                Color color = originalColor;
+                color.a = alpha;
+                renderer.material.color = color;
+                
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+        }
+        
+        GameObject.Destroy(fragment);
     }
 
     private BossForm DecideNextForm()
@@ -302,153 +398,10 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
         return availableForms[UnityEngine.Random.Range(0, availableForms.Count)];
     }
     
-    // 몬스터별 캡슐 설정 헬퍼 메소드들
-    private float GetFormRadius(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: return 4f;      // 웜은 좀 더 슬림
-            case BossForm.Trojan: return 5f;    // 트로이안은 중간 크기
-            case BossForm.Ransomware: return 6f; // 랜섬웨어는 크고 위협적
-            default: return 3f;
-        }
-    }
     
-    private float GetFormHeight(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: return 10f;     // 웜은 길고 높게
-            case BossForm.Trojan: return 7f;    // 트로이안은 균형잡힌 높이
-            case BossForm.Ransomware: return 8f; // 랜섬웨어는 묵직하게
-            default: return 6f;
-        }
-    }
     
-    private Vector3 GetFormScale(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: return new Vector3(0.8f, 1.5f, 0.8f);      // 세로로 길게
-            case BossForm.Trojan: return new Vector3(1.2f, 1f, 1.2f);      // 옆으로 넓게
-            case BossForm.Ransomware: return new Vector3(1.3f, 0.9f, 1.3f); // 크고 낮게
-            default: return Vector3.one;
-        }
-    }
     
-    private GameObject GetFormMonster(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: return owner.Worm;
-            case BossForm.Trojan: return owner.Troy;
-            case BossForm.Ransomware: return owner.Ransomware;
-            default: return null;
-        }
-    }
-    
-    private Vector3 GetFormDirection(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: 
-                // 웜: 수평으로 길게 누워있는 느낌 (뱀처럼 유연함)
-                return new Vector3(0.3f, 0.7f, 0f).normalized;
-                
-            case BossForm.Trojan: 
-                // 트로이안: 전통적이고 견고한 수직 방향
-                return Vector3.up;
-                
-            case BossForm.Ransomware: 
-                // 랜섬웨어: 불안정하고 위협적인 비스듬한 각도
-                return new Vector3(-0.4f, 0.8f, 0.2f).normalized;
-                
-            default: 
-                return Vector3.up;
-        }
-    }
-    
-    private Vector3 GetFormForwardAxis(BossForm form)
-    {
-        switch (form)
-        {
-            case BossForm.Worm: 
-                // 웜: 앞으로 기어가는 방향
-                return Vector3.forward;
-                
-            case BossForm.Trojan: 
-                // 트로이안: 정면을 향한 안정적인 방향
-                return Vector3.forward;
-                
-            case BossForm.Ransomware: 
-                // 랜섬웨어: 비틀어진 불안정한 축
-                return new Vector3(0.2f, 0f, 0.8f).normalized;
-                
-            default: 
-                                 return Vector3.forward;
-         }
-     }
      
-     private Color GetFormFogColor(BossForm form)
-     {
-         switch (form)
-         {
-             case BossForm.Worm: 
-                 // 웜: 독성 녹색 안개 (생물학적 위험)
-                 return new Color(0.2f, 0.8f, 0.3f, 0.6f);
-                 
-             case BossForm.Trojan: 
-                 // 트로이안: 경고 노란색 안개 (시스템 침입)
-                 return new Color(1f, 0.8f, 0.2f, 0.6f);
-                 
-             case BossForm.Ransomware: 
-                 // 랜섬웨어: 위협적인 빨간색 안개 (데이터 암호화)
-                 return new Color(0.9f, 0.2f, 0.3f, 0.7f);
-                 
-             default: 
-                 return new Color(0f, 0.7f, 1f, 0.5f); // 기본 사이안
-         }
-     }
      
-     private float GetFormFogDensity(BossForm form)
-     {
-         switch (form)
-         {
-             case BossForm.Worm: 
-                 // 웜: 중간 밀도 (은밀함)
-                 return 0.4f;
-                 
-             case BossForm.Trojan: 
-                 // 트로이안: 낮은 밀도 (정직한 침입?)
-                 return 0.3f;
-                 
-             case BossForm.Ransomware: 
-                 // 랜섬웨어: 높은 밀도 (완전한 은폐)
-                 return 0.7f;
-                 
-             default: 
-                 return 0.5f;
-         }
-     }
      
-     private float GetFormFogFadeTime(BossForm form)
-     {
-         switch (form)
-         {
-             case BossForm.Worm: 
-                 // 웜: 빠른 페이드 (재빠른 등장)
-                 return 0.8f;
-                 
-             case BossForm.Trojan: 
-                 // 트로이안: 중간 페이드 (안정적 등장)
-                 return 1.2f;
-                 
-             case BossForm.Ransomware: 
-                 // 랜섬웨어: 느린 페이드 (극적인 등장)
-                 return 1.8f;
-                 
-             default: 
-                 return 1.2f;
-         }
-     }
 }

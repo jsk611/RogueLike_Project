@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Play.Publisher.Editor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -103,7 +104,7 @@ public class DefeatedState_Ransomeware : State<Ransomware>
         Debug.Log("[DefeatedState_Ransomeware] 랜섬웨어 비활성화");
 
         // 랜섬웨어 보스 비활성화
-        owner.gameObject.SetActive(false);
+        GameObject.Destroy(owner.gameObject);
 
         // 필요한 경우 추가 클린업 작업
         // 예: 특정 매니저에 보스 처치 알림 등

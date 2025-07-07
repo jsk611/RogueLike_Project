@@ -5,28 +5,28 @@ using UnityEngine;
 public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
 {
     private bool isAttackFinished = false;
-    private Coroutine attackCoroutine; // ÄÚ·çÆ¾ ÂüÁ¶ ÀúÀå
+    private Coroutine attackCoroutine; // ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public MapAttackState_UnknownVirus(UnknownVirusBoss owner) : base(owner)
     {
-        // º¸½º°¡ ÀÚ½ÅÀÇ ¸Ê °ø°Ý »óÅÂ¸¦ ¾Ë°Ô ÇÔ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½Ë°ï¿½ ï¿½ï¿½
         owner.SetMapAttackState(this);
     }
 
     public override void Enter()
     {
-        Debug.Log("UnknownVirus: Map Attack State ÁøÀÔ");
+        Debug.Log("UnknownVirus: Map Attack State ï¿½ï¿½ï¿½ï¿½");
         VirusCubeAttackEffect vfx = owner.basic.GetComponent<VirusCubeAttackEffect>();
+        if (vfx == null) Debug.Log("Can't find vfx");
         isAttackFinished = false;
 
-        // ÀÌµ¿ ¸ØÃã
+        // ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½
         owner.NmAgent.isStopped = true;
         owner.Animator.SetBool("IsMoving", false);
 
         attackCoroutine = owner.StartCoroutine(ExecuteSequentialAttack());
 
-
-        // °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç & È¿°ú
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ & È¿ï¿½ï¿½
         owner.Animator.SetTrigger("MapAttack");
     }
 
@@ -37,16 +37,16 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
 
     public override void Exit()
     {
-        Debug.Log("UnknownVirus: Map Attack State Á¾·á");
+        Debug.Log("UnknownVirus: Map Attack State ï¿½ï¿½ï¿½ï¿½");
 
-        // ÁøÇà ÁßÀÎ °ø°Ý ÄÚ·çÆ¾ Áß´Ü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ß´ï¿½
         if (attackCoroutine != null)
         {
             owner.StopCoroutine(attackCoroutine);
             attackCoroutine = null;
         }
 
-        // Å¥ºê °ø°Ý È¿°ú Áß´Ü
+        // Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ß´ï¿½
         StopCubeAttackEffect();
 
         owner.NmAgent.isStopped = false;
@@ -58,24 +58,24 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
     {
         base.Interrupt();
 
-        Debug.Log("MapAttackState: °­Á¦ Áß´ÜµÊ");
+        Debug.Log("MapAttackState: ï¿½ï¿½ï¿½ï¿½ ï¿½ß´Üµï¿½");
 
-        // ÁøÇà ÁßÀÎ °ø°Ý Áï½Ã Áß´Ü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß´ï¿½
         if (attackCoroutine != null)
         {
             owner.StopCoroutine(attackCoroutine);
             attackCoroutine = null;
         }
 
-        // Å¥ºê °ø°Ý È¿°ú Áï½Ã Áß´Ü
+        // Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ß´ï¿½
         StopCubeAttackEffect();
 
-        // °ø°Ý ¿Ï·á·Î Ç¥½ÃÇÏ¿© »óÅÂ ÀüÈ¯ Çã¿ë
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ Ç¥ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½
         isAttackFinished = true;
     }
 
     /// <summary>
-    /// Å¥ºê °ø°Ý È¿°ú Áß´Ü
+    /// Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ß´ï¿½
     /// </summary>
     private void StopCubeAttackEffect()
     {
@@ -84,11 +84,11 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
             VirusCubeAttackEffect vfx = owner.basic.GetComponent<VirusCubeAttackEffect>();
             if (vfx != null)
             {
-                vfx.StopEffect(); // Å¥ºê È¿°ú Áß´Ü
+                vfx.StopEffect(); // Å¥ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ß´ï¿½
             }
         }
     }
-    /// <summary>¾Ö´Ï¸ÞÀÌ¼Ç ÀÌº¥Æ®³ª °­Á¦ Å¸ÀÌ¸Ó Á¾·á ½Ã È£Ãâ</summary>
+    /// <summary>ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½</summary>
     public void OnAttackFinished()
     {
         if (isAttackFinished) return;
@@ -103,20 +103,20 @@ public class MapAttackState_UnknownVirus : BossPhaseBase<UnknownVirusBoss>
             if (vfx == null)
                 vfx = owner.basic.AddComponent<VirusCubeAttackEffect>();
 
-            // 1. ¹ÙÀÌ·¯½º Å¥ºê ·¹ÀÌÀú ¿¬Ãâ ½ÃÀÛ
+            // 1. ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ Å¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             vfx.StartLaserAttack();
 
-            // 2. ¿¬Ãâ ¿Ï·á±îÁö ´ë±â (3.6ÃÊ)
+            // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (3.6ï¿½ï¿½)
             yield return new WaitForSeconds(3.2f);
 
-            // 3. ¸Ê °ø°Ý ½ÇÇà
+            // 3. ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (owner.AbilityManager.UseAbility("MapAttack"))
             {
                 owner.TriggerMapAttack();
             }
         }
 
-        // 4. °ø°Ý ¿Ï·á
+        // 4. ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½
         isAttackFinished = true;
     }
 
