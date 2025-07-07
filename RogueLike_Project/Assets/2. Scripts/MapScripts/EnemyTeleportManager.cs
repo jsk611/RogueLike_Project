@@ -45,6 +45,7 @@ public class EnemyTeleportManager : MonoBehaviour
                 if (monster != null && monster.NmAgent != null)
                 {
                     monster.NmAgent.Warp(newPosition);
+                    monster.InitializeSummon();
                    // monster.NmAgent.FindClosestEdge(out NavMeshHit h);
                 }
             }

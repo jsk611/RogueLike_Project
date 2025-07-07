@@ -121,8 +121,7 @@ public abstract class MonsterBase : MonoBehaviour
         InitializeComponents();
         InitializeStateMachine();
         InitializeStats();
-
-        StartCoroutine(SummonEffect());
+        InitializeSummon();
     }
 
     #region Initialization
@@ -162,6 +161,11 @@ public abstract class MonsterBase : MonoBehaviour
         HPBar.SetRatio(monsterStatus.GetHealth(),monsterStatus.GetMaxHealth());
     }
 
+    public void InitializeSummon()
+    {
+        ChangeState(State.IDLE);
+        StartCoroutine(SummonEffect());
+    }
     #endregion
 
 
