@@ -9,25 +9,25 @@ public class UnknownVirusBoss : BossBase
 {
     public enum BossForm { Basic, Worm, Trojan, Ransomware }
 
-    #region Æû °èÃş °ü¸®
-    [Header("Æû ¿ÀºêÁ§Æ®")]
-    [SerializeField] private GameObject basicFormObject;     // ±âº» Æû ¿ÀºêÁ§Æ® (ÀÚ±â ÀÚ½Å)
-    [SerializeField] private GameObject wormFormObject;      // ¿ú Æû ¿ÀºêÁ§Æ® (ÀÚ½Ä)
-    [SerializeField] private GameObject trojanFormObject;    // Æ®·ÎÀÌ ¸ñ¸¶ Æû ¿ÀºêÁ§Æ® (ÀÚ½Ä)
-    [SerializeField] private GameObject ransomwareFormObject; // ·£¼¶¿ş¾î Æû ¿ÀºêÁ§Æ® (ÀÚ½Ä)
+    #region ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Header("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
+    [SerializeField] private GameObject basicFormObject;     // ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ú±ï¿½ ï¿½Ú½ï¿½)
+    [SerializeField] private GameObject wormFormObject;      // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ú½ï¿½)
+    [SerializeField] private GameObject trojanFormObject;    // Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ú½ï¿½)
+    [SerializeField] private GameObject ransomwareFormObject; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® (ï¿½Ú½ï¿½)
 
-    // °¢ Æû ÄÄÆ÷³ÍÆ® Ä³½Ì
+    // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Ä³ï¿½ï¿½
     private WormBossPrime wormComponent;
     private Troy trojanComponent;
     private Ransomware ransomwareComponent;
 
-    // ÇöÀç È°¼ºÈ­µÈ Æû ÂüÁ¶
+    // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private GameObject currentActiveFormObject;
     private BossBase currentActiveBoss;
     [SerializeField] private BossForm currentForm = BossForm.Basic;
 
-    // Æû º¯°æ ÄğÅ¸ÀÓ °ü¸®
-    private float formStayDuration = 15f; // º¯½ÅÇÑ Æû¿¡ ¸Ó¹«´Â ½Ã°£
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    private float formStayDuration = 15f; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ó¹ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½
     private float formTimer = 0f;
     #endregion
 
@@ -37,30 +37,30 @@ public class UnknownVirusBoss : BossBase
 
     #endregion
 
-    #region º¸½º ¼³Á¤
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private float currentRandomValue = 0.9f;
-    [Header("ÀüÅõ ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private float baseAttackDamage = 20f;
     [SerializeField] private float baseAttackRange = 10f;
     [SerializeField] private float baseAttackCooldown = 3f;
 
-    [Header("¸Ê °ø°İ")]
+    [Header("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject mapAttackVFX;
     [Range(0, 1)][SerializeField] private float mapAttackChance = 0.7f;
 
-    [Header("Æû º¯°æ")]
+    [Header("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private GameObject transformationVFX;
     [Range(0, 1)][SerializeField] private float formChangeChance = 0.3f;
 
-    [Header("ÄÄÆ÷³ÍÆ®")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®")]
     [SerializeField] private AbilityManager abilityManager;
     #endregion
 
-    #region »óÅÂ ¸Ó½Å
-    [Header("»óÅÂ ¸Ó½Å")]
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½Ó½ï¿½")]
     [SerializeField] private StateMachine<UnknownVirusBoss> fsm;
 
-    // »óÅÂµé
+    // ï¿½ï¿½ï¿½Âµï¿½
     private IntroState_UnknownVirus introState;
     private BasicCombatState_UnknownVirus basicState;
     private MapAttackState_UnknownVirus mapAttackState;
@@ -68,7 +68,7 @@ public class UnknownVirusBoss : BossBase
     private DefeatedState_UnknownVirus deadState;
     #endregion
 
-    #region »óÅÂ ¼¼ÆÃ ¸Ş¼­µå
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
 
     public void SetMapAttackState(MapAttackState_UnknownVirus state)
     {
@@ -82,17 +82,17 @@ public class UnknownVirusBoss : BossBase
     #endregion
 
 
-    #region ¸Ê °ø°İ ¼³Á¤
-    [Header("¸Ê °ø°İ ¼³Á¤")]
+    #region ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [Header("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private TileManager tileManager;
     [SerializeField] private GameObject laserPrefab;
-    [SerializeField] private int attackAreaSize = 5; // °ø°İ ¿µ¿ª Å©±â (5x5)
-    [SerializeField] private float tileSearchInterval = 0.1f; // Å¸ÀÏ °Ë»ö °£°İ
-    [SerializeField] private float shockwavePower = 30f; // Ãæ°İÆÄ ¼¼±â
+    [SerializeField] private int attackAreaSize = 5; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½ (5x5)
+    [SerializeField] private float tileSearchInterval = 0.1f; // Å¸ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private float shockwavePower = 30f; // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [SerializeField] private LayerMask playerLayer;
     #endregion
 
-    #region °ø°³ ÇÁ·ÎÆÛÆ¼
+    #region ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼
     public BossForm CurrentForm => currentForm;
     public Transform Player => target;
     public NavMeshAgent NmAgent => nmAgent;
@@ -108,7 +108,7 @@ public class UnknownVirusBoss : BossBase
 
     public VoxelFloatEffect FLOATINGEFFECT => vFE;
 
-    public StateMachine<UnknownVirusBoss> Fsm => fsm;  // ±âÁ¸ fsm ÇÊµå¸¦ publicÀ¸·Î ³ëÃâ
+    public StateMachine<UnknownVirusBoss> Fsm => fsm;  // ï¿½ï¿½ï¿½ï¿½ fsm ï¿½Êµå¸¦ publicï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
     public float GetFormTimer()
     {
@@ -125,7 +125,7 @@ public class UnknownVirusBoss : BossBase
     }
     #endregion
 
-    #region À¯´ÏÆ¼ ¶óÀÌÇÁ»çÀÌÅ¬
+    #region ï¿½ï¿½ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¬
     private void Start()
     {
         InitializeComponents();
@@ -135,16 +135,16 @@ public class UnknownVirusBoss : BossBase
         InitializeStates();
         InitializeFSM();
 
-        Debug.Log("[UnknownVirusBoss] ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private void Update()
     {
-        // FSM ¾÷µ¥ÀÌÆ®
+        // FSM ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         UpdateRandomValue();
         fsm.Update();
 
-        // »ç¸Á »óÅÂ È®ÀÎ
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (bossStatus.GetHealth() <= 0 && !(fsm.CurrentState is DefeatedState_UnknownVirus))
         {
             HandleDeath();
@@ -152,7 +152,7 @@ public class UnknownVirusBoss : BossBase
     }
     #endregion
 
-    #region ÃÊ±âÈ­ ¸Ş¼­µå
+    #region ï¿½Ê±ï¿½È­ ï¿½Ş¼ï¿½ï¿½ï¿½
 
     private void InitiailzeEffects()
     {
@@ -160,29 +160,29 @@ public class UnknownVirusBoss : BossBase
     }
     private void InitializeComponents()
     {
-        // ÂüÁ¶ Ã£±â
+        // ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½
         tileManager = FindObjectOfType<TileManager>();
         target = GameObject.FindWithTag("Player").transform;
         vFE = GetComponentInChildren<VoxelFloatEffect>();
 
-        // ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         anim = GetComponent<Animator>();
         nmAgent = GetComponent<NavMeshAgent>();
         fov = GetComponent<FieldOfView>();
 
-        Debug.Log("[UnknownVirusBoss] ÄÄÆ÷³ÍÆ® ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private void InitializeFormHierarchy()
     {
-        // Æû ¿ÀºêÁ§Æ® À¯È¿¼º °Ë»ç
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È¿ï¿½ï¿½ ï¿½Ë»ï¿½
         if (basicFormObject == null)
         {
-            Debug.LogError("[UnknownVirusBoss] ±âº» Æû ¿ÀºêÁ§Æ®°¡ ¾ø½À´Ï´Ù!");
+            Debug.LogError("[UnknownVirusBoss] ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½!");
             return;
         }
 
-        // Æû ÄÄÆ÷³ÍÆ® Ä³½Ì
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Ä³ï¿½ï¿½
         if (wormFormObject != null)
         {
             wormComponent = wormFormObject.GetComponent<WormBossPrime>();
@@ -201,22 +201,22 @@ public class UnknownVirusBoss : BossBase
             ransomwareFormObject.SetActive(false);
         }
 
-        // ÃÊ±â »óÅÂ - ±âº» Æû¸¸ È°¼ºÈ­
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ - ï¿½âº» ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­
         ActivateBasicFormOnly();
 
-        Debug.Log("[UnknownVirusBoss] Æû °èÃş ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private void InitializeAbilities()
     {
-        // ¸Ê °ø°İ ´É·Â È°¼ºÈ­
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½É·ï¿½ È°ï¿½ï¿½È­
         abilityManager.SetAbilityActive("MapAttack");
         abilityManager.SetMaxCoolTime("MapAttack");
 
         abilityManager.SetAbilityActive("Transform");
         abilityManager.SetMaxCoolTime("Transform");
 
-        Debug.Log("[UnknownVirusBoss] ´É·Â ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] ï¿½É·ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private void InitializeStates()
@@ -227,21 +227,21 @@ public class UnknownVirusBoss : BossBase
         transformState = new TransformState_UnknownVirus(this);
         deadState = new DefeatedState_UnknownVirus(this);
 
-        Debug.Log("[UnknownVirusBoss] »óÅÂ ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private void InitializeFSM()
     {
-        // »óÅÂ ÀÎ½ºÅÏ½º »ı¼º
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ï¿½ï¿½
         var states = CreateStates();
 
-        // ÃÊ±â »óÅÂ¸¦ ÀÎÆ®·Î·Î ¼³Á¤ÇØ FSM »ı¼º
+        // ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½Æ®ï¿½Î·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ FSM ï¿½ï¿½ï¿½ï¿½
         fsm = new StateMachine<UnknownVirusBoss>(states.introState);
 
-        // ÀüÀÌ ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         SetupTransitions(states);
 
-        Debug.Log("[UnknownVirusBoss] FSM ÃÊ±âÈ­ ¿Ï·á");
+        Debug.Log("[UnknownVirusBoss] FSM ï¿½Ê±ï¿½È­ ï¿½Ï·ï¿½");
     }
 
     private (
@@ -269,35 +269,36 @@ public class UnknownVirusBoss : BossBase
         DefeatedState_UnknownVirus deadState
     ) s)
     {
-        // ÀÎÆ®·Î ¡æ ±âº» ÀüÅõ
+        // ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.introState, s.basicState, () => true));
 
-        // ±âº» ÀüÅõ ¡æ ¸Ê °ø°İ
+        // ê¸°ë³¸ ìƒíƒœ â†’ ë§µ ê³µê²© (Base í™œì„±í™” ìƒíƒœ ì²´í¬ ì¶”ê°€)
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.basicState, s.mapAttackState,
             () => abilityManager.GetAbilityRemainingCooldown("MapAttack") == 0 &&
-                 currentRandomValue < mapAttackChance));
+                 currentRandomValue < mapAttackChance &&
+                 basicFormObject != null && basicFormObject.activeInHierarchy));
 
-        // ¸Ê °ø°İ ¡æ ±âº» ÀüÅõ
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.mapAttackState, s.basicState,
             () => mapAttackState.IsAnimationFinished()
         ));
 
-        // ±âº» ÀüÅõ ¡æ º¯½Å
+        // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.basicState, s.transformState,
             () => abilityManager.GetAbilityRemainingCooldown("Transform") == 0 &&
                  currentRandomValue > mapAttackChance));
 
-        // °¢ Æû ÀüÅõ ¡æ ±âº» ÀüÅõ
+        // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.transformState, s.basicState,
             () => Time.time - formTimer >= formStayDuration));
 
 
-        // Àü¿ª »ç¸Á »óÅÂ ÀüÀÌ (ÀÎÆ®·Î Á¦¿Ü)
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)
         List<State<UnknownVirusBoss>> exceptStates = new List<State<UnknownVirusBoss>> { s.introState };
         fsm.AddGlobalTransition(s.deadState, () => bossStatus.GetHealth() <= 0, exceptStates);
     }
@@ -305,10 +306,10 @@ public class UnknownVirusBoss : BossBase
 
 
 
-    #region Æû °ü¸® ¸Ş¼­µå
+    #region ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     private void ActivateBasicFormOnly()
     {
-        // ±âº» Æû¸¸ È°¼ºÈ­ÇÏ°í ³ª¸ÓÁö´Â ºñÈ°¼ºÈ­
+        // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         if (basicFormObject != null)
             basicFormObject.SetActive(true);
 
@@ -321,7 +322,7 @@ public class UnknownVirusBoss : BossBase
         if (ransomwareFormObject != null)
             ransomwareFormObject.SetActive(false);
 
-        // ÇöÀç Æû ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         currentForm = BossForm.Basic;
         currentActiveFormObject = basicFormObject;
         currentActiveBoss = null;
@@ -329,30 +330,30 @@ public class UnknownVirusBoss : BossBase
 
     public void ApplyForm(BossForm form)
     {
-        // Æû ÀüÈ¯ ·ÎÁ÷
+        // ï¿½ï¿½ ï¿½ï¿½È¯ ï¿½ï¿½ï¿½ï¿½
         if (form == currentForm) return;
 
-        // ÇöÀç È°¼ºÈ­µÈ Æû ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         DeactivateCurrentForm();
 
-        // »õ Æû È°¼ºÈ­
+        // ï¿½ï¿½ ï¿½ï¿½ È°ï¿½ï¿½È­
         ActivateForm(form);
 
-        // Æû Å¸ÀÌ¸Ó ¸®¼Â
+        // ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½
         formTimer = Time.time;
 
-        // ÇöÀç Æû ¾÷µ¥ÀÌÆ®
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
         currentForm = form;
 
-        Debug.Log($"[UnknownVirusBoss] {form} ÆûÀ¸·Î º¯½Å ¿Ï·á");
+        Debug.Log($"[UnknownVirusBoss] {form} ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½");
     }
 
     private void DeactivateCurrentForm()
     {
-        // ÇöÀç È°¼ºÈ­µÈ Æû ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­
         if (currentActiveFormObject != null)
         {
-            // Æû ¿ÀºêÁ§Æ® ºñÈ°¼ºÈ­
+            // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½È°ï¿½ï¿½È­
             currentActiveFormObject.SetActive(false);
         }
 
@@ -361,7 +362,7 @@ public class UnknownVirusBoss : BossBase
             currentActiveBoss.ResetBoss();
         }
 
-        // ÇöÀç È°¼º º¸½º ÂüÁ¶ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         currentActiveBoss = null;
     }
 
@@ -369,7 +370,7 @@ public class UnknownVirusBoss : BossBase
     {
         GameObject targetFormObject = null;
 
-        // Æû¿¡ µû¶ó ´ë»ó ¿ÀºêÁ§Æ® ¼±ÅÃ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 
         switch (form)
         {
@@ -394,19 +395,18 @@ public class UnknownVirusBoss : BossBase
                 break;
         }
 
-        // ´ë»ó Æû ¿ÀºêÁ§Æ® È°¼ºÈ­
+        // ìƒˆë¡œìš´ í¼ ì˜¤ë¸Œì íŠ¸ í™œì„±í™”
         if (targetFormObject != null)
         {
             targetFormObject.SetActive(true);
 
-            // À§Ä¡/È¸Àü µ¿±âÈ­
+            // ìœ„ì¹˜/íšŒì „ ë™ê¸°í™”
             SyncFormTransform(targetFormObject);
 
-            // Ã¼·Â µ¿±âÈ­
+            // ì²´ë ¥ ë™ê¸°í™”
             SyncHealthToActiveForm(targetFormObject, form);
 
-
-            // ÇöÀç È°¼º Æû ¿ÀºêÁ§Æ® ¾÷µ¥ÀÌÆ®
+            // í˜„ì¬ í™œì„± í¼ ì˜¤ë¸Œì íŠ¸ ì—…ë°ì´íŠ¸
             currentActiveFormObject = targetFormObject;
         }
     }
@@ -416,21 +416,21 @@ public class UnknownVirusBoss : BossBase
         if (formObject == null || formObject == basicFormObject)
             return;
 
-        // ÇöÀç Æû À§Ä¡¸¦ ±âÁØÀ¸·Î µ¿±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
         formObject.transform.position = currentActiveFormObject.transform.position;
         formObject.transform.rotation = currentActiveFormObject.transform.rotation;
     }
 
     private void SyncHealthToActiveForm(GameObject formObject, BossForm form)
     {
-        // ÇöÀç Ã¼·Â ºñÀ² °è»ê
+        // ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         float healthRatio = bossStatus.GetHealth() / bossStatus.GetMaxHealth();
 
-        // ´ë»ó ÆûÀÇ Ã¼·Â ÄÄÆ÷³ÍÆ® °¡Á®¿À±â
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         BossStatus targetStatus = formObject.GetComponent<BossStatus>();
 
 
-        // ´ë»ó Ã¼·Â ¼³Á¤ (ºñÀ² µ¿ÀÏÇÏ°Ô)
+        // ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½)
         if (targetStatus != null)
         {
             float newHealth = targetStatus.GetMaxHealth() * healthRatio;
@@ -443,23 +443,23 @@ public class UnknownVirusBoss : BossBase
         if (currentForm == BossForm.Basic || currentActiveBoss == null)
             return;
 
-        // ÇöÀç È°¼º ÆûÀÇ Ã¼·Â ºñÀ² °è»ê
+        // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         BossStatus formStatus = currentActiveBoss.GetComponent<BossStatus>();
         if (formStatus == null)
             return;
 
         float healthRatio = formStatus.GetHealth() / formStatus.GetMaxHealth();
 
-        // º»Ã¼ Ã¼·Â ºñÀ² µ¿±âÈ­
+        // ï¿½ï¿½Ã¼ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
         bossStatus.SetHealth(bossStatus.GetMaxHealth() * healthRatio);
 
-        // UI °»½Å
+        // UI ï¿½ï¿½ï¿½ï¿½
         HPBar?.SetRatio(bossStatus.GetHealth(), bossStatus.GetMaxHealth());
     }
 
     private void DeactivateAllForms()
     {
-        // ¸ğµç Æû ºñÈ°¼ºÈ­ (»ç¸Á½Ã »ç¿ë)
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­ (ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
         if (wormFormObject != null)
             wormFormObject.SetActive(false);
 
@@ -469,14 +469,14 @@ public class UnknownVirusBoss : BossBase
         if (ransomwareFormObject != null)
             ransomwareFormObject.SetActive(false);
 
-        // ÂüÁ¶ ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         basicFormObject.SetActive(true);
         currentActiveFormObject = basicFormObject;
         currentActiveBoss = null;
     }
     #endregion
 
-    #region ¾÷µ¥ÀÌÆ® ·ÎÁ÷
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
   
 
     public void PrepareToReturnToBasicForm()
@@ -488,42 +488,42 @@ public class UnknownVirusBoss : BossBase
     {
         StopAllCoroutines();
 
-        // »ç¸Á Ã³¸®
+        // ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
         DeactivateAllForms();
 
-        // »ç¸Á »óÅÂ·Î ÀüÈ¯
+        // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½È¯
         fsm.ForcedTransition(deadState);
 
-        Debug.Log("[UnknownVirusBoss] º¸½º »ç¸Á");
+        Debug.Log("[UnknownVirusBoss] ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½");
     }
 
     public void RequestFormChange(BossForm newForm)
     {
-        // º¯½Å È¿°ú È°¼ºÈ­
+        // ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ È°ï¿½ï¿½È­
         if (transformationVFX != null)
             transformationVFX.SetActive(true);
     }
 
     #endregion
 
-    #region µ¥¹ÌÁö Ã³¸®
+    #region ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
     public override void TakeDamage(float damage, bool showDamage = true)
     {
-        // ÇöÀç È°¼ºÈ­µÈ Æû¿¡ µ¥¹ÌÁö Àü´Ş
+        // ï¿½ï¿½ï¿½ï¿½ È°ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (currentForm != BossForm.Basic && currentActiveBoss != null)
         {
-            // º¯½Å Æû¿¡ µ¥¹ÌÁö Àû¿ë
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             currentActiveBoss.TakeDamage(damage, showDamage);
 
-            // ±âº» Æû¿¡µµ µ¥¹ÌÁö µ¿±âÈ­
+            // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
             SyncHealthFromActiveBoss();
         }
         else
         {
-            // ±âº» Æû µ¥¹ÌÁö Ã³¸®
+            // ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
             bossStatus.DecreaseHealth(damage);
 
-            // ÇÇÇØ ÀÌº¥Æ® ¹× UI Ç¥½Ã
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ìºï¿½Æ® ï¿½ï¿½ UI Ç¥ï¿½ï¿½
             EventManager.Instance.TriggerMonsterDamagedEvent();
             if (showDamage && UIDamaged != null)
             {
@@ -536,11 +536,11 @@ public class UnknownVirusBoss : BossBase
                 popup.damage = damage;
             }
 
-            // UI °»½Å
+            // UI ï¿½ï¿½ï¿½ï¿½
             HPBar?.SetRatio(bossStatus.GetHealth(), bossStatus.GetMaxHealth());
         }
 
-        // »ç¸Á Ã¼Å©
+        // ï¿½ï¿½ï¿½ Ã¼Å©
         if (bossStatus.GetHealth() <= 0 && !(fsm.CurrentState is DefeatedState_UnknownVirus))
         {
             HandleDeath();
@@ -548,8 +548,8 @@ public class UnknownVirusBoss : BossBase
     }
     #endregion
 
-    #region ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌº¥Æ® ÇÚµé·¯
-    // ¸Ê °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÀÌº¥Æ®
+    #region ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ® ï¿½Úµé·¯
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ï·ï¿½ ï¿½Ìºï¿½Æ®
     public void OnMapAttackFinished()
     {
         if (mapAttackState != null)
@@ -558,59 +558,57 @@ public class UnknownVirusBoss : BossBase
         }
     }
 
-    // ±âº» °ø°İ ¾Ö´Ï¸ŞÀÌ¼Ç ¿Ï·á ÀÌº¥Æ®
+    // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ï·ï¿½ ï¿½Ìºï¿½Æ®
     public void OnBasicAttackFinished()
     {
-        // ±âº» °ø°İ ¿Ï·á Ã³¸® (ÇÊ¿ä½Ã)
+        // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ Ã³ï¿½ï¿½ (ï¿½Ê¿ï¿½ï¿½)
     }
     #endregion
 
-    #region ¸Ê °ø°İ ·ÎÁ÷
-    // ¸Ê °ø°İ Æ®¸®°Å ¸Ş¼­µå
+    #region ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     public void TriggerMapAttack()
     {
         try
         {
             if (tileManager == null)
             {
-                Debug.LogError("¸Ê °ø°İ ½ÇÇà ºÒ°¡: TileManager°¡ nullÀÔ´Ï´Ù");
+                Debug.LogError("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½: TileManagerï¿½ï¿½ nullï¿½Ô´Ï´ï¿½");
                 mapAttackState?.OnAttackFinished();
                 return;
             }
 
-            // °Ë»ö ¾Ë°í¸®Áò ¼±ÅÃ (·£´ı)
+            // ï¿½Ë»ï¿½ ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)
             int searchMethod = UnityEngine.Random.Range(0, 3);
             StartCoroutine(ExecuteMapAttack(searchMethod));
-
-            mapAttackState?.OnAttackFinished();
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"TriggerMapAttack ¿À·ù: {e.Message}\n{e.StackTrace}");
+            Debug.LogError($"TriggerMapAttack ï¿½ï¿½ï¿½ï¿½: {e.Message}\n{e.StackTrace}");
             mapAttackState?.OnAttackFinished();
         }
     }
 
     private IEnumerator ExecuteMapAttack(int searchMethod)
     {
-        // ÇÃ·¹ÀÌ¾î ÁÖº¯ ÁÂÇ¥ °è»ê
+        // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Öºï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½
         Vector3 playerPos = target.position;
 
-        // ¿ùµå ÁÂÇ¥¸¦ Å¸ÀÏ ±×¸®µå ÁÂÇ¥·Î º¯È¯
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
         int centerX = Mathf.RoundToInt(playerPos.x / 2);
         int centerZ = Mathf.RoundToInt(playerPos.z / 2);
 
-        Debug.Log($"±×¸®µå À§Ä¡ [{centerX}, {centerZ}]¿¡¼­ ¸Ê °ø°İ ½ÃÀÛ");
+        Debug.Log($"ï¿½×¸ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ [{centerX}, {centerZ}]ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
 
-        // ¸ñÇ¥ Å¸ÀÏ ¹«ÀÛÀ§ ¼±ÅÃ (°ø°İ ¿µ¿ª ³»)
+        // ï¿½ï¿½Ç¥ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)
         int targetX = centerX + UnityEngine.Random.Range(-attackAreaSize / 2, attackAreaSize / 2 + 1);
         int targetZ = centerZ + UnityEngine.Random.Range(-attackAreaSize / 2, attackAreaSize / 2 + 1);
 
-        // À¯È¿ÇÑ ¸Ê ¹üÀ§ ³»·Î Á¶Á¤
+        // ï¿½ï¿½È¿ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         targetX = Mathf.Clamp(targetX, 0, tileManager.GetMapSize - 1);
         targetZ = Mathf.Clamp(targetZ, 0, tileManager.GetMapSize - 1);
 
-        // °Ë»ö ¹æ¹ı¿¡ µû¸¥ È¿°ú ½ÇÇà
+        // ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         switch (searchMethod)
         {
             case 0:
@@ -624,45 +622,45 @@ public class UnknownVirusBoss : BossBase
                 break;
         }
 
-        // °ø°İ ¿Ï·á ÈÄ ´ë±â
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½
         yield return new WaitForSeconds(1f);
 
-        // ¸Ê °ø°İ »óÅÂ ¿Ï·á ¾Ë¸²
+        // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½Ë¸ï¿½
         mapAttackState?.OnAttackFinished();
     }
 
-    // ¼±Çü Å¸ÀÏ °Ë»ö °ø°İ
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½
     private IEnumerator LinearTileSearch(int centerX, int centerZ, int targetX, int targetZ)
     {
         int halfSize = attackAreaSize / 2;
 
-        // °Ë»ö ¹üÀ§ °è»ê (ÇÃ·¹ÀÌ¾î Áß½ÉÀ¸·Î attackAreaSize x attackAreaSize ¿µ¿ª)
+        // ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ (ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ attackAreaSize x attackAreaSize ï¿½ï¿½ï¿½ï¿½)
         int minX = Mathf.Max(0, centerX - halfSize);
         int maxX = Mathf.Min(tileManager.GetMapSize - 1, centerX + halfSize);
         int minZ = Mathf.Max(0, centerZ - halfSize);
         int maxZ = Mathf.Min(tileManager.GetMapSize - 1, centerZ + halfSize);
 
-        Debug.Log($"¼±Çü °Ë»ö ¿µ¿ª: [{minX},{minZ}] ¿¡¼­ [{maxX},{maxZ}], ¸ñÇ¥: [{targetX},{targetZ}]");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½: [{minX},{minZ}] ï¿½ï¿½ï¿½ï¿½ [{maxX},{maxZ}], ï¿½ï¿½Ç¥: [{targetX},{targetZ}]");
 
-        // ¸ğµç Å¸ÀÏÀ» ¼øÂ÷ÀûÀ¸·Î °Ë»ö
+        // ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
         for (int x = minX; x <= maxX; x++)
         {
             for (int z = minZ; z <= maxZ; z++)
             {
-                // ÇöÀç °Ë»ö Å¸ÀÏ Ç¥½Ã
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ Å¸ï¿½ï¿½ Ç¥ï¿½ï¿½
                 HighlightTile(x, z, Color.red);
 
-                // ¿ùµå ÁÂÇ¥·Î º¯È¯
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½È¯
                 Vector3 tilePos = new Vector3(x * 2, 0, z * 2);
 
-                // ·¹ÀÌÀú È¿°ú
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
                 if (laserPrefab != null)
                 {
                     GameObject laser = Instantiate(laserPrefab,
-                       tilePos + Vector3.up * 0.2f, // Å¸ÀÏ ¹Ù·Î À§
+                       tilePos + Vector3.up * 0.2f, // Å¸ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½
                        Quaternion.identity);
 
-                    // ·¹ÀÌÀú µ¥¹ÌÁö ¼³Á¤ (VirusLaser ÄÄÆ÷³ÍÆ®°¡ ÀÖ´Ù°í °¡Á¤)
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (VirusLaser ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½)
                     var virusLaser = laser.GetComponent<VirusLaser>();
                     if (virusLaser != null)
                     {
@@ -672,39 +670,39 @@ public class UnknownVirusBoss : BossBase
 
                 yield return new WaitForSeconds(tileSearchInterval);
 
-                // Å¸°Ù Å¸ÀÏÀ» Ã£À¸¸é Ãæ°İÆÄ È¿°ú
+                // Å¸ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
                 if (x == targetX && z == targetZ)
                 {
-                    // Å¸°Ù Å¸ÀÏ Ç¥½Ã
+                    // Å¸ï¿½ï¿½ Å¸ï¿½ï¿½ Ç¥ï¿½ï¿½
                     HighlightTile(x, z, Color.green);
 
-                    // Ãæ°İÆÄ »ı¼º (TileManagerÀÇ CreateShockwave ÄÚ·çÆ¾ È£Ãâ)
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (TileManagerï¿½ï¿½ CreateShockwave ï¿½Ú·ï¿½Æ¾ È£ï¿½ï¿½)
                     StartCoroutine(tileManager.CreateShockwave(x, z, halfSize, shockwavePower));
 
                     yield break;
                 }
 
-                // °Ë»ö ¿Ï·áµÈ Å¸ÀÏ ¸®¼Â
+                // ï¿½Ë»ï¿½ ï¿½Ï·ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 ResetTileColor(x, z);
             }
         }
     }
 
-    // ÀÌÁø Å¸ÀÏ °Ë»ö °ø°İ
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½
     private IEnumerator BinaryTileSearch(int centerX, int centerZ, int targetX, int targetZ)
     {
         int halfSize = attackAreaSize / 2;
 
-        // °Ë»ö ¹üÀ§ °è»ê
+        // ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         int leftX = Mathf.Max(0, centerX - halfSize);
         int rightX = Mathf.Min(tileManager.GetMapSize - 1, centerX + halfSize);
         int topZ = Mathf.Max(0, centerZ - halfSize);
         int bottomZ = Mathf.Min(tileManager.GetMapSize - 1, centerZ + halfSize);
 
-        Debug.Log($"ÀÌÁø °Ë»ö ¿µ¿ª: [{leftX},{topZ}] ¿¡¼­ [{rightX},{bottomZ}], ¸ñÇ¥: [{targetX},{targetZ}]");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½: [{leftX},{topZ}] ï¿½ï¿½ï¿½ï¿½ [{rightX},{bottomZ}], ï¿½ï¿½Ç¥: [{targetX},{targetZ}]");
 
         int iterations = 0;
-        int maxIterations = 10; // ¹«ÇÑ ·çÇÁ ¹æÁö
+        int maxIterations = 10; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         while (leftX <= rightX && topZ <= bottomZ && iterations < maxIterations)
         {
@@ -712,14 +710,14 @@ public class UnknownVirusBoss : BossBase
             int midX = (leftX + rightX) / 2;
             int midZ = (topZ + bottomZ) / 2;
 
-            // ÇöÀç °Ë»ö ¿µ¿ª °­Á¶
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             for (int x = leftX; x <= rightX; x++)
             {
                 for (int z = topZ; z <= bottomZ; z++)
                 {
                     HighlightTile(x, z, Color.red);
 
-                    // °æ°è Å¸ÀÏ¿¡¸¸ ·¹ÀÌÀú È¿°ú
+                    // ï¿½ï¿½ï¿½ Å¸ï¿½Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
                     if (x == leftX || x == rightX || z == topZ || z == bottomZ)
                     {
                         if (laserPrefab != null)
@@ -729,7 +727,7 @@ public class UnknownVirusBoss : BossBase
                                 tilePos + Vector3.up * 0.2f,
                                 Quaternion.identity);
 
-                            // ·¹ÀÌÀú µ¥¹ÌÁö ¼³Á¤
+                            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                             var virusLaser = laser.GetComponent<VirusLaser>();
                             if (virusLaser != null)
                             {
@@ -742,7 +740,7 @@ public class UnknownVirusBoss : BossBase
 
             yield return new WaitForSeconds(0.5f);
 
-            // °­Á¶ È¿°ú ÃÊ±âÈ­
+            // ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½Ê±ï¿½È­
             for (int x = leftX; x <= rightX; x++)
             {
                 for (int z = topZ; z <= bottomZ; z++)
@@ -753,14 +751,14 @@ public class UnknownVirusBoss : BossBase
 
             yield return new WaitForSeconds(0.2f);
 
-            // Å¸°ÙÀ» Ã£¾Ò´ÂÁö È®ÀÎ
+            // Å¸ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½Ò´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             if (midX == targetX && midZ == targetZ)
             {
                 HighlightTile(midX, midZ, Color.green);
                 yield break;
             }
 
-            // ÀÌÁø °Ë»ö ·ÎÁ÷
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½
             if (targetX < midX)
                 rightX = midX - 1;
             else
@@ -772,34 +770,34 @@ public class UnknownVirusBoss : BossBase
                 topZ = midZ + 1;
         }
 
-        // Å¸°Ù ¿µ¿ª °­Á¶ ¹× È¿°ú Àû¿ë (ÀÌÁø °Ë»öÀÌ ½ÇÆĞÇßÀ» °æ¿ì)
+        // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½)
         HighlightTile(targetX, targetZ, Color.green);
     }
 
-    // ·£´ı Å¸ÀÏ °Ë»ö °ø°İ
+    // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½
     private IEnumerator RandomTileSearch(int centerX, int centerZ, int targetX, int targetZ)
     {
         int halfSize = attackAreaSize / 2;
 
-        // °Ë»ö ¹üÀ§ °è»ê
+        // ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         int minX = Mathf.Max(0, centerX - halfSize);
         int maxX = Mathf.Min(tileManager.GetMapSize - 1, centerX + halfSize);
         int minZ = Mathf.Max(0, centerZ - halfSize);
         int maxZ = Mathf.Min(tileManager.GetMapSize - 1, centerZ + halfSize);
 
-        Debug.Log($"·£´ı °Ë»ö ¿µ¿ª: [{minX},{minZ}] ¿¡¼­ [{maxX},{maxZ}], ¸ñÇ¥: [{targetX},{targetZ}]");
+        Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½: [{minX},{minZ}] ï¿½ï¿½ï¿½ï¿½ [{maxX},{maxZ}], ï¿½ï¿½Ç¥: [{targetX},{targetZ}]");
 
         HashSet<Vector2Int> searchedTiles = new HashSet<Vector2Int>();
         int maxAttempts = Mathf.Min(20, (maxX - minX + 1) * (maxZ - minZ + 1));
 
         for (int i = 0; i < maxAttempts; i++)
         {
-            // °Ë»ö ¹üÀ§ ³»¿¡¼­ ·£´ı Å¸ÀÏ ¼±ÅÃ
+            // ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             int x = UnityEngine.Random.Range(minX, maxX + 1);
             int z = UnityEngine.Random.Range(minZ, maxZ + 1);
             Vector2Int tilePos = new Vector2Int(x, z);
 
-            // ÀÌ¹Ì °Ë»öÇÑ Å¸ÀÏÀÌ¸é ´Ù½Ã ¼±ÅÃ (ÃÖ´ë 3¹ø)
+            // ï¿½Ì¹ï¿½ ï¿½Ë»ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½Ö´ï¿½ 3ï¿½ï¿½)
             int attempts = 0;
             while (searchedTiles.Contains(tilePos) && attempts < 3)
             {
@@ -811,7 +809,7 @@ public class UnknownVirusBoss : BossBase
 
             searchedTiles.Add(tilePos);
 
-            // Å¸ÀÏ °­Á¶ ¹× ·¹ÀÌÀú È¿°ú
+            // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È¿ï¿½ï¿½
             HighlightTile(x, z, Color.red);
 
             if (laserPrefab != null)
@@ -825,22 +823,22 @@ public class UnknownVirusBoss : BossBase
 
             yield return new WaitForSeconds(tileSearchInterval);
 
-            // Å¸°Ù Å¸ÀÏÀ» Ã£¾Ò´ÂÁö È®ÀÎ
+            // Å¸ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½Ò´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             if (x == targetX && z == targetZ)
             {
                 HighlightTile(x, z, Color.green);
                 yield break;
             }
 
-            // °Ë»ö ¿Ï·áµÈ Å¸ÀÏ ¸®¼Â
+            // ï¿½Ë»ï¿½ ï¿½Ï·ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             ResetTileColor(x, z);
         }
 
-        // ÃÖ´ë ½Ãµµ È½¼ö¸¦ ÃÊ°úÇØµµ Å¸°ÙÀ» Ã£Áö ¸øÇÑ °æ¿ì
+        // ï¿½Ö´ï¿½ ï¿½Ãµï¿½ È½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½Øµï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         HighlightTile(targetX, targetZ, Color.green);
     }
 
-    // Å¸ÀÏ °­Á¶ ÇïÆÛ ¸Ş¼­µå
+    // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     private void HighlightTile(int x, int z, Color color)
     {
         if (x < 0 || x >= tileManager.GetMapSize || z < 0 || z >= tileManager.GetMapSize)
@@ -857,7 +855,7 @@ public class UnknownVirusBoss : BossBase
         }
     }
 
-    // Å¸ÀÏ »ö»ó ¸®¼Â ÇïÆÛ ¸Ş¼­µå
+    // Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     private void ResetTileColor(int x, int z)
     {
         if (x < 0 || x >= tileManager.GetMapSize || z < 0 || z >= tileManager.GetMapSize)
@@ -874,7 +872,7 @@ public class UnknownVirusBoss : BossBase
         }
     }
 
-    // °ø°İ Á¾·á ½Ã Á¤¸® ¸Ş¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ş¼ï¿½ï¿½ï¿½
     public void CleanupMapAttack()
     {
     }
