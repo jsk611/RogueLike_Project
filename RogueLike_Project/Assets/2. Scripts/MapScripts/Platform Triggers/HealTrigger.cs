@@ -9,7 +9,8 @@ public class HealTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
     [SerializeField] int healCost = 200;
-    Color originColor;
+    [SerializeField] Color originColor;
+
     string uiText = "Recovery - 100DNA";
     bool isHealed = false;
     
@@ -19,14 +20,13 @@ public class HealTrigger : MonoBehaviour
     {
         ps = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
         isHealed = false;
-        originColor = GetComponent<MeshRenderer>().material.color;
     }
 
     private void OnEnable()
     {
         isHealed = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
-        GetComponent<MeshRenderer>().material.color = originColor;
+        GetComponent<MeshRenderer>().material.SetColor("_Tint", originColor);
     }
 
     private void OnTriggerStay(Collider other)
@@ -41,7 +41,7 @@ public class HealTrigger : MonoBehaviour
                 isHealed = true;
                 ps.IncreaseHealth(ps.GetMaxHealth() * 0.25f * PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate);
                 ps.DecreaseCoin(healCost);
-                GetComponent<MeshRenderer>().material.color -= new Color(1, 1, 1, 0.125f);
+                GetComponent<MeshRenderer>().material.SetColor("_Tint", originColor - new Color(1,1,1,0));
                 GetComponentInChildren<PlatformIcon>().gameObject.SetActive(false);
 
             }
