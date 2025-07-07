@@ -3,40 +3,25 @@
   "isMultiMap": false,
   "maps": [
     {
-      "file": "1_6",
+      "file": "1_7",
       "duration": 60
     }
   ],
-  "isRandomEnemy": false,
+  "isRandomPos": true,
   "enemies": [
     {
       "type": 101,
       "count": 6,
-      "spawnPoints": [
-        { "x": 27, "y": 11}
-      ],
-      "spawnDelay": 20
+      "spawnDelay": 15
     },
     {
       "type": 111,
       "count": 6,
-      "spawnPoints": [
-        {
-          "x": 2,
-          "y": 18
-        }
-      ],
-      "spawnDelay": 20
+      "spawnDelay": 15
     },
     {
       "type": 102,
       "count": 6,
-      "spawnPoints": [
-        {
-          "x": 11,
-          "y": 27
-        }
-      ],
       "spawnDelay": 30
     }
   ],
@@ -50,14 +35,15 @@
       "x": 6,
       "y": 6
     },
-    "footholdHeight": 2.5
+    "footholdHeight": 2.5,
+    "time": 10
 
 
 
   },
-  
+
   "isRandomEvent": false,
   "events": [
-    
+
   ]
 }
