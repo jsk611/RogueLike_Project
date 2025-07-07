@@ -491,8 +491,9 @@ public class WaveManager : MonoBehaviour
         //    item.isChasing = true;
         //    item.velocity *= 2;
         //}
-        tileManager.InitializeArray(currentStage,4);
-        yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
+        //tileManager.InitializeArray(currentStage,4);
+        //yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
+        yield return new WaitForSeconds(2f);
 
         //upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
         //if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);

@@ -43,7 +43,7 @@ public class Vector2Data
 [Serializable]
 public class MissionInfo
 {
-    public string type;
+    public string type; //Killing, Boss, Survive, Capture, Item
 
     //처치or아이템
     public int count;

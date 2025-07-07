@@ -10,6 +10,7 @@ public class BossHPBar : MonoBehaviour
     [SerializeField] Image mid;
     [SerializeField] float speed = 0.2f;
     [SerializeField] TMP_Text bossName;
+    [SerializeField] TMP_Text percent;
     BossStatus bossStatus;
 
     float ratio = 1f;
@@ -34,6 +35,7 @@ public class BossHPBar : MonoBehaviour
     void SetRatio(float current, float max)
     {
         ratio = current / max;
+        percent.text = $"{(int)(ratio * 100)}%"; 
     }
 
     public void SetBoss(BossStatus boss)
