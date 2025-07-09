@@ -180,14 +180,11 @@ public class MonsterStatus : StatusBehaviour
 
     // Movement Speeds
     public override void IncreaseMovementSpeed(float moveSpeed)
-    { if(currentCC == CC.normal)MoveSpeed += moveSpeed; }
+    { MoveSpeed += moveSpeed; }
     public override void DecreaseMovementSpeed(float moveSpeed)
     {
-        if (currentCC == CC.normal)
-        {
-            MoveSpeed -= moveSpeed;
-            if (MoveSpeed < 0) MoveSpeed = 0;
-        }
+        MoveSpeed -= moveSpeed;
+        if (MoveSpeed < 0) MoveSpeed = 0;
     }
     public override void SetMovementSpeed(float moveSpeed)
     {
@@ -284,8 +281,7 @@ public class MonsterStatus : StatusBehaviour
 
     public override IEnumerator Shocked(float damage, float duration, float probability,float interval, float shockTime)
     {
-        if (currentCon == Condition.Shocked) yield break;
-        eventHandler.SetShockTime(shockTime);
+        eventHandler.SetShockTime(duration/10);
         float startTime = 0;
         float latest = 0;
  
@@ -319,19 +315,32 @@ public class MonsterStatus : StatusBehaviour
     //}
     public override IEnumerator Frozen(float damage,float effect,float duration)
     {
-        Debug.Log("Get Frozened");
+        Debug.Log("Get Frozen");
         if (currentCon == Condition.Frozen) yield break;
-        eventHandler.SetFrozenTime(duration);
         currentCon = Condition.Frozen;
-        monsterBase.TakeDamage(0,false);
-        yield return new WaitForSeconds(duration);
-        monsterBase.TakeDamage(damage);
+        float originSpeed = GetMovementSpeed();
+        if (effect >= 100)
+        {
+            eventHandler.SetFrozenTime(duration);
+            monsterBase.TakeDamage(0,false);
+            yield return new WaitForSeconds(duration);
+            monsterBase.TakeDamage(damage);
+        }
+        else
+        {
+            DecreaseMovementSpeed(originSpeed * (effect / 100));
+            yield return new WaitForSeconds(duration);
+            monsterBase.TakeDamage(damage);
+            SetMovementSpeed(originSpeed);
+        }
+
         currentCon = Condition.normal;
         currentCC = CC.normal;
     }
     public override IEnumerator Blazed(float damage, float probability, float duration, float interval)
     {
-     //   if (currentCon == Condition.Blazed) yield break;
+        //   if (currentCon == Condition.Blazed) yield break;
+        if (Random.Range(0f, 100f) > probability) yield break;
         currentCon = Condition.Blazed;
         float startTime = Time.time;
         while (Time.time - startTime < duration)

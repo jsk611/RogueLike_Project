@@ -175,10 +175,10 @@ public abstract class MonsterBase : MonoBehaviour
         // Debug.Log($"{name} current state = {state}");
         // if (state == State.IDLE) CheckPlayer();
         // ???? ???????? ???? ????
-        if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
+       // if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
+        chaseSpeed = monsterStatus.GetMovementSpeed();
         ExecuteStateAction();
-
-
+        Debug.Log(chaseSpeed);
     }
 
     private void LateUpdate()

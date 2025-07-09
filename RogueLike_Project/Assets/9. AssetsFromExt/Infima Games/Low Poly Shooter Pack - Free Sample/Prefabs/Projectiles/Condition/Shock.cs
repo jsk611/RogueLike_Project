@@ -20,7 +20,7 @@ public class Shock : WeaponCondition
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
-            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Shocked, effect, duration, interval,shockTime);
+            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Shocked, damage, duration, probability, interval, effect,shockTime);
         }
     }
 }

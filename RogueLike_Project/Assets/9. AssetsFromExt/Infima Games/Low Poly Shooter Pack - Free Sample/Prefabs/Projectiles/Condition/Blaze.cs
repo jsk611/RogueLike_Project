@@ -12,7 +12,7 @@ public class Blaze : WeaponCondition
         if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
             if (collision.gameObject.GetComponent<StatusBehaviour>() == null) return;
-            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Blazed,effect,duration,interval);
+            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Blazed,damage,duration,probability,interval,effect);
         }
     }
 }

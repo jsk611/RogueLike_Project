@@ -10,7 +10,7 @@ public class Freeze : WeaponCondition
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
-            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Frozen, effect, duration, interval);
+            collision.gameObject.GetComponent<StatusBehaviour>().ConditionOverload(StatusBehaviour.Condition.Frozen, damage, duration, probability,interval,effect);
         }
     }
 }

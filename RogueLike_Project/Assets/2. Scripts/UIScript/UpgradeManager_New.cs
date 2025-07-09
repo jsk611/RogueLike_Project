@@ -296,7 +296,7 @@ public class UpgradeManager_New : MonoBehaviour
         switch ((WeaponUpgradeSet)upgradeResult)
         {
             case WeaponUpgradeSet.damage:
-                WeaponConditionUpgrade(1, 0, 0, 0, 0);
+                WeaponConditionUpgrade(5, 0, 0, 0, 0);
                 break;
             case WeaponUpgradeSet.interval:
                 WeaponConditionUpgrade(0, 0, 0, 1, 0);
@@ -305,7 +305,7 @@ public class UpgradeManager_New : MonoBehaviour
                 WeaponConditionUpgrade(0, 0, 0, 0, 1);
                 break;
             case WeaponUpgradeSet.probability:
-                WeaponConditionUpgrade(0, 0, 1, 0, 0);
+                WeaponConditionUpgrade(0, 0, 15, 0, 0);
                 break;
             case WeaponUpgradeSet.duration:
                 WeaponConditionUpgrade(0, 1, 0, 0, 0);
