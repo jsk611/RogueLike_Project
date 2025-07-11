@@ -372,7 +372,7 @@ public class WaveManager : MonoBehaviour
             Vector2Int randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
             while (tileManager.GetTileMap[randomPos.y, randomPos.x] <= 0)
             {
-                randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
+                randomPos = new Vector2Int(Random.Range(1, mapSize-1), Random.Range(1, mapSize-1));
             }
             
             enemySpawnLogic.SpawnEnemy(randomPos.x, randomPos.y, enemyType);
