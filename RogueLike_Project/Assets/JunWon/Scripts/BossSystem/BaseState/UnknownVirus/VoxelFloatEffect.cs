@@ -51,16 +51,6 @@ public class VoxelFloatEffect : MonoBehaviour
         {
             FloatVoxels();
         }
-
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            StartCoroutine(DropFragmentsToGround());
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            StartCoroutine(EpicGroupRise());
-        }
     }
 
     private void InitializeVoxelPositions()
@@ -421,49 +411,56 @@ public class VoxelFloatEffect : MonoBehaviour
         Debug.Log("[VoxelFloatEffect] 변신 복귀 floating 효과 완료 - 정상 상태");
     }
 
-    /// <summary>
-    /// 조각들이 흘러내리고 솟아올라서 큐브모양으로 재배치되는 이펙트 시작
-    /// </summary>
-    public void StartDropAndRiseEffect()
+    public void StartDropEffect()
     {
-        Debug.Log("[VoxelFloatEffect] 조각 흘러내리고 솟아오르는 이펙트 시작");
+        Debug.Log("[VoxelFloatEffect] 드롭 효과 시작");
         
-        // 기존 floating 효과 일시정지
-        SetPaused(true);
-        
-        // 드롭앤라이즈 이펙트 시작
-        StartCoroutine(DropAndRiseSequence());
-    }
-    
-    /// <summary>
-    /// 흘러내리고 솟아오르는 전체 시퀀스
-    /// </summary>
-    private IEnumerator DropAndRiseSequence()
-    {
-        Debug.Log("[VoxelFloatEffect] 드롭앤라이즈 시퀀스 시작");
-        
-        // 1단계: 조각들을 바닥으로 흘러내리기
-        yield return StartCoroutine(DropFragmentsToGround());
-        
-        // 2단계: 잠시 대기 (바닥에서 안정화)
-        yield return new WaitForSeconds(1f);
-        
-        // 3단계: 조각들을 솟아올려서 큐브 형태로 재배치
-        yield return StartCoroutine(RiseAndFormCube());
-        
-        // 4단계: 정상 floating 효과 재개
-        SetPaused(false);
-        StartFloatingEffect();
-        
-        Debug.Log("[VoxelFloatEffect] 드롭앤라이즈 시퀀스 완료");
+        // 드롭 시퀀스 시작
+        StartCoroutine(DropSequence());
     }
 
-    /// <summary>
-    /// 조각들을 바닥으로 흘러내리기
-    /// </summary>
+    public IEnumerator DropSequence()
+    {
+        Debug.Log("[VoxelFloatEffect] 드롭 시퀀스 시작");
+
+        // 1단계: 조각들을 바닥으로 흘러내리기
+        yield return StartCoroutine(DropFragmentsToGround());
+
+        // 2단계: 잠시 대기 (바닥에서 안정화) - 더 빠르게
+        yield return new WaitForSeconds(3.0f); // 1f → 0.5f로 단축
+        
+        Debug.Log("[VoxelFloatEffect] 드롭 시퀀스 완료");
+    }
+
+    public void StartRiseEffect()
+    {
+        Debug.Log("[VoxelFloatEffect] 라이즈 효과 시작");
+        
+        // 라이즈 시퀀스 시작
+        StartCoroutine(EpicGroupRise());
+    }
+
+    private IEnumerator RiseSequence()
+    {
+        Debug.Log("[VoxelFloatEffect] 라이즈 시퀀스 시작");
+        
+        // 상태 초기화
+        SetPaused(true);
+        
+        // EpicGroupRise 실행
+        yield return StartCoroutine(EpicGroupRise());
+
+        // 정상 floating 효과 재개 (더 빠르게)
+        yield return new WaitForSeconds(0.2f);
+        StartFloatingEffect();
+
+        Debug.Log("[VoxelFloatEffect] 라이즈 시퀀스 완료");
+    }
+
     private IEnumerator DropFragmentsToGround()
     {
         Debug.Log("[VoxelFloatEffect] 조각들을 얌전히 가라앉히기");
+
         SetPaused(true);
 
         foreach (Transform voxel in originalPositions.Keys)
@@ -473,10 +470,10 @@ public class VoxelFloatEffect : MonoBehaviour
             // 개별 가라앉기 효과 시작
             StartCoroutine(GentleDropAndSink(voxel));
 
-            yield return new WaitForSeconds(0.00001f);
+            yield return null; // 더 빠르게
         }
 
-        yield return new WaitForSeconds(2.0f);
+        yield return null; 
     }
 
     private IEnumerator GentleDropAndSink(Transform voxel)
@@ -497,30 +494,27 @@ public class VoxelFloatEffect : MonoBehaviour
             UnityEngine.Random.Range(-5f, 5f)
         );
 
-        // 가라앉기 애니메이션 (3단계로 분할)
+        // 가라앉기 애니메이션 (더 빠르게)
         Vector3 midPos = new Vector3(voxel.position.x, -0.2f, voxel.position.z) + offset * 0.5f;
         Vector3 finalPos = new Vector3(voxel.position.x, -0.8f, voxel.position.z) + offset;
 
-        // 1단계: 중간까지 (부드럽게)
-        voxel.transform.DOMove(midPos, 2f).SetEase(Ease.OutQuad);
-        
-        yield return new WaitForSeconds(1f);
-        
-        // 2단계: 최종 위치까지 (가속)
-        voxel.transform.DOMove(finalPos, 3f).SetEase(Ease.InQuad);
+        // 바로 최종 위치로 (더 빠르게)
+        voxel.transform.DOMove(finalPos, 0.6f).SetEase(Ease.OutQuad); // 1.0f → 0.6f
 
-        // 회전은 전체 시간에 걸쳐
+        // 회전은 전체 시간에 걸쳐 (더 빠르게)
         voxel.transform.DORotate(
             new Vector3(
                 UnityEngine.Random.Range(-25f, 25f),
                 UnityEngine.Random.Range(0f, 360f),
                 UnityEngine.Random.Range(-25f, 25f)
             ),
-            4f  // 전체 시간
+            0.6f  // 1.0f → 0.6f
         ).SetEase(Ease.OutCubic);
         
-        // 크기도 살짝 줄이기 (깊이감)
-        voxel.transform.DOScale(Vector3.one * 0.8f, 4f).SetEase(Ease.InQuad);
+        // 크기도 살짝 줄이기 (더 빠르게)
+        voxel.transform.DOScale(Vector3.one * 0.8f, 0.6f).SetEase(Ease.InQuad); // 1.0f → 0.6f
+
+        yield return null;
     }
 
     /// <summary>
@@ -626,13 +620,13 @@ public class VoxelFloatEffect : MonoBehaviour
     /// <summary>
     /// 더 드라마틱한 단체 솟아오르기 (대안)
     /// </summary>
-    private IEnumerator EpicGroupRise()
+    public IEnumerator EpicGroupRise()
     {
         Debug.Log("[VoxelFloatEffect] 에픽 단체 솟아오르기 시작");
         
         List<Transform> voxelList = new List<Transform>(originalPositions.Keys);
         
-        // 1단계: 모든 조각을 더 깊이 매장
+        // 1단계: 모든 조각을 더 깊이 매장 (더 빠르게)
         foreach (Transform voxel in voxelList)
         {
             if (voxel == null) continue;
@@ -640,13 +634,13 @@ public class VoxelFloatEffect : MonoBehaviour
             voxel.GetComponent<Rigidbody>().isKinematic = true;
             
             Vector3 buriedPos = voxel.position + Vector3.down * 1f;
-            voxel.transform.DOMove(buriedPos, 1f).SetEase(Ease.InQuad);
-            voxel.transform.DOScale(Vector3.one * 0.3f, 1f).SetEase(Ease.InQuad);
+            voxel.transform.DOMove(buriedPos, 0.5f).SetEase(Ease.InQuad); // 더 빠르게
+            voxel.transform.DOScale(Vector3.one * 0.3f, 0.5f).SetEase(Ease.InQuad); // 더 빠르게
         }
         
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.8f); // 더 빠르게
         
-        // 2단계: 파도처럼 순차적으로 솟아오르기
+        // 2단계: 파도처럼 순차적으로 솟아오르기 (더 빠르게)
         for (int i = 0; i < voxelList.Count; i++)
         {
             Transform voxel = voxelList[i];
@@ -657,25 +651,25 @@ public class VoxelFloatEffect : MonoBehaviour
             // 높이 오버슈트
             Vector3 overshootPos = targetPos + Vector3.up * 3f;
             
-            // 순차적으로 솟아오르기
-            voxel.transform.DOMove(overshootPos, 0.8f)
+            // 순차적으로 솟아오르기 (더 빠르게)
+            voxel.transform.DOMove(overshootPos, 0.5f) // 더 빠르게
                 .SetEase(Ease.OutQuart)
-                .SetDelay(i * 0.05f);
+                .SetDelay(i * 0.005f); // 더 빠르게
             
-            voxel.transform.DOScale(Vector3.one * 1.2f, 0.8f)
+            voxel.transform.DOScale(Vector3.one * 1.2f, 0.5f) // 더 빠르게
                 .SetEase(Ease.OutBack)
-                .SetDelay(i * 0.05f);
+                .SetDelay(i * 0.005f); // 더 빠르게
             
             // 회전
             voxel.transform.DORotate(
                 new Vector3(0, UnityEngine.Random.Range(0f, 360f), 0), 
-                0.8f
-            ).SetDelay(i * 0.05f);
+                0.5f // 더 빠르게
+            ).SetDelay(i * 0.005f); // 더 빠르게
         }
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.6f); // 더 빠르게
         
-        // 3단계: 정확한 위치로 착지
+        // 3단계: 정확한 위치로 착지 (더 빠르게)
         for (int i = 0; i < voxelList.Count; i++)
         {
             Transform voxel = voxelList[i];
@@ -683,20 +677,20 @@ public class VoxelFloatEffect : MonoBehaviour
             
             Vector3 targetPos = transform.TransformPoint(originalPositions[voxel]);
             
-            voxel.transform.DOMove(targetPos, 1f)
+            voxel.transform.DOMove(targetPos, 0.6f) // 더 빠르게
                 .SetEase(Ease.OutBounce)
-                .SetDelay(i * 0.03f);
+                .SetDelay(i * 0.005f); // 더 빠르게
             
-            voxel.transform.DORotate(Vector3.zero, 1f)
+            voxel.transform.DORotate(Vector3.zero, 0.6f) // 더 빠르게
                 .SetEase(Ease.OutQuart)
-                .SetDelay(i * 0.03f);
+                .SetDelay(i * 0.005f); // 더 빠르게
             
-            voxel.transform.DOScale(Vector3.one, 1f)
+            voxel.transform.DOScale(Vector3.one, 0.6f) // 더 빠르게
                 .SetEase(Ease.OutBounce)
-                .SetDelay(i * 0.03f);
+                .SetDelay(i * 0.005f); // 더 빠르게
         }
         
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.7f); // 더 빠르게
         
         SetPaused(false);
         Debug.Log("[VoxelFloatEffect] 에픽 단체 솟아오르기 완료");
@@ -719,5 +713,43 @@ public class VoxelFloatEffect : MonoBehaviour
         // 정상 floating 효과 재개
         SetPaused(false);
         RefreshVoxelList();
+    }
+
+    /// <summary>
+    /// 긴 드롭 효과 (지정된 시간 동안 드롭 상태 유지)
+    /// </summary>
+    public void StartLongDropEffect(float duration = 30f)
+    {
+        Debug.Log($"[VoxelFloatEffect] 긴 드롭 효과 시작 - {duration}초 유지");
+        
+        // 기존 DOTween 애니메이션 중단
+        StopAllCoroutines();
+        DOTween.KillAll();
+        
+        // 긴 드롭 시퀀스 시작
+        StartCoroutine(LongDropSequence(duration));
+    }
+
+    private IEnumerator LongDropSequence(float duration)
+    {
+        Debug.Log("[VoxelFloatEffect] 긴 드롭 시퀀스 시작");
+
+        // 1단계: 조각들을 바닥으로 흘러내리기
+        yield return StartCoroutine(DropFragmentsToGround());
+
+        // 2단계: 지정된 시간 동안 드롭 상태 유지
+        Debug.Log($"[VoxelFloatEffect] 드롭 상태 {duration}초 유지 중...");
+        yield return new WaitForSeconds(duration);
+        
+        Debug.Log("[VoxelFloatEffect] 긴 드롭 시퀀스 완료");
+    }
+
+    /// <summary>
+    /// 드롭 상태에서 즉시 다음 단계로 진행
+    /// </summary>
+    public void FinishDropEarly()
+    {
+        Debug.Log("[VoxelFloatEffect] 드롭 효과 조기 종료");
+        StopAllCoroutines();
     }
 }

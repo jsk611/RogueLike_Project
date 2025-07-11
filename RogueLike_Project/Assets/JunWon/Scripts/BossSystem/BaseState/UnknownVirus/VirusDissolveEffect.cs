@@ -528,15 +528,4 @@ public class VirusDissolveEffect : MonoBehaviour
         Debug.Log($"[VirusDissolveEffect] {gameObject.name} 디졸브 리셋 완료 - 기존 머티리얼로 복구");
     }
     
-    /// <summary>
-    /// 즉시 사라지기 (긴급용)
-    /// </summary>
-    public void InstantDissolve()
-    {
-        if (isDissolving) return;
-        
-        ApplyDissolveMaterials();
-        UpdateDissolveValue(1f);
-        OnDissolveComplete();
-    }
 } 
