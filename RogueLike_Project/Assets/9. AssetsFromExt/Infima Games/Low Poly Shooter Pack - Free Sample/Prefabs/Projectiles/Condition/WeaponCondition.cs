@@ -5,11 +5,11 @@ using UnityEngine;
 public abstract class WeaponCondition : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float damage;
-    public float duration;
-    public float probability;
-    public float interval;
-    public float effect;
+    public float damage= 1;
+    public float duration = 1;
+    public float probability= 1;
+    public float interval = 1;
+    public float effect = 1;
 
     //초기화 및 수정도 포함
 
