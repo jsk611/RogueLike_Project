@@ -380,7 +380,6 @@ public abstract class MonsterBase : MonoBehaviour
     private IEnumerator HandleDeath()
     {
         yield return new WaitForSeconds(dieDuration);
-        transform.position = new Vector3(-100, -100, -100);
         if (summonedMonster)
         {
             dropDNA = false;
@@ -394,8 +393,9 @@ public abstract class MonsterBase : MonoBehaviour
             if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
             //enemyCountData.enemyCount--;
         }
-
-        Destroy(gameObject, 0.1f);
+        transform.position = new Vector3(-100, -100, -100);
+        yield return null;
+        Destroy(gameObject);
     }
 
     private void SpawnItem()
