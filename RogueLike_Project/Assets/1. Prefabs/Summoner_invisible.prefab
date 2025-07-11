@@ -703,7 +703,6 @@ MonoBehaviour:
   target: {fileID: 0}
   body: {fileID: 0}
   head: {fileID: 0}
-  maxVerticalAngle: 60
   rotateSpeed: 2
   master: {fileID: 0}
   anim: {fileID: 4651061701667495703}
@@ -766,10 +765,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
-  Health: 100
-  MaxHealth: 100
+  Health: 250
+  MaxHealth: 250
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 3.5

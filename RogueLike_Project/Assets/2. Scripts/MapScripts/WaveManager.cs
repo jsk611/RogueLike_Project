@@ -27,6 +27,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] Material defaultSkybox;
     [SerializeField] GameObject footHold;
     [SerializeField] GameObject item;
+    public int monsterEnforceVar = 0;
     public float HP_enforceRate = 0.15f;
     public float ATK_enforceRate = 0.15f;
     bool nextWaveTrigger = false;
@@ -150,6 +151,8 @@ public class WaveManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         int prevWave = -1;
         UIManager.instance.isStarted = true;
+        monsterEnforceVar = 0;
+
         for(currentStage = debugStage; currentStage <= 4; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
@@ -162,7 +165,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                LoadWaveData($"{currentStage}-8");
+                //LoadWaveData($"{currentStage}-8");
                 //LoadWaveData($"2-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
@@ -235,6 +238,8 @@ public class WaveManager : MonoBehaviour
         jeongbiStage.transform.position = tileManager.GetTiles[stagePos.y, stagePos.x].transform.position;
         jeongbiStage.transform.position = new Vector3(jeongbiStage.transform.position.x, 0, jeongbiStage.transform.position.z);
 
+        monsterEnforceVar++;
+
         while (!nextWaveTrigger) 
         {
             yield return new WaitForEndOfFrame();
@@ -305,6 +310,7 @@ public class WaveManager : MonoBehaviour
 
         if(mapChanging != null) StopCoroutine(mapChanging);
         StopCoroutine("SummonEnemyCoroutine");
+        StopCoroutine("SummonRandomPosEnemyCoroutine");
         MonsterBase[] monsterBases = FindObjectsOfType<MonsterBase>();
         foreach (MonsterBase monster in monsterBases)
         {
@@ -485,7 +491,7 @@ public class WaveManager : MonoBehaviour
         StopCoroutine("WallCrisis");
         StopCoroutine("HoleCrisis");
         StopCoroutine("SpikeCrisis");
-
+        StopCoroutine("SummonRandomPosEnemyCoroutine");
         //Item[] items = FindObjectsOfType<Item>();
         //foreach(Item item in items) { 
         //    item.isChasing = true;

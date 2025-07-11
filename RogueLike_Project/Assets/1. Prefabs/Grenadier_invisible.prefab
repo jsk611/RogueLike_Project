@@ -39,6 +39,16 @@ PrefabInstance:
       propertyPath: Damage
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8390763758789801008, guid: 0833468f5bad55f4da2176c05eb1f131,
+        type: 3}
+      propertyPath: Health
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8390763758789801008, guid: 0833468f5bad55f4da2176c05eb1f131,
+        type: 3}
+      propertyPath: MaxHealth
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 8788629424251833221, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: m_LocalPosition.x

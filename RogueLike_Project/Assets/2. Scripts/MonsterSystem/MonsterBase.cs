@@ -152,8 +152,8 @@ public abstract class MonsterBase : MonoBehaviour
         dmg = monsterStatus.GetAttackDamage();
         chaseSpeed = monsterStatus.GetMovementSpeed();
 
-        float HPenforce = (8 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
-        float ATKenforce = (8 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
+        float HPenforce = 1 + waveManager.monsterEnforceVar * waveManager.HP_enforceRate;
+        float ATKenforce = 1 + waveManager.monsterEnforceVar * waveManager.ATK_enforceRate;
         monsterStatus.SetMaxHealth(hp * HPenforce);
         monsterStatus.SetHealth(hp * HPenforce);
         monsterStatus.SetAttackDamage(dmg * ATKenforce);
@@ -393,8 +393,9 @@ public abstract class MonsterBase : MonoBehaviour
             if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
             //enemyCountData.enemyCount--;
         }
+        GetComponent<NavMeshAgent>().enabled = false;
         transform.position = new Vector3(-100, -100, -100);
-        yield return null;
+        yield return new WaitForEndOfFrame();
         Destroy(gameObject);
     }
 

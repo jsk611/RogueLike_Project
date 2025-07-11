@@ -820,8 +820,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
   Health: 100
   MaxHealth: 100
   CriticalRate: 0
@@ -894,7 +894,6 @@ MonoBehaviour:
   target: {fileID: 0}
   body: {fileID: 4906287229469710357}
   head: {fileID: 4906287229469710355}
-  maxVerticalAngle: 60
   rotateSpeed: 2
   master: {fileID: 0}
   anim: {fileID: 4906287229460363219}
