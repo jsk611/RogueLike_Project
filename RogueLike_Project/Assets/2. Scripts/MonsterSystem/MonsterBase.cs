@@ -16,7 +16,7 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] protected Transform target;
     [SerializeField] private Transform body; // Character body (XZ rotation)
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
-    [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
+   // [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
 
     public Summoner master = null;
@@ -52,7 +52,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] public EnemyHPBar HPBar;
-    [SerializeField] private GameObject UIDamaged;
+    public GameObject UIDamaged;
 
     [Header("Timings")]
     [SerializeField] private float hitCooldown = 1.0f;
@@ -153,9 +153,9 @@ public abstract class MonsterBase : MonoBehaviour
         chaseSpeed = monsterStatus.GetMovementSpeed();
 
         float HPenforce = (8 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.HP_enforceRate;
+        float ATKenforce = (8 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
         monsterStatus.SetMaxHealth(hp * HPenforce);
         monsterStatus.SetHealth(hp * HPenforce);
-        float ATKenforce = (4 * (waveManager.currentStage - 1) + waveManager.currentWave) * waveManager.ATK_enforceRate;
         monsterStatus.SetAttackDamage(dmg * ATKenforce);
 
         HPBar.SetRatio(monsterStatus.GetHealth(),monsterStatus.GetMaxHealth());
@@ -380,7 +380,6 @@ public abstract class MonsterBase : MonoBehaviour
     private IEnumerator HandleDeath()
     {
         yield return new WaitForSeconds(dieDuration);
-        transform.position = new Vector3(-100, -100, -100);
         if (summonedMonster)
         {
             dropDNA = false;
@@ -394,8 +393,9 @@ public abstract class MonsterBase : MonoBehaviour
             if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
             //enemyCountData.enemyCount--;
         }
-
-        Destroy(gameObject, 0.1f);
+        transform.position = new Vector3(-100, -100, -100);
+        yield return null;
+        Destroy(gameObject);
     }
 
     private void SpawnItem()
@@ -446,6 +446,25 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
+    public void ChangeConditionMaterial(MonsterStatus.Condition condition)
+    {
+        Material conMaterial = EnemyShader.instance.monsterNormal;
+        switch (condition)
+        {
+            case StatusBehaviour.Condition.normal: conMaterial = EnemyShader.instance.monsterNormal; break;
+            case StatusBehaviour.Condition.Blazed: conMaterial = EnemyShader.instance.monsterBlazed; break;
+            case StatusBehaviour.Condition.Frozen: conMaterial = EnemyShader.instance.monsterFrozen; break;
+            case StatusBehaviour.Condition.Shocked: conMaterial = EnemyShader.instance.monsterShocked; break;
+        }
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+            renderer.material = conMaterial;
+        }
+
+    }
     //CC?? ???? ?? state ????????? ??????
     public void UpdateStateFromAnimationEvent()
     {

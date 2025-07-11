@@ -215,21 +215,21 @@ public class UpgradeManager : MonoBehaviour
             case WeaponUpgrade.ApplyBlaze:
                 Blaze weaponBlaze = weapon.GetComponent<Blaze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponBlaze) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(1, 1, 1,1,1);
+                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(20, 1, 25, 1, 1);
             //    else weaponBlaze.Upgrade(upgradeSet);
                     break;
             case WeaponUpgrade.ApplyFreeze:
                 Freeze weaponFreeze = weapon.GetComponent<Freeze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponFreeze) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(1, 1, 1,1,1);
-       //         else weaponFreeze.Upgrade(upgradeSet);
-                    break;
+                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(20, 1, 25, 1, 1);
+                //         else weaponFreeze.Upgrade(upgradeSet);
+                break;
             case WeaponUpgrade.ApplyShock:
                 Shock weaponShock = weapon.GetComponent<Shock>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponShock) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(1, 1, 1, 1, 1);
-           //     else weaponShock.Upgrade(upgradeSet);
-                    break;
+                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(20, 1, 25, 1, 1);
+                //     else weaponShock.Upgrade(upgradeSet);
+                break;
             default:
                 break;
         }

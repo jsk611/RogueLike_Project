@@ -162,7 +162,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-6");
+                LoadWaveData($"{currentStage}-8");
                 //LoadWaveData($"2-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
@@ -369,10 +369,10 @@ public class WaveManager : MonoBehaviour
         while (count > 0)
         {
             if (isMissionEnd) yield break;
-            Vector2Int randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
+            Vector2Int randomPos = new Vector2Int(Random.Range(1, mapSize-1), Random.Range(1, mapSize-1));
             while (tileManager.GetTileMap[randomPos.y, randomPos.x] <= 0)
             {
-                randomPos = new Vector2Int(Random.Range(0, mapSize), Random.Range(0, mapSize));
+                randomPos = new Vector2Int(Random.Range(1, mapSize-1), Random.Range(1, mapSize-1));
             }
             
             enemySpawnLogic.SpawnEnemy(randomPos.x, randomPos.y, enemyType);
