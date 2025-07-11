@@ -47,9 +47,9 @@ public enum WeaponUpgrade
 }
 public enum WeaponUpgradeSet
 {
+    probability,
     damage,
     duration,
-    probability,
     interval,
     effect
 }
