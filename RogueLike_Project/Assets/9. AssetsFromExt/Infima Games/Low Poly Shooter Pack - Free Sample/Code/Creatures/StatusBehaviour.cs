@@ -86,8 +86,23 @@ public abstract class StatusBehaviour : MonoBehaviour
         Shocked,
         Frozen,
     }
+    [SerializeField] Condition CurrentCon;
+    public Condition currentCon
+    {
+        get { return CurrentCon; }
+        set
+        {
+            CurrentCon = value;
+            Debug.Log("Change Condition");
+            OnConditionStateChanged(value);
+        }
+    }
+    virtual protected void OnConditionStateChanged(Condition val)
+    {
+        return;
+    }
+
     public CC currentCC;
-    public Condition currentCon;
 
     public void CoroutineEngine(IEnumerator coroutine) {
         StartCoroutine(coroutine);

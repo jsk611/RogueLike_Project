@@ -63,7 +63,6 @@ public class MonsterStatus : StatusBehaviour
 
     private Animator monsterAnimator;
 
-
     private void Start()
     {
         monsterBase = GetComponent<MonsterBase>();
@@ -277,7 +276,12 @@ public class MonsterStatus : StatusBehaviour
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
 
-   
+
+    protected override void OnConditionStateChanged(Condition val)
+    {
+        monsterBase.ChangeConditionMaterial(val);
+    }
+
 
     public override IEnumerator Shocked(float damage, float duration, float probability,float interval, float shockTime)
     {

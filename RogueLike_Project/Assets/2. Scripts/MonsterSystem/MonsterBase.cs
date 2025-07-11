@@ -446,6 +446,25 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
+    public void ChangeConditionMaterial(MonsterStatus.Condition condition)
+    {
+        Material conMaterial = EnemyShader.instance.monsterNormal;
+        switch (condition)
+        {
+            case StatusBehaviour.Condition.normal: conMaterial = EnemyShader.instance.monsterNormal; break;
+            case StatusBehaviour.Condition.Blazed: conMaterial = EnemyShader.instance.monsterBlazed; break;
+            case StatusBehaviour.Condition.Frozen: conMaterial = EnemyShader.instance.monsterFrozen; break;
+            case StatusBehaviour.Condition.Shocked: conMaterial = EnemyShader.instance.monsterShocked; break;
+        }
+
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            if (renderer == spawnEffect.GetComponentInChildren<Renderer>()) continue;
+            renderer.material = conMaterial;
+        }
+
+    }
     //CC?? ???? ?? state ????????? ??????
     public void UpdateStateFromAnimationEvent()
     {
