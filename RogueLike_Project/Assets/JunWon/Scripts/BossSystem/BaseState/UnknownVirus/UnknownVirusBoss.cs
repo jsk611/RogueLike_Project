@@ -295,7 +295,8 @@ public class UnknownVirusBoss : BossBase
         // �� �� ���� �� �⺻ ����
         fsm.AddTransition(new Transition<UnknownVirusBoss>(
             s.transformState, s.basicState,
-            () => Time.time - formTimer >= formStayDuration));
+            () => transformState.IsAnimationFinished()
+        ));
 
 
         // ���� ��� ���� ���� (��Ʈ�� ����)
@@ -378,20 +379,20 @@ public class UnknownVirusBoss : BossBase
                 targetFormObject = basicFormObject;
                 currentActiveBoss = null;
                 break;
-
             case BossForm.Worm:
                 targetFormObject = wormFormObject;
                 currentActiveBoss = wormComponent;
+                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
-
             case BossForm.Trojan:
                 targetFormObject = trojanFormObject;
                 currentActiveBoss = trojanComponent;
+                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
-
             case BossForm.Ransomware:
                 targetFormObject = ransomwareFormObject;
                 currentActiveBoss = ransomwareComponent;
+                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
         }
 

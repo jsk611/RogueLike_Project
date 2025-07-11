@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityName: Transform
   abilityDescription: 
-  cooldown: 10000
+  cooldown: 30
   abilityType: 0
   abilityIcon: {fileID: 0}
   targetType: 0
