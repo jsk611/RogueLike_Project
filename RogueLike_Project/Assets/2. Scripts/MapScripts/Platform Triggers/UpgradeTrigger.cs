@@ -9,11 +9,9 @@ public class UpgradeTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
     [SerializeField] Color originColor;
-    string uiText = "Upgrade - ";
 
     UpgradeManager_New UpgradeManager;
     int canUpgrade;
-    bool isUpgrading;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +23,6 @@ public class UpgradeTrigger : MonoBehaviour
     private void OnEnable()
     {
         canUpgrade = 2;
-        isUpgrading = false;
         GetComponentInChildren<PlatformIcon>(true).gameObject.SetActive(true);
         GetComponent<MeshRenderer>().material.SetColor("_Tint", originColor);
     }

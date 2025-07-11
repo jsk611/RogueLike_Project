@@ -285,6 +285,7 @@ public class MonsterStatus : StatusBehaviour
 
     public override IEnumerator Shocked(float damage, float duration, float probability,float interval, float shockTime)
     {
+        if (currentCon == Condition.Shocked) yield break;
         eventHandler.SetShockTime(duration/10);
         float startTime = 0;
         float latest = 0;
@@ -351,6 +352,8 @@ public class MonsterStatus : StatusBehaviour
         {
             Debug.Log("Get Blazed");
             DecreaseHealth(damage);
+            Instantiate(GetComponent<MonsterBase>().UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, 5f / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+
             yield return new WaitForSeconds(interval);
         }
         currentCon = Condition.normal;

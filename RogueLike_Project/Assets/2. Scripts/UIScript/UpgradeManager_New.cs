@@ -36,7 +36,6 @@ public class UpgradeManager_New : MonoBehaviour
     private GameObject[] UpgradeSet;
     public List<int> upgradeType;
 
-    bool isWaitingInput = false;
     public bool upgrading = false;
     CharacterBehaviour player;
     PlayerStatus playerStatus;
@@ -156,7 +155,6 @@ public class UpgradeManager_New : MonoBehaviour
 
         // 3. 인풋필드 활성화
         upgradeInputField.transform.parent.gameObject.SetActive(true);
-        isWaitingInput = true;
     }
 
     void FilterUpgradeSet(GameObject[] UpgradeSet)
@@ -292,7 +290,7 @@ public class UpgradeManager_New : MonoBehaviour
                 WeaponConditionUpgrade(0, 0, 15, 0, 0);
                 break;
             case WeaponUpgradeSet.damage:
-                WeaponConditionUpgrade(10, 0, 0, 0, 0);
+                WeaponConditionUpgrade(20, 0, 0, 0, 0);
                 break;
             case WeaponUpgradeSet.duration:
                 WeaponConditionUpgrade(0, 1, 0, 0, 0);
@@ -313,19 +311,19 @@ public class UpgradeManager_New : MonoBehaviour
             case WeaponUpgrade.Blaze:
                 Blaze weaponBlaze = weapon.GetComponent<Blaze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponBlaze) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(1, 1, 1, 1, 1);
+                if (weaponBlaze == null) weapon.AddComponent<Blaze>().StateInitializer(20, 1, 25, 1, 1);
                 else weaponBlaze.Upgrade(dmg,dur,prob,itv,eff);
                 break;
             case WeaponUpgrade.Freeze:
                 Freeze weaponFreeze = weapon.GetComponent<Freeze>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponFreeze) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(1, 1, 1, 1, 1);
+                if (weaponFreeze == null) weapon.AddComponent<Freeze>().StateInitializer(20, 1, 25, 1, 1);
                 else weaponFreeze.Upgrade(dmg, dur, prob, itv, eff);
                 break;
             case WeaponUpgrade.Shock:
                 Shock weaponShock = weapon.GetComponent<Shock>();
                 if (weapon.GetComponent<WeaponCondition>() != weaponShock) Destroy(weapon.GetComponent<WeaponCondition>());
-                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(1, 1, 1, 1, 1);
+                if (weaponShock == null) weapon.AddComponent<Shock>().StateInitializer(20, 1, 25, 1, 1);
                 else weaponShock.Upgrade(dmg, dur, prob, itv, eff);
                 break;
             default:

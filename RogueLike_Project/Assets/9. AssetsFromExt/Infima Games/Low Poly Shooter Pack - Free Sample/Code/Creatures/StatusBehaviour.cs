@@ -87,6 +87,7 @@ public abstract class StatusBehaviour : MonoBehaviour
         Frozen,
     }
     [SerializeField] Condition CurrentCon;
+    protected Coroutine ConditionCor;
     public Condition currentCon
     {
         get { return CurrentCon; }
@@ -206,10 +207,11 @@ public abstract class StatusBehaviour : MonoBehaviour
         switch(con)
         {
             case Condition.Blazed:
-                StartCoroutine(Blazed(damage,probability,duration,interval));  
+                if (currentCon == Condition.Blazed && ConditionCor != null) StopCoroutine(ConditionCor);
+                ConditionCor = StartCoroutine(Blazed(damage,probability,duration,interval));  
                 break;
             case Condition.Frozen:
-                StartCoroutine(Frozen(damage,effect,duration));
+                StartCoroutine(Frozen(damage,probability,duration));
                 break;
             case Condition.Shocked:
                 StartCoroutine(Shocked(damage,duration,probability,interval,shockTime));
