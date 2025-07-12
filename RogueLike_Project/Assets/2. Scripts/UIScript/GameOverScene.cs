@@ -31,6 +31,6 @@ public class GameOverScene : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.1f);
-        SceneManager.LoadScene("TitleScene");
+        SceneManager.LoadScene("IngameScene");
     }
 }

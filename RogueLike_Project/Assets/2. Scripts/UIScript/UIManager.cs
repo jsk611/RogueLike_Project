@@ -13,7 +13,8 @@ public class UIManager : MonoBehaviour
 {
     static public UIManager instance = new UIManager();
 
-    public GameObject[] weapon;
+    [SerializeField] private GameObject[] weapon;
+    [SerializeField] private Sprite[] ElementImages;
 
 
     public Text[] curAmmo, maxAmmo;
@@ -108,6 +109,19 @@ public class UIManager : MonoBehaviour
                 break;
             }
         }
+    }
+    public void ElementImageSwap(int index, WeaponCondition condition)
+    {
+        Sprite sprite; 
+        switch(condition)
+        {
+            case Blaze: sprite = ElementImages[0]; break;
+            case Freeze: sprite = ElementImages[1]; break;
+            case Shock: sprite = ElementImages[2]; break;
+            default: sprite = null; break;
+        }
+        weapon[index].transform.Find("Element_Image").gameObject.SetActive(true);
+        weapon[index].transform.Find("Element_Image").GetComponent<Image>().sprite = sprite;
     }
 
     public void AmmoTextReset(bool knifeActive, int cur, int max)

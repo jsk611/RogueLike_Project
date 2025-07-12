@@ -149,7 +149,6 @@ public class UpgradeManager_New : MonoBehaviour
                 int randIdx = Random.Range(0, directChildren.Count);
                 directChildren[randIdx].gameObject.SetActive(true);
                 upgradeType.Add(randIdx);
-                Debug.Log(upgradeType.Count+upgrade.name + directChildren[randIdx].name);
             }
         }
 
@@ -218,9 +217,7 @@ public class UpgradeManager_New : MonoBehaviour
         else if (decisionTypeInput == UpgradeDecision.WEAPON)
         {
             decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
-            Debug.Log("wow");
-                StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
-            
+            StartCoroutine(UpgradeDisplay(UpgradeTier.weapon));
         }
         else if (decisionTypeInput == UpgradeDecision.EXIT)
         {

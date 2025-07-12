@@ -1,3 +1,4 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,9 @@ public abstract class WeaponCondition : MonoBehaviour
         probability = prob;
         interval = itv;
         effect = eff;
+
+        int index = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetInventory().GetEquippedIndex();
+        UIManager.instance.ElementImageSwap(index, this);
     }
 
     public virtual void Succession(WeaponCondition bulletCondition)
