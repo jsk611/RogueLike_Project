@@ -792,11 +792,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f96cd2774fd58145870c5d18e60eccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
-  bossName: Moris_Worm
-  Health: 1000
-  MaxHealth: 1000
+  bossName: Morris_Worm
+  Health: 1500
+  MaxHealth: 1500
   CriticalRate: 5
   CriticalDamage: 100
   MoveSpeed: 20

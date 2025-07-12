@@ -35,6 +35,7 @@ public class BossHPBar : MonoBehaviour
     void SetRatio(float current, float max)
     {
         ratio = current / max;
+        if(ratio < 0f) ratio = 0f;
         percent.text = $"{(int)(ratio * 100)}%"; 
     }
 

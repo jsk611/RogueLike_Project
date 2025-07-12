@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 //using UnityEditor.Experimental.GraphView;
 using Unity.VisualScripting;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 //using UnityEngine.UIElements;
 
 namespace InfimaGames.LowPolyShooterPack
@@ -231,6 +232,7 @@ namespace InfimaGames.LowPolyShooterPack
             weaponChangeLocked = false;
             dashLocked = false;
 
+            //Upgrade Call
             #region Lock Cursor
 
             //Always make sure that our cursor is locked when the game starts!
@@ -249,9 +251,16 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Refresh!
             RefreshWeaponSetup();
+            try
+            {
+                PermanentUpgradeManager.instance.LoadData();
+            } catch (NullReferenceException)
+            {
+                cursorLocked = false;
+                UpdateCursorState();
+                SceneManager.LoadScene(0);
+            }
 
-            //Upgrade Call
-            PermanentUpgradeManager.instance.LoadData();
         }
         protected override void Start()
         {

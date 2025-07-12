@@ -153,7 +153,7 @@ public class WaveManager : MonoBehaviour
         UIManager.instance.isStarted = true;
         monsterEnforceVar = 0;
 
-        for(currentStage = debugStage; currentStage <= 4; currentStage++)
+        for(currentStage = debugStage; currentStage <= 3; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeStage();
@@ -166,7 +166,7 @@ public class WaveManager : MonoBehaviour
 
                 LoadWaveData($"{currentStage}-{randNum}");
                 //LoadWaveData($"{currentStage}-8");
-                //LoadWaveData($"2-boss");
+                //LoadWaveData($"4-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -198,7 +198,10 @@ public class WaveManager : MonoBehaviour
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
         }
-
+        //4스테이지 보스
+        LoadWaveData($"{currentStage}-boss");
+        yield return StartCoroutine(RunWave());
+        yield return new WaitForSeconds(0.5f);
     }
     
     IEnumerator StartMap() 

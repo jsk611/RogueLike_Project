@@ -79,6 +79,7 @@ public class EnemySpawnLogic : MonoBehaviour
             case EnemyType.Troyboss: return bossPrefabs[1];
             case EnemyType.Ransomware: return bossPrefabs[2];
             case EnemyType.Spider: return bossPrefabs[3];
+            case EnemyType.Unknown: return bossPrefabs[4];
             default: return null;
         }
     }
