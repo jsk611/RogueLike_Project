@@ -172,6 +172,7 @@ public class WaveManager : MonoBehaviour
                 prevWave = randNum;
             }
             //정비 스테이지
+            currentWave = 5;
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
@@ -189,11 +190,14 @@ public class WaveManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
             }
+
             //보스전
+            currentWave = 10;
             LoadWaveData($"{currentStage}-boss");
             yield return StartCoroutine(RunWave());
             yield return new WaitForSeconds(0.5f);
 
+            currentWave = 0;
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
@@ -254,7 +258,7 @@ public class WaveManager : MonoBehaviour
         playerPos = playerPositionData.playerTilePosition;
         yield return tileManager.MoveTilesByArrayByWave(playerPos.x, playerPos.y, 1.5f,1,0);
     }
-  
+    
     IEnumerator RunWave()
     {
         isMissionEnd = false;
@@ -268,19 +272,21 @@ public class WaveManager : MonoBehaviour
         Vector2Int basePos = tileManager.MakeCenteredMapFromCSV(waveData.maps[0].file, playerPos.x, playerPos.y);
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
+
         //적 소환
+        List<Coroutine> summonCoroutines = new List<Coroutine>();
         if (waveData.isRandomPos)
         {
             foreach (var enemy in waveData.enemies)
             {
-                StartCoroutine(SummonRandomPosEnemyCoroutine(basePos, enemy));
+                summonCoroutines.Add(StartCoroutine(SummonRandomPosEnemyCoroutine(basePos, enemy)));
             }
         }
         else
         {
             foreach (var enemy in waveData.enemies)
             {
-                StartCoroutine(SummonEnemyCoroutine(basePos, enemy));
+                summonCoroutines.Add(StartCoroutine(SummonEnemyCoroutine(basePos, enemy)));
             }
         }
         
@@ -312,8 +318,7 @@ public class WaveManager : MonoBehaviour
         while (!isMissionEnd) { yield return new WaitForEndOfFrame(); };
 
         if(mapChanging != null) StopCoroutine(mapChanging);
-        StopCoroutine("SummonEnemyCoroutine");
-        StopCoroutine("SummonRandomPosEnemyCoroutine");
+        StopAllSpecificCoroutines(summonCoroutines);
         MonsterBase[] monsterBases = FindObjectsOfType<MonsterBase>();
         foreach (MonsterBase monster in monsterBases)
         {
@@ -463,31 +468,17 @@ public class WaveManager : MonoBehaviour
             Destroy(itemStk.Pop().gameObject, 2f);
         }
     }
-    //IEnumerator Stage1Boss()
-    //{
-    //    Debug.Log("Stage1_Wave");
-    //    UIManager.instance.changeWaveText(currentStage.ToString() + "- <color=red>B</color>");
 
-    //    tileManager.InitializeArray(1);
-    //    Vector2Int playerPos = playerPositionData.playerTilePosition;
-    //    tileManager.MakeCenteredMapFromCSV(stage1MapPath[stage1MapPath.Length -1], playerPos.x, playerPos.y);
-    //    yield return StartCoroutine(tileManager.MoveTilesByArray());
-    //    yield return new WaitForSeconds(1f);
-
-    //    Debug.Log("Setting Monsters");
-    //    InitializeEnemyArray();
-    //    enemySpawnLogic.SpawnBoss(playerPos.x, playerPos.y, 0);
-    //    enemyCountData.enemyCount = 1;
-    //    UIManager.instance.KillingMissionStart();
-    //    while (enemyCountData.enemyCount > 0)
-    //    {
-    //        yield return new WaitForEndOfFrame();
-    //    }
-
-    //    Debug.Log("Wave End");
-    //}
-
-
+    void StopAllSpecificCoroutines(List<Coroutine> coroutines)
+    {
+        foreach (Coroutine coroutine in coroutines)
+        {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
+        }
+    }
     IEnumerator WaveEnd()
     {
         UIManager.instance.MissionComplete();
@@ -495,20 +486,9 @@ public class WaveManager : MonoBehaviour
         StopCoroutine("HoleCrisis");
         StopCoroutine("SpikeCrisis");
         StopCoroutine("SummonRandomPosEnemyCoroutine");
-        //Item[] items = FindObjectsOfType<Item>();
-        //foreach(Item item in items) { 
-        //    item.isChasing = true;
-        //    item.velocity *= 2;
-        //}
-        //tileManager.InitializeArray(currentStage,4);
-        //yield return StartCoroutine(tileManager.MoveTilesByArray(0,2,0));
+
         yield return new WaitForSeconds(2f);
 
-        //upgradeManager.RepeatNumSet(earnedCommonItems.Count,earnedRareItems.Count,earnedEpicItems.Count);
-        //if(earnedCommonItems.Count > 0) upgradeManager.UpgradeDisplay(1);
-        //else if (earnedRareItems.Count > 0) upgradeManager.UpgradeDisplay(2);
-        //else if (earnedEpicItems.Count >0) upgradeManager.UpgradeDisplay(3);
-        //StartCoroutine(upgradeManager.UpgradeDisplay(UpgradeTier.common));
         upgradeManager.BasicUpgradeCall();
 
         yield return null;

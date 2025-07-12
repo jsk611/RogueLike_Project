@@ -94,7 +94,6 @@ public class Tile : MonoBehaviour
         tmp2.a = 0.6f;
         minimapTile.color = tmp2;
 
-        if(isSpike) yield return new WaitForSeconds(1f);
         ChangeSpikeMode(false);
         ChangeHealMode(false);
     }
@@ -129,32 +128,19 @@ public class Tile : MonoBehaviour
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
     }
 
-    public void CreateTile(float size_y, float duration = 3f) //기본 생성시
+    public void CreateTile(float size_y, float maxTileHeight) //기본 생성시
     {
         gameObject.SetActive(true);
         isSetActive = true;
-        StartCoroutine(TileCreating(size_y, duration));
+        maxHeight = maxTileHeight;
+        TileCreating(size_y);
     }
-    IEnumerator TileCreating(float size_y, float duration = 1.5f)
+    void TileCreating(float size_y)
     {
 
         transform.position = new Vector3(transform.position.x, -20f, transform.position.z);
         StartCoroutine(ChangeSizeCoroutine(size_y, 0));
-        if(duration > 0f)
-        {
-            StartCoroutine(MoveCoroutine(size_y / 2f, 0));
-            float tmp = duration;
-            while (tmp > 0f)
-            {
-                tmp -= Time.deltaTime;
-                Color newColor = meshRenderer.material.GetColor("_GridColor") + new Color(0, 0, 0, Time.deltaTime / duration);
-                meshRenderer.material.SetColor("_GridColor", newColor);
-                yield return new WaitForSeconds(Time.deltaTime);
-            }
-            meshRenderer.material.SetColor("_GridColor", new Color(1,1,1,1));
-            //StartCoroutine(MoveCoroutine(size_y / 2f, 0.3f));
-        }
-        else StartCoroutine(MoveCoroutine(size_y / 2f , duration));
+        StartCoroutine(MoveCoroutine(size_y / 2f , 0));
 
     }
     IEnumerator SetActiveFalseCoroutine(float duration = 1f)

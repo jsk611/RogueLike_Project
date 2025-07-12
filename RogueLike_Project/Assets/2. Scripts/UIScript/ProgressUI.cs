@@ -12,11 +12,14 @@ public class ProgressUI : MonoBehaviour
     [SerializeField] TMP_Text waveText;
     [SerializeField] Vector2 movingTarget;
     RectTransform rt;
+    WaveManager waveManager;
+
     static public ProgressUI instance = new ProgressUI();
     private void Awake()
     {
         instance = this;
         rt = GetComponent<RectTransform>();
+        waveManager = FindObjectOfType<WaveManager>();
     }
     public static void SetAnchorAndPivotPreservingPosition(RectTransform rt, Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot)
     {
@@ -53,14 +56,17 @@ public class ProgressUI : MonoBehaviour
             anchorMins[i] = waveIcons[i].anchorMin;
         }
 
+        //왼쪽 아이콘 사라짐
         waveIcons[0].GetComponent<Image>().DOFade(0, 0.45f);
         waveIcons[0].DOAnchorPos(new Vector2(-2, 0), 0.45f);
 
+        //중앙 아이콘 왼쪽 이동
         SetAnchorAndPivotPreservingPosition(waveIcons[1], anchorMins[0], anchorMaxs[0], pivots[0]);
         waveIcons[1].anchoredPosition = new Vector2(22.5f, 0f);
         waveIcons[1].DOAnchorPos(new Vector2(2, 0), 0.9f);
         waveIcons[1].DOScale(new Vector2(0.5f,0.5f), 0.9f);
 
+        //오른쪽 아이콘 중앙으로 이동
         SetAnchorAndPivotPreservingPosition(waveIcons[2], anchorMins[1], anchorMaxs[1], pivots[1]);
         waveIcons[2].DOAnchorPos(Vector2.zero, 0.9f);
         waveIcons[2].DOScale(new Vector2(1f, 1f), 0.9f);
@@ -68,6 +74,23 @@ public class ProgressUI : MonoBehaviour
         waveText.DOFade(0f, 0.5f);
 
         yield return new WaitForSeconds(0.45f);
+        //새로운 아이콘 이동
+        switch(waveManager.currentWave)
+        {
+            // 정비 아이콘
+            case 4:
+            case 10:
+                waveIcons[0].GetComponent<Image>().color = Color.green;
+                break;
+            // 보스전 아이콘
+            case 9:
+                waveIcons[0].GetComponent<Image>().color = Color.red;
+                break;
+            default:
+                waveIcons[0].GetComponent<Image>().color = Color.white;
+                break;
+        }
+
         waveIcons[0].pivot = pivots[2];
         waveIcons[0].anchorMax = anchorMaxs[2];
         waveIcons[0].anchorMin = anchorMins[2];

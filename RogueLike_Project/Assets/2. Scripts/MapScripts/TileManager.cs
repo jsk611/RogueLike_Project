@@ -276,15 +276,13 @@ public class TileManager : MonoBehaviour
                     if (baseColors != null) mr.material.SetColor("_BaseColor", baseColors[j, i]);
                     if (emissionColors != null) mr.material.SetColor("_EmissionColor", emissionColors[j, i]);
                     if (gridColors != null) mr.material.SetColor("_GridColor", gridColors[j, i]);
-                    if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile(tileMap[i, j], durationAboutTile);
+                    if (!tiles[i, j].IsSetActive) tiles[i, j].CreateTile(tileMap[i, j], maxTileHeight);
                     else 
                     {
 
                         if (tiles[i, j].transform.position.y == tileMap[i, j]/2) continue;
-
-                        bool isTooHigh = IsHighPos(i,j);
           
-                        tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile, isTooHigh);
+                        tiles[i, j].ChangeHeightWithFixedBase(tileMap[i, j], durationAboutTile);
                         if(j % 2 == 2) yield return null;
                     }
                 }
