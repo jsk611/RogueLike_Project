@@ -55,6 +55,7 @@ public class WaveManager : MonoBehaviour
     [Header("Debug")]
     [SerializeField] int debugStage;
 
+    [SerializeField] GameObject demoEndingUI;
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager_New>();
@@ -152,8 +153,8 @@ public class WaveManager : MonoBehaviour
         int prevWave = -1;
         UIManager.instance.isStarted = true;
         monsterEnforceVar = 0;
-
-        for(currentStage = debugStage; currentStage <= 3; currentStage++)
+        
+        for (currentStage = debugStage; currentStage <= 3; currentStage++)
         {
             int mapMaxIdx = stageMapNum[currentStage - 1];
             ChangeStage();
@@ -166,7 +167,7 @@ public class WaveManager : MonoBehaviour
 
                 LoadWaveData($"{currentStage}-{randNum}");
                 //LoadWaveData($"{currentStage}-8");
-                //LoadWaveData($"4-boss");
+                //LoadWaveData($"3-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -202,6 +203,13 @@ public class WaveManager : MonoBehaviour
             yield return StartCoroutine(Maintenance());
             yield return new WaitForSeconds(0.5f);
         }
+
+        //데모 버전이므로 3스테이지까지만 진행
+        demoEndingUI.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        demoEndingUI.SetActive(false);
+        FindObjectOfType<PlayerStatus>().DecreaseHealth(9999f);
+        yield break;
         //4스테이지 보스
         LoadWaveData($"{currentStage}-boss");
         yield return StartCoroutine(RunWave());
