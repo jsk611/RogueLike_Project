@@ -111,11 +111,14 @@ public class UI_LvIndicator : MonoBehaviour
     {
         PermanentUpgradeManager.instance.upgradeData.Basic_ATK += UpgradeRateSet[upgradeType];
         BasicATKLvSet();
+        player.SetAttackDamage(PermanentUpgradeManager.instance.upgradeData.Basic_ATK);
     }
     private void BasicHPUpgrade()
     {
         PermanentUpgradeManager.instance.upgradeData.Basic_HP += UpgradeRateSet[upgradeType];
         BasicHPLvSet();
+        player.SetMaxHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
+        player.SetHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
     }
     private void CoinAcqUpgrade()
     {
