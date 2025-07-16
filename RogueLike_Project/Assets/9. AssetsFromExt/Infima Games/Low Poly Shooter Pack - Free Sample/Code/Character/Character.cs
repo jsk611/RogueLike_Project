@@ -403,6 +403,8 @@ namespace InfimaGames.LowPolyShooterPack
             characterAnimator.CrossFade(stateName, 0.05f, layerOverlay, 0);
 
             UIManager.instance.AmmoTextReset(knifeActive,equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
+
+            if(equippedWeapon.GetAmmunitionCurrent() <= 0) PlayReloadAnimation();
         }
 
         private void PlayReloadAnimation()

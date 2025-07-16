@@ -59,7 +59,7 @@ public class CamouflageState_Troy : State<Troy>
         owner.IdleToCamouflage();
         owner.HideAndSeek(false);
         owner.CoroutineRunner(FollowPlayer());
-        owner.BossStatus.SetMovementSpeed(18);
+        owner.BossStatus.SetMovementSpeed(13);
     }
     public override void Update()
     {

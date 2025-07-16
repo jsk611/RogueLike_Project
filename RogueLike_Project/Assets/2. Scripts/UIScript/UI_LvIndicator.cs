@@ -102,6 +102,10 @@ public class UI_LvIndicator : MonoBehaviour
         }
         if(lv < 5) PermanentUpgradeManager.instance.weaponLockData.UnlockWeapon((WeaponType)(lv + 1));
         WeaponLockLvSet();
+        foreach(ItemWeapon item in FindObjectsOfType<ItemWeapon>(true))
+        {
+            item.CheckUnlocked();
+        }
     }
     private void BasicATKUpgrade()
     {

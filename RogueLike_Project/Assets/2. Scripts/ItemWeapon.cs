@@ -25,11 +25,7 @@ public class ItemWeapon : MonoBehaviour
     // Start is called before the first frame update    
     void Start()
     {
-        if(PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock(type) == false)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
+        CheckUnlocked();
 
         boxCollider = GetComponent<BoxCollider>();
         character = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<Character>();
@@ -59,7 +55,15 @@ public class ItemWeapon : MonoBehaviour
             
             yield return null;
     }
-
+    public void CheckUnlocked()
+    {
+        if (PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock(type) == false)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+        else gameObject.SetActive(true);
+    }
     
 
 }
