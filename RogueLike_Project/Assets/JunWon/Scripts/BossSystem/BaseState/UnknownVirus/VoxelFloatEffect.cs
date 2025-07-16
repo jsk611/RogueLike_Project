@@ -427,7 +427,7 @@ public class VoxelFloatEffect : MonoBehaviour
         yield return StartCoroutine(DropFragmentsToGround());
 
         // 2단계: 잠시 대기 (바닥에서 안정화) - 더 빠르게
-        yield return new WaitForSeconds(3.0f); // 1f → 0.5f로 단축
+        yield return new WaitForSeconds(0.5f); // 1f → 0.5f로 단축
         
         Debug.Log("[VoxelFloatEffect] 드롭 시퀀스 완료");
     }
@@ -463,6 +463,7 @@ public class VoxelFloatEffect : MonoBehaviour
 
         SetPaused(true);
 
+        int batch = 0;
         foreach (Transform voxel in originalPositions.Keys)
         {
             if (voxel == null) continue;
@@ -470,7 +471,9 @@ public class VoxelFloatEffect : MonoBehaviour
             // 개별 가라앉기 효과 시작
             StartCoroutine(GentleDropAndSink(voxel));
 
-            yield return null; // 더 빠르게
+            // 10개마다 프레임 양보
+            if (++batch % 10 == 0)
+                yield return null;
         }
 
         yield return null; 
@@ -495,26 +498,20 @@ public class VoxelFloatEffect : MonoBehaviour
         );
 
         // 가라앉기 애니메이션 (더 빠르게)
-        Vector3 midPos = new Vector3(voxel.position.x, -0.2f, voxel.position.z) + offset * 0.5f;
         Vector3 finalPos = new Vector3(voxel.position.x, -0.8f, voxel.position.z) + offset;
 
-        // 바로 최종 위치로 (더 빠르게)
-        voxel.transform.DOMove(finalPos, 0.6f).SetEase(Ease.OutQuad); // 1.0f → 0.6f
+        Sequence seq = DOTween.Sequence()
+       .Append(voxel.DOMove(finalPos, 0.6f).SetEase(Ease.OutQuad))
+       .Join(voxel.DORotate(
+               new Vector3(
+                   UnityEngine.Random.Range(-25f, 25f),
+                   UnityEngine.Random.Range(0f, 360f),
+                   UnityEngine.Random.Range(-25f, 25f)),
+               0.6f).SetEase(Ease.OutCubic))
+       .Join(voxel.DOScale(Vector3.one * 0.8f, 0.6f).SetEase(Ease.InQuad));
 
-        // 회전은 전체 시간에 걸쳐 (더 빠르게)
-        voxel.transform.DORotate(
-            new Vector3(
-                UnityEngine.Random.Range(-25f, 25f),
-                UnityEngine.Random.Range(0f, 360f),
-                UnityEngine.Random.Range(-25f, 25f)
-            ),
-            0.6f  // 1.0f → 0.6f
-        ).SetEase(Ease.OutCubic);
-        
-        // 크기도 살짝 줄이기 (더 빠르게)
-        voxel.transform.DOScale(Vector3.one * 0.8f, 0.6f).SetEase(Ease.InQuad); // 1.0f → 0.6f
-
-        yield return null;
+        // 0.6 초가 끝날 때까지 기다린다
+        yield return seq.WaitForCompletion();
     }
 
     /// <summary>

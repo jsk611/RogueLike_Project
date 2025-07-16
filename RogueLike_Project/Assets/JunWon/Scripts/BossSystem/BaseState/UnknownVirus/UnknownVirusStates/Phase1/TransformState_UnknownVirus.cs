@@ -88,7 +88,8 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
         // 3단계: 폼 적용
         owner.ApplyForm(targetForm);
-        yield return new WaitForSeconds(0.5f);
+        VirusDissolveEffect VDE = owner.GetCurrentActiveBoss().GetComponent<VirusDissolveEffect>();
+        // yield return owner.StartCoroutine(VDE.AppearSequence(1.5f));
 
         // 4단계: 변신 완료 처리
         CompleteTransformation();
@@ -117,14 +118,7 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
             GetStateInfo();
             StartReversion();
         }
-
-        // 강제 변신 완료 체크 (안전장치)
-        if (!isTransformationComplete && 
-            Time.time - startTime >= transformationTime + 2f)
-        {
-            Debug.LogWarning("[TransformState] 강제 변신 완료");
-            ForceCompleteTransformation();
-        }
+        
     }
 
     private void CompleteTransformation()
@@ -167,9 +161,7 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
         Debug.Log("[TransformState] 복귀 시퀀스 시작");
 
         VirusDissolveEffect VDE = owner.GetCurrentActiveBoss().GetComponent<VirusDissolveEffect>();
-
-        VDE.StartDissolve();
-        yield return new WaitForSeconds(2.0f);
+        // yield return owner.StartCoroutine(VDE.DissolveSequence(1.5f));
 
         // 1단계: Basic 폼으로 전환
         owner.ApplyForm(BossForm.Basic);
@@ -180,6 +172,8 @@ public class TransformState_UnknownVirus : BaseState_UnknownVirus
 
         // 3단계: 복귀 완료 처리
         CompleteReversion();
+        yield return new WaitForSeconds(0.3f);
+
 
         Debug.Log("[TransformState] 복귀 시퀀스 완료");
     }

@@ -382,17 +382,14 @@ public class UnknownVirusBoss : BossBase
             case BossForm.Worm:
                 targetFormObject = wormFormObject;
                 currentActiveBoss = wormComponent;
-                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
             case BossForm.Trojan:
                 targetFormObject = trojanFormObject;
                 currentActiveBoss = trojanComponent;
-                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
             case BossForm.Ransomware:
                 targetFormObject = ransomwareFormObject;
                 currentActiveBoss = ransomwareComponent;
-                targetFormObject.GetComponent<VirusDissolveEffect>().ResetDissolve();
                 break;
         }
 
