@@ -167,7 +167,7 @@ public class WaveManager : MonoBehaviour
 
                 LoadWaveData($"{currentStage}-{randNum}");
                 //LoadWaveData($"{currentStage}-5");
-                //LoadWaveData($"2-boss");
+                LoadWaveData($"4-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
