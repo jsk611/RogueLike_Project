@@ -295,13 +295,7 @@ MonoBehaviour:
   copyList: []
   runInterval: 7
   enemySummonAmount: 3
-  lurkHeathBoundary:
-  - 30
-  - 60
-  lurkInterval: 20
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
-  copyChain: 3
-  isCopied: 0
   bomb: {fileID: 7367227017500463239, guid: c0566a570bf75264c82c6241a746e673, type: 3}
   originalLurkHeathBoundary: []
 --- !u!95 &8014969182548315342
@@ -390,8 +384,8 @@ MonoBehaviour:
   CurrentCon: 0
   currentCC: 0
   bossName: Troy
-  Health: 1000
-  MaxHealth: 1000
+  Health: 2500
+  MaxHealth: 2500
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 40
