@@ -279,69 +279,10 @@ public class BossStatus : StatusBehaviour
     public override float GetReloadSpeed() => ReloadSpeed / 100f;
     //public override float GetJumpPower() => JumpPower;
 
-   
-
-    public override IEnumerator Shocked(float damage, float duration, float probability, float interval, float shockTime)
+    public override void ConditionOverload(Condition con, float damage = 1, float duration = 1, float probability = 1, float interval = 1, float effect = 1, float shockTime = 0.5F)
     {
-        if (currentCon == Condition.Shocked) yield break;
-        eventHandler.SetShockTime(shockTime);
-        float startTime = 0;
-        float latest = 0;
- 
-        currentCon = Condition.Shocked;
-        while (startTime < duration)
-        {
-            if (latest >= interval)
-            {
-                latest = 0;
-                bossBase.TakeDamage(1);
-            }
-            latest += Time.deltaTime;
-            startTime += Time.deltaTime;
-            yield return null;
-        }
-        currentCon = Condition.normal;
-        currentCC = CC.normal;
+        return;
     }
-    //public override IEnumerator Poisoned(float effect, float duration, float interval)
-    //{
-    //    if (currentCon == Condition.Poisoned) yield break;
-    //    currentCon = Condition.Poisoned;
-    //    float startTime = 0;
-    //    while (startTime < duration)
-    //    {
-    //        DecreaseHealth(effect);
-    //        yield return new WaitForSeconds(interval);
-    //        startTime += interval;
-    //    }
-    //    currentCon = Condition.normal;
-    //}
-    public override IEnumerator Frozen(float damage, float effect, float duration)
-    {
-        Debug.Log("Get Frozened");
-        if (currentCon == Condition.Frozen) yield break;
-        eventHandler.SetFrozenTime(duration);
-        currentCon = Condition.Frozen;
-        bossBase.TakeDamage(0,false);
-        yield return new WaitForSeconds(duration);
-        bossBase.TakeDamage(damage);
-        currentCon = Condition.normal;
-        currentCC = CC.normal;
-    }
-    public override IEnumerator Blazed(float damage,float probability, float duration, float interval)
-    {
-     //   if (currentCon == Condition.Blazed) yield break;
-        currentCon = Condition.Blazed;
-        float startTime = Time.time;
-        while (Time.time - startTime < duration)
-        {
-            Debug.Log("Get Blazed");
-            DecreaseHealth(damage);
-            yield return new WaitForSeconds(interval);
-        }
-        currentCon = Condition.normal;
-    }
-
     void OnDestroy()
     {
         if(bossBase.isBoss) UIManager.instance.BossKilled(this);
