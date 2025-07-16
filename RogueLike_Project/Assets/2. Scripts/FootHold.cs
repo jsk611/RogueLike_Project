@@ -23,6 +23,7 @@ public class FootHold : MonoBehaviour
     }
     private void Update()
     {
+
         if (enemiesInZone.Count == 0) isEnemyHolding = false;
         else isEnemyHolding=true;
 

@@ -396,7 +396,7 @@ public abstract class MonsterBase : MonoBehaviour
         GetComponent<NavMeshAgent>().enabled = false;
         transform.position = new Vector3(-100, -100, -100);
         yield return new WaitForEndOfFrame();
-        Destroy(gameObject);
+        Destroy(gameObject, 0.05f);
     }
 
     private void SpawnItem()

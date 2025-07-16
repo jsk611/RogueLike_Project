@@ -45539,6 +45539,11 @@ PrefabInstance:
       propertyPath: MaxHealth
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 2201277632883506388, guid: 7c312516655d18d44a20b0a29f102200,
+        type: 3}
+      propertyPath: isBoss
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5721729257438012605, guid: 7c312516655d18d44a20b0a29f102200,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -45850,6 +45855,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6258489173530735470, guid: 0e8f905236e90174283ad4a1d4f9a8e2,
+        type: 3}
+      propertyPath: isBoss
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6628562622782694470, guid: 0e8f905236e90174283ad4a1d4f9a8e2,
         type: 3}
       propertyPath: m_Materials.Array.size
@@ -46031,6 +46041,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1995481721876496042}
     m_Modifications:
+    - target: {fileID: 571053316010917679, guid: 41240e4d1ddbada4e9e3bf08c43e8519,
+        type: 3}
+      propertyPath: isBoss
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1890576070884137300, guid: 41240e4d1ddbada4e9e3bf08c43e8519,
         type: 3}
       propertyPath: m_Name
