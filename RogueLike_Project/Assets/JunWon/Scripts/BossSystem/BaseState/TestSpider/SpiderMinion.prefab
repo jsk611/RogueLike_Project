@@ -2586,11 +2586,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f96cd2774fd58145870c5d18e60eccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
   bossName: 
-  Health: 100
-  MaxHealth: 100
+  Health: 80
+  MaxHealth: 80
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 3
