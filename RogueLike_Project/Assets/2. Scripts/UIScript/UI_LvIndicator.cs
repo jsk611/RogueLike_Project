@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
+using UnityEngine.UI;
 
 public class UI_LvIndicator : MonoBehaviour
 { 
@@ -20,10 +21,12 @@ public class UI_LvIndicator : MonoBehaviour
 
     //upgrade 레벨 당 강화율
     [SerializeField] PerUpgradeType upgradeType;
+    [SerializeField] int maxLevel = 10;
     [SerializeField] float upgradeRate = 10f;
     [SerializeField] int upgradeCost = 10;
     [SerializeField] int costIncreaseRate = 5;
     [SerializeField] TextMeshProUGUI LvText;
+    [SerializeField] Slider slider;
 
     //[SerializeField] float basicATK_UpgradeRate = 5f;
     //[SerializeField] float basicHP_UpgradeRate = 10f;
@@ -36,54 +39,69 @@ public class UI_LvIndicator : MonoBehaviour
     private Dictionary<PerUpgradeType, Action> UpgradeAction;
     private Dictionary<PerUpgradeType, float> UpgradeRateSet;
     private PlayerStatus player;
+    private int curLevel;
 
     private void Start()
     {
         Initialization();
-        DoLVSet();
+        curLevel = DoLVSet();
         player = FindAnyObjectByType<PlayerStatus>();
+        slider.value = curLevel;
     }
 
     #region LevelSet
-    private void WeaponLockLvSet()
+    private int WeaponLockLvSet()
     {
         int lv = 0;
         for (int i = 0; i < 6; i++)
         {
             if (PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock((WeaponType)i)) lv = i;
         }
-        if (lv == 5) LvStringInit("MAX");
+        if (lv == maxLevel) LvStringInit("MAX");
         else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void BasicATKLvSet()
+    private int BasicATKLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.Basic_ATK - 100f) / UpgradeRateSet[upgradeType]) + 1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void BasicHPLvSet()
+    private int BasicHPLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.Basic_HP - 100f) / UpgradeRateSet[upgradeType]) + 1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void CoinAcqLvSet()
+    private int CoinAcqLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate - 1.0f) / UpgradeRateSet[upgradeType]) +1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void HealRateLVSet()
+    private int HealRateLVSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void AtkUpgradeRateLvSet()
+    private int AtkUpgradeRateLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
-    private void UtilUpgradeRateLvSet()
+    private int UtilUpgradeRateLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        LvStringInit(lv.ToString());
+        if (lv == maxLevel) LvStringInit("MAX");
+        else LvStringInit(lv.ToString());
+        return lv;
     }
     private void LvStringInit(string lv)
     {
@@ -100,7 +118,7 @@ public class UI_LvIndicator : MonoBehaviour
         {
             if (PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock((WeaponType)i)) lv = i;
         }
-        if(lv < 5) PermanentUpgradeManager.instance.weaponLockData.UnlockWeapon((WeaponType)(lv + 1));
+        if(lv < maxLevel) PermanentUpgradeManager.instance.weaponLockData.UnlockWeapon((WeaponType)(lv + 1));
         WeaponLockLvSet();
         foreach(ItemWeapon item in FindObjectsOfType<ItemWeapon>(true))
         {
@@ -109,35 +127,35 @@ public class UI_LvIndicator : MonoBehaviour
     }
     private void BasicATKUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.Basic_ATK += UpgradeRateSet[upgradeType];
+        if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.Basic_ATK += UpgradeRateSet[upgradeType];
         BasicATKLvSet();
         player.SetAttackDamage(PermanentUpgradeManager.instance.upgradeData.Basic_ATK);
     }
     private void BasicHPUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.Basic_HP += UpgradeRateSet[upgradeType];
+        if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.Basic_HP += UpgradeRateSet[upgradeType];
         BasicHPLvSet();
         player.SetMaxHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
         player.SetHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
     }
     private void CoinAcqUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate += UpgradeRateSet[upgradeType];
+        if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate += UpgradeRateSet[upgradeType];
         CoinAcqLvSet();
     }
     private void HealRateUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate += UpgradeRateSet[upgradeType];
+        if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate += UpgradeRateSet[upgradeType];
         HealRateLVSet();
     }
     private void AtkRateUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate += UpgradeRateSet[upgradeType];
+        if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate += UpgradeRateSet[upgradeType];
         AtkUpgradeRateLvSet();
     }
     private void UtilRateUpgrade()
     {
-        PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate += UpgradeRateSet[upgradeType];
+        if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate += UpgradeRateSet[upgradeType];
         UtilUpgradeRateLvSet();
     }
     #endregion
@@ -148,9 +166,16 @@ public class UI_LvIndicator : MonoBehaviour
             Debug.Log("Not enough minerals");
             return;
         }
+        if (curLevel >= maxLevel)
+        {
+            Debug.Log("Max Level");
+            return;
+        }
         player.DecreasePermanentCoin(upgradeCost);
         UpgradeAction[upgradeType].Invoke();
         upgradeCost += costIncreaseRate;
+        curLevel++;
+        slider.value = curLevel;
     }
     private void Initialization()
     {
@@ -166,31 +191,18 @@ public class UI_LvIndicator : MonoBehaviour
         UpgradeRateSet = new Dictionary<PerUpgradeType, float>();
         UpgradeRateSet[upgradeType] = upgradeRate;
     }
-    private void DoLVSet()
+    private int DoLVSet()
     {
         switch(upgradeType)
         {
-            case PerUpgradeType.weapon_Unlock:
-                WeaponLockLvSet();
-                break;
-            case PerUpgradeType.basic_atk:
-                BasicATKLvSet();
-                break;
-            case PerUpgradeType.basic_hp:
-                BasicHPLvSet();
-                break;
-            case PerUpgradeType.coin_AcqRate:
-                CoinAcqLvSet();
-                break;
-            case PerUpgradeType.heal_Rate:
-                HealRateLVSet();
-                break;
-            case PerUpgradeType.atk_UpgradeRate:
-                AtkUpgradeRateLvSet();
-                break;
-            case PerUpgradeType.util_UpgradeRate:
-                UtilUpgradeRateLvSet();
-                break;
+            case PerUpgradeType.weapon_Unlock: return WeaponLockLvSet();
+            case PerUpgradeType.basic_atk: return BasicATKLvSet();
+            case PerUpgradeType.basic_hp: return BasicHPLvSet();
+            case PerUpgradeType.coin_AcqRate: return CoinAcqLvSet();
+            case PerUpgradeType.heal_Rate: return HealRateLVSet();
+            case PerUpgradeType.atk_UpgradeRate: return AtkUpgradeRateLvSet();
+            case PerUpgradeType.util_UpgradeRate: return UtilUpgradeRateLvSet();
+            default: return 1;
         }
     }
 
