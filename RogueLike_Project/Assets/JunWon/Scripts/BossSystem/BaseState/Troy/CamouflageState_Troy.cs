@@ -1,8 +1,11 @@
+using InfimaGames.LowPolyShooterPack;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Unity.Tutorials.Core.Editor;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CamouflageState_Troy : State<Troy>
 {
@@ -12,21 +15,29 @@ public class CamouflageState_Troy : State<Troy>
     //being immune
     EnemySpawnLogic enemyManager;
     StatusBehaviour CamouflageObject;
+    PlayerStatus player;
     float summonEnemyCount;
 
 
     float bombThrowInterval = 2f;
-    float bombThrowTimer = 0f;
+    float bombThrowTimer = 2f;
+    float bombDistance = 3f;
 
     float rushTimer = 0f;
     bool isRushing = false;
     float rushInterval = 5f;
     float minRushDist = 10f;
 
+   
+
     // Start is called before the first frame update
     public override void Enter()
     {
-        if (enemyManager == null) enemyManager = GameObject.FindAnyObjectByType<EnemySpawnLogic>();
+        if (enemyManager == null)
+        {
+            player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
+            enemyManager = GameObject.FindAnyObjectByType<EnemySpawnLogic>();
+        }
         owner.SUMMONEDMONSTERS.RemoveAll(item => item == null);
         if (owner.SUMMONEDMONSTERS.Count > 0)
             CamouflageObject = owner.SUMMONEDMONSTERS[Random.Range(0, owner.SUMMONEDMONSTERS.Count)];
@@ -47,20 +58,15 @@ public class CamouflageState_Troy : State<Troy>
         }
         owner.IdleToCamouflage();
         owner.HideAndSeek(false);
+        owner.CoroutineRunner(FollowPlayer());
+        owner.BossStatus.SetMovementSpeed(18);
     }
     public override void Update()
     {
-        bombThrowTimer += Time.deltaTime;
+        //bombThrowTimer += Time.deltaTime;
         rushTimer += Time.deltaTime;
 
-        if (rushTimer >= rushInterval)
-        {
-            if (!isRushing)
-            {
-                isRushing = true;
-                owner.CoroutineRunner(RushToPlayer());
-            }
-        }
+    
         //if (bombThrowTimer >= bombThrowInterval)
         //{
         //    Debug.Log(bombThrowInterval);
@@ -76,15 +82,9 @@ public class CamouflageState_Troy : State<Troy>
     }
     public override void Exit()
     {
+        owner.BossStatus.SetMovementSpeed(40);
         owner.NmAgent.SetDestination(owner.transform.position);
         owner.HideAndSeek(true);
-    }
-    void OnCollisionEnter(Collision collision)
-    {
-        if(isRushing && collision.gameObject == owner.Player.gameObject)
-        {
-            Debug.Log("collided to player");
-        }
     }
     IEnumerator RushToPlayer()
     {
@@ -94,7 +94,7 @@ public class CamouflageState_Troy : State<Troy>
         while(isRushing && elapsedTime <= 2f)
         { 
             Vector3 rushDirection = owner.Player.position;
-            checkPlayer = Physics.OverlapBox(owner.transform.position+ new Vector3(0, 2f, 0.3f), ownerCollider.size*1.8f , owner.transform.rotation,LayerMask.GetMask("Character"));
+            checkPlayer = Physics.OverlapBox(owner.transform.position+ new Vector3(0, 2f, 0.3f), ownerCollider.size * 1.6f, owner.transform.rotation,LayerMask.GetMask("Character"));
             elapsedTime += Time.deltaTime;
             owner.NmAgent.SetDestination(rushDirection);
             if (checkPlayer.Length > 0)
@@ -117,5 +117,21 @@ public class CamouflageState_Troy : State<Troy>
         isRushing = false;
         rushTimer = 0f;
     }
-    
+    private IEnumerator FollowPlayer()
+    {
+        float time = 0f;
+        while (owner.ISCAMOUFLAGED)
+        {
+            owner.NmAgent.SetDestination(owner.Player.position);
+            if(Vector3.Distance(owner.Player.position,owner.transform.position) <= bombDistance && time >= bombThrowInterval)
+            {
+                GameObject.Instantiate(owner.BOMBEFFECT, owner.transform.position, Quaternion.identity);
+                Collider[] scan = Physics.OverlapSphere(owner.transform.position, bombDistance, LayerMask.GetMask("Character"));
+                if (scan.Length > 0) player.DecreaseHealth(owner.BossStatus.GetAttackDamage());
+                time = 0f;
+            }
+            time += Time.deltaTime;
+            yield return null;
+        }
+    }
 }

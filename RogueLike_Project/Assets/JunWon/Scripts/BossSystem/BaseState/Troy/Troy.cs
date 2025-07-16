@@ -14,7 +14,7 @@ public class Troy : BossBase
     [SerializeField] protected StateMachine<Troy> fsm;
     private bool isCamouflaged = false;
     private bool isRushing = false;
-    private bool isLurked = false;
+  //  private bool isLurked = false;
 
     [Header("Camouflage")]
     public List<StatusBehaviour> monsterList = new List<StatusBehaviour>();
@@ -26,17 +26,17 @@ public class Troy : BossBase
     [SerializeField] float runInterval = 20f;
     [SerializeField] float enemySummonAmount = 4f;
     float runTimer = 0f;
-    
 
 
-    [Header("Lurk")]
-    [SerializeField]
-    [Range(0, 100)] List<float> lurkHeathBoundary;
-    [SerializeField] float lurkInterval = 20f;
+
+    //[Header("Lurk")]
+    //[SerializeField]
+    //[Range(0, 100)] List<float> lurkHeathBoundary;
+    //[SerializeField] float lurkInterval = 20f;
     [SerializeField] GameObject bombEffect;
-    [SerializeField] float copyChain = 3f;
-    public bool isCopied = false;
-    float lurkTimer = 0f;
+    //[SerializeField] float copyChain = 3f;
+    //public bool isCopied = false;
+    //float lurkTimer = 0f;
 
     [Header("BombThrow")]
     [SerializeField] GameObject bomb;
@@ -45,8 +45,8 @@ public class Troy : BossBase
     public float SUMMONAMOUNT => enemySummonAmount;
     public List<StatusBehaviour> SUMMONEDMONSTERS => monsterList;
     public List<GameObject> COPYLIST => copyList;
-    public bool ISLURKED { get => isLurked; set => isLurked = value; }
-    public float COPYCHAIN { get => copyChain; set => copyChain = value; }
+ //   public bool ISLURKED { get => isLurked; set => isLurked = value; }
+ //   public float COPYCHAIN { get => copyChain; set => copyChain = value; }
     public GameObject TROYBOMB => bomb;
     public GameObject BOMBEFFECT => bombEffect;
 
@@ -64,8 +64,8 @@ public class Troy : BossBase
    
         runTimer += Time.deltaTime;
 
-        lurkTimer += Time.deltaTime;
-
+        //        lurkTimer += Time.deltaTime;
+        nmAgent.speed = bossStatus.GetMovementSpeed();
         fsm.Update();
 
         Debug.Log(fsm.CurrentState);
@@ -77,7 +77,7 @@ public class Troy : BossBase
         var idleState = new IdleState_Troy(this);
         var runState = new RunState_Troy(this);
         //     var summonState = new SummonState_Troy(this);
-        var lurkState = new LurkState_Troy(this);
+      //  var lurkState = new LurkState_Troy(this);
         var camouflageState = new CamouflageState_Troy(this);
 
         var dieState = new DieState_Troy(this);
@@ -86,9 +86,9 @@ public class Troy : BossBase
 
         Transition<Troy> introToIdle = new Transition<Troy>(introState, idleState, () => true);
 
-        Transition<Troy> idleToLurk = new Transition<Troy>(idleState, lurkState, () => LurkStateCheck());
-        Transition<Troy> lurkToIdle = new Transition<Troy>(lurkState, idleState, () => !isLurked);
-        Transition<Troy> lurkToCamouflage = new Transition<Troy>(lurkState, camouflageState, ()=> !isLurked);
+      //  Transition<Troy> idleToLurk = new Transition<Troy>(idleState, lurkState, () => LurkStateCheck());
+    //    Transition<Troy> lurkToIdle = new Transition<Troy>(lurkState, idleState, () => !isLurked);
+   //     Transition<Troy> lurkToCamouflage = new Transition<Troy>(lurkState, camouflageState, ()=> !isLurked);
 
         Transition<Troy> idleToCamouflage = new Transition<Troy>(idleState, camouflageState, () => CamouflageStateCheck());
         Transition<Troy> camouflageToIdle = new Transition<Troy>(camouflageState, idleState, () => !isCamouflaged);
@@ -105,9 +105,9 @@ public class Troy : BossBase
         fsm.AddTransition(idleToRun);
         fsm.AddTransition(runToIdle);
 
-        fsm.AddTransition(idleToLurk);
-        fsm.AddTransition(lurkToIdle);
-        fsm.AddTransition(lurkToCamouflage);
+       // fsm.AddTransition(idleToLurk);
+    //    fsm.AddTransition(lurkToIdle);
+     //   fsm.AddTransition(lurkToCamouflage);
 
         fsm.AddTransition(idleToCamouflage);
         fsm.AddTransition(camouflageToIdle);
@@ -124,39 +124,39 @@ public class Troy : BossBase
 
     public override void TakeDamage(float damage, bool showDamage = true)
     {
-        if (isCamouflaged || isLurked) return;
+        if (isCamouflaged) return;
 
         bossStatus.DecreaseHealth(damage);
 
-        if(lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count-1])
-        bossStatus.SetHealth(Mathf.Max(bossStatus.GetHealth(), lurkHeathBoundary[lurkHeathBoundary.Count-1]/100f*bossStatus.GetMaxHealth()));
+        //if(lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count-1])
+        //bossStatus.SetHealth(Mathf.Max(bossStatus.GetHealth(), lurkHeathBoundary[lurkHeathBoundary.Count-1]/100f*bossStatus.GetMaxHealth()));
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
     }
-    public void SetCopied(float health)
-    {
-        copyChain = 0;
-        while (lurkHeathBoundary.Count > 0) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
-        bossStatus.SetHealth(health);
-    }
-    public bool LurkStateCheck()
-    {
-        if (copyChain < 0) return false;
+    //public void SetCopied(float health)
+    //{
+    //    copyChain = 0;
+    //    while (lurkHeathBoundary.Count > 0) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
+    //    bossStatus.SetHealth(health);
+    //}
+    //public bool LurkStateCheck()
+    //{
+    //    if (copyChain <= 0) return false;
 
-        if (lurkTimer >= lurkInterval) return true;
-        else if (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1])
-        {
-            while (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1]) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
-            return true;
-        }
-        return false;
-    }
-    public void IdleToLurk()
-    {
-        isLurked = !isLurked;
-        lurkTimer = 0f;
-    }
+    //    if (lurkTimer >= lurkInterval) return true;
+    //    else if (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1])
+    //    {
+    //        while (lurkHeathBoundary.Count>0 && bossStatus.GetHealth() <= lurkHeathBoundary[lurkHeathBoundary.Count - 1]) lurkHeathBoundary.RemoveAt(lurkHeathBoundary.Count - 1);
+    //        return true;
+    //    }
+    //    return false;
+    //}
+    //public void IdleToLurk()
+    //{
+    //    isLurked = !isLurked;
+    //    lurkTimer = 0f;
+    //}
 
     public bool CamouflageStateCheck()
     {
@@ -173,7 +173,7 @@ public class Troy : BossBase
     {
         GetComponent<MeshRenderer>().enabled = val;
         GetComponent<BoxCollider>().enabled = val;
-        transform.Find("EnemyIcon").gameObject.SetActive(val);
+      //  transform.Find("EnemyIcon").gameObject.SetActive(val);
     }
     public void CoroutineRunner(IEnumerator coroutine)
     {
@@ -228,9 +228,9 @@ public class Troy : BossBase
         // 초기 상태값 설정
         isCamouflaged = false;
         isRushing = false;
-        isLurked = false;
+        //isLurked = false;
         runTimer = 0f;
-        lurkTimer = 0f;
+       // lurkTimer = 0f;
     }
 
     private void ClearSummonedMonsters()
@@ -269,12 +269,12 @@ public class Troy : BossBase
     private void Awake()
     {
         // 원본 데이터 백업
-        originalLurkHeathBoundary = new List<float>(lurkHeathBoundary);
+     //   originalLurkHeathBoundary = new List<float>(lurkHeathBoundary);
     }
 
     private void RestoreLurkHealthBoundary()
     {
-        lurkHeathBoundary = new List<float>(originalLurkHeathBoundary);
+        //lurkHeathBoundary = new List<float>(originalLurkHeathBoundary);
     }
     #endregion
 
