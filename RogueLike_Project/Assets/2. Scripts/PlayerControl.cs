@@ -2,6 +2,7 @@ using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour, ISkillLockable
@@ -137,7 +138,6 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         var v = Input.GetAxisRaw("Vertical") * transform.forward;
         Movement = h + v;
 
-        character.height = 1.8f;
         character.center = new Vector3(0, 1, 0);
 
         Movement = Movement.normalized * moveSpeed;
@@ -171,7 +171,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
 
     public bool CheckGrounded()
     {
-        isGrounded = Physics.SphereCast(character.transform.position, character.radius, Vector3.down, out hitInfo, 0.83f, LayerMask.GetMask("Wall"));
+        isGrounded = Physics.SphereCast(transform.position, character.radius, Vector3.down, out hitInfo, 0.2f, LayerMask.GetMask("Wall"));
         if (!isGrounded)
         {
             rigidBody.isKinematic = false;
@@ -180,7 +180,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         if (isGrounded)
         {
             rigidBody.isKinematic = true;
-            character.Move(Vector3.down * 4f * Time.deltaTime);
+            character.Move(Vector3.down * Physics.gravity.magnitude * Time.deltaTime);
 
             if (hitInfo.transform != transform.parent)
             {
@@ -193,6 +193,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         {
             characterStatus.DecreaseHealth(60 * Time.deltaTime);
         }
+        Debug.Log(isGrounded);
         return isGrounded;
     }
 
@@ -279,6 +280,15 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         }
 
         Debug.Log("모든 스킬 잠금 해제됨");
+    }
+    private void OnDrawGizmos()
+    {
+        if (character == null) return;
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position+ Vector3.down * (character.height/2+character.radius));
+        }
     }
     #endregion
 }
