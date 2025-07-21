@@ -66,5 +66,6 @@ public class EventInfo
     public string type;
     public int repeat;
     public float delay;
+    public float startDelay = 0;
     public int count;
 }

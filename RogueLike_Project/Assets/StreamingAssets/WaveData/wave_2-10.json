@@ -1,0 +1,61 @@
+{
+  "waveIndex": 1,
+  "isMultiMap": false,
+  "isRepeating": true,
+  "maps": [
+    {
+      "file": "2_10",
+      "duration": 10
+    }
+  ],
+  "isRandomPos": true,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 6,
+      "spawnDelay": 20
+    },
+    {
+      "type": 111,
+      "count": 3,
+      "spawnDelay": 20
+    },
+    {
+      "type": 102,
+      "count": 3,
+      "spawnDelay": 30
+    },
+    {
+      "type": 212,
+      "count": 6,
+      "spawnDelay": 15
+    },
+    {
+      "type": 213,
+      "count": 6,
+      "spawnDelay": 20,
+      "firstDelay": 10
+    }
+
+  ],
+  "mission": {
+
+    "type": "Capture",
+    "time": 20,
+    "footholdPoint": {
+      "x": 24,
+      "y": 15
+    },
+    "footholdHeight": 9.5,
+    "footholdSize": {
+      "x": 6,
+      "y": 6
+    }
+
+  },
+
+  "isRandomEvent": false,
+  "events": [
+
+  ]
+}

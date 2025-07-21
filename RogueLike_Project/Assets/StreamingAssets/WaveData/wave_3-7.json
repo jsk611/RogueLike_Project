@@ -1,0 +1,83 @@
+{
+  "waveIndex": 1,
+  "isMultiMap": true,
+  "isRepeating": true,
+  "maps": [
+    {
+      "file": "3_6_1",
+      "duration": 20
+    },
+    {
+      "file": "3_6_2",
+      "duration": 20
+    },
+    {
+      "file": "3_6_3",
+      "duration": 20
+    }
+  ],
+  "isRandomPos": true,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 2,
+      "spawnDelay": 20
+    },
+    {
+      "type": 111,
+      "count": 3,
+      "spawnDelay": 20
+    },
+    {
+      "type": 102,
+      "count": 2,
+      "spawnDelay": 30
+    },
+    {
+      "type": 212,
+      "count": 2,
+      "spawnDelay": 15
+    },
+    {
+      "type": 213,
+      "count": 2,
+      "spawnDelay": 20,
+      "firstDelay": 10
+    },
+    {
+      "type": 301,
+      "count": 1,
+      "spawnDelay": 30,
+      "firstDelay": 20
+    },
+    {
+      "type": 302,
+      "count": 1,
+      "spawnDelay": 30,
+      "firstDelay": 10
+    },
+    {
+      "type": 311,
+      "count": 1,
+      "spawnDelay": 25
+    }
+  ],
+  "mission": {
+
+    "type": "Killing",
+    "count": 14
+    
+
+  },
+
+  "isRandomEvent": false,
+  "events": [
+    {
+      "type": "SinkHole",
+      "repeat": 5,
+      "delay": 20,
+      "startDelay": 10,
+      "count": 40
+    }
+  ]
+}

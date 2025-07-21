@@ -166,8 +166,8 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{currentStage}-5");
-                LoadWaveData($"4-boss");
+                LoadWaveData($"1-9");
+                //LoadWaveData($"4-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -317,7 +317,7 @@ public class WaveManager : MonoBehaviour
             switch (ev.type)
             {
                 case "Building": StartCoroutine(WallCrisis(ev.repeat, ev.delay, ev.count)); break;
-                case "SinkHole": StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.count)); break;
+                case "SinkHole": StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.startDelay, ev.count)); break;
                 case "Spike": StartCoroutine(SpikeCrisis(ev.repeat, ev.delay, ev.count)); break;
                 default: Debug.LogError("Wrong Event Type"); break;
             }
@@ -520,8 +520,9 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(cooltime);
         }
     }
-    IEnumerator HoleCrisis(int repeat, float cooltime, int holeCount)
+    IEnumerator HoleCrisis(int repeat, float cooltime, float startDelay, int holeCount)
     {
+        yield return new WaitForSeconds(startDelay);
         for (int i = 0; i < repeat; i++)
         {
             if (isMissionEnd) break;

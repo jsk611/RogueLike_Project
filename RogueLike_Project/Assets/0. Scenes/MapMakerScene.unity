@@ -6131,11 +6131,11 @@ MonoBehaviour:
   input: {fileID: 1357588557}
   mapPaths:
   - StartMapSample
-  - 1_1
-  - 1_2
-  - 1_3
-  - 1_4
-  - 1_5
+  - 1_9
+  - 2_9
+  - 2_10
+  - 444
+  - 555
   - 1_6
   - 1_7
   - 1_8
