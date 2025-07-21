@@ -1178,15 +1178,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
   Health: 100
   MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 50
   ReloadSpeed: 100
-  Damage: 50
+  Damage: 25
   AttackSpeed: 100
 --- !u!114 &5165777887607683104
 MonoBehaviour:
@@ -1203,7 +1203,6 @@ MonoBehaviour:
   target: {fileID: 0}
   body: {fileID: 6653918507616483876}
   head: {fileID: 6476374187044824731}
-  maxVerticalAngle: 60
   rotateSpeed: 2
   master: {fileID: 0}
   anim: {fileID: 4325502948305491921}

@@ -17,45 +17,45 @@
     {
       "type": 101,
       "count": 6,
-      "spawnDelay": 20
+      "spawnDelay": 40
     },
     {
       "type": 111,
       "count": 3,
-      "spawnDelay": 20
+      "spawnDelay": 40
     },
     {
       "type": 102,
       "count": 3,
-      "spawnDelay": 30
+      "spawnDelay": 60
     },
     {
       "type": 212,
       "count": 6,
-      "spawnDelay": 15
+      "spawnDelay": 30
     },
     {
       "type": 213,
       "count": 6,
-      "spawnDelay": 20,
+      "spawnDelay": 40,
       "firstDelay": 10
     },
     {
       "type": 301,
       "count": 5,
-      "spawnDelay": 30,
+      "spawnDelay": 60,
       "firstDelay": 20
     },
     {
       "type": 302,
       "count": 5,
-      "spawnDelay": 30,
+      "spawnDelay": 60,
       "firstDelay": 10
     },
     {
       "type": 311,
       "count": 5,
-      "spawnDelay": 25
+      "spawnDelay": 50
     }
   ],
   "mission": {
