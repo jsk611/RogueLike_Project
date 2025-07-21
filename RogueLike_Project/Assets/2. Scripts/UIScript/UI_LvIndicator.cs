@@ -26,6 +26,7 @@ public class UI_LvIndicator : MonoBehaviour
     [SerializeField] int upgradeCost = 10;
     [SerializeField] int costIncreaseRate = 5;
     [SerializeField] TextMeshProUGUI LvText;
+    [SerializeField] TextMeshProUGUI CostText;
     [SerializeField] Slider slider;
 
     //[SerializeField] float basicATK_UpgradeRate = 5f;
@@ -47,6 +48,7 @@ public class UI_LvIndicator : MonoBehaviour
         curLevel = DoLVSet();
         player = FindAnyObjectByType<PlayerStatus>();
         slider.value = curLevel;
+        CostText.text = "Cost : "+upgradeCost.ToString();
     }
 
     #region LevelSet
@@ -176,6 +178,7 @@ public class UI_LvIndicator : MonoBehaviour
         upgradeCost += costIncreaseRate;
         curLevel++;
         slider.value = curLevel;
+        CostText.text = "Cost : " + upgradeCost.ToString();
     }
     private void Initialization()
     {

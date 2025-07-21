@@ -9,15 +9,17 @@ public class UpgradeTrigger : MonoBehaviour
 {
     [SerializeField] TMP_Text helpUI;
     [SerializeField] Color originColor;
+    [SerializeField] int UpgradeCost = 500;
 
     UpgradeManager_New UpgradeManager;
+    PlayerStatus player;
     int canUpgrade;
     // Start is called before the first frame update
     void Start()
     {
         UpgradeManager = ServiceLocator.Current.Get<IGameModeService>().GetUpgradeManager();
         originColor = GetComponent<MeshRenderer>().material.color;
-     
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
     }
 
     private void OnEnable()
@@ -31,11 +33,12 @@ public class UpgradeTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            helpUI.text = "Upgradable";
+            helpUI.text = "Upgradable (500 DNA)";
             helpUI.enabled = true;
             helpUI.color = Color.cyan;
-            if (canUpgrade >0 && Input.GetKeyUp(KeyCode.F) && !UpgradeManager.Upgrading)
+            if (canUpgrade >0 && player.GetCoin() >= UpgradeCost && Input.GetKeyUp(KeyCode.F) && !UpgradeManager.Upgrading)
             {
+                player.DecreaseCoin(UpgradeCost);
                 StartCoroutine(UpgradeManager.DecisionTreeDisplay(2));
                 canUpgrade= 0;
             }
