@@ -917,8 +917,9 @@ namespace InfimaGames.LowPolyShooterPack
         public override void OnTryExchangeWeapon(GameObject otherWeapon, Vector3 Position, Quaternion Rotation)
         {
             if (!CanChangeWeapon()) return;
-            string temp = inventory.GetOtherEquipped().gameObject.name;
-            if (otherWeapon.name + "(Clone)" == temp)
+            string other = inventory.GetOtherEquipped().gameObject.name;
+            string cur = inventory.GetEquipped().gameObject.name;
+            if (otherWeapon.name + "(Clone)" == other || otherWeapon.name + "(Clone)" == cur)
             {
                 Debug.Log("Already have same weapon");
                 return;
@@ -1163,8 +1164,16 @@ namespace InfimaGames.LowPolyShooterPack
             {
                 cameraWorld.gameObject.SetActive(!zoomState);
                 weaponAttachmentManager.GetZoomScope().gameObject.SetActive(zoomState);
-                if (currentCamera == cameraWorld) currentCamera = weaponAttachmentManager.GetZoomScope();
-                else currentCamera = cameraWorld;
+                if (currentCamera == cameraWorld)
+                {
+                    currentCamera = weaponAttachmentManager.GetZoomScope();
+                    inventory.GetEquipped().GetBulletPrefab().GetComponent<Projectile>().bulletDamage += 40;
+                }
+                else
+                {
+                    currentCamera = cameraWorld;
+                    inventory.GetEquipped().GetBulletPrefab().GetComponent<Projectile>().bulletDamage -= 40;
+                }
             }
         }
       IEnumerator zoomtest(float FOV)

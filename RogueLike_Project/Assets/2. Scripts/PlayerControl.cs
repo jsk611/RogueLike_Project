@@ -138,7 +138,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         Movement = h + v;
 
         character.height = 1.8f;
-        character.center = new Vector3(0, 0, 0);
+        character.center = new Vector3(0, 1, 0);
 
         Movement = Movement.normalized * moveSpeed;
 
