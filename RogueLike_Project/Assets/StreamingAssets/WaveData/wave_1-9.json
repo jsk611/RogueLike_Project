@@ -26,7 +26,7 @@
           "y": 16
         }
       ],
-      "spawnDelay": 15
+      "spawnDelay": 10
     },
     {
       "type": 111,
@@ -45,7 +45,7 @@
           "y": 16
         }
       ],
-      "spawnDelay": 15
+      "spawnDelay": 10
     },
     {
       "type": 102,
@@ -60,7 +60,7 @@
     }
   ],
   "mission": {
-    "type": "survive",
+    "type": "Survive",
     "time": 70
   },
 

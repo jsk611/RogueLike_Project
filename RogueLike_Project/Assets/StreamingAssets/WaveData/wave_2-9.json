@@ -7,7 +7,7 @@
       "duration": 60
     }
   ],
-  "isRandomEnemy": true,
+  "isRandomPos": true,
   "enemies": [
     {
       "type": 101,
@@ -18,20 +18,20 @@
     {
       "type": 111,
       "count": 8,
-     
+
       "spawnDelay": 20
     },
     {
       "type": 102,
       "count": 2,
-      
+
       "firstDelay": 55,
       "spawnDelay": 60
     },
     {
       "type": 213,
       "count": 4,
-      
+
       "spawnDelay": 45
     },
     {
@@ -64,7 +64,7 @@
       }
     ]
   },
-  
+
   "isRandomEvent": false,
   "events": [
     {
