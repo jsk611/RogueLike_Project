@@ -193,7 +193,6 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
         {
             characterStatus.DecreaseHealth(60 * Time.deltaTime);
         }
-        Debug.Log(isGrounded);
         return isGrounded;
     }
 
@@ -281,14 +280,6 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
 
         Debug.Log("모든 스킬 잠금 해제됨");
     }
-    private void OnDrawGizmos()
-    {
-        if (character == null) return;
-        else
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position+ Vector3.down * (character.height/2+character.radius));
-        }
-    }
+
     #endregion
 }

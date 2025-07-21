@@ -20,7 +20,7 @@ public class SettingManager : MonoBehaviour
     }
     private void Start()
     {
-        if(!PlayerPrefs.HasKey("packet")) continueButton.SetActive(false);
+
     }
     //continue
     public void InitGame()

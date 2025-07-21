@@ -402,13 +402,13 @@ public class PlayerStatus : StatusBehaviour
     public void IncreasePermanentCoin(int packet)
     { 
         PermanentCoins += packet;
-        UIManager.instance.packetIncrease(packet);
+        UIManager.instance.packetIncrease(PermanentCoins);
         PermanentUpgradeManager.instance.upgradeData.CurrentDNA = PermanentCoins;
     }
     public void DecreasePermanentCoin(int packet)
     { 
         PermanentCoins -= packet;
-        UIManager.instance.packetIncrease(-packet);
+        UIManager.instance.packetIncrease(PermanentCoins);
         PermanentUpgradeManager.instance.upgradeData.CurrentDNA = PermanentCoins;
     }
     public void SetPermanentCoin(int coin)

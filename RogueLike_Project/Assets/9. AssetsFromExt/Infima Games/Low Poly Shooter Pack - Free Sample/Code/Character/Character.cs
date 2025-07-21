@@ -462,7 +462,6 @@ namespace InfimaGames.LowPolyShooterPack
             inventory.Equip(index);
             //Refresh.
             RefreshWeaponSetup();
-
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
@@ -480,7 +479,6 @@ namespace InfimaGames.LowPolyShooterPack
             inventory.SwitchWeapons(currentEquippedIndex, equippedWeapon, otherWeapon);
             inventory.Equip(currentEquippedIndex);
             RefreshWeaponSetup();
-
             yield return new WaitForEndOfFrame();
             UIManager.instance.AmmoTextReset(knifeActive, equippedWeapon.GetAmmunitionCurrent(), equippedWeapon.GetAmmunitionTotal());
         }
@@ -1167,12 +1165,10 @@ namespace InfimaGames.LowPolyShooterPack
                 if (currentCamera == cameraWorld)
                 {
                     currentCamera = weaponAttachmentManager.GetZoomScope();
-                    inventory.GetEquipped().GetBulletPrefab().GetComponent<Projectile>().bulletDamage += 40;
                 }
                 else
                 {
                     currentCamera = cameraWorld;
-                    inventory.GetEquipped().GetBulletPrefab().GetComponent<Projectile>().bulletDamage -= 40;
                 }
             }
         }

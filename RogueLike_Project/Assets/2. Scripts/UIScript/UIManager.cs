@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     Text curammo, maxammo;
 
     int dna, packet;
+    private PlayerStatus player;
 
     [SerializeField] Image fade;
 
@@ -40,9 +41,8 @@ public class UIManager : MonoBehaviour
         BarValueChange(0, 100, 100);
         BarValueChange(1, 100, 100);
         DNAReset(0);
-        PacketReset(packet);
         Swapping(0);
-
+        player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
     }
 
     public float stopwatch = 0;
@@ -151,8 +151,7 @@ public class UIManager : MonoBehaviour
     }
     public void PacketReset(int curpacket)
     {
-        PlayerPrefs.SetInt("packet", curpacket);
-
+        curpacket = player.GetPermanentCoin();
         if (curpacket == 0)
         {
             foreach(TMP_Text temp in packetText)
