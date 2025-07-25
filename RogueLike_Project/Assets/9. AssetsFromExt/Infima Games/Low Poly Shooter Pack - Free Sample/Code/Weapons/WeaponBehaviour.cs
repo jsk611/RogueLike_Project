@@ -139,8 +139,8 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         public abstract void EjectCasing();
 
-       
 
+        public virtual void ZoomEffect(bool val) { }
         public virtual void Throw() { }
         #endregion
     }

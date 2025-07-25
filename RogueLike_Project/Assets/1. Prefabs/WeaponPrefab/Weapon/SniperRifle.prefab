@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 1612064551344130276}
   - component: {fileID: 3673051191447947828}
   - component: {fileID: 1903351134193991036}
-  - component: {fileID: 2023804658626275915}
+  - component: {fileID: -4603156272320470388}
   - component: {fileID: 365103744244228065}
   - component: {fileID: 8506589210327217193}
   m_Layer: 0
@@ -427,7 +427,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2023804658626275915
+--- !u!114 &-4603156272320470388
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5893218163072621543}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7170d51de97d79e4fb11d3321667acb0, type: 3}
+  m_Script: {fileID: 11500000, guid: ce3054751a3bf3d428d7ae09bce91e00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   automatic: 0

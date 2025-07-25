@@ -40,15 +40,12 @@ public class UI_LvIndicator : MonoBehaviour
     private Dictionary<PerUpgradeType, Action> UpgradeAction;
     private Dictionary<PerUpgradeType, float> UpgradeRateSet;
     private PlayerStatus player;
-    private int curLevel;
+    public int curLevel = 1;
 
     private void Start()
     {
         Initialization();
-        curLevel = DoLVSet();
         player = FindAnyObjectByType<PlayerStatus>();
-        slider.value = curLevel;
-        CostText.text = "Cost : "+upgradeCost.ToString();
     }
 
     #region LevelSet
@@ -59,50 +56,36 @@ public class UI_LvIndicator : MonoBehaviour
         {
             if (PermanentUpgradeManager.instance.weaponLockData.GetWeaponLock((WeaponType)i)) lv = i;
         }
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int BasicATKLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.Basic_ATK - 100f) / UpgradeRateSet[upgradeType]) + 1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int BasicHPLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.Basic_HP - 100f) / UpgradeRateSet[upgradeType]) + 1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int CoinAcqLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate - 1.0f) / UpgradeRateSet[upgradeType]) +1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int HealRateLVSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int AtkUpgradeRateLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private int UtilUpgradeRateLvSet()
     {
         int lv = (int)((PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate - 1.0f) / UpgradeRateSet[upgradeType]) + 1;
-        if (lv == maxLevel) LvStringInit("MAX");
-        else LvStringInit(lv.ToString());
         return lv;
     }
     private void LvStringInit(string lv)
@@ -130,35 +113,29 @@ public class UI_LvIndicator : MonoBehaviour
     private void BasicATKUpgrade()
     {
         if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.Basic_ATK += UpgradeRateSet[upgradeType];
-        BasicATKLvSet();
         player.SetAttackDamage(PermanentUpgradeManager.instance.upgradeData.Basic_ATK);
     }
     private void BasicHPUpgrade()
     {
         if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.Basic_HP += UpgradeRateSet[upgradeType];
-        BasicHPLvSet();
         player.SetMaxHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
         player.SetHealth(PermanentUpgradeManager.instance.upgradeData.Basic_HP);
     }
     private void CoinAcqUpgrade()
     {
         if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate += UpgradeRateSet[upgradeType];
-        CoinAcqLvSet();
     }
     private void HealRateUpgrade()
     {
         if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.MaintenanceHealRate += UpgradeRateSet[upgradeType];
-        HealRateLVSet();
     }
     private void AtkRateUpgrade()
     {
         if (curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.ATKUpgradeRate += UpgradeRateSet[upgradeType];
-        AtkUpgradeRateLvSet();
     }
     private void UtilRateUpgrade()
     {
         if(curLevel < maxLevel) PermanentUpgradeManager.instance.upgradeData.UTLUpgradeRate += UpgradeRateSet[upgradeType];
-        UtilUpgradeRateLvSet();
     }
     #endregion
     public void DoPermanentUpgrade()
@@ -179,6 +156,8 @@ public class UI_LvIndicator : MonoBehaviour
         curLevel++;
         slider.value = curLevel;
         CostText.text = "Cost : " + upgradeCost.ToString();
+        if (curLevel == maxLevel) LvStringInit("MAX");
+        else LvStringInit(curLevel.ToString());
     }
     private void Initialization()
     {
@@ -193,9 +172,14 @@ public class UI_LvIndicator : MonoBehaviour
         };
         UpgradeRateSet = new Dictionary<PerUpgradeType, float>();
         UpgradeRateSet[upgradeType] = upgradeRate;
+        curLevel = DoLVSet();
+        LvStringInit(curLevel.ToString());
+        slider.value = curLevel;
+        CostText.text = "Cost : " + upgradeCost.ToString();
     }
     private int DoLVSet()
     {
+
         switch(upgradeType)
         {
             case PerUpgradeType.weapon_Unlock: return WeaponLockLvSet();

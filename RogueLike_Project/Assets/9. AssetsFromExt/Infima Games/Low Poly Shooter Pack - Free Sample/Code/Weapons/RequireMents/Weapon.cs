@@ -133,7 +133,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// <summary>
         /// The player character's status
         /// </summary>
-        private PlayerStatus playerStatus;
+        protected PlayerStatus playerStatus;
 
         private static readonly int HashReloadSpeed = Animator.StringToHash("Reload Speed");
         private static readonly int HashAtackSpeed = Animator.StringToHash("Fire Speed");
@@ -288,6 +288,10 @@ namespace InfimaGames.LowPolyShooterPack
 
         }
 
+        public override void ZoomEffect(bool val)
+        {
+            return;
+        }
         public override void EjectCasing()
         {
             //Spawn casing prefab at spawn point.

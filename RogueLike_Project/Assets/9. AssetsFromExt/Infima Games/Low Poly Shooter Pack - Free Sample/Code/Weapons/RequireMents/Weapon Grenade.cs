@@ -362,7 +362,6 @@ namespace InfimaGames.LowPolyShooterPack
                 yield return null;
             }
         }
-
         private float CalX(float t,float v,float cos)
         { return v * cos * t; }
         private float CalY(float t,float v,float sin,float g)
