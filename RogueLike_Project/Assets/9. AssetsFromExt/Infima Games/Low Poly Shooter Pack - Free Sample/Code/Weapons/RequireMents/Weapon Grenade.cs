@@ -40,6 +40,9 @@ namespace InfimaGames.LowPolyShooterPack
         [SerializeField]
         private float maximumDistance = 500.0f;
 
+        [Header("Reload Stat")]
+        private float unusedReloadRate = 1.0f;
+
         [Header("Animation")]
 
         [Tooltip("Transform that represents the weapon's ejection port, meaning the part of the weapon that casings shoot from.")]
@@ -203,6 +206,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override Animator GetAnimator() => animator;
 
+        public override float GetReloadSpeed() => unusedReloadRate;
         public override Sprite GetSpriteBody() => spriteBody;
 
         public override AudioClip GetAudioClipHolster() => audioClipHolster;

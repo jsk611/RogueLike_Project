@@ -83,7 +83,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// Returns the Weapon's Animator component.
         /// </summary>
         public abstract Animator GetAnimator();
-
+        public abstract float GetReloadSpeed();
         /// <summary>
         /// Returns true if this weapon shoots in automatic.
         /// </summary>

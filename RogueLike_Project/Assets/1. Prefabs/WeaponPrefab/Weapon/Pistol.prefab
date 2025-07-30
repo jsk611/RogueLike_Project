@@ -318,6 +318,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maximumDistance: 500
+  reloadSpeedRate: 1.2
   socketEjection: {fileID: 2403201294998550230}
   prefabCasing: {fileID: 1492315059354262, guid: b1995a53a949fac4db5722fc1df9efe4,
     type: 3}

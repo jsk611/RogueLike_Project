@@ -248,7 +248,8 @@ namespace InfimaGames.LowPolyShooterPack
 
             //Initialize Inventory.
             inventory.Init(0);
-
+            characterStatus = GetComponent<PlayerStatus>();
+           
             //Refresh!
             RefreshWeaponSetup();
             try
@@ -271,7 +272,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Cache a reference to the overlay layer's index.
             layerOverlay = characterAnimator.GetLayerIndex("Layer Overlay");
 
-            characterStatus = GetComponent<PlayerStatus>();
+
             //UIManager.instance.AmmoTextReset(equippedWeapon.GetAmmunitionTotal(), equippedWeapon.GetAmmunitionTotal());
         }
         
@@ -445,6 +446,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private IEnumerator Equip(int index = 0)
         {
+            Debug.Log(equippedWeapon.name + (1/equippedWeapon.GetReloadSpeed()));
             //Only if we're not holstered, holster. If we are already, we don't need to wait.
             if (!holstered)
             {

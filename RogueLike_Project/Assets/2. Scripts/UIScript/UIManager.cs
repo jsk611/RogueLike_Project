@@ -360,7 +360,7 @@ public class UIManager : MonoBehaviour
         DyingParticle.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
         Time.timeScale = 1f;
-        PlayerPrefs.SetString("Time", $"{(int)stopwatch / 60}:{(int)stopwatch % 60}");
+        PlayerPrefs.SetString("Time", $"{(int)stopwatch / 60}:{((int)stopwatch % 60):D2}");
         PlayerPrefs.SetString("Stage", waveText.text);
         SceneManager.LoadScene("GameOverScene");
     } 

@@ -398,6 +398,7 @@ MonoBehaviour:
     m_Bits: 1
   maximumDistance: 500
   concentration: 1
+  reloadSpeedRate: 0.8
   socketEjection: {fileID: 8897128229815599576}
   prefabCasing: {fileID: 1492315059354262, guid: c638dfae3f3edf843b2614dae230a771,
     type: 3}

@@ -42,6 +42,10 @@ namespace InfimaGames.LowPolyShooterPack
         [SerializeField]
         float concentration = 10f;
 
+        [Header("Reload Stat")]
+        [SerializeField]
+        private float reloadSpeedRate = 1.0f;
+
         [Header("Animation")]
 
         [Tooltip("Transform that represents the weapon's ejection port, meaning the part of the weapon that casings shoot from.")]
@@ -192,6 +196,7 @@ namespace InfimaGames.LowPolyShooterPack
 
         public override Animator GetAnimator() => animator;
 
+        public override float GetReloadSpeed() => reloadSpeedRate;
         public override Sprite GetSpriteBody() => spriteBody;
 
         public override AudioClip GetAudioClipHolster() => audioClipHolster;
