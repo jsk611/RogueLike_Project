@@ -710,6 +710,8 @@ namespace InfimaGames.LowPolyShooterPack
 
             if (knifeActive)
                 return false;
+            if (FindObjectOfType<UpgradeManager_New>().upgrading)
+                return false;
 
             //Return.
             return true;
@@ -868,12 +870,15 @@ namespace InfimaGames.LowPolyShooterPack
             //Block while the cursor is unlocked.
             if (!cursorLocked)
                 return;
-
+            if (!CanAim())
+                return;
+   
             //Switch.
             switch (context.phase)
             {
                 case InputActionPhase.Started:
                     //Started.
+                    if (holdingButtonAim) break;
                     equippedWeapon.ZoomEffect(true);
                     characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed()-5);
                     holdingButtonAim = true;
@@ -881,13 +886,21 @@ namespace InfimaGames.LowPolyShooterPack
                     break;
                 case InputActionPhase.Canceled:
                     //Canceled.
+                    if (!holdingButtonAim) break;
                     equippedWeapon.ZoomEffect(false);
                     characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed()+5);
                     holdingButtonAim = false;
                     break;
             }
         }
-
+        public override void CancelAiming()
+        {
+            if (!holdingButtonAim) return;
+            Debug.Log("WTF");
+            equippedWeapon.ZoomEffect(false);
+            characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed() + 5);
+            holdingButtonAim = false;
+        }
 
         /// <summary>
         /// Holster.

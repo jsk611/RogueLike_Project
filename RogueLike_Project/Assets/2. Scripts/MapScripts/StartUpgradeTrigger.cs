@@ -26,6 +26,7 @@ public class StartUpgradeTrigger : MonoBehaviour
     }
     public void UIEnable(bool val)
     {
+        player.CancelAiming();
         UIenabled = val;
         upgradeUI.SetActive(val);
         player.SetCursorState(!val);

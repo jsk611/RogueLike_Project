@@ -68,6 +68,7 @@ public class UpgradeManager_New : MonoBehaviour
 
     public IEnumerator DecisionTreeDisplay(int level)
     {
+        player.CancelAiming();
         decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
         terminal2.SetActive(false);
@@ -87,6 +88,7 @@ public class UpgradeManager_New : MonoBehaviour
     }
     public void BasicUpgradeCall()
     {
+        player.CancelAiming();
         terminal1.SetActive(false);
         curUpgradeLevel = 1;
         decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);

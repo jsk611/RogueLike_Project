@@ -60,7 +60,6 @@ public class ProjectileLauncher : MonoBehaviour {
 		if (collision.gameObject.GetComponent<Projectile>() != null)
 			return;
 
-
 		Instantiate(explosionPrefab,transform.position,Quaternion.Euler(Vector3.left*90));
 
 		Collider[] hits = Physics.OverlapSphere(transform.position, explosionRange,LayerMask.GetMask("Creature"));
