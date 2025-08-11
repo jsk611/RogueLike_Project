@@ -21,12 +21,12 @@ public class WeaponSniper : Weapon
         Debug.Log("zoomeffect");
         if (val && !zoomEffect)
         {
-            playerStatus.SetAttackDamage(playerStatus.GetAttackDamage() + 50);
+            playerStatus.SetAttackDamage(playerStatus.GetAttackDamage() + 70);
             zoomEffect = true;
         }
         else if (!val && zoomEffect)
         {
-            playerStatus.SetAttackDamage(playerStatus.GetAttackDamage() - 50);
+            playerStatus.SetAttackDamage(playerStatus.GetAttackDamage() - 70);
             zoomEffect = false;
         } 
 
