@@ -110,7 +110,7 @@ public class RangedMonster : MonsterBase
 
     private bool IsTargetValid()
     {
-        return target != null && Vector3.Distance(transform.position, target.position) <= attackRange;
+        return target != null && Vector3.Distance(transform.position, target.position) <= attackRange && DetectedPlayer();
     }
 
     private void ResetAttackTimer()
