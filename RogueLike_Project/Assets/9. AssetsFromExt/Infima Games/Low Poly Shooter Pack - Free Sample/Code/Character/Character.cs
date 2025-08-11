@@ -875,14 +875,14 @@ namespace InfimaGames.LowPolyShooterPack
                 case InputActionPhase.Started:
                     //Started.
                     equippedWeapon.ZoomEffect(true);
-                    characterStatus.DecreaseMovementSpeed(5);
+                    characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed()-5);
                     holdingButtonAim = true;
 
                     break;
                 case InputActionPhase.Canceled:
                     //Canceled.
                     equippedWeapon.ZoomEffect(false);
-                    characterStatus.IncreaseMovementSpeed(5);
+                    characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed()+5);
                     holdingButtonAim = false;
                     break;
             }
