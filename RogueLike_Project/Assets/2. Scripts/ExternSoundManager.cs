@@ -41,7 +41,7 @@ public class ExternSoundManager : MonoBehaviour
         Effect_Volume = Main_Volume * Effect_Slider.value;
 
         BGM.volume = BGM_Volume;
-        
+        ChangeVolume();
     }
 
 
