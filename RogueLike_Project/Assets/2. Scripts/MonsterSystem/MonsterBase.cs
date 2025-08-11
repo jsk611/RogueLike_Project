@@ -219,6 +219,17 @@ public abstract class MonsterBase : MonoBehaviour
     }
     #endregion
 
+    protected virtual bool DetectedPlayer()
+    {
+        if (fov.visibleTargets.Count > 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+
     #region State Update Methods
     protected virtual void UpdateIdle()
     {
