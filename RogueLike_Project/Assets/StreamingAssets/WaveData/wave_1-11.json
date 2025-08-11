@@ -1,0 +1,61 @@
+{
+  "waveIndex": 3,
+  "isMultiMap": false,
+  "maps": [
+    {
+      "file": "1_3",
+      "duration": 60
+    }
+  ],
+  "isRandomEnemy": false,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 4,
+      "spawnPoints": [
+        {
+          "x": 14,
+          "y": 27
+        }
+      ],
+      "spawnDelay": 10
+    },
+    {
+      "type": 111,
+      "count": 2,
+      "spawnPoints": [
+        {
+          "x": 14,
+          "y": 2
+        }
+      ],
+      "spawnDelay": 10
+    },
+    {
+      "type": 102,
+      "count": 2,
+      "spawnPoints": [
+        {
+          "x": 23,
+          "y": 14
+        },
+        {
+          "x": 6,
+          "y": 15
+        }
+      ],
+      "spawnDelay": 20
+    }
+
+  ],
+  "mission":
+  {
+    "type": "Survive",
+    "time": 70
+  },
+  
+  "isRandomEvent": false,
+  "events": [
+    
+  ]
+}

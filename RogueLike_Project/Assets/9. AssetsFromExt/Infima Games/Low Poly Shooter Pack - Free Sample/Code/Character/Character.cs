@@ -446,7 +446,6 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private IEnumerator Equip(int index = 0)
         {
-            Debug.Log(equippedWeapon.name + (1/equippedWeapon.GetReloadSpeed()));
             //Only if we're not holstered, holster. If we are already, we don't need to wait.
             if (!holstered)
             {
