@@ -416,7 +416,7 @@ namespace InfimaGames.LowPolyShooterPack
             //Get the name of the animation state to play, which depends on weapon settings, and ammunition!
             string stateName = equippedWeapon.HasAmmunition() ? "Reload" : "Reload Empty";
             //Play the animation state!
-            
+            CancelAiming();
             characterAnimator.Play(stateName, layerActions, 0.0f);
 
             //Set.

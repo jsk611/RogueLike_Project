@@ -161,7 +161,7 @@ public class WaveManager : MonoBehaviour
             for (int i = 1; i <= 4; i++)
             {
                 currentWave = i;
-                int randNum = 13;//Random.Range(1, mapMaxIdx + 1);
+                int randNum =  Random.Range(1, mapMaxIdx + 1);
                 int cnt = 0;
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
