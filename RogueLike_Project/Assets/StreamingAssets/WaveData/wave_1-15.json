@@ -7,22 +7,22 @@
       "duration": 60
     }
   ],
-  "isRandomEnemy": true,
+  "isRandomPos": true,
   "enemies": [
     {
       "type": 101,
       "count": 6,
-      "spawnDelay": 10
+      "spawnDelay": 5
     },
     {
       "type": 111,
       "count": 6,
-      "spawnDelay": 10
+      "spawnDelay": 5
     },
     {
       "type": 102,
       "count": 3,
-      "spawnDelay": 20
+      "spawnDelay": 8
     }
   ],
   "mission":

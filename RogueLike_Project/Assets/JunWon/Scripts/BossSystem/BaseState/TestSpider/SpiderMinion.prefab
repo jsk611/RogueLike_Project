@@ -2649,7 +2649,7 @@ MonoBehaviour:
   items: []
   itemProbability: 320000001900000000000000
   height: 5
-  DNADrop: 0
+  DNADrop: 1
   HPBar: {fileID: 2396254366292662098}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}

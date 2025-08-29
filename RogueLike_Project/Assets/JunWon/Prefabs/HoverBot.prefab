@@ -441,8 +441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3d9f0ed395b72f4684123b5f2898614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CurrentCon: 0
   currentCC: 0
-  currentCon: 0
   Health: 200
   MaxHealth: 200
   CriticalRate: 0
@@ -466,7 +466,6 @@ MonoBehaviour:
   target: {fileID: 0}
   body: {fileID: 0}
   head: {fileID: 0}
-  maxVerticalAngle: 60
   rotateSpeed: 2
   master: {fileID: 0}
   anim: {fileID: 6068325511724340943}
@@ -489,7 +488,7 @@ MonoBehaviour:
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
   - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
-  DNADrop: 63
+  DNADrop: 60
   HPBar: {fileID: 8254156462037723369}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
@@ -497,6 +496,7 @@ MonoBehaviour:
   hitDuration: 0.8
   dieDuration: 1
   transitionCooldown: 0.3
+  teleportCooldown: 4
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   binaryDeathEffectObject: {fileID: 5581131334687998717, guid: 47f4f2569c4806c48a7893a4100f513b,
     type: 3}

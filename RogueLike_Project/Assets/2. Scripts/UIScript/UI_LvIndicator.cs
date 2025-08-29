@@ -175,6 +175,7 @@ public class UI_LvIndicator : MonoBehaviour
         curLevel = DoLVSet();
         LvStringInit(curLevel.ToString());
         slider.value = curLevel;
+        upgradeCost += (curLevel - 1) * costIncreaseRate;
         CostText.text = "Cost : " + upgradeCost.ToString();
     }
     private int DoLVSet()
