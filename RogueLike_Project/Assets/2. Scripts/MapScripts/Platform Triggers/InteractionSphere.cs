@@ -8,6 +8,7 @@ public class InteractionSphere : MonoBehaviour
 {
     // Start is called before the first frame update
     WaveManager waveManager;
+    private Coroutine uiCoroutine;
 
     [SerializeField] TMP_Text helpUI;
     string uiText = "Next Wave";
@@ -31,7 +32,7 @@ public class InteractionSphere : MonoBehaviour
             helpUI.text = uiText;
             helpUI.enabled = true;
             helpUI.color = Color.red;
-            StartCoroutine("PressToSwitchWave");
+            uiCoroutine = StartCoroutine("PressToSwitchWave");
         }
 
     }
@@ -43,7 +44,7 @@ public class InteractionSphere : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             helpUI.enabled = false;
-            StopCoroutine("PressToSwitchWave");
+            StopCoroutine(uiCoroutine);
         }
     }
     

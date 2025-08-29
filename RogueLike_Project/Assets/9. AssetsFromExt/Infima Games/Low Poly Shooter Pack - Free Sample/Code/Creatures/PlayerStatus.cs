@@ -388,7 +388,7 @@ public class PlayerStatus : StatusBehaviour
     //Coins
     public void IncreaseCoin(int coin)
     {   Coins += coin;
-        UIManager.instance.dnaIncrease(coin);
+        UIManager.instance.dnaIncrease((int)(coin*PermanentUpgradeManager.instance.upgradeData.CoinAcquisitionRate));
     }
     public void DecreaseCoin(int coin)
     { 

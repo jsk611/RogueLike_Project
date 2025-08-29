@@ -27,6 +27,12 @@ public class UpgradeManager_New : MonoBehaviour
     [SerializeField] GameObject upgradeSuccess;
 
     [SerializeField] AudioClip upgradeSuccessSound;
+
+    [Header("Upgrade Text UI")]
+    [SerializeField] TextMeshProUGUI[] ATK_Texts;
+    [SerializeField] TextMeshProUGUI[] UTL_Texts;
+    [SerializeField] TextMeshProUGUI[] Coin_Texts;
+
     private IAudioManagerService audioManager;
     private InfimaGames.LowPolyShooterPack.AudioSettings audioSetting;
 
@@ -69,6 +75,7 @@ public class UpgradeManager_New : MonoBehaviour
     public IEnumerator DecisionTreeDisplay(int level)
     {
         player.CancelAiming();
+        UpgradeValueEdit();
         decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
         terminal2.SetActive(false);
@@ -89,6 +96,7 @@ public class UpgradeManager_New : MonoBehaviour
     public void BasicUpgradeCall()
     {
         player.CancelAiming();
+        UpgradeValueEdit();
         terminal1.SetActive(false);
         curUpgradeLevel = 1;
         decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
@@ -272,10 +280,10 @@ public class UpgradeManager_New : MonoBehaviour
                 switch ((COINUGType)upgradeResult)
                 {
                     case COINUGType.CoinAcquisitonRate:
-                        playerStatus.IncreaseCoin((int)(100*COINAcquistionRate));
+                        playerStatus.IncreaseCoin(100);
                         break;
                     case COINUGType.PermanentCoinAcquisitionRate:
-                        playerStatus.IncreasePermanentAcquisitionRate(1*COINAcquistionRate);
+                        playerStatus.IncreaseCoin(100);
                         break;
                 }
                 break;
@@ -360,6 +368,23 @@ public class UpgradeManager_New : MonoBehaviour
         player.SetInteractingUI(upgrading);
     }
 
+    private void UpgradeValueEdit()
+    {
+        UpgradeData temp = PermanentUpgradeManager.instance.upgradeData;
+        {
+            ATK_Texts[0].text = string.Format("Damage + {0:F2}%",10 * temp.ATKUpgradeRate);
+            ATK_Texts[1].text = string.Format("AttackSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
+            ATK_Texts[2].text = string.Format("ReloadingSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
+        }
+        {
+            UTL_Texts[0].text = string.Format("MoveSpeed + {0:F2}", 1 * temp.UTLUpgradeRate);
+            UTL_Texts[1].text = string.Format("Health + {0:D}",(int)(10 * temp.UTLUpgradeRate));
+        }
+        {
+            Coin_Texts[0].text = string.Format("Coin + {0:D}", (int)(100 * temp.CoinAcquisitionRate));
+            Coin_Texts[1].text = Coin_Texts[0].text;
+        }
+    }
 }
 
 
