@@ -400,9 +400,13 @@ public abstract class MonsterBase : MonoBehaviour
         else
         { 
             Debug.LogWarning("?? ?????? --");
-         //   if (dropItem) SpawnItem();
-            if (dropDNA) target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
-            //enemyCountData.enemyCount--;
+            //   if (dropItem) SpawnItem();
+            if (dropDNA)
+            {
+                target.GetComponent<PlayerStatus>().IncreaseCoin(DNADrop);
+                dropDNA = false;
+            }
+            
         }
         GetComponent<NavMeshAgent>().enabled = false;
         transform.position = new Vector3(-100, -100, -100);

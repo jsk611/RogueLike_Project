@@ -5,7 +5,7 @@ using System.IO;
 using UnityEngine.Rendering;
 using JetBrains.Annotations;
 public class UpgradeData {
-    public int CurrentDNA = 1000;
+    public int CurrentDNA = 0;
     public float Basic_ATK = 100.0f;
     public float Basic_HP = 100.0f;
     public float ATKUpgradeRate = 1.0f;

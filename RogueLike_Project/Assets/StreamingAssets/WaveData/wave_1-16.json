@@ -12,12 +12,12 @@
     {
       "type": 101,
       "count": 5,
-      "spawnDelay": 15
+      "spawnDelay": 20
     },
     {
       "type": 111,
       "count": 6,
-      "spawnDelay": 15
+      "spawnDelay": 20
     },
     {
       "type": 102,
