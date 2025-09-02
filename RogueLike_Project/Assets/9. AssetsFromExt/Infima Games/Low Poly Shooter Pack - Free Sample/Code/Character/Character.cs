@@ -1007,8 +1007,8 @@ namespace InfimaGames.LowPolyShooterPack
                     if (CanChangeWeapon() && (indexCurrent != indexNext))
                     {
                         AnimationCancelReload();
-                        UIManager.instance.Swapping(indexNext);
                         StartCoroutine(nameof(Equip), indexNext);
+                        UIManager.instance.Swapping(indexNext);
                     }
                     break;
             }
@@ -1026,8 +1026,8 @@ namespace InfimaGames.LowPolyShooterPack
                     if (CanChangeWeapon() && (nextIndex != inventory.GetEquippedIndex()))
                     {
                         AnimationCancelReload();
-                        UIManager.instance.Swapping(nextIndex);
                         StartCoroutine(nameof(Equip), nextIndex);
+                        UIManager.instance.Swapping(nextIndex);
                     }
                     break;
             }

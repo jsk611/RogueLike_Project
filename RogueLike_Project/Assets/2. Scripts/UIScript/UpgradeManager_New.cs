@@ -372,7 +372,7 @@ public class UpgradeManager_New : MonoBehaviour
     {
         UpgradeData temp = PermanentUpgradeManager.instance.upgradeData;
         {
-            ATK_Texts[0].text = string.Format("Damage + {0:F2}%",10 * temp.ATKUpgradeRate);
+            ATK_Texts[0].text = string.Format("Damage + {0:F2}",10 * temp.ATKUpgradeRate);
             ATK_Texts[1].text = string.Format("AttackSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
             ATK_Texts[2].text = string.Format("ReloadingSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
         }

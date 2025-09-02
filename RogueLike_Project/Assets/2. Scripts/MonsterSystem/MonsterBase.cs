@@ -1,3 +1,4 @@
+using DG.Tweening;
 using InfimaGames.LowPolyShooterPack;
 using System;
 using System.Collections;
@@ -18,6 +19,8 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
    // [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
+    [SerializeField] protected float maxSpeedRange = 6f;
+    [SerializeField] protected float minSpeedRange = 4f;
 
     public Summoner master = null;
 
@@ -175,8 +178,12 @@ public abstract class MonsterBase : MonoBehaviour
         // Debug.Log($"{name} current state = {state}");
         // if (state == State.IDLE) CheckPlayer();
         // ???? ???????? ???? ????
-       // if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
+        // if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
+        float distance = Vector3.Distance(transform.position, target.position);
+        distance = Mathf.Clamp(distance, minSpeedRange,maxSpeedRange);
         chaseSpeed = monsterStatus.GetMovementSpeed();
+        chaseSpeed *= distance / minSpeedRange;
+       
         ExecuteStateAction();
         Debug.Log(chaseSpeed);
     }

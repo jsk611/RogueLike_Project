@@ -1,6 +1,7 @@
 {
   "waveIndex": 2,
   "isMultiMap": false,
+  "wallHeight": 8,
   "maps": [
     {
       "file": "1_2",

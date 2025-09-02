@@ -1,6 +1,7 @@
 {
   "waveIndex": 5,
   "isMultiMap": false,
+  "wallHeight": 8,
   "maps": [
     {
       "file": "2_boss",

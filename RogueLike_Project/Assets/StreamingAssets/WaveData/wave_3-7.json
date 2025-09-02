@@ -1,6 +1,7 @@
 {
   "waveIndex": 1,
   "isMultiMap": true,
+  "wallHeight": 12,
   "isRepeating": true,
   "maps": [
     {

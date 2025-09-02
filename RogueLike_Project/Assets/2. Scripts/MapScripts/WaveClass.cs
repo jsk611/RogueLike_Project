@@ -7,6 +7,7 @@ public class WaveData
 {
     public int waveIndex;
     public bool isMultiMap;
+    public int wallHeight;
     public bool isRepeating=false;
     public List<MapInfo> maps;
     public bool isRandomEnemy=false;
