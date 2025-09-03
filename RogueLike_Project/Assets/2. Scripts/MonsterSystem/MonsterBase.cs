@@ -19,8 +19,8 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
    // [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
-    [SerializeField] protected float maxSpeedRange = 20f;
-    [SerializeField] protected float minSpeedRange = 16f;
+    [SerializeField] protected float maxSpeedRange = 10f;
+    [SerializeField] protected float minSpeedRange = 6f;
 
     public Summoner master = null;
 
@@ -33,8 +33,6 @@ public abstract class MonsterBase : MonoBehaviour
     
     [Header("Adaptive Aggression System")]
     [SerializeField] private bool useAdaptiveAggression = true; // 적응형 적극성 시스템 사용 여부
-    [SerializeField] private bool useOptimizedVersion = true; // 최적화된 버전 사용 여부
-    protected AdaptiveAggressionSystem aggressionSystem;
     protected OptimizedAggressionSystem optimizedAggressionSystem;
 
 
@@ -142,26 +140,13 @@ public abstract class MonsterBase : MonoBehaviour
         monsterStatus = GetComponent<MonsterStatus>();
         fov = GetComponent<FieldOfView>();
         
-        // 적응형 적극성 시스템 초기화
+        // 적응형 적극성 시스템 초기화 (최적화된 버전만 사용)
         if (useAdaptiveAggression)
         {
-            if (useOptimizedVersion)
+            optimizedAggressionSystem = GetComponent<OptimizedAggressionSystem>();
+            if (optimizedAggressionSystem == null)
             {
-                // 최적화된 버전 사용
-                optimizedAggressionSystem = GetComponent<OptimizedAggressionSystem>();
-                if (optimizedAggressionSystem == null)
-                {
-                    optimizedAggressionSystem = gameObject.AddComponent<OptimizedAggressionSystem>();
-                }
-            }
-            else
-            {
-                // 기존 버전 사용
-                aggressionSystem = GetComponent<AdaptiveAggressionSystem>();
-                if (aggressionSystem == null)
-                {
-                    aggressionSystem = gameObject.AddComponent<AdaptiveAggressionSystem>();
-                }
+                optimizedAggressionSystem = gameObject.AddComponent<OptimizedAggressionSystem>();
             }
         }
     }
@@ -209,9 +194,8 @@ public abstract class MonsterBase : MonoBehaviour
         // ???? ???????? ???? ????
         // if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
         
-        // 적응형 적극성 시스템이 활성화된 경우 기존 거리 기반 속도 조절을 건너뛰고
-        // AdaptiveAggressionSystem에서 처리하도록 함
-        if (!useAdaptiveAggression || aggressionSystem == null)
+        // 적응형 적극성 시스템이 활성화된 경우 OptimizedAggressionSystem에서 처리
+        if (!useAdaptiveAggression || optimizedAggressionSystem == null)
         {
             // 기존 거리 기반 속도 조절 로직
             float distance = Vector3.Distance(transform.position, target.position);
@@ -221,17 +205,17 @@ public abstract class MonsterBase : MonoBehaviour
         }
         else
         {
-            // 적응형 시스템에서 속도가 이미 조절되므로 현재 NavMeshAgent 속도를 사용
+            // 최적화된 시스템에서 속도가 이미 조절되므로 현재 NavMeshAgent 속도를 사용
             chaseSpeed = nmAgent.speed;
         }
        
         ExecuteStateAction();
         
-        // 디버그 로그를 적극성 시스템 사용 시에만 표시
-        if (useAdaptiveAggression && aggressionSystem != null)
-        {
-            Debug.Log($"{name} - Speed: {chaseSpeed:F1}, Aggression: {aggressionSystem.GetAggressionLevel():F2}");
-        }
+        // 디버그 로그를 적극성 시스템 사용 시에만 표시 (성능을 위해 주석 처리)
+        // if (useAdaptiveAggression && optimizedAggressionSystem != null)
+        // {
+        //     Debug.Log($"{name} - Speed: {chaseSpeed:F1}, Aggression: {optimizedAggressionSystem.GetAggressionLevel():F2}");
+        // }
     }
 
     private void LateUpdate()
@@ -344,43 +328,22 @@ public abstract class MonsterBase : MonoBehaviour
         
         // 적응형 적극성 시스템 사용 시 예측 이동 고려
         Vector3 targetDestination = target.position;
-        if (useAdaptiveAggression)
+        if (useAdaptiveAggression && optimizedAggressionSystem != null && optimizedAggressionSystem.IsAggressive())
         {
-            if (useOptimizedVersion && optimizedAggressionSystem != null && optimizedAggressionSystem.IsAggressive())
+            Vector3 predictedPos = optimizedAggressionSystem.GetPredictedPlayerPosition();
+            float confidence = optimizedAggressionSystem.GetPredictionConfidence();
+            
+            // 예측 조건을 완화하여 더 자주 발동되도록 수정
+            if (confidence > 0.4f && optimizedAggressionSystem.GetAggressionLevel() > 0.3f && predictedPos != Vector3.zero)
             {
-                Vector3 predictedPos = optimizedAggressionSystem.GetPredictedPlayerPosition();
-                float confidence = optimizedAggressionSystem.GetPredictionConfidence();
-                
-                // 예측 신뢰도가 높고 적극성이 높을 때 예측 위치로 이동
-                if (confidence > 0.6f && optimizedAggressionSystem.GetAggressionLevel() > 0.5f && predictedPos != Vector3.zero)
-                {
-                    targetDestination = predictedPos;
-                    Debug.Log($"{name}: Using predicted position with confidence {confidence:F2}");
-                }
-            }
-            else if (!useOptimizedVersion && aggressionSystem != null && aggressionSystem.IsAggressive())
-            {
-                Vector3 predictedPos = aggressionSystem.GetPredictedPlayerPosition();
-                float confidence = aggressionSystem.GetPredictionConfidence();
-                
-                // 예측 신뢰도가 높고 적극성이 높을 때 예측 위치로 이동
-                if (confidence > 0.6f && aggressionSystem.GetAggressionLevel() > 0.5f && predictedPos != Vector3.zero)
-                {
-                    targetDestination = predictedPos;
-                    Debug.Log($"{name}: Using predicted position with confidence {confidence:F2}");
-                }
+                targetDestination = predictedPos;
+                // 디버그 로그 제거 (성능 향상)
+                // Debug.Log($"{name}: Using predicted position with confidence {confidence:F2}");
             }
         }
         
-        // 목표 설정
-        if (nmAgent.SetDestination(targetDestination))
-        {
-            Debug.Log($"{name}: Chasing target at {targetDestination}, speed: {chaseSpeed:F1}");
-        }
-        else
-        {
-            Debug.LogWarning($"{name}: Failed to set destination to {targetDestination}");
-        }
+        // 목표 설정 (디버그 로그 제거로 성능 향상)
+        nmAgent.SetDestination(targetDestination);
         
         if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {
@@ -397,18 +360,9 @@ public abstract class MonsterBase : MonoBehaviour
         
         // 적극성에 따른 공격 쿨다운 조절
         float effectiveAttackCooldown = attackCooldown;
-        if (useAdaptiveAggression)
+        if (useAdaptiveAggression && optimizedAggressionSystem != null)
         {
-            float aggressionLevel = 0f;
-            if (useOptimizedVersion && optimizedAggressionSystem != null)
-            {
-                aggressionLevel = optimizedAggressionSystem.GetAggressionLevel();
-            }
-            else if (!useOptimizedVersion && aggressionSystem != null)
-            {
-                aggressionLevel = aggressionSystem.GetAggressionLevel();
-            }
-            
+            float aggressionLevel = optimizedAggressionSystem.GetAggressionLevel();
             // 적극성이 높을수록 공격 쿨다운 감소 (최대 30% 감소)
             effectiveAttackCooldown *= (1f - aggressionLevel * 0.3f);
         }
@@ -636,11 +590,11 @@ public abstract class MonsterBase : MonoBehaviour
     public float GetRange() => attackRange;
     
     /// <summary>
-    /// 적응형 적극성 시스템 참조 반환
+    /// 최적화된 적극성 시스템 참조 반환
     /// </summary>
-    public AdaptiveAggressionSystem GetAggressionSystem()
+    public OptimizedAggressionSystem GetOptimizedAggressionSystem()
     {
-        return aggressionSystem;
+        return optimizedAggressionSystem;
     }
     
     /// <summary>
@@ -648,14 +602,8 @@ public abstract class MonsterBase : MonoBehaviour
     /// </summary>
     public float GetCurrentAggressionLevel()
     {
-        if (!useAdaptiveAggression) return 0f;
-        
-        if (useOptimizedVersion && optimizedAggressionSystem != null)
-            return optimizedAggressionSystem.GetAggressionLevel();
-        else if (!useOptimizedVersion && aggressionSystem != null)
-            return aggressionSystem.GetAggressionLevel();
-            
-        return 0f;
+        return useAdaptiveAggression && optimizedAggressionSystem != null ? 
+               optimizedAggressionSystem.GetAggressionLevel() : 0f;
     }
     
     /// <summary>
@@ -663,14 +611,8 @@ public abstract class MonsterBase : MonoBehaviour
     /// </summary>
     public bool IsCurrentlyAggressive()
     {
-        if (!useAdaptiveAggression) return false;
-        
-        if (useOptimizedVersion && optimizedAggressionSystem != null)
-            return optimizedAggressionSystem.IsAggressive();
-        else if (!useOptimizedVersion && aggressionSystem != null)
-            return aggressionSystem.IsAggressive();
-            
-        return false;
+        return useAdaptiveAggression && optimizedAggressionSystem != null && 
+               optimizedAggressionSystem.IsAggressive();
     }
     
     public void ChangeStateToIdle()
