@@ -12,26 +12,26 @@
   "enemies": [
     {
       "type": 101,
-      "count": 2,
+      "count": 5,
       "spawnPoints": [
         { "x": 3, "y": 16}
       ],
-      "spawnDelay": 5
+      "spawnDelay": 6
     },
     {
       "type": 111,
-      "count": 3,
+      "count": 6,
       "spawnPoints": [
         {
           "x": 30,
           "y": 16
         }
       ],
-      "spawnDelay": 5
+      "spawnDelay": 4
     },
     {
       "type": 102,
-      "count": 1,
+      "count": 3,
       "spawnPoints": [
         {
           "x": 16,

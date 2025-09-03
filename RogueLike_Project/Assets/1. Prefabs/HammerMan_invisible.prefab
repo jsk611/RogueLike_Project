@@ -1204,6 +1204,8 @@ MonoBehaviour:
   body: {fileID: 6653918507616483876}
   head: {fileID: 6476374187044824731}
   rotateSpeed: 2
+  maxSpeedRange: 20
+  minSpeedRange: 16
   master: {fileID: 0}
   anim: {fileID: 4325502948305491921}
   nmAgent: {fileID: 2633594184378361070}
@@ -1225,7 +1227,7 @@ MonoBehaviour:
   - {fileID: 8021822854330241990, guid: 8886da0133ed94f43b93f9da2740db68, type: 3}
   - {fileID: 8021822854330241990, guid: 0ae848827b9656d429f9ecb8e95addaf, type: 3}
   itemProbability: 320000001900000000000000
-  DNADrop: 30
+  DNADrop: 120
   HPBar: {fileID: 1321003993446372597}
   UIDamaged: {fileID: 5442733019155415247, guid: 8fdd67c50d046a94693a6f6eb060742d,
     type: 3}
