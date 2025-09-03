@@ -12,18 +12,18 @@
   "enemies": [
     {
       "type": 101,
-      "count": 6,
+      "count": 8,
       "spawnDelay": 12
     },
     {
       "type": 111,
-      "count": 3,
+      "count": 6,
       "spawnDelay": 12
     },
     {
       "type": 102,
-      "count": 3,
-      "spawnDelay": 20
+      "count": 12,
+      "spawnDelay": 8
     },
     {
       "type": 212,
@@ -31,7 +31,7 @@
       "spawnDelay": 15
     },
     {
-      "type": 301,
+      "type": 302,
       "count": 2,
       "spawnDelay": 30
     },

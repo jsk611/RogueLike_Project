@@ -19,8 +19,8 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] private Transform head; // Head or torso (vertical rotation)
    // [SerializeField] private float maxVerticalAngle = 60f; // Maximum vertical angle for head rotation
     [SerializeField] protected float rotateSpeed = 2.0f; // Rotation speed
-    [SerializeField] protected float maxSpeedRange = 6f;
-    [SerializeField] protected float minSpeedRange = 4f;
+    [SerializeField] protected float maxSpeedRange = 20f;
+    [SerializeField] protected float minSpeedRange = 16f;
 
     public Summoner master = null;
 

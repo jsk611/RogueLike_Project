@@ -24,19 +24,19 @@
     },
     {
       "type": 212,
-      "count": 3,
+      "count": 12,
       "spawnPoints": [
         {
           "x": 1,
           "y": 1
         }
       ],
-      "spawnDelay": 4,
+      "spawnDelay": 3,
       "firstDelay": 5
     },
     {
       "type": 102,
-      "count": 2,
+      "count": 6,
       "spawnPoints": [
         {
           "x": 37,
