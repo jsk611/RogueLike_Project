@@ -811,12 +811,16 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   rotateSpeed: 2
+  maxSpeedRange: 6
+  minSpeedRange: 4
   master: {fileID: 0}
   anim: {fileID: 9121877531147584107}
   nmAgent: {fileID: 5266449347478749467}
   fov: {fileID: 8380599353331853265}
   monsterStatus: {fileID: 7043160550485060466}
   playerRigidBody: {fileID: 5152150415338884019}
+  useAdaptiveAggression: 0
+  useOptimizedVersion: 1
   attackRange: 7
   attackCooldown: 1
   splashFx: {fileID: 0}

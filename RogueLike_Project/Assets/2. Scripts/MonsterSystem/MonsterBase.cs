@@ -30,6 +30,12 @@ public abstract class MonsterBase : MonoBehaviour
     [SerializeField] protected FieldOfView fov;
     [SerializeField] protected MonsterStatus monsterStatus;
     [SerializeField] private Rigidbody playerRigidBody;
+    
+    [Header("Adaptive Aggression System")]
+    [SerializeField] private bool useAdaptiveAggression = true; // 적응형 적극성 시스템 사용 여부
+    [SerializeField] private bool useOptimizedVersion = true; // 최적화된 버전 사용 여부
+    protected AdaptiveAggressionSystem aggressionSystem;
+    protected OptimizedAggressionSystem optimizedAggressionSystem;
 
 
     [Header("Stats")]
@@ -135,6 +141,29 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent = GetComponent<NavMeshAgent>();
         monsterStatus = GetComponent<MonsterStatus>();
         fov = GetComponent<FieldOfView>();
+        
+        // 적응형 적극성 시스템 초기화
+        if (useAdaptiveAggression)
+        {
+            if (useOptimizedVersion)
+            {
+                // 최적화된 버전 사용
+                optimizedAggressionSystem = GetComponent<OptimizedAggressionSystem>();
+                if (optimizedAggressionSystem == null)
+                {
+                    optimizedAggressionSystem = gameObject.AddComponent<OptimizedAggressionSystem>();
+                }
+            }
+            else
+            {
+                // 기존 버전 사용
+                aggressionSystem = GetComponent<AdaptiveAggressionSystem>();
+                if (aggressionSystem == null)
+                {
+                    aggressionSystem = gameObject.AddComponent<AdaptiveAggressionSystem>();
+                }
+            }
+        }
     }
 
     private void InitializeStateMachine()
@@ -179,13 +208,30 @@ public abstract class MonsterBase : MonoBehaviour
         // if (state == State.IDLE) CheckPlayer();
         // ???? ???????? ???? ????
         // if ((state == State.CHASE || state == State.ATTACK)&&monsterStatus.currentCon != MonsterStatus.Condition.Frozen) RotateTowardsTarget();
-        float distance = Vector3.Distance(transform.position, target.position);
-        distance = Mathf.Clamp(distance, minSpeedRange,maxSpeedRange);
-        chaseSpeed = monsterStatus.GetMovementSpeed();
-        chaseSpeed *= distance / minSpeedRange;
+        
+        // 적응형 적극성 시스템이 활성화된 경우 기존 거리 기반 속도 조절을 건너뛰고
+        // AdaptiveAggressionSystem에서 처리하도록 함
+        if (!useAdaptiveAggression || aggressionSystem == null)
+        {
+            // 기존 거리 기반 속도 조절 로직
+            float distance = Vector3.Distance(transform.position, target.position);
+            distance = Mathf.Clamp(distance, minSpeedRange, maxSpeedRange);
+            chaseSpeed = monsterStatus.GetMovementSpeed();
+            chaseSpeed *= distance / minSpeedRange;
+        }
+        else
+        {
+            // 적응형 시스템에서 속도가 이미 조절되므로 현재 NavMeshAgent 속도를 사용
+            chaseSpeed = nmAgent.speed;
+        }
        
         ExecuteStateAction();
-        Debug.Log(chaseSpeed);
+        
+        // 디버그 로그를 적극성 시스템 사용 시에만 표시
+        if (useAdaptiveAggression && aggressionSystem != null)
+        {
+            Debug.Log($"{name} - Speed: {chaseSpeed:F1}, Aggression: {aggressionSystem.GetAggressionLevel():F2}");
+        }
     }
 
     private void LateUpdate()
@@ -240,6 +286,24 @@ public abstract class MonsterBase : MonoBehaviour
     #region State Update Methods
     protected virtual void UpdateIdle()
     {
+        // 플레이어를 감지하면 추적 상태로 전환
+        CheckPlayer();
+        
+        // 적응형 적극성 시스템이 활성화된 경우 거리에 따라 자동으로 추적 시작
+        if (useAdaptiveAggression && target != null)
+        {
+            float distanceToPlayer = Vector3.Distance(transform.position, target.position);
+            // 일정 거리 내에 플레이어가 있으면 자동으로 추적 시작 (기본 15m)
+            if (distanceToPlayer <= 15f)
+            {
+                ChangeState(State.CHASE);
+            }
+        }
+        // 적응형 시스템이 비활성화된 경우 FieldOfView 기반 감지만 사용
+        else if (!useAdaptiveAggression && fov.visibleTargets.Count > 0)
+        {
+            ChangeState(State.CHASE);
+        }
     }
     protected virtual void UpdateChase()
     {
@@ -256,10 +320,67 @@ public abstract class MonsterBase : MonoBehaviour
             teleportTimer = 0f;
         }
 
+        // NavMeshAgent 상태 확인 및 설정
+        if (nmAgent == null)
+        {
+            Debug.LogError($"{name}: NavMeshAgent is null!");
+            return;
+        }
+        
+        if (!nmAgent.enabled)
+        {
+            Debug.LogWarning($"{name}: NavMeshAgent is disabled!");
+            nmAgent.enabled = true;
+        }
+        
+        if (!nmAgent.isOnNavMesh)
+        {
+            Debug.LogWarning($"{name}: NavMeshAgent is not on NavMesh!");
+            return;
+        }
+        
         nmAgent.isStopped = false;
         nmAgent.speed = chaseSpeed;
-        nmAgent.SetDestination(target.position);
         
+        // 적응형 적극성 시스템 사용 시 예측 이동 고려
+        Vector3 targetDestination = target.position;
+        if (useAdaptiveAggression)
+        {
+            if (useOptimizedVersion && optimizedAggressionSystem != null && optimizedAggressionSystem.IsAggressive())
+            {
+                Vector3 predictedPos = optimizedAggressionSystem.GetPredictedPlayerPosition();
+                float confidence = optimizedAggressionSystem.GetPredictionConfidence();
+                
+                // 예측 신뢰도가 높고 적극성이 높을 때 예측 위치로 이동
+                if (confidence > 0.6f && optimizedAggressionSystem.GetAggressionLevel() > 0.5f && predictedPos != Vector3.zero)
+                {
+                    targetDestination = predictedPos;
+                    Debug.Log($"{name}: Using predicted position with confidence {confidence:F2}");
+                }
+            }
+            else if (!useOptimizedVersion && aggressionSystem != null && aggressionSystem.IsAggressive())
+            {
+                Vector3 predictedPos = aggressionSystem.GetPredictedPlayerPosition();
+                float confidence = aggressionSystem.GetPredictionConfidence();
+                
+                // 예측 신뢰도가 높고 적극성이 높을 때 예측 위치로 이동
+                if (confidence > 0.6f && aggressionSystem.GetAggressionLevel() > 0.5f && predictedPos != Vector3.zero)
+                {
+                    targetDestination = predictedPos;
+                    Debug.Log($"{name}: Using predicted position with confidence {confidence:F2}");
+                }
+            }
+        }
+        
+        // 목표 설정
+        if (nmAgent.SetDestination(targetDestination))
+        {
+            Debug.Log($"{name}: Chasing target at {targetDestination}, speed: {chaseSpeed:F1}");
+        }
+        else
+        {
+            Debug.LogWarning($"{name}: Failed to set destination to {targetDestination}");
+        }
         
         if (Vector3.Distance(transform.position, target.position) <= attackRange)
         {
@@ -273,7 +394,26 @@ public abstract class MonsterBase : MonoBehaviour
         nmAgent.isStopped = true;
 
         attackTimer += Time.deltaTime;
-        if (attackTimer >= attackCooldown)
+        
+        // 적극성에 따른 공격 쿨다운 조절
+        float effectiveAttackCooldown = attackCooldown;
+        if (useAdaptiveAggression)
+        {
+            float aggressionLevel = 0f;
+            if (useOptimizedVersion && optimizedAggressionSystem != null)
+            {
+                aggressionLevel = optimizedAggressionSystem.GetAggressionLevel();
+            }
+            else if (!useOptimizedVersion && aggressionSystem != null)
+            {
+                aggressionLevel = aggressionSystem.GetAggressionLevel();
+            }
+            
+            // 적극성이 높을수록 공격 쿨다운 감소 (최대 30% 감소)
+            effectiveAttackCooldown *= (1f - aggressionLevel * 0.3f);
+        }
+        
+        if (attackTimer >= effectiveAttackCooldown)
         {
             if (Vector3.Distance(transform.position, target.position) > attackRange)
             {
@@ -494,6 +634,44 @@ public abstract class MonsterBase : MonoBehaviour
        // ChangeState(State.CHASE);
     }
     public float GetRange() => attackRange;
+    
+    /// <summary>
+    /// 적응형 적극성 시스템 참조 반환
+    /// </summary>
+    public AdaptiveAggressionSystem GetAggressionSystem()
+    {
+        return aggressionSystem;
+    }
+    
+    /// <summary>
+    /// 현재 적극성 수준 반환
+    /// </summary>
+    public float GetCurrentAggressionLevel()
+    {
+        if (!useAdaptiveAggression) return 0f;
+        
+        if (useOptimizedVersion && optimizedAggressionSystem != null)
+            return optimizedAggressionSystem.GetAggressionLevel();
+        else if (!useOptimizedVersion && aggressionSystem != null)
+            return aggressionSystem.GetAggressionLevel();
+            
+        return 0f;
+    }
+    
+    /// <summary>
+    /// 적극적 상태인지 확인
+    /// </summary>
+    public bool IsCurrentlyAggressive()
+    {
+        if (!useAdaptiveAggression) return false;
+        
+        if (useOptimizedVersion && optimizedAggressionSystem != null)
+            return optimizedAggressionSystem.IsAggressive();
+        else if (!useOptimizedVersion && aggressionSystem != null)
+            return aggressionSystem.IsAggressive();
+            
+        return false;
+    }
     
     public void ChangeStateToIdle()
     {
