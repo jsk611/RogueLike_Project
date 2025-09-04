@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,13 +82,18 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "Player")
-        {
-            isPlayerHolding = true;
-        }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("Creature"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Creature"))
         {
             enemiesInZone.Add(other.gameObject);
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player")) {
+            if (Mathf.Abs((other.transform.position - transform.position).y) <= 4)
+                isPlayerHolding = true;
+            else 
+                isPlayerHolding = false;
         }
     }
     private void OnTriggerExit(Collider other)

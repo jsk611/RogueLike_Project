@@ -252,13 +252,13 @@ public class UpgradeManager_New : MonoBehaviour
                 switch ((ATKUGType)upgradeResult)
                 {
                     case ATKUGType.Damage:
-                        playerStatus?.IncreaseAttackDamage(10*ATKUpgradeRate);
+                        playerStatus?.IncreaseAttackDamage(15*ATKUpgradeRate);
                         break;
                     case ATKUGType.AttackSpeed:
-                        playerStatus?.IncreaseAttackSpeed(5*ATKUpgradeRate);
+                        playerStatus?.IncreaseAttackSpeed(6*ATKUpgradeRate);
                         break;
                     case ATKUGType.ReloadSpeed:
-                        playerStatus?.IncreaseReloadSpeed(5*ATKUpgradeRate);
+                        playerStatus?.IncreaseReloadSpeed(7*ATKUpgradeRate);
                         break;
                 }
                 break;
@@ -267,8 +267,8 @@ public class UpgradeManager_New : MonoBehaviour
                 switch ((UTILUGType)upgradeResult)
                 {
                     case UTILUGType.Heath:
-                        playerStatus.IncreaseMaxHealth(10*UTLUpgradeRate);
-                        playerStatus.IncreaseHealth(15*UTLUpgradeRate);
+                        playerStatus.IncreaseMaxHealth(15*UTLUpgradeRate);
+                        playerStatus.IncreaseHealth(20*UTLUpgradeRate);
                         break;
                     case UTILUGType.MoveSpeed:
                         playerStatus.IncreaseMovementSpeed(1*UTLUpgradeRate);
@@ -372,13 +372,13 @@ public class UpgradeManager_New : MonoBehaviour
     {
         UpgradeData temp = PermanentUpgradeManager.instance.upgradeData;
         {
-            ATK_Texts[0].text = string.Format("Damage + {0:F2}",10 * temp.ATKUpgradeRate);
-            ATK_Texts[1].text = string.Format("AttackSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
-            ATK_Texts[2].text = string.Format("ReloadingSpeed + {0:F2}%", 5 * temp.ATKUpgradeRate);
+            ATK_Texts[0].text = string.Format("Damage + {0:F2}",15 * temp.ATKUpgradeRate);
+            ATK_Texts[1].text = string.Format("AttackSpeed + {0:F2}%", 6 * temp.ATKUpgradeRate);
+            ATK_Texts[2].text = string.Format("ReloadingSpeed + {0:F2}%", 7 * temp.ATKUpgradeRate);
         }
         {
             UTL_Texts[0].text = string.Format("MoveSpeed + {0:F2}", 1 * temp.UTLUpgradeRate);
-            UTL_Texts[1].text = string.Format("Health + {0:D}",(int)(10 * temp.UTLUpgradeRate));
+            UTL_Texts[1].text = string.Format("Health + {0:D}",(int)(15 * temp.UTLUpgradeRate));
         }
         {
             Coin_Texts[0].text = string.Format("Coin + {0:D}", (int)(100 * temp.CoinAcquisitionRate));

@@ -65,4 +65,9 @@ public class InteractionSphere : MonoBehaviour
             yield return null;
         }
     }
+
+    private void OnDisable()
+    {
+        helpUI.enabled = false;
+    }
 }
