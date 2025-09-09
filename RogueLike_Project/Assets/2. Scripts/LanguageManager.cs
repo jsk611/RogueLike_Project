@@ -1,4 +1,4 @@
-// ï¿½ï¿½Ó´Ù¿ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
+// µå·Ó´Ù¿î ½ºÅ©¸³Æ®¿¡¼­ È£Ãâ
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -6,75 +6,14 @@ using UnityEngine.Localization.Settings;
 
 public static class LanguageManager
 {
-    // ì§€ì› ì–¸ì–´ ëª©ë¡
-    public enum Language
-    {
-        English,
-        Korean, 
-        Japanese
-    }
-    
-    // ì–¸ì–´ ì½”ë“œ ë§¤í•‘
-    private static readonly string[] languageCodes = { "en", "ko", "ja" };
-    private static readonly string[] languageNames = { "English", "í•œêµ­ì–´", "æ—¥æœ¬èª" };
-    
     public static void SetByCode(string code) // "en", "ko", "ja"...
     {
         var locale = LocalizationSettings.AvailableLocales.Locales
             .FirstOrDefault(l => l.Identifier.Code.StartsWith(code));
         if (locale != null)
         {
-            LocalizationSettings.SelectedLocale = locale; // ì–¸ì–´ ì„¤ì •
-            PlayerPrefs.SetString("lang", code);          // ì €ì¥í•´ ë‘˜ ì„¤ì •
-            Debug.Log($"Language changed to: {GetLanguageName(code)}");
+            LocalizationSettings.SelectedLocale = locale; // Àü¿ª Àû¿ë
+            PlayerPrefs.SetString("lang", code);          // Àç½ÇÇà ½Ã À¯Áö
         }
-        else
-        {
-            Debug.LogWarning($"Language code '{code}' not found!");
-        }
-    }
-    
-    public static void SetByLanguage(Language language)
-    {
-        int index = (int)language;
-        if (index >= 0 && index < languageCodes.Length)
-        {
-            SetByCode(languageCodes[index]);
-        }
-    }
-    
-    public static Language GetCurrentLanguage()
-    {
-        string currentCode = PlayerPrefs.GetString("lang", "en");
-        for (int i = 0; i < languageCodes.Length; i++)
-        {
-            if (currentCode.StartsWith(languageCodes[i]))
-            {
-                return (Language)i;
-            }
-        }
-        return Language.English; // ê¸°ë³¸ê°’
-    }
-    
-    public static string GetCurrentLanguageCode()
-    {
-        return PlayerPrefs.GetString("lang", "en");
-    }
-    
-    public static string GetLanguageName(string code)
-    {
-        for (int i = 0; i < languageCodes.Length; i++)
-        {
-            if (code.StartsWith(languageCodes[i]))
-            {
-                return languageNames[i];
-            }
-        }
-        return "Unknown";
-    }
-    
-    public static string[] GetAvailableLanguages()
-    {
-        return languageNames;
     }
 }
