@@ -184,21 +184,6 @@ public class ProjectileScript : MonoBehaviour {
 				//Toggle the isHit bool on the target object
 				hit.gameObject.GetComponent<TargetScript>().isHit = true;
 			}
-
-			//If the projectile explosion hits barrels with the tag "ExplosiveBarrel"
-			if (hit.transform.tag == "ExplosiveBarrel") {
-				
-				//Toggle the explode bool on the explosive barrel object
-				hit.transform.gameObject.GetComponent<ExplosiveBarrelScript>().explode = true;
-			}
-
-			//If the projectile explosion hits objects with "GasTank" tag
-			if (hit.GetComponent<Collider>().tag == "GasTank") 
-			{
-				//If gas tank is within radius, explode it
-				hit.gameObject.GetComponent<GasTankScript> ().isHit = true;
-				hit.gameObject.GetComponent<GasTankScript> ().explosionTimer = 0.05f;
-			}
 		}
 	}
 }

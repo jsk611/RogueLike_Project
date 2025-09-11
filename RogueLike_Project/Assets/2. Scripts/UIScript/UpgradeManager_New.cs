@@ -7,7 +7,6 @@ using TMPro;
 using System;
 using Random = UnityEngine.Random;
 using InfimaGames.LowPolyShooterPack;
-using static UpgradeManager;
 
 public class UpgradeManager_New : MonoBehaviour
 {

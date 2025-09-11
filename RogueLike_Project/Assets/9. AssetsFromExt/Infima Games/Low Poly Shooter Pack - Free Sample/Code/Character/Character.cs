@@ -128,11 +128,6 @@ namespace InfimaGames.LowPolyShooterPack
         private MagazineBehaviour equippedWeaponMagazine;
 
         /// <summary>
-        /// The skill of the player's current weapon
-        /// </summary>
-        private WeaponSkillManager equippedWeaponSkill;
-
-        /// <summary>
         /// True if the character is reloading.
         /// </summary>
         private bool reloading;
@@ -507,9 +502,6 @@ namespace InfimaGames.LowPolyShooterPack
             equippedWeaponScope = weaponAttachmentManager.GetEquippedScope();
             //Get equipped magazine. We need this one for its settings!
             equippedWeaponMagazine = weaponAttachmentManager.GetEquippedMagazine();
-            if (equippedWeapon.TryGetComponent<WeaponSkillManager>(out WeaponSkillManager skill))
-                equippedWeaponSkill = skill;//equippedWeapon.GetComponent<WeaponSkillManager>();
-            else equippedWeaponSkill = null;
         }
    
 
