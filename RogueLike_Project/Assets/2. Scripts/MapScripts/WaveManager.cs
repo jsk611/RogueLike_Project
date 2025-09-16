@@ -54,8 +54,10 @@ public class WaveManager : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField] int debugStage;
-
+    [SerializeField] int debugWave = 1;
+    [SerializeField] bool isDebugMode = false;
     [SerializeField] GameObject demoEndingUI;
+
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager_New>();
@@ -69,9 +71,52 @@ public class WaveManager : MonoBehaviour
         
         sp = startPosition.transform.position;
 
-        StartCoroutine(StartMap());
+        if (isDebugMode)
+        {
+            StartCoroutine(StartDebugWave());
+        }
+        else
+        {
+            StartCoroutine(StartMap());
+        }
         InvokeRepeating("UpdateLighting", 0, 0.5f);
-        //StartCoroutine(RunWaves()); //?????? GameManager?? ???? ??
+    }
+
+    IEnumerator StartDebugWave()
+    {
+        // 기본 맵 설정
+        tileManager.MakeMapByCSV(startMapPath, 7, 7);
+        yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
+        yield return new WaitForSeconds(1f);
+        
+        UIManager.instance.isStarted = true;
+        currentStage = debugStage;
+        currentWave = debugWave;
+        monsterEnforceVar = (debugStage - 1) * 10 + (debugWave - 1);
+        
+        ChangeStage();
+        
+        // 정비 웨이브인 경우
+        if (debugWave == 5 || debugWave == 0)
+        {
+            yield return StartCoroutine(Maintenance());
+        }
+        // 보스 웨이브인 경우
+        else if (debugWave == 10)
+        {
+            LoadWaveData($"{debugStage}-boss");
+            yield return StartCoroutine(RunWave());
+        }
+        // 일반 웨이브인 경우
+        else
+        {
+            int mapMaxIdx = stageMapNum[debugStage - 1];
+            int randNum = Random.Range(1, mapMaxIdx + 1);
+            LoadWaveData($"{debugStage}-{randNum}");
+            yield return StartCoroutine(RunWave());
+        }
+        
+        Debug.Log($"Debug Wave Complete: Stage {debugStage}, Wave {debugWave}");
     }
 
     #region WaveDataSetting
