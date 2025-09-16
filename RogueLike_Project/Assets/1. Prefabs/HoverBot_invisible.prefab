@@ -474,7 +474,6 @@ MonoBehaviour:
   fov: {fileID: 763921145771254811}
   monsterStatus: {fileID: 9110442896728709607}
   playerRigidBody: {fileID: 4303473675281574568}
-  useAdaptiveAggression: 1
   attackRange: 10
   attackCooldown: 1
   splashFx: {fileID: 0}
