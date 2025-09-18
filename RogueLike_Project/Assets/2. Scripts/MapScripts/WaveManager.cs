@@ -52,11 +52,29 @@ public class WaveManager : MonoBehaviour
     WaveData waveData;
     bool isMissionEnd;
 
-    [Header("Debug")]
-    [SerializeField] int debugStage;
-    [SerializeField] int debugWave = 1;
+    [Header("Enhanced Debug System")]
     [SerializeField] bool isDebugMode = false;
+    [SerializeField] bool showDebugGUI = true;
+    [SerializeField] int debugStage = 1;
+    [SerializeField] int debugWave = 1;
+    [SerializeField] bool skipToDebugWave = false;
+    [SerializeField] bool godMode = false;
+    [SerializeField] bool instantKillEnemies = false;
+    [SerializeField] bool skipUpgrade = false;
     [SerializeField] GameObject demoEndingUI;
+    
+    [Header("Debug Quick Actions")]
+    [SerializeField] KeyCode nextWaveKey = KeyCode.N;
+    [SerializeField] KeyCode prevWaveKey = KeyCode.B;
+    [SerializeField] KeyCode nextStageKey = KeyCode.RightArrow;
+    [SerializeField] KeyCode prevStageKey = KeyCode.LeftArrow;
+    [SerializeField] KeyCode toggleGodModeKey = KeyCode.G;
+    [SerializeField] KeyCode killAllEnemiesKey = KeyCode.K;
+
+    // 디버그 상태 추적
+    private bool debugInitialized = false;
+    private string lastDebugAction = "";
+    private float debugActionTime = 0f;
 
     void Start()
     {
@@ -65,7 +83,6 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
         currentStage = 1;
-        debugStage = 1;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
         
@@ -73,7 +90,15 @@ public class WaveManager : MonoBehaviour
 
         if (isDebugMode)
         {
-            StartCoroutine(StartDebugWave());
+            InitializeDebugSystem();
+            if (skipToDebugWave)
+            {
+                StartCoroutine(StartDebugWave());
+            }
+            else
+            {
+                StartCoroutine(StartMap());
+            }
         }
         else
         {
@@ -82,12 +107,237 @@ public class WaveManager : MonoBehaviour
         InvokeRepeating("UpdateLighting", 0, 0.5f);
     }
 
+    void Update()
+    {
+        if (isDebugMode)
+        {
+            HandleDebugInput();
+        }
+    }
+
+    void InitializeDebugSystem()
+    {
+        debugInitialized = true;
+        Debug.Log($"[DEBUG SYSTEM] Initialized - Target: Stage {debugStage}, Wave {debugWave}");
+        
+        if (godMode)
+        {
+            var playerStatus = FindObjectOfType<PlayerStatus>();
+            if (playerStatus != null)
+            {
+                playerStatus.SetHealth(9999f);
+            }
+        }
+    }
+
+    void HandleDebugInput()
+    {
+        if (Input.GetKeyDown(nextWaveKey))
+        {
+            DebugNextWave();
+        }
+        else if (Input.GetKeyDown(prevWaveKey))
+        {
+            DebugPreviousWave();
+        }
+        else if (Input.GetKeyDown(nextStageKey))
+        {
+            DebugNextStage();
+        }
+        else if (Input.GetKeyDown(prevStageKey))
+        {
+            DebugPreviousStage();
+        }
+        else if (Input.GetKeyDown(toggleGodModeKey))
+        {
+            ToggleGodMode();
+        }
+        else if (Input.GetKeyDown(killAllEnemiesKey))
+        {
+            KillAllEnemies();
+        }
+    }
+
+    void DebugNextWave()
+    {
+        if (debugWave < 10)
+        {
+            debugWave++;
+        }
+        else
+        {
+            debugWave = 1;
+            if (debugStage < 4) debugStage++;
+        }
+        
+        LogDebugAction($"Next Wave -> Stage {debugStage}, Wave {debugWave}");
+        RestartDebugWave();
+    }
+
+    void DebugPreviousWave()
+    {
+        if (debugWave > 1)
+        {
+            debugWave--;
+        }
+        else
+        {
+            debugWave = 10;
+            if (debugStage > 1) debugStage--;
+        }
+        
+        LogDebugAction($"Previous Wave -> Stage {debugStage}, Wave {debugWave}");
+        RestartDebugWave();
+    }
+
+    void DebugNextStage()
+    {
+        if (debugStage < 4)
+        {
+            debugStage++;
+            debugWave = 1;
+            LogDebugAction($"Next Stage -> Stage {debugStage}, Wave {debugWave}");
+            RestartDebugWave();
+        }
+    }
+
+    void DebugPreviousStage()
+    {
+        if (debugStage > 1)
+        {
+            debugStage--;
+            debugWave = 1;
+            LogDebugAction($"Previous Stage -> Stage {debugStage}, Wave {debugWave}");
+            RestartDebugWave();
+        }
+    }
+
+    void ToggleGodMode()
+    {
+        godMode = !godMode;
+        var playerStatus = FindObjectOfType<PlayerStatus>();
+        if (playerStatus != null)
+        {
+            if (godMode)
+            {
+                playerStatus.SetHealth(9999f);
+            }
+            else
+            {
+                playerStatus.SetHealth(100f);
+            }
+        }
+        LogDebugAction($"God Mode: {(godMode ? "ON" : "OFF")}");
+    }
+
+    void KillAllEnemies()
+    {
+        MonsterBase[] monsters = FindObjectsOfType<MonsterBase>();
+        foreach (MonsterBase monster in monsters)
+        {
+            monster.TakeDamage(9999f, false);
+        }
+        LogDebugAction($"Killed {monsters.Length} enemies");
+    }
+
+    void RestartDebugWave()
+    {
+        StopAllCoroutines();
+        StartCoroutine(StartDebugWave());
+    }
+
+    void LogDebugAction(string action)
+    {
+        lastDebugAction = action;
+        debugActionTime = Time.time;
+        Debug.Log($"[DEBUG] {action}");
+    }
+
+    void OnGUI()
+    {
+        if (!isDebugMode || !showDebugGUI) return;
+
+        GUI.color = Color.white;
+        GUILayout.BeginArea(new Rect(10, 10, 300, 400));
+        
+        GUILayout.BeginVertical("box");
+        GUILayout.Label("DEBUG WAVE MANAGER", GUI.skin.GetStyle("label"));
+        GUILayout.Space(10);
+        
+        // 현재 상태 표시
+        GUILayout.Label($"Current: Stage {currentStage}, Wave {currentWave}");
+        GUILayout.Label($"Debug Target: Stage {debugStage}, Wave {debugWave}");
+        GUILayout.Space(10);
+        
+        // 디버그 설정
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Stage:");
+        if (GUILayout.Button("-") && debugStage > 1) { debugStage--; }
+        GUILayout.Label(debugStage.ToString());
+        if (GUILayout.Button("+") && debugStage < 4) { debugStage++; }
+        GUILayout.EndHorizontal();
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Wave:");
+        if (GUILayout.Button("-") && debugWave > 0) { debugWave--; }
+        GUILayout.Label(debugWave.ToString());
+        if (GUILayout.Button("+") && debugWave < 10) { debugWave++; }
+        GUILayout.EndHorizontal();
+        
+        GUILayout.Space(10);
+        
+        // 빠른 액션 버튼들
+        if (GUILayout.Button("Start Debug Wave"))
+        {
+            RestartDebugWave();
+        }
+        
+        if (GUILayout.Button($"God Mode: {(godMode ? "ON" : "OFF")}"))
+        {
+            ToggleGodMode();
+        }
+        
+        if (GUILayout.Button("Kill All Enemies"))
+        {
+            KillAllEnemies();
+        }
+        
+        if (GUILayout.Button("Complete Mission"))
+        {
+            isMissionEnd = true;
+        }
+        
+        GUILayout.Space(10);
+        
+        // 단축키 정보
+        GUILayout.Label("Shortcuts:", GUI.skin.GetStyle("label"));
+        GUILayout.Label($"Next Wave: {nextWaveKey}");
+        GUILayout.Label($"Prev Wave: {prevWaveKey}");
+        GUILayout.Label($"Next Stage: {nextStageKey}");
+        GUILayout.Label($"Prev Stage: {prevStageKey}");
+        GUILayout.Label($"God Mode: {toggleGodModeKey}");
+        GUILayout.Label($"Kill Enemies: {killAllEnemiesKey}");
+        
+        GUILayout.Space(10);
+        
+        // 마지막 액션 표시
+        if (!string.IsNullOrEmpty(lastDebugAction) && Time.time - debugActionTime < 3f)
+        {
+            GUI.color = Color.green;
+            GUILayout.Label($"Last Action: {lastDebugAction}");
+            GUI.color = Color.white;
+        }
+        
+        GUILayout.EndVertical();
+        GUILayout.EndArea();
+    }
+
     IEnumerator StartDebugWave()
     {
         // 기본 맵 설정
         tileManager.MakeMapByCSV(startMapPath, 7, 7);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
         
         UIManager.instance.isStarted = true;
         currentStage = debugStage;
@@ -95,6 +345,8 @@ public class WaveManager : MonoBehaviour
         monsterEnforceVar = (debugStage - 1) * 10 + (debugWave - 1);
         
         ChangeStage();
+        
+        Debug.Log($"[DEBUG] Starting Wave: Stage {debugStage}, Wave {debugWave}");
         
         // 정비 웨이브인 경우
         if (debugWave == 5 || debugWave == 0)
@@ -116,7 +368,7 @@ public class WaveManager : MonoBehaviour
             yield return StartCoroutine(RunWave());
         }
         
-        Debug.Log($"Debug Wave Complete: Stage {debugStage}, Wave {debugWave}");
+        Debug.Log($"[DEBUG] Wave Complete: Stage {debugStage}, Wave {debugWave}");
     }
 
     #region WaveDataSetting
@@ -211,8 +463,6 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"3-7");
-                //LoadWaveData($"4-boss");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -231,7 +481,6 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
-                //LoadWaveData($"{2}-{7}");
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -255,10 +504,6 @@ public class WaveManager : MonoBehaviour
         demoEndingUI.SetActive(false);
         FindObjectOfType<PlayerStatus>().DecreaseHealth(9999f);
         yield break;
-        //4스테이지 보스
-        LoadWaveData($"{currentStage}-boss");
-        yield return StartCoroutine(RunWave());
-        yield return new WaitForSeconds(0.5f);
     }
     
     IEnumerator StartMap() 
@@ -269,7 +514,6 @@ public class WaveManager : MonoBehaviour
         startPosition.transform.position = sp;
 
         startStage.SetActive(true);
-
 
         while (!nextWaveTrigger)
         {
@@ -286,6 +530,7 @@ public class WaveManager : MonoBehaviour
         StartCoroutine(RunStage());
         yield break;
     }
+    
     IEnumerator Maintenance()
     {
         UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=green>M");
@@ -403,6 +648,7 @@ public class WaveManager : MonoBehaviour
         } while (isRepeating);
         
     }
+    
     IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
         yield return new WaitForSeconds(enemy.firstDelay); //첫 스폰 지연시간
@@ -428,6 +674,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(enemy.spawnDelay);
         }
     }
+    
     IEnumerator SummonRandomPosEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
         //적 스폰 위치 표시
@@ -449,6 +696,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(enemy.spawnDelay);
         }
     }
+    
     IEnumerator KillingMission(int count, bool isBoss = false)
     {
         enemyCountData.enemyCount = count;
@@ -459,6 +707,7 @@ public class WaveManager : MonoBehaviour
         }
         isMissionEnd = true;
     }
+    
     IEnumerator BossMission(int count, bool isBoss = true)
     {
         UIManager.instance.BossMissionStart();
@@ -468,6 +717,7 @@ public class WaveManager : MonoBehaviour
         }
         isMissionEnd = true;
     }
+    
     IEnumerator SurviveMission(float time)
     {
         UIManager.instance.SurviveMissionStart(time);
@@ -477,6 +727,7 @@ public class WaveManager : MonoBehaviour
         }
         isMissionEnd = true;
     }
+    
     IEnumerator CaptureMission(float time, Vector2Int basePos)
     {
         MissionInfo info = waveData.mission;
@@ -495,6 +746,7 @@ public class WaveManager : MonoBehaviour
         isMissionEnd = true;
         Destroy(fh.gameObject, 2f);
     }
+    
     IEnumerator ItemMission(Vector2Int basePos, float time = 4f)
     {
         MissionInfo info = waveData.mission;
@@ -532,6 +784,7 @@ public class WaveManager : MonoBehaviour
             }
         }
     }
+    
     IEnumerator WaveEnd()
     {
         UIManager.instance.MissionComplete();
@@ -542,12 +795,15 @@ public class WaveManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        upgradeManager.BasicUpgradeCall();
-
-        yield return null;
-        while (upgradeManager.Upgrading)
+        if (!skipUpgrade || !isDebugMode)
         {
+            upgradeManager.BasicUpgradeCall();
+
             yield return null;
+            while (upgradeManager.Upgrading)
+            {
+                yield return null;
+            }
         }
 
         yield return null;
@@ -565,6 +821,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(cooltime);
         }
     }
+    
     IEnumerator HoleCrisis(int repeat, float cooltime, float startDelay, int holeCount)
     {
         yield return new WaitForSeconds(startDelay);
@@ -577,6 +834,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(cooltime);
         }
     }
+    
     IEnumerator SpikeCrisis(int repeat, float cooltime, int holeCount)
     {
         for (int i = 0; i < repeat; i++)
@@ -589,5 +847,4 @@ public class WaveManager : MonoBehaviour
         }
     }
     #endregion
-    
 }
