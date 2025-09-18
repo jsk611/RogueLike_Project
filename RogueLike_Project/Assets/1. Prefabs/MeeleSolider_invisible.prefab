@@ -6448,7 +6448,6 @@ MonoBehaviour:
   monsterStatus: {fileID: 1508268718791618267}
   playerRigidBody: {fileID: 1041920953890708533}
   useAdaptiveAggression: 0
-  useOptimizedVersion: 1
   attackRange: 5
   attackCooldown: 1
   splashFx: {fileID: 0}
