@@ -34,6 +34,7 @@ public class Ransomware : BossBase, IBossEntity
     [SerializeField] private GameObject dataPacket;
     private bool canRotate = true;
 
+    [SerializeField] List<BaseWeapon> weaponsList = new List<BaseWeapon>();
 
     [SerializeField] float meeleAttackRange;
     [SerializeField] float rangedAttackRange;
