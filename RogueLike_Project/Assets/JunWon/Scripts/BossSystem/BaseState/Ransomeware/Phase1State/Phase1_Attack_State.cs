@@ -1,26 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class Phase1_Attack_State : BossPhaseBase<Ransomware>
 {
     private bool isAttackFinished = false;
 
-    public Phase1_Attack_State(Ransomware owner) : base(owner) { 
-        owner.SetMeeleAttackState(this);
+    public Phase1_Attack_State(Ransomware owner) : base(owner) 
+    { 
     }
 
     public override void Enter()
     {
         isAttackFinished = false;
-        Debug.Log("[Phase1_BasicMeeleAttack_State] Enter");
+        Debug.Log("[Phase1_MeleeAttack_State] Enter");
         owner.NmAgent.isStopped = true;
 
         if (CanExecuteAttack())
         {
-            owner.Animator.SetTrigger("MeeleAttack");
-            if (owner.AbilityManager.UseAbility("BasicMeeleAttack"))
+            owner.Animator.SetTrigger("MeleeAttack");
+            if (owner.AbilityManager.UseAbility("BasicMeleeAttack"))
             {
             }
         }
@@ -29,7 +28,7 @@ public class Phase1_Attack_State : BossPhaseBase<Ransomware>
     public override void Exit()
     {
         owner.NmAgent.isStopped = false;
-        owner.Animator.ResetTrigger("MeeleAttack");
+        owner.Animator.ResetTrigger("MeleeAttack");
     }
 
     private bool CanExecuteAttack()
@@ -41,5 +40,6 @@ public class Phase1_Attack_State : BossPhaseBase<Ransomware>
     {
         isAttackFinished = true;
     }
+    
     public bool IsAnimationFinished() => isAttackFinished;
 }
