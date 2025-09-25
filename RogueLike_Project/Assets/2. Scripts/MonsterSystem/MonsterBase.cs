@@ -175,23 +175,6 @@ public abstract class MonsterBase : MonoBehaviour
         monsterStatus.SetHealth(hp * HPenforce);
         monsterStatus.SetAttackDamage(dmg * ATKenforce);
 
-        WaveRandomEnforce.EnemyWaveEnforce t = WaveRandomEnforce.enemyBuff;
-        switch (t) {
-            case WaveRandomEnforce.EnemyWaveEnforce.healthEnforce:
-                hp = monsterStatus.GetHealth();
-                monsterStatus.SetMaxHealth(hp * (1 + WaveRandomEnforce.enemyBuffVal[t]));
-                monsterStatus.SetHealth(hp * (1 + WaveRandomEnforce.enemyBuffVal[t]));
-                break;
-            case WaveRandomEnforce.EnemyWaveEnforce.attackEnforce:
-                monsterStatus.SetAttackDamage(monsterStatus.GetAttackDamage() * (1 + WaveRandomEnforce.enemyBuffVal[t]));
-                break;
-            case WaveRandomEnforce.EnemyWaveEnforce.speedEnforce:
-                monsterStatus.SetMovementSpeed(monsterStatus.GetMovementSpeed() * (1 + WaveRandomEnforce.enemyBuffVal[t]));
-                break;
-            case WaveRandomEnforce.EnemyWaveEnforce.none:
-                break;
-        }
-
         HPBar.SetRatio(monsterStatus.GetHealth(),monsterStatus.GetMaxHealth());
     }
 

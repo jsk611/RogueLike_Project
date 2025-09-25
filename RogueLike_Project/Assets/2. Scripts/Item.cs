@@ -28,7 +28,7 @@ public class Item : MonoBehaviour
         isDone = false;
         beacon.material = beaconMaterials[0];
     }
-    private void FixedUpdate()
+    private void Update()
     {
         if (enemiesInZone.Count == 0) isEnemyHolding = false;
         else isEnemyHolding = true;

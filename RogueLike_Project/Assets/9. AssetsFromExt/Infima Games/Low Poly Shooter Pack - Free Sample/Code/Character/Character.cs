@@ -43,6 +43,9 @@ namespace InfimaGames.LowPolyShooterPack
         [SerializeField]
         private float dampTimeAiming = 0.3f;
 
+        [Tooltip("How smoothly we crouch")]
+        [SerializeField]
+        private float dampTimeCrouching = 0.1f;
 
         [Header("Animation Procedural")]
 
@@ -61,6 +64,10 @@ namespace InfimaGames.LowPolyShooterPack
         private bool aiming;
 
 
+        /// <summary>
+        /// True if the character is crouching
+        /// </summary>
+        private bool crouching;
         /// <summary>
         /// True if the character is running.
         /// </summary>
@@ -157,6 +164,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private bool holdingButtonAim;
 
+        private bool holdingButtonCrouch;
         /// <summary>
         /// True if the player is holding the running button.
         /// </summary>
@@ -206,6 +214,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// </summary>
         private static readonly int HashMovement = Animator.StringToHash("Movement");
 
+        private static readonly int HashCrouch = Animator.StringToHash("Crouching");
 
 
         #endregion
@@ -268,6 +277,9 @@ namespace InfimaGames.LowPolyShooterPack
             aiming = holdingButtonAim && CanAim();
             //Match Run.
             running = holdingButtonRun && CanRun();
+
+            crouching = characterAnimator.GetBool("Crouch");
+
 
             //Holding the firing button.
             if (holdingButtonFire)
@@ -342,10 +354,13 @@ namespace InfimaGames.LowPolyShooterPack
         private void UpdateAnimator()
         {
             //Movement Value. This value affects absolute movement. Aiming movement uses this, as opposed to per-axis movement.
-            characterAnimator.SetFloat(HashMovement, Mathf.Clamp01(Mathf.Abs(axisMovement.x) + Mathf.Abs(axisMovement.y)), dampTimeLocomotion, Time.deltaTime);
+            if (characterAnimator.GetBool("Crouch")) characterAnimator.SetFloat(HashMovement, 0.5f * Mathf.Clamp01(Mathf.Abs(axisMovement.x) + Mathf.Abs(axisMovement.y)), dampTimeLocomotion, Time.deltaTime);
+            else characterAnimator.SetFloat(HashMovement, Mathf.Clamp01(Mathf.Abs(axisMovement.x) + Mathf.Abs(axisMovement.y)), dampTimeLocomotion, Time.deltaTime);
 
             //Update the aiming value, but use interpolation. This makes sure that things like firing can transition properly.
             characterAnimator.SetFloat(HashAimingAlpha, Convert.ToSingle(aiming), 0.25f / 1.0f * dampTimeAiming, Time.deltaTime);
+
+            characterAnimator.SetFloat(HashCrouch, Convert.ToSingle(crouching), 0.25f / 1.0f * dampTimeCrouching, Time.deltaTime);
 
             //Update Animator Aiming.
             const string boolNameAim = "Aim";
