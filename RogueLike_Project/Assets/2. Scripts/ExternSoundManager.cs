@@ -11,7 +11,7 @@ using DG.Tweening;
 public class ExternSoundManager : MonoBehaviour
 {       
     public static ExternSoundManager instance;
-    private AudioSource BGM;
+    private static AudioSource BGM;
     public float Main_Volume { get; set; }
     public float BGM_Volume { get; set; }
     public float Effect_Volume { get; set; }
@@ -115,7 +115,7 @@ public class ExternSoundManager : MonoBehaviour
             BGM.clip = BGM_List[stage];
             BGM.loop = false; // 일반 BGM은 루프하지 않음
             BGM.Play();
-            BGM.volume = originalBGMVolume;
+            BGM.volume = Main_Volume * BGM_Volume;
         });
     }
     
@@ -123,7 +123,19 @@ public class ExternSoundManager : MonoBehaviour
     {
         BGM.Play();
     }
-    
+
+    public void PauseBGM()
+    {
+        Main_Volume = Main_Slider.value;
+        Main_Slider.value = Main_Volume * 0.1f;
+        ChangeVolume();
+    }
+    public void ResumeBGM()
+    {
+        Main_Slider.value = Main_Volume;
+        ChangeVolume();
+    }
+
     public void StopBGM()
     {
         BGM.Stop();
@@ -136,12 +148,15 @@ public class ExternSoundManager : MonoBehaviour
     
     public void ChangeVolume()
     {
+        //Main_Volume = Main_Slider.value;
+        //BGM_Volume = BGM_Slider.value;
+        //Effect_Volume = Effect_Slider.value;
+
+        //BGM.volume = Main_Volume * BGM_Volume;
+
         Main_Mixer.SetFloat("MasterVolume", ConvertVolume(Main_Slider.value));
         Main_Mixer.SetFloat("BGMVolume", ConvertVolume(BGM_Slider.value));
         Main_Mixer.SetFloat("EffectVolume", ConvertVolume(Effect_Slider.value));
-        
-        // 원본 볼륨 업데이트
-        originalBGMVolume = Main_Volume * BGM_Volume;
     }
     
     public void Mute()

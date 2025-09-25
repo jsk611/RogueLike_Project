@@ -74,6 +74,7 @@ public class UpgradeManager_New : MonoBehaviour
     public IEnumerator DecisionTreeDisplay(int level)
     {
         player.CancelAiming();
+        ExternSoundManager.instance.PauseBGM();
         UpgradeValueEdit();
         decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
