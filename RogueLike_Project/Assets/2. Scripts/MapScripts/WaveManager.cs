@@ -347,7 +347,7 @@ public class WaveManager : MonoBehaviour
         ChangeStage();
         
         Debug.Log($"[DEBUG] Starting Wave: Stage {debugStage}, Wave {debugWave}");
-        
+ 
         // 정비 웨이브인 경우
         if (debugWave == 5 || debugWave == 0)
         {
@@ -440,8 +440,8 @@ public class WaveManager : MonoBehaviour
         defaultSkybox.DOFloat(horizonStrength, "_HorizonStrength", duration);
         defaultSkybox.DOFloat(horizonHeight, "_HorizonHeight", duration);
 
-        //BGM 변경
-        ExternSoundManager.instance.ChangeBGM(currentStage - 1, duration/2);
+        if (currentStage == 1 && currentWave == 0)
+            ExternSoundManager.instance.StartRandomBGM();
     }
 
     IEnumerator RunStage()
@@ -533,6 +533,8 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator Maintenance()
     {
+        if (ExternSoundManager.instance != null)
+            ExternSoundManager.instance.ReduceBGMVolume();
         UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=green>M");
 
         tileManager.InitializeArray(currentStage, 4);
@@ -559,6 +561,12 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator RunWave()
     {
+        if (currentWave == 1 || currentWave == 6)
+        {
+            if (ExternSoundManager.instance != null)
+                ExternSoundManager.instance.RestoreBGMVolume();
+        }
+
         isMissionEnd = false;
         //UI작업
         if(waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
@@ -710,6 +718,8 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator BossMission(int count, bool isBoss = true)
     {
+        if (ExternSoundManager.instance != null)
+            ExternSoundManager.instance.ReduceBGMVolume();
         UIManager.instance.BossMissionStart();
         while (!UIManager.instance.isAllBossKilled)
         {

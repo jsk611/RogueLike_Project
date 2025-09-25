@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 public class ExternSoundManager : MonoBehaviour
-{
+{       
     public static ExternSoundManager instance;
     private AudioSource BGM;
     public float Main_Volume { get; set; }
@@ -24,6 +24,11 @@ public class ExternSoundManager : MonoBehaviour
     public Slider Effect_Slider;
     public Slider Main_Slider;
 
+    // 랜덤 BGM 관련 변수
+    [SerializeField] private bool isRandomBGMPlaying = false;
+    [SerializeField] private float originalBGMVolume;
+    [SerializeField] private bool isVolumeReduced = false;
+    [SerializeField] private int currentRandomBGMIndex = -1;
 
     /// SOUNDTYPE
     /// MAIN : 1
@@ -41,23 +46,84 @@ public class ExternSoundManager : MonoBehaviour
         Effect_Volume = Main_Volume * Effect_Slider.value;
 
         BGM.volume = BGM_Volume;
+        originalBGMVolume = BGM_Volume;
         ChangeVolume();
     }
 
+    void Update()
+    {
+            // Update 메서드에서 자동 BGM 전환 로직 제거
+        // 한번 선택된 랜덤 BGM은 계속 재생됨
+    }
+
+    public void StartRandomBGM()
+    {
+        if (!isRandomBGMPlaying)
+        {
+            isRandomBGMPlaying = true;
+            PlayNextRandomBGM();
+        }
+    }
+
+    public void StopRandomBGM()
+    {
+        isRandomBGMPlaying = false;
+        currentRandomBGMIndex = -1;
+        BGM.Stop();
+    }
+
+    private void PlayNextRandomBGM()
+    {
+        if (isRandomBGMPlaying && BGM_List.Length > 0)
+        {
+            int randomIndex = Random.Range(0, BGM_List.Length);
+            currentRandomBGMIndex = randomIndex;
+            BGM.clip = BGM_List[randomIndex];
+            BGM.loop = true; // 선택된 BGM을 계속 반복 재생
+            BGM.Play();
+        }
+    }
+
+    public void ReduceBGMVolume()
+    {
+        if (isRandomBGMPlaying && !isVolumeReduced)
+        {
+            isVolumeReduced = true;
+            BGM.DOFade(originalBGMVolume * 0.3f, 0.5f);
+        }
+    }
+
+    public void RestoreBGMVolume()
+    {
+        if (isRandomBGMPlaying && isVolumeReduced)
+        {
+            isVolumeReduced = false;
+            BGM.DOFade(originalBGMVolume, 0.5f);
+        }
+    }
 
     public void ChangeBGM(int stage, float duration)
     {
+        // 랜덤 BGM 모드 종료
+        if (isRandomBGMPlaying)
+        {
+            StopRandomBGM();
+        }
+        
         BGM.DOFade(0, duration).OnComplete(() =>
         {
             BGM.clip = BGM_List[stage];
+            BGM.loop = false; // 일반 BGM은 루프하지 않음
             BGM.Play();
-            BGM.volume = Main_Volume * BGM_Volume;
+            BGM.volume = originalBGMVolume;
         });
     }
+    
     public void PlayBGM()
     {
         BGM.Play();
     }
+    
     public void StopBGM()
     {
         BGM.Stop();
@@ -67,23 +133,22 @@ public class ExternSoundManager : MonoBehaviour
     {
         return sliderValue == 0 ? -80 : (sliderValue - 1) * 20;
     } 
+    
     public void ChangeVolume()
     {
-        //Main_Volume = Main_Slider.value;
-        //BGM_Volume = BGM_Slider.value;
-        //Effect_Volume = Effect_Slider.value;
-
-        //BGM.volume = Main_Volume * BGM_Volume;
-
-        //소리 관리를 Audio Mixer로 변경
         Main_Mixer.SetFloat("MasterVolume", ConvertVolume(Main_Slider.value));
         Main_Mixer.SetFloat("BGMVolume", ConvertVolume(BGM_Slider.value));
         Main_Mixer.SetFloat("EffectVolume", ConvertVolume(Effect_Slider.value));
+        
+        // 원본 볼륨 업데이트
+        originalBGMVolume = Main_Volume * BGM_Volume;
     }
+    
     public void Mute()
     {
         BGM.mute = true;
     }
+    
     public void UnMute()
     {
         BGM.mute = false;
