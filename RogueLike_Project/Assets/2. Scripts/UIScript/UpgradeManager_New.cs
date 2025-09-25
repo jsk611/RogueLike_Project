@@ -74,6 +74,7 @@ public class UpgradeManager_New : MonoBehaviour
     public IEnumerator DecisionTreeDisplay(int level)
     {
         player.CancelAiming();
+        ExternSoundManager.instance.PauseBGM();
         UpgradeValueEdit();
         decisionInputField.transform.gameObject.SetActive(false);
         terminal1.SetActive(true);
@@ -95,6 +96,7 @@ public class UpgradeManager_New : MonoBehaviour
     public void BasicUpgradeCall()
     {
         player.CancelAiming();
+        ExternSoundManager.instance.PauseBGM();
         UpgradeValueEdit();
         terminal1.SetActive(false);
         curUpgradeLevel = 1;
@@ -346,7 +348,7 @@ public class UpgradeManager_New : MonoBehaviour
         string progressBarText = "|";
         while(progress < 100)
         {
-            progress += Random.Range(0, 16);
+            progress += Random.Range(6, 23);
             if(progress > 100) progress = 100;
 
             int barCount = (int)(progress / 100f * 20);
@@ -365,6 +367,7 @@ public class UpgradeManager_New : MonoBehaviour
         player.SetCursorState(true);
         upgrading = false;
         player.SetInteractingUI(upgrading);
+        ExternSoundManager.instance.ResumeBGM();
     }
 
     private void UpgradeValueEdit()

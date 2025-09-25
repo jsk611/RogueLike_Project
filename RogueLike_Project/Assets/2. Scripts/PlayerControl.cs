@@ -12,7 +12,7 @@ public class PlayerControl : MonoBehaviour, ISkillLockable
     private float jumpPower;
     [Range(0, 100)] public float Stamina = 100;
 
-    float dashCool;
+    public float dashCool;
     public bool isGrounded = false;
     public bool dashOver = false;
 

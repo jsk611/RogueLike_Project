@@ -9,9 +9,13 @@ using Random = UnityEngine.Random;
 using Unity.Mathematics;
 using DG.Tweening;
 using static UnityEngine.EventSystems.EventTrigger;
+using InfimaGames.LowPolyShooterPack;
+using Unity.VisualScripting;
 
 public class WaveManager : MonoBehaviour
 {
+    public static WaveManager instance;
+
     UpgradeManager_New upgradeManager;
     TileManager tileManager;
     EnemySpawnLogic enemySpawnLogic;
@@ -85,6 +89,9 @@ public class WaveManager : MonoBehaviour
         currentStage = 1;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
+
+        instance = this;
+        WaveRandomEnforce.WaveEventInit();
         
         sp = startPosition.transform.position;
 
@@ -463,6 +470,7 @@ public class WaveManager : MonoBehaviour
                 while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
+   
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -515,10 +523,7 @@ public class WaveManager : MonoBehaviour
 
         startStage.SetActive(true);
 
-        while (!nextWaveTrigger)
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return new WaitUntil(() => nextWaveTrigger);
 
         nextWaveTrigger = false;
         startStage.SetActive(false);
@@ -545,10 +550,7 @@ public class WaveManager : MonoBehaviour
 
         monsterEnforceVar++;
 
-        while (!nextWaveTrigger) 
-        {
-            yield return new WaitForEndOfFrame();
-        }
+        yield return new WaitUntil(() => nextWaveTrigger);
 
         nextWaveTrigger= false;
         tileManager.InitializeArray(currentStage, 4);
@@ -560,8 +562,10 @@ public class WaveManager : MonoBehaviour
     IEnumerator RunWave()
     {
         isMissionEnd = false;
+        WaveRandomEnforce.WaveRandomEvent();
+        StartCoroutine(WaveRandomEnforce.PlayerRandomDebuff());
         //UI작업
-        if(waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
+        if (waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
         else UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
         //맵 불러오기
         tileManager.InitializeArray(currentStage);
@@ -613,7 +617,7 @@ public class WaveManager : MonoBehaviour
             }
         }
         //임무 완료시 초기화
-        while (!isMissionEnd) { yield return new WaitForEndOfFrame(); };
+        yield return new WaitUntil(() => isMissionEnd);
 
         if(mapChanging != null) StopCoroutine(mapChanging);
         StopAllSpecificCoroutines(summonCoroutines);
@@ -847,4 +851,104 @@ public class WaveManager : MonoBehaviour
         }
     }
     #endregion
+
+    public bool IsMissionEnd { get { return isMissionEnd; } }
+
+    private IEnumerator RunInfiniteWave()
+    {
+        yield return new WaitUntil(() => nextWaveTrigger);
+    }
+
+    private void StageEndAddition()
+    {
+
+    }
 }
+public static class WaveRandomEnforce
+{
+    private static bool initFlag = false;
+    public enum EnemyWaveEnforce
+    {
+        attackEnforce = 0,
+        healthEnforce,
+        speedEnforce,
+        none
+    }
+    public enum PlayerWaveDebuff
+    {
+        dashDelay = 0,
+        reloadDelay,
+        attackSpeedDelay,
+        movespeedDelay,
+        none
+    }
+
+
+
+    public static EnemyWaveEnforce enemyBuff = EnemyWaveEnforce.none;
+    public static PlayerWaveDebuff playerDebuff = PlayerWaveDebuff.none;
+    public static Dictionary<EnemyWaveEnforce, float> enemyBuffVal;
+    public static Dictionary<PlayerWaveDebuff, float> playerDebuffVal;
+    private static PlayerStatus playerStatus;
+    public static void WaveRandomEvent()
+    {
+        enemyBuff =  (EnemyWaveEnforce)Random.Range(0, 4);
+        playerDebuff = (PlayerWaveDebuff)Random.Range(0, 5);
+        Debug.Log("Enemy Buffed : " + enemyBuff);
+    }
+    public static void WaveEventInit()
+    {
+        enemyBuffVal = new Dictionary<EnemyWaveEnforce, float>();
+        enemyBuffVal[EnemyWaveEnforce.attackEnforce] = 0.2f;
+        enemyBuffVal[EnemyWaveEnforce.healthEnforce] = 0.1f;
+        enemyBuffVal[EnemyWaveEnforce.speedEnforce] = 0.1f;
+
+        // % degree
+        playerDebuffVal = new Dictionary<PlayerWaveDebuff, float>();
+        playerDebuffVal[PlayerWaveDebuff.dashDelay] = 0.1f;
+        playerDebuffVal[PlayerWaveDebuff.reloadDelay] = 0.2f;
+        playerDebuffVal[PlayerWaveDebuff.attackSpeedDelay] = 0.2f;
+        playerDebuffVal[PlayerWaveDebuff.movespeedDelay] = 0.2f;
+
+        playerStatus = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
+    }
+
+    public static IEnumerator PlayerRandomDebuff()
+    {
+        WaveRandomEnforce.PlayerWaveDebuff t = WaveRandomEnforce.playerDebuff;
+        Debug.Log("Player Debuff : " + t);
+        float decrease;
+        switch (t)
+        {
+            case WaveRandomEnforce.PlayerWaveDebuff.attackSpeedDelay:
+                decrease = playerStatus.GetAttackSpeed() * 100 * WaveRandomEnforce.playerDebuffVal[t];
+                playerStatus.DecreaseAttackSpeed(decrease);
+                yield return new WaitUntil(() => WaveManager.instance.IsMissionEnd);
+                playerStatus.IncreaseAttackSpeed(decrease);
+                break;
+            case WaveRandomEnforce.PlayerWaveDebuff.movespeedDelay:
+                decrease = playerStatus.GetMovementSpeed() * WaveRandomEnforce.playerDebuffVal[t];
+                playerStatus.DecreaseMovementSpeed(decrease);
+                yield return new WaitUntil(() => WaveManager.instance.IsMissionEnd);
+                playerStatus.IncreaseMovementSpeed(decrease);
+                break;
+            case WaveRandomEnforce.PlayerWaveDebuff.dashDelay:
+                PlayerControl playerControl = playerStatus.GetComponent<PlayerControl>();
+                decrease = playerControl.dashCool * WaveRandomEnforce.playerDebuffVal[t];
+                playerControl.dashCool -= decrease;
+                yield return new WaitUntil(() => WaveManager.instance.IsMissionEnd);
+                playerControl.dashCool += decrease;
+                break;
+            case WaveRandomEnforce.PlayerWaveDebuff.reloadDelay:
+                decrease = playerStatus.GetReloadSpeed() * 100 * WaveRandomEnforce.playerDebuffVal[t];
+                playerStatus.DecreaseReloadSpeed(decrease);
+                yield return new WaitUntil(() => WaveManager.instance.IsMissionEnd);
+                playerStatus.IncreaseReloadSpeed(decrease);
+                break;
+            case WaveRandomEnforce.PlayerWaveDebuff.none:
+                break;
+        }
+
+    }
+}
+

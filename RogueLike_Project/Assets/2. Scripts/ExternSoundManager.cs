@@ -11,7 +11,7 @@ using DG.Tweening;
 public class ExternSoundManager : MonoBehaviour
 {
     public static ExternSoundManager instance;
-    private AudioSource BGM;
+    private static AudioSource BGM;
     public float Main_Volume { get; set; }
     public float BGM_Volume { get; set; }
     public float Effect_Volume { get; set; }
@@ -57,6 +57,17 @@ public class ExternSoundManager : MonoBehaviour
     public void PlayBGM()
     {
         BGM.Play();
+    }
+    public void PauseBGM()
+    {
+        Main_Volume = Main_Slider.value;
+        Main_Slider.value = Main_Volume* 0.1f;
+        ChangeVolume();
+    }
+    public void ResumeBGM()
+    {
+        Main_Slider.value = Main_Volume;
+        ChangeVolume();
     }
     public void StopBGM()
     {
