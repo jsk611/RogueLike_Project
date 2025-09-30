@@ -8,17 +8,17 @@ using UnityEngine.Localization.Settings;
 public class LanguageDropdown : MonoBehaviour
 {
     [SerializeField] private TMP_Dropdown dropdown;
-    // µå·Ó´Ù¿î ¿É¼Ç ¼ø¼­¿Í ¸ÂÃß¼¼¿ä: ENGLISH, KOREAN ...
+    // ï¿½ï¿½Ó´Ù¿ï¿½ ï¿½É¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½: ENGLISH, KOREAN ...
     [SerializeField] private string[] codes = { "en", "ko" };
 
     private IEnumerator Start()
     {
         if (!dropdown) dropdown = GetComponent<TMP_Dropdown>();
 
-        // Localization ½Ã½ºÅÛ ÃÊ±âÈ­ ±â´Ù¸®±â
+        // Localization ï¿½Ã½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½Ù¸ï¿½ï¿½ï¿½
         yield return LocalizationSettings.InitializationOperation;
 
-        // ÀúÀåµÈ ¾ð¾î ºÒ·¯¿Í ÃÊ±â ¼±ÅÃ µ¿±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È­
         string saved = PlayerPrefs.GetString("lang",
             LocalizationSettings.SelectedLocale.Identifier.Code);
 
@@ -26,14 +26,14 @@ public class LanguageDropdown : MonoBehaviour
         if (idx < 0) idx = 0;
 
         dropdown.SetValueWithoutNotify(idx);
-        Apply(idx);                                  // ¡ç ¿©±â¼­ ¡®È£Ãâ¡¯
-        dropdown.onValueChanged.AddListener(Apply);  // °ª ¹Ù²ð ¶§¸¶´Ù ¡®È£Ãâ¡¯
+        Apply(idx);                                  // ï¿½ï¿½ ï¿½ï¿½ï¿½â¼­ ï¿½ï¿½È£ï¿½â¡¯
+        dropdown.onValueChanged.AddListener(Apply);  // ï¿½ï¿½ ï¿½Ù²ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È£ï¿½â¡¯
     }
 
     private int IndexOfCode(string code)
     {
         for (int i = 0; i < codes.Length; i++)
-            if (code.StartsWith(codes[i])) return i; // en-US, ko-KRµµ ¸ÅÄª
+            if (code.StartsWith(codes[i])) return i; // en-US, ko-KRï¿½ï¿½ ï¿½ï¿½Äª
         return -1;
     }
 
@@ -45,7 +45,7 @@ public class LanguageDropdown : MonoBehaviour
             .FirstOrDefault(l => l.Identifier.Code.StartsWith(codes[index]));
         if (locale == null) return;
 
-        LocalizationSettings.SelectedLocale = locale; // Àü¿ª ¾ð¾î º¯°æ ¡æ ÀüÃ¼ UI ÀÚµ¿ °»½Å
-        PlayerPrefs.SetString("lang", codes[index]);  // ´ÙÀ½ ½ÇÇà ½Ã À¯Áö
+        LocalizationSettings.SelectedLocale = locale; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ UI ï¿½Úµï¿½ ï¿½ï¿½ï¿½ï¿½
+        PlayerPrefs.SetString("lang", codes[index]);  // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 }

@@ -1,22 +1,21 @@
-using System.Collections;
+癤퓎sing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class MProjectile : MonoBehaviour
 {
-    
-    protected float damage; // 투사체의 피해량
-   
+    protected float damage;
+
     [Header("Settings")]
-    [SerializeField] float lifetime = 20f; // 투사체의 수명
-    [SerializeField] protected float speed = 0.05f; // 투사체의 속도
+    [SerializeField] private float lifetime = 20f;
+    [SerializeField] protected float speed = 0.05f;
     [SerializeField] protected Vector3 dir = Vector3.forward;
 
     void Start()
     {
         SetDirection(transform.forward);
-        Destroy(gameObject, lifetime); // 일정 시간 후 투사체 파괴
+        Destroy(gameObject, lifetime);
     }
 
     protected void Update()
@@ -51,11 +50,21 @@ public class MProjectile : MonoBehaviour
     public void SetBulletDamage(float attackDamage)
     {
         damage = attackDamage;
-        Debug.Log("Bullet damage : "+ damage);
+        Debug.Log("Bullet damage : " + damage);
     }
 
-    public void SetDirection(Vector3 dir)
+    public void SetDirection(Vector3 direction)
     {
-        this.dir = dir; 
+        dir = direction;
+    }
+
+    public void SetSpeed(float newSpeed)
+    {
+        speed = Mathf.Max(0f, newSpeed);
+    }
+
+    public float GetSpeed()
+    {
+        return speed;
     }
 }

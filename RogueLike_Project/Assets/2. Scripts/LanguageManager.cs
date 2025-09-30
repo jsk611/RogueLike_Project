@@ -1,4 +1,4 @@
-// µå·Ó´Ù¿î ½ºÅ©¸³Æ®¿¡¼­ È£Ãâ
+// ï¿½ï¿½Ó´Ù¿ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -12,8 +12,8 @@ public static class LanguageManager
             .FirstOrDefault(l => l.Identifier.Code.StartsWith(code));
         if (locale != null)
         {
-            LocalizationSettings.SelectedLocale = locale; // Àü¿ª Àû¿ë
-            PlayerPrefs.SetString("lang", code);          // Àç½ÇÇà ½Ã À¯Áö
+            LocalizationSettings.SelectedLocale = locale; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            PlayerPrefs.SetString("lang", code);          // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
     }
 }
