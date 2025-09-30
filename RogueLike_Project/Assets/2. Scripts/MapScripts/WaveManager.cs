@@ -675,7 +675,7 @@ public class WaveManager : MonoBehaviour
             spawnPoints.Add(basePos + new Vector2Int(spawnpoint.x, spawnpoint.y));
         }
 
-        int count = enemy.count;
+        int count = (WaveRandomEnforce.enemyBuff == WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce)? enemy.count + (int)WaveRandomEnforce.enemyBuffVal[WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce] : enemy.count;
         EnemyType enemyType = enemy.type;
         while(count > 0)
         {
@@ -693,7 +693,7 @@ public class WaveManager : MonoBehaviour
     IEnumerator SummonRandomPosEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
         //적 스폰 위치 표시
-        int count = enemy.count;
+        int count = (WaveRandomEnforce.enemyBuff == WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce)? enemy.count+(int)WaveRandomEnforce.enemyBuffVal[WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce] : enemy.count ;
         EnemyType enemyType = enemy.type;
         while (count > 0)
         {
@@ -885,6 +885,7 @@ public class WaveManager : MonoBehaviour
             attackEnforce = 0,
             healthEnforce,
             speedEnforce,
+            quantityEnforce,
             none
         }
         public enum PlayerWaveDebuff
@@ -905,7 +906,7 @@ public class WaveManager : MonoBehaviour
         private static PlayerStatus playerStatus;
         public static void WaveRandomEvent()
         {
-            enemyBuff = (EnemyWaveEnforce)Random.Range(0, 4);
+            enemyBuff = (EnemyWaveEnforce)Random.Range(0, 5);
             playerDebuff = (PlayerWaveDebuff)Random.Range(0, 5);
             Debug.Log("Enemy Buffed : " + enemyBuff);
         }
@@ -915,10 +916,11 @@ public class WaveManager : MonoBehaviour
             enemyBuffVal[EnemyWaveEnforce.attackEnforce] = 0.2f;
             enemyBuffVal[EnemyWaveEnforce.healthEnforce] = 0.1f;
             enemyBuffVal[EnemyWaveEnforce.speedEnforce] = 0.1f;
+            enemyBuffVal[EnemyWaveEnforce.quantityEnforce] = 2;
 
             // % degree
             playerDebuffVal = new Dictionary<PlayerWaveDebuff, float>();
-            playerDebuffVal[PlayerWaveDebuff.dashDelay] = 0.1f;
+            playerDebuffVal[PlayerWaveDebuff.dashDelay] = 0.5f;
             playerDebuffVal[PlayerWaveDebuff.reloadDelay] = 0.2f;
             playerDebuffVal[PlayerWaveDebuff.attackSpeedDelay] = 0.2f;
             playerDebuffVal[PlayerWaveDebuff.movespeedDelay] = 0.2f;
@@ -946,11 +948,10 @@ public class WaveManager : MonoBehaviour
                     playerStatus.IncreaseMovementSpeed(decrease);
                     break;
                 case WaveRandomEnforce.PlayerWaveDebuff.dashDelay:
-                    PlayerControl playerControl = playerStatus.GetComponent<PlayerControl>();
-                    decrease = playerControl.dashCool * WaveRandomEnforce.playerDebuffVal[t];
-                    playerControl.dashCool -= decrease;
+                    decrease = playerStatus.GetStaminaRegen() * WaveRandomEnforce.playerDebuffVal[t];
+                    playerStatus.DecreaseStaminaRegen(decrease);
                     yield return new WaitUntil(() => WaveManager.instance.IsMissionEnd);
-                    playerControl.dashCool += decrease;
+                    playerStatus.IncreaseStaminaRegen(decrease);
                     break;
                 case WaveRandomEnforce.PlayerWaveDebuff.reloadDelay:
                     decrease = playerStatus.GetReloadSpeed() * 100 * WaveRandomEnforce.playerDebuffVal[t];

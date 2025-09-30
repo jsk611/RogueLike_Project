@@ -97,6 +97,7 @@ public class UpgradeManager_New : MonoBehaviour
     {
         player.CancelAiming();
         UpgradeValueEdit();
+        ExternSoundManager.instance.PauseBGM();
         terminal1.SetActive(false);
         curUpgradeLevel = 1;
         decisionInputField.onEndEdit.RemoveListener(DecisionInputEnd);
@@ -362,6 +363,7 @@ public class UpgradeManager_New : MonoBehaviour
         audioManager.PlayOneShotDelayed(upgradeSuccessSound,audioSetting,0.0f);
         upgradeSuccess.SetActive(true);
         yield return new WaitForSeconds(3f);
+        ExternSoundManager.instance.ResumeBGM();
         upgradeRootUI.SetActive(false);
         player.SetCursorState(true);
         upgrading = false;
