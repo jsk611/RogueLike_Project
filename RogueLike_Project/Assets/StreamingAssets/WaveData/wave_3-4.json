@@ -5,44 +5,12 @@
   "isRepeating": true,
   "maps": [
     {
-      "file": "3_3_1",
-      "duration": 4
+      "file": "3_4_1",
+      "duration": 10
     },
     {
-      "file": "3_3_5",
-      "duration": 1
-    },
-    {
-      "file": "3_3_2",
-      "duration": 4
-    },
-    {
-      "file": "3_3_5",
-      "duration": 1
-    },
-    {
-      "file": "3_3_3",
-      "duration": 4
-    },
-    {
-      "file": "3_3_5",
-      "duration": 1
-    },
-    {
-      "file": "3_3_4",
-      "duration": 4
-    },
-    {
-      "file": "3_3_5",
-      "duration": 1
-    },
-    {
-      "file": "3_3_6",
-      "duration": 4
-    },
-    {
-      "file": "3_3_5",
-      "duration": 1
+      "file": "3_4_2",
+      "duration": 10
     }
   ],
   "isRandomPos": true,
@@ -50,59 +18,61 @@
     {
       "type": 101,
       "count": 6,
-      "spawnDelay": 12
+      "spawnDelay": 40
     },
     {
       "type": 111,
       "count": 3,
-      "spawnDelay": 12
+      "spawnDelay": 40
     },
     {
       "type": 102,
       "count": 3,
-      "spawnDelay": 20
+      "spawnDelay": 60
     },
     {
       "type": 212,
       "count": 6,
-      "spawnDelay": 15
+      "spawnDelay": 30
+    },
+    {
+      "type": 213,
+      "count": 6,
+      "spawnDelay": 40,
+      "firstDelay": 10
     },
     {
       "type": 301,
       "count": 5,
-      "spawnDelay": 30
+      "spawnDelay": 60,
+      "firstDelay": 20
+    },
+    {
+      "type": 302,
+      "count": 5,
+      "spawnDelay": 60,
+      "firstDelay": 10
     },
     {
       "type": 311,
       "count": 5,
-      "spawnDelay": 25
+      "spawnDelay": 50
     }
   ],
   "mission": {
-    "type": "Item",
-    "count": 5,
-    "itemPoints": [
-      {
-        "x": 7,
-        "y": 27
-      },
-      {
-        "x": 7,
-        "y": 7
-      },
-      {
-        "x": 27,
-        "y": 7
-      },
-      {
-        "x": 27,
-        "y": 27
-      },
-      {
-        "x": 17,
-        "y": 17
-      }
-    ]
+
+    "type": "Capture",
+    "time": 30,
+    "footholdPoint": {
+      "x": 15,
+      "y": 15
+    },
+    "footholdHeight": 10.5,
+    "footholdSize": {
+      "x": 10,
+      "y": 10
+    }
+
   },
 
   "isRandomEvent": false,

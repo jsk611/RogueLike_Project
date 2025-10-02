@@ -712,6 +712,7 @@ MonoBehaviour:
   fov: {fileID: 5700704047402082328}
   monsterStatus: {fileID: 7348688555122462705}
   playerRigidBody: {fileID: 1730082157152504440}
+  useAdaptiveAggression: 1
   attackRange: 5
   attackCooldown: 3
   splashFx: {fileID: 0}
@@ -770,8 +771,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentCon: 0
   currentCC: 0
-  Health: 200
-  MaxHealth: 200
+  Health: 170
+  MaxHealth: 170
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 3.5
@@ -852,10 +853,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
-  m_Height: 1.8
+  m_Radius: 0.7470525
+  m_Height: 1.7417891
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8, z: 0.1}
+  m_Center: {x: 0, y: 0.77089465, z: 0.24705252}
 --- !u!195 &6495392665463634359
 NavMeshAgent:
   m_ObjectHideFlags: 0

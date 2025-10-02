@@ -11,12 +11,12 @@ PrefabInstance:
     - target: {fileID: 3036678144869235856, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: m_Height
-      value: 1.8
+      value: 1.9041874
       objectReference: {fileID: 0}
     - target: {fileID: 3036678144869235856, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: m_Center.y
-      value: 0.68
+      value: 0.7320937
       objectReference: {fileID: 0}
     - target: {fileID: 5843401921991139928, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
@@ -47,12 +47,12 @@ PrefabInstance:
     - target: {fileID: 8390763758789801008, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: Health
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8390763758789801008, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
       propertyPath: MaxHealth
-      value: 150
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8788629424251833221, guid: 0833468f5bad55f4da2176c05eb1f131,
         type: 3}
@@ -274,10 +274,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
-  m_Height: 20
+  m_Radius: 28.000021
+  m_Height: 60.028076
   m_Direction: 1
-  m_Center: {x: -1.0935726, y: 17872.97, z: 617.13934}
+  m_Center: {x: -1.0935724, y: 17874.982, z: 617.13934}
 --- !u!54 &8103806092087448014
 Rigidbody:
   m_ObjectHideFlags: 0

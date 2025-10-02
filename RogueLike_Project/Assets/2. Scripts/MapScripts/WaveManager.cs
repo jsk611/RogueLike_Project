@@ -81,6 +81,19 @@ public class WaveManager : MonoBehaviour
     private string lastDebugAction = "";
     private float debugActionTime = 0f;
 
+    //스테이지 영구 변화
+    private enum EternalChange
+    {
+        None = 0,
+        AddCapture,
+        NewEntity1,
+        AddSpikeEvent,
+        AddEnergy,
+        NewEntity2,
+        AddSinkHole
+    }
+    private EternalChange eternalWaveChange;
+
     void Start()
     {
         upgradeManager = FindObjectOfType<UpgradeManager_New>();
@@ -88,6 +101,7 @@ public class WaveManager : MonoBehaviour
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
         mapSize = tileManager.GetMapSize;
         currentStage = 1;
+        eternalWaveChange = EternalChange.None;
         enemyMap = new EnemyType[mapSize, mapSize];
         InitializeEnemyArray();
 
@@ -380,7 +394,7 @@ public class WaveManager : MonoBehaviour
     }
 
     #region WaveDataSetting
-    void LoadWaveData(string fileTitle)
+    bool LoadWaveData(string fileTitle)
     {
         string path = Path.Combine(Application.streamingAssetsPath, $"WaveData/wave_{fileTitle}.json");
         if (File.Exists(path))
@@ -388,10 +402,12 @@ public class WaveManager : MonoBehaviour
             string jsonText = File.ReadAllText(path);
             waveData = JsonUtility.FromJson<WaveData>(jsonText);
             ApplyWaveSettings();
+            return true;
         }
         else
         {
             Debug.LogError("파일 찾기 실패!: " + path);
+            return false;
         }
     }
     void ApplyWaveSettings()
@@ -468,9 +484,12 @@ public class WaveManager : MonoBehaviour
                 currentWave = i;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
                 int cnt = 0;
-                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
+            
+                    while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
+                
+
                 
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
@@ -487,9 +506,11 @@ public class WaveManager : MonoBehaviour
                 currentWave = i;
                 int randNum = Random.Range(1, mapMaxIdx + 1);
                 int cnt = 0;
-                while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
+
+                    while (prevWave == randNum && cnt++ < 20) randNum = Random.Range(1, mapMaxIdx + 1);
 
                 LoadWaveData($"{currentStage}-{randNum}");
+                
                 yield return StartCoroutine(RunWave());
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
@@ -733,6 +754,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         isMissionEnd = true;
+        eternalWaveChange++;
     }
     
     IEnumerator SurviveMission(float time)

@@ -412,6 +412,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void UpdateDie()
     {
+        if (gameObject == null) return;
         nmAgent.isStopped = true;
 
         dieTimer += Time.deltaTime;

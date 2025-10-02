@@ -6249,10 +6249,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 20
-  m_Height: 20
+  m_Radius: 24.8
+  m_Height: 46.64917
   m_Direction: 1
-  m_Center: {x: -1.0935726, y: 17872.97, z: 613.27826}
+  m_Center: {x: -1.0935724, y: 17876.287, z: 613.27826}
 --- !u!54 &1895312792271440289
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -6343,8 +6343,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentCon: 0
   currentCC: 0
-  Health: 140
-  MaxHealth: 140
+  Health: 100
+  MaxHealth: 100
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 12

@@ -617,8 +617,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CurrentCon: 0
   currentCC: 0
-  Health: 200
-  MaxHealth: 200
+  Health: 230
+  MaxHealth: 230
   CriticalRate: 0
   CriticalDamage: 0
   MoveSpeed: 12
@@ -731,6 +731,7 @@ MonoBehaviour:
   fov: {fileID: 4951477267646572840}
   monsterStatus: {fileID: 2325090481492472559}
   playerRigidBody: {fileID: 1618767469269076740}
+  useAdaptiveAggression: 1
   attackRange: 35
   attackCooldown: 1
   splashFx: {fileID: 0}
