@@ -658,7 +658,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1890576070884137300}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05bb1cac37203de4595e7670dae807a1, type: 3}
   m_Name: 
@@ -676,14 +676,38 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1890576070884137300}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed6b63fb4e6f460489ee5718614d4ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dissolveMaterial: {fileID: 2100000, guid: e4ab5c1d6320b774d945afd184188e46, type: 2}
-  colorTransitionTime: 1.5
-  dissolveTime: 2
+  virusDissolveaterial: {fileID: 0}
+  defaultMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
+  spawnCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   dissolveCurve:
     serializedVersion: 2
     m_Curve:
@@ -708,19 +732,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  cyberColor1: {r: 0, g: 1, b: 1, a: 1}
-  cyberColor2: {r: 1, g: 0, b: 1, a: 1}
-  cyberColor3: {r: 0, g: 0.5, b: 1, a: 1}
-  enableColorPulse: 1
-  pulseSpeed: 3
-  useMaterialBlending: 1
-  materialBlendSpeed: 2
-  enableGlitchEffect: 1
-  enableParticleEffect: 1
-  enableLightEffect: 1
-  dissolveSound: {fileID: 0}
-  originalRenderers: []
-  originalMaterials: []
+  preSpawnDelay: 0.5
+  postDissolveDelay: 0.3
+  preDissolveDelay: 0.3
+  spawnStartScale: 0.1
+  spawnOvershoot: 1.2
+  dissolveEndScale: 0.8
 --- !u!1 &2017852236662126329
 GameObject:
   m_ObjectHideFlags: 0

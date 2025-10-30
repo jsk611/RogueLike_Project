@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 831a75d54e1b5ab4f864137ac653f9f2, type: 3}
   m_Name: Ransomeware_BasicMeeleAttack
   m_EditorClassIdentifier: 
-  abilityName: BasicMeeleAttack
+  abilityName: BasicMeleeAttack
   abilityDescription: "\uAE30\uBCF8 \uADFC\uC811 \uACF5\uACA9"
   cooldown: 3
   abilityType: 0

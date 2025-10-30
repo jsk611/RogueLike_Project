@@ -6,8 +6,9 @@ public class Phase1_Attack_State : BossPhaseBase<Ransomware>
 {
     private bool isAttackFinished = false;
 
-    public Phase1_Attack_State(Ransomware owner) : base(owner) 
-    { 
+    public Phase1_Attack_State(Ransomware owner) : base(owner)
+    {
+         owner.SetMeleeAttackState(this);
     }
 
     public override void Enter()

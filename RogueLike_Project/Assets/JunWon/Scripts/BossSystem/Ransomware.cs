@@ -1,4 +1,4 @@
-using System.Buffers;
+ï»¿using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -36,7 +36,7 @@ public class Ransomware : BossBase, IBossEntity
 
     [SerializeField] List<BaseWeapon> weaponsList = new List<BaseWeapon>();
 
-    [SerializeField] float meeleAttackRange;
+    [SerializeField] float meleeAttackRange;
     [SerializeField] float rangedAttackRange;
     #endregion
 
@@ -47,10 +47,10 @@ public class Ransomware : BossBase, IBossEntity
     #endregion
 
     #region State References
-    private Phase1_Attack_State meeleAttackState;
+    private Phase1_Attack_State meleeAttackState;
     private Phase1_BasicRangedAttack_State rangedAttackState;
     private Phase1_SpeacialAttack_State specialAttackState;
-    private Phase2_MeeleAttackState meeleAttackState2;
+    private Phase2_MeleeAttackState meleeAttackState2;
     private Phase2_RangedAttackState rangedAttackState2;
     private Phase2_DataBlink_State blinkState;
     private Phase2_DigitalShadow_State summonState;
@@ -59,18 +59,18 @@ public class Ransomware : BossBase, IBossEntity
     #endregion
 
     #region Animation Event Handlers
-    // ±âº» ¿ø°Å¸® °ø°Ý ¾Ö´Ï¸ÞÀÌ¼Ç ÀÌº¥Æ®
+    // ï¿½âº» ï¿½ï¿½ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ®
 
-    public void OnMeeleAttackFinished()
+    public void OnMeleeAttackFinished()
     {
-        if (meeleAttackState != null)
+        if (meleeAttackState != null)
         {
-            meeleAttackState.OnAttackFinished();
+            meleeAttackState.OnAttackFinished();
         }
 
-        if (meeleAttackState2 != null)
+        if (meleeAttackState2 != null)
         {
-            meeleAttackState2.OnAttackFinished();
+            meleeAttackState2.OnAttackFinished();
         }
     }
 
@@ -168,13 +168,13 @@ public class Ransomware : BossBase, IBossEntity
     #endregion
 
     #region State Setters
-    public void SetMeeleAttackState(Phase1_Attack_State state)
+    public void SetMeleeAttackState(Phase1_Attack_State state)
     {
-        meeleAttackState = state;
+        meleeAttackState = state;
     }
-    public void SetMeeleAttackState(Phase2_MeeleAttackState state)
+    public void SetMeleeAttackState(Phase2_MeleeAttackState state)
     {
-        meeleAttackState2 = state;
+        meleeAttackState2 = state;
     }
     public void SetRangedAttackState(Phase1_BasicRangedAttack_State state)
     {
@@ -222,7 +222,7 @@ public class Ransomware : BossBase, IBossEntity
 
     public List<GameObject> SummonedMonsters => summonedObjects;
 
-    public float MeeleAttackRange => meeleAttackRange;
+    public float MeleeAttackRange => meleeAttackRange;
     public float RangedAttackRange => rangedAttackRange;
 
     public GameObject Shadow => shadowPrefab;
@@ -239,7 +239,7 @@ public class Ransomware : BossBase, IBossEntity
         InitializeComponents();
         InitializeFSM();
         InitializeWeapons();
-        EnableMeeleWeapon();
+        EnableMeleeWeapon();
         anim.SetLayerWeight(anim.GetLayerIndex("Phase1"), 0);
         anim.SetLayerWeight(anim.GetLayerIndex("Phase2"), 0);
     }
@@ -267,7 +267,7 @@ public class Ransomware : BossBase, IBossEntity
         nmAgent = GetComponent<NavMeshAgent>();
         fov = GetComponent<FieldOfView>();
         shadowsSpawned = false;
-        meeleAttackRange = 5f;
+        meleeAttackRange = 5f;
         rangedAttackRange = 30f;
     }
 
@@ -325,7 +325,7 @@ public class Ransomware : BossBase, IBossEntity
             states.deadState,
             () =>
             {
-                if (!shadowsSpawned) return false; // ¼¨µµ¿ì°¡ ¾ÆÁ÷ »ý¼ºµÇÁö ¾Ê¾ÒÀ¸¸é ÀüÈ¯ÇÏÁö ¾ÊÀ½
+                if (!shadowsSpawned) return false; // ï¿½ï¿½ï¿½ï¿½ï¿½ì°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
                 bool allShadowsDestroyed = FindObjectsOfType<DigitalShadow>().Length == 0;
                 return bossStatus.GetHealth() <= 0f || allShadowsDestroyed;
@@ -444,7 +444,7 @@ public class Ransomware : BossBase, IBossEntity
 
     public void InterruptCurrentAction(InterruptReason reason)
     {
-        // ÇöÀç State¿¡ µû¸¥ Interrupt Ã³¸®
+        // ï¿½ï¿½ï¿½ï¿½ Stateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Interrupt Ã³ï¿½ï¿½
         if (fsm.CurrentState is Phase1State_Ransomware phase1)
         {
             phase1.Interrupt();
@@ -458,10 +458,10 @@ public class Ransomware : BossBase, IBossEntity
             phase3.Interrupt();
         }
 
-        // ¾Ö´Ï¸ÞÀÌ¼Ç ¸®¼Â
+        // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½ï¿½
         ResetAllAnimationTriggers();
 
-        // Æ¯Á¤ ÀÎÅÍ·´Æ® »çÀ¯¿¡ µû¸¥ Ãß°¡ Ã³¸®
+        // Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½Í·ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ Ã³ï¿½ï¿½
         switch (reason)
         {
             case InterruptReason.PhaseTransition:
@@ -485,20 +485,20 @@ public class Ransomware : BossBase, IBossEntity
             case InterruptReason.ForcedInterrupt:
                 SetRotationLock(true);
                 NmAgent.isStopped = true;
-                // °­Á¦ Áß´Ü ½Ã ¸ðµç ¼¨µµ¿ì Á¦°Å
+                // ï¿½ï¿½ï¿½ï¿½ ï¿½ß´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 break;
         }
     }
 
     private void ResetAllAnimationTriggers()
     {
-        // ¸ðµç °ø°Ý °ü·Ã Æ®¸®°Å ¸®¼Â
-        Animator.ResetTrigger("MeeleAttack");
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Animator.ResetTrigger("meleeAttack");
         Animator.ResetTrigger("RangedAttack");
         Animator.ResetTrigger("SpecialAttack");
         Animator.ResetTrigger("DataBlink");
 
-        // ÇöÀç ÁøÇàÁßÀÎ ¾×¼Ç Áß´Ü
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¼ï¿½ ï¿½ß´ï¿½
         Animator.SetTrigger("InterruptAction");
     }
 
@@ -510,10 +510,10 @@ public class Ransomware : BossBase, IBossEntity
         PlayerControl playerControl = GameObject.FindObjectOfType<PlayerControl>();
         if (playerControl != null)
         {
-            // ½ºÅ³ Àá±Ý
+            // ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½
             playerControl.SetSkillEnabled(skillType, false);
 
-            // ÇØÁ¦ ½Ã°£ ¼³Á¤ (ÇöÀç ½Ã°£ + Áö¼Ó ½Ã°£)
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ + ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½)
             skillUnlockTimes[skillType] = Time.time + duration;
         }
     }
@@ -522,7 +522,7 @@ public class Ransomware : BossBase, IBossEntity
         float currentTime = Time.time;
         List<SkillType> skillsToUnlock = new List<SkillType>();
 
-        // ÇØÁ¦ ½Ã°£ÀÌ µÈ ½ºÅ³ È®ÀÎ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å³ È®ï¿½ï¿½
         foreach (var entry in skillUnlockTimes)
         {
             if (currentTime >= entry.Value)
@@ -531,7 +531,7 @@ public class Ransomware : BossBase, IBossEntity
             }
         }
 
-        // ÇØÁ¦ ½Ã°£ÀÌ µÈ ½ºÅ³ ÇØÁ¦
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½
         PlayerControl playerControl = GameObject.FindObjectOfType<PlayerControl>();
         if (playerControl != null && skillsToUnlock.Count > 0)
         {
@@ -546,21 +546,21 @@ public class Ransomware : BossBase, IBossEntity
     #endregion
 
     #region WeaponMethod
-    // ¹«±â ÃÊ±âÈ­ (Start³ª InitializeComponents ¸Þ¼­µå¿¡¼­ È£Ãâ)
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ (Startï¿½ï¿½ InitializeComponents ï¿½Þ¼ï¿½ï¿½å¿¡ï¿½ï¿½ È£ï¿½ï¿½)
     private void InitializeWeapons()
     {
-        // ÇÊ¿äÇÑ °æ¿ì ¹«±â ÄÄÆ÷³ÍÆ®µéÀ» Ã£¾Æ¼­ ¸®½ºÆ®¿¡ Ãß°¡
+        // ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½
         weaponsList.Clear();
         BaseWeapon[] foundWeapons = GetComponentsInChildren<BaseWeapon>();
         foreach (var weapon in foundWeapons)
         {
             weaponsList.Add(weapon);
-            weapon.DisableCollision(); // ½ÃÀÛ ½Ã ¸ðµç ¹«±â ÄÝ¶óÀÌ´õ ºñÈ°¼ºÈ­
+            weapon.DisableCollision(); // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ý¶ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         }
     }
 
-    // ¾Ö´Ï¸ÞÀÌ¼Ç ÀÌº¥Æ®¿¡¼­ È£ÃâÇÒ ¸Þ¼­µåµé
-    public void EnableMeeleWeapon()
+    // ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½
+    public void EnableMeleeWeapon()
     {
         foreach (var weapon in weaponsList)
         {
@@ -571,7 +571,7 @@ public class Ransomware : BossBase, IBossEntity
         }
     }
 
-    public void DisableMeeleWeapon()
+    public void DisableMeleeWeapon()
     {
         foreach (var weapon in weaponsList)
         {
@@ -583,30 +583,30 @@ public class Ransomware : BossBase, IBossEntity
     }
     #endregion
 
-    // ÀÎÅÍÆäÀÌ½º ¸Þ¼­µå Ãß°¡
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     public float GetBaseDamage()
     {
-        // ±âº» µ¥¹ÌÁö °ª ¹ÝÈ¯
-        return 20f; // ¶Ç´Â ÇÊ¿äÇÑ ±âº» µ¥¹ÌÁö °ª
+        // ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯
+        return 20f; // ï¿½Ç´ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½âº» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
     }
 
     public float GetDamageMultiplier()
     {
-        // º¸½º ÆäÀÌÁî³ª »óÅÂ¿¡ µû¸¥ ¹è¼ö ¹ÝÈ¯
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½î³ª ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¯
         return fsm.CurrentState is Phase2State_Ransomeware ? 1.5f : 1.0f;
     }
 
     public bool IsInSpecialState()
     {
-        // º¸½º°¡ Æ¯¼ö »óÅÂÀÎ °æ¿ì true ¹ÝÈ¯
-        return false; // ±âº»°ªÀº false ¶Ç´Â ·ÎÁ÷ ±¸Çö
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ true ï¿½ï¿½È¯
+        return false; // ï¿½âº»ï¿½ï¿½ï¿½ï¿½ false ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     }
 
     #region Reset
-    // º¸½º »óÅÂ ÃÊ±âÈ­ ¸Þ¼­µå
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½Þ¼ï¿½ï¿½ï¿½
     public override void ResetBoss()
     {
-        // »óÅÂ º¯¼öµé ÃÊ±âÈ­
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         ResetBossState();
 
         if (bossStatus != null)
@@ -616,21 +616,21 @@ public class Ransomware : BossBase, IBossEntity
 
         ClearSummonedMonsters();
 
-        // ¾Ö´Ï¸ÞÀÌÅÍ »óÅÂ ÃÊ±âÈ­
+        // ï¿½Ö´Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         if (anim != null)
         {
             anim.Rebind();
             anim.Update(0f);
         }
 
-        // NavMeshAgent ÃÊ±âÈ­
+        // NavMeshAgent ï¿½Ê±ï¿½È­
         if (nmAgent != null)
         {
             nmAgent.isStopped = false;
             nmAgent.ResetPath();
         }
 
-        // FSMÀ» Ã³À½ »óÅÂ·Î µÇµ¹¸®±â
+        // FSMï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½Â·ï¿½ ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½
         ResetStateMachine();
 
     }
@@ -653,7 +653,7 @@ public class Ransomware : BossBase, IBossEntity
     {
         if (fsm != null)
         {
-            // FSMÀ» »õ·Î ÃÊ±âÈ­
+            // FSMï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
             InitializeFSM();
         }
     }

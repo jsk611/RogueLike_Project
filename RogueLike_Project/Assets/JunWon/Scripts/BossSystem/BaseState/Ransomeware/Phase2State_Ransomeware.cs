@@ -24,7 +24,7 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
     private void InitializeSubFSM()
     {
         var idleState = new Phase1_Idle_State(owner);
-        var attackState = new Phase2_MeeleAttackState(owner);
+        var attackState = new Phase2_MeleeAttackState(owner);
         var rangedAttackState = new Phase2_RangedAttackState(owner);
         var chaseState = new Phase1_Chase_State(owner);
         var blinkState = new Phase2_DataBlink_State(owner);
@@ -70,7 +70,7 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             attackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= owner.MeeleAttackRange &&
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) <= owner.MeleeAttackRange &&
              owner.AbilityManager.GetAbilityRemainingCooldown("BasicMeeleAttack") == 0
         ));
 
@@ -83,7 +83,7 @@ public class Phase2State_Ransomeware : BossPhaseBase<Ransomware>
         subFsm.AddTransition(new Transition<Ransomware>(
             chaseState,
             rangedAttackState,
-            () => Vector3.Distance(owner.transform.position, owner.Player.position) > owner.MeeleAttackRange &&
+            () => Vector3.Distance(owner.transform.position, owner.Player.position) > owner.MeleeAttackRange &&
                   Vector3.Distance(owner.transform.position, owner.Player.position) <= owner.RangedAttackRange &&
                     owner.AbilityManager.GetAbilityRemainingCooldown("BasicRangedAttack") == 0
         ));

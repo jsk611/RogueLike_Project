@@ -272,7 +272,7 @@ public class Phase1_BasicRangedAttack_State : State<Ransomware>
         if (distance > owner.RangedAttackRange * 0.8f)
             return RangedPattern.FocusedCurve;
 
-        if (distance < owner.MeeleAttackRange * 1.2f)
+        if (distance < owner.MeleeAttackRange * 1.2f)
             return roll < 0.6f ? RangedPattern.SpreadVolley : RangedPattern.LockOnChase;
 
         if (roll < 0.4f)
