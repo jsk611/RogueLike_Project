@@ -35,9 +35,6 @@ public class ScoreManager : MonoBehaviour
     private static void Bootstrap()
     {
         if (Instance != null) return;
-        var go = new GameObject("[ScoreManager]");
-        go.AddComponent<ScoreManager>();
-        DontDestroyOnLoad(go);
     }
 
     private void Awake()

@@ -826,6 +826,8 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator WaveEnd()
     {
+        GameController.Instance.OnWaveCleared();
+
         UIManager.instance.MissionComplete();
         StopCoroutine("WallCrisis");
         StopCoroutine("HoleCrisis");

@@ -511,6 +511,8 @@ public abstract class MonsterBase : MonoBehaviour
 
     private IEnumerator HandleDeath()
     {
+        GameController.Instance.OnMonsterKilled();
+
         yield return new WaitForSeconds(dieDuration);
         if (summonedMonster)
         {
