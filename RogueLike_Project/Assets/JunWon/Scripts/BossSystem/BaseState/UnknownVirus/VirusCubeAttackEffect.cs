@@ -1,40 +1,44 @@
-using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ¼öÁ¤µÈ ¹ÙÀÌ·¯½º Å¥ºê ·¹ÀÌÀú ÀÌÆåÆ® - Áß½ÉÁ¡ ±âÁØ Á¤À°¸éÃ¼ Çü¼º
+/// ë°”ì´ëŸ¬ìŠ¤ ë ˆì´ì € íë¸Œ ê³µê²© ì´í™íŠ¸ - ì¤‘ì‹¬ì  ê¸°ë°˜ íë¸Œí˜•ì„± ê³µê²©
+/// - ì‚¬ì´ë²„ ìŠ¤íƒ€ì¼ ìƒ‰ìƒ ë³€í™” (ë³´ë¼ìƒ‰ â†’ ë¹¨ê°„ìƒ‰)
+/// - ê³µìœ  Materialë¡œ ì „ì²´ ë³µì…€ ë™ì‹œ ì œì–´
+/// - ì „ê¸° ì•„í¬ íš¨ê³¼ í¬í•¨
 /// </summary>
 public class VirusCubeAttackEffect : MonoBehaviour
 {
+    #region Serialized Fields
 
     [Header("Enhanced Spread")]
     [SerializeField] private bool useEnhancedSpread = true;
-
     [SerializeField] private VirusCubeSpread spreadCalculator;
 
     [Header("Formation Settings")]
-    [SerializeField] private float formationTime = 2f;        // Å¥ºê Çü¼º ½Ã°£
-    [SerializeField] private float compactTime = 1f;          // ¾ĞÃà ½Ã°£
-    [SerializeField] private float expandTime = 0.3f;         // ÆîÄ§ ½Ã°£
-    [SerializeField] private float returnTime = 1.5f;         // ¿ø·¡ À§Ä¡·Î º¹±Í ½Ã°£
-    [SerializeField] private bool shouldReturnToOriginal = true; // ¿ø·¡ À§Ä¡·Î º¹±ÍÇÒÁö ¿©ºÎ
+    [SerializeField] private float formationTime = 2f;
+    [SerializeField] private float compactTime = 1f;
+    [SerializeField] private float expandTime = 0.3f;
+    [SerializeField] private float returnTime = 1.5f;
+    [SerializeField] private bool shouldReturnToOriginal = true;
 
     [Header("Cube Formation")]
     [SerializeField] private Vector3Int cubeSize = new Vector3Int(8, 8, 8);
-    [SerializeField] private float voxelSpacing = 0.15f;      // º¹¼¿ °£°İ
-    [SerializeField] private float compactScale = 0.6f;       // ¾ĞÃà½Ã ½ºÄÉÀÏ
-    [SerializeField] private float expandScale = 1.8f;        // ÆîÄ§½Ã ½ºÄÉÀÏ
-    [SerializeField] private Vector3 cubeCenter = Vector3.zero; // Å¥ºê Áß½ÉÁ¡
+    [SerializeField] private float voxelSpacing = 0.15f;
+    [SerializeField] private float compactScale = 0.6f;
+    [SerializeField] private float expandScale = 1.8f;
+    [SerializeField] private Vector3 cubeCenter = Vector3.zero;
 
-    [Header("Visual Effects")]
-    [SerializeField] private Color formationColor = Color.cyan;
-    [SerializeField] private Color chargingColor = Color.yellow;
+    [Header("Visual Effects - Cyber Style")]
+    [SerializeField] private Color idleOutlineColor = new Color(0.5f, 0f, 1f);
+    [SerializeField] private float idleEmissionStrength = 1f;
+    [SerializeField] private Color formationColor = new Color(0.3f, 0f, 0.8f);
+    [SerializeField] private Color chargingColor = new Color(0.8f, 0f, 1f);
+    [SerializeField] private Color dangerColor = new Color(1f, 0.3f, 0.5f);
     [SerializeField] private Color attackColor = Color.red;
     [SerializeField] private ParticleSystem chargeEffect;
     [SerializeField] private ParticleSystem expandEffect;
-    [SerializeField] private Light coreLight;                 // Áß½É ¶óÀÌÆ®
 
     [Header("Audio")]
     [SerializeField] private AudioSource audioSource;
@@ -42,31 +46,86 @@ public class VirusCubeAttackEffect : MonoBehaviour
     [SerializeField] private AudioClip chargeSound;
     [SerializeField] private AudioClip expandSound;
 
-    // º¹¼¿ °ü¸®
-    private List<Transform> voxelChildren = new List<Transform>();
-    private List<Vector3> originalPositions = new List<Vector3>();    // ¿ø·¡ À§Ä¡ (·£´ı ÇÃ·ÎÆÃ À§Ä¡)
-    private List<Vector3> cubePositions = new List<Vector3>();        // Å¥ºê Çü¼º À§Ä¡
-    private List<Vector3> compactPositions = new List<Vector3>();     // ¾ĞÃà À§Ä¡
-    private List<Vector3> expandedPositions = new List<Vector3>();    // ÆîÄ§ À§Ä¡
+    [Header("Electric Arc Effect")]
+    [SerializeField] private bool useElectricArc = true;
+    [SerializeField] private int arcCount = 8;
+    [SerializeField] private float arcDistance = 3f;
+    [SerializeField] private float arcUpdateInterval = 0.1f;
+    [SerializeField] private float arcMinWidth = 0.05f;
+    [SerializeField] private float arcMaxWidth = 0.1f;
 
-    // ·¹ÀÌÀú °ü¸®
+    #endregion
+
+    #region Private Fields
+    private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorId = Shader.PropertyToID("_Color");
+    private static readonly int EmissionColorId = Shader.PropertyToID("_EmissionColor");
+    private static readonly int EmissionStrengthId = Shader.PropertyToID("_EmissionStrength");
+
+    private readonly List<Transform> voxelChildren = new();
+    private readonly List<Vector3> originalPositions = new();
+    private readonly List<Vector3> cubePositions = new();
+    private readonly List<Vector3> compactPositions = new();
+    private readonly List<Vector3> expandedPositions = new();
+
+    private Material sharedVoxelMaterial;
+    private Material originalSharedMaterial;
+    private Color originalEmissionColor = Color.black;
+    private Color originalBaseColor = Color.black;
+    private bool originalEmissionEnabled;
+    private int cachedBaseColorPropertyId = -1;
+    private bool hasEmissionStrengthProperty;
+    private bool hasEmissionColorProperty;
+
+    private readonly List<LineRenderer> electricArcs = new();
+    private Material sharedArcMaterial;
+
     private Transform target;
-    private bool isExecuting = false;
+    private bool isExecuting;
+
+    private const float COLOR_PHASE_1 = 0.3f;
+    private const float COLOR_PHASE_2 = 0.7f;
+
+    #endregion
+
+    #region Unity Lifecycle
+
+    private void Awake()
+    {
+        InitializeArcMaterial();
+    }
 
     private void Start()
     {
-        useEnhancedSpread = true;
-        // ±âÁ¸ ÀÚ½Ä °´Ã¼µéÀ» º¹¼¿·Î »ç¿ë
-        CollectExistingVoxels();
+        InitializeComponents();
+        CollectAndPrepareVoxels();
+    }
 
-        // ÄÄÆ÷³ÍÆ® ¼³Á¤
+    private void OnDestroy()
+    {
+        CleanupResources();
+    }
+
+    #endregion
+
+    #region Initialization
+
+    private void InitializeArcMaterial()
+    {
+        if (!useElectricArc) return;
+
+        sharedArcMaterial = new Material(Shader.Find("Sprites/Default"));
+        sharedArcMaterial.EnableKeyword("_EMISSION");
+    }
+
+    private void InitializeComponents()
+    {
         if (audioSource == null)
+        {
             audioSource = gameObject.AddComponent<AudioSource>();
+        }
 
-        // ÇÃ·¹ÀÌ¾î Å¸°Ù Ã£±â
         target = GameObject.FindWithTag("Player")?.transform;
-
-        // Å¥ºê Áß½ÉÁ¡À» ÇöÀç À§Ä¡·Î ¼³Á¤
         cubeCenter = transform.position;
 
         if (useEnhancedSpread)
@@ -75,61 +134,102 @@ public class VirusCubeAttackEffect : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// ·¹ÀÌÀú °ø°İ ½ÃÀÛ
-    /// </summary>
-    public void StartLaserAttack()
-    {
-        if (isExecuting) return;
-        StartCoroutine(ExecuteLaserAttack());
-    }
-
-    private IEnumerator ExecuteLaserAttack()
-    {
-        isExecuting = true;
-
-        // 1. Å¥ºê Çü¼º (ÇöÀç À§Ä¡¿¡¼­ Áß½ÉÁ¡ ±âÁØ Á¤À°¸éÃ¼·Î)
-        yield return StartCoroutine(FormCubePhase());
-
-        // 2. ¾ĞÃà ¹× Â÷Â¡
-        yield return StartCoroutine(CompactAndChargePhase());
-
-        // 3. ÆîÄ§ ¹× ·¹ÀÌÀú ¹ß»ç
-        yield return StartCoroutine(ExpandAndLaserPhase());
-
-        // 4. ¿ø·¡ À§Ä¡·Î º¹±Í (·£´ı ÇÃ·ÎÆÃ »óÅÂ)
-        if (shouldReturnToOriginal)
-        {
-            yield return StartCoroutine(ReturnToFloatingPhase());
-        }
-        isExecuting = false;
-    }
-
-    /// <summary>
-    /// ±âÁ¸ ÀÚ½Ä °´Ã¼µéÀ» º¹¼¿·Î ¼öÁı
-    /// </summary>
-    private void CollectExistingVoxels()
+    private void CollectAndPrepareVoxels()
     {
         voxelChildren.Clear();
         originalPositions.Clear();
 
-        // ¸ğµç ÀÚ½Ä °´Ã¼ ¼öÁı
+        if (transform.childCount > 0)
+        {
+            Renderer firstRenderer = transform.GetChild(0).GetComponent<Renderer>();
+            if (firstRenderer != null)
+            {
+                InitializeSharedVoxelMaterial(firstRenderer);
+            }
+        }
+
         foreach (Transform child in transform)
         {
             voxelChildren.Add(child);
-            // ÇöÀç À§Ä¡¸¦ ¿ø·¡ ÇÃ·ÎÆÃ À§Ä¡·Î ÀúÀå
             originalPositions.Add(child.localPosition);
+
+            Renderer renderer = child.GetComponent<Renderer>();
+            if (renderer != null && sharedVoxelMaterial != null)
+            {
+                renderer.sharedMaterial = sharedVoxelMaterial;
+            }
+            else if (renderer == null)
+            {
+                Debug.LogWarning($"[VirusCubeAttack] ë³µì…€ {child.name}ì— Rendererê°€ ì—†ìŠµë‹ˆë‹¤.", child);
+            }
         }
 
-        // Á¤À°¸éÃ¼ À§Ä¡µé °è»ê
         CalculateFormationPositions();
-
-        Debug.Log($"¼öÁıµÈ º¹¼¿ °³¼ö: {voxelChildren.Count}");
+        ResetSharedMaterialToOriginalState();
+        Debug.Log($"[VirusCubeAttack] ë³µì…€ ìˆ˜ì§‘ ì™„ë£Œ: {voxelChildren.Count}ê°œ (ê³µìœ  Material)");
     }
 
-    /// <summary>
-    /// Áß½ÉÁ¡ ±âÁØ Á¤À°¸éÃ¼ À§Ä¡µé °è»ê
-    /// </summary>
+    private void InitializeSharedVoxelMaterial(Renderer sampleRenderer)
+    {
+        originalSharedMaterial = sampleRenderer.sharedMaterial;
+
+        if (originalSharedMaterial == null)
+        {
+            Debug.LogError("[VirusCubeAttack] ì›ë³¸ Materialì„ ì°¾ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+            return;
+        }
+
+        CacheOriginalMaterialState(originalSharedMaterial);
+
+        sharedVoxelMaterial = new Material(originalSharedMaterial)
+        {
+            name = $"{originalSharedMaterial.name}_VirusCubeShared"
+        };
+
+        sharedVoxelMaterial.EnableKeyword("_EMISSION");
+        hasEmissionStrengthProperty = sharedVoxelMaterial.HasProperty(EmissionStrengthId);
+        hasEmissionColorProperty = sharedVoxelMaterial.HasProperty(EmissionColorId);
+    }
+
+    private void CacheOriginalMaterialState(Material sourceMaterial)
+    {
+        if (sourceMaterial.HasProperty(BaseColorId))
+        {
+            cachedBaseColorPropertyId = BaseColorId;
+            originalBaseColor = sourceMaterial.GetColor(BaseColorId);
+        }
+        else if (sourceMaterial.HasProperty(ColorId))
+        {
+            cachedBaseColorPropertyId = ColorId;
+            originalBaseColor = sourceMaterial.GetColor(ColorId);
+        }
+        else
+        {
+            cachedBaseColorPropertyId = -1;
+            originalBaseColor = Color.black;
+        }
+
+        if (sourceMaterial.HasProperty(EmissionColorId))
+        {
+            originalEmissionColor = sourceMaterial.GetColor(EmissionColorId);
+            hasEmissionColorProperty = true;
+        }
+        else
+        {
+            originalEmissionColor = Color.black;
+            hasEmissionColorProperty = false;
+        }
+
+        originalEmissionEnabled = sourceMaterial.IsKeywordEnabled("_EMISSION");
+        hasEmissionStrengthProperty = sourceMaterial.HasProperty(EmissionStrengthId);
+    }
+
+    
+
+    #endregion
+
+    #region Formation Calculation
+
     private void CalculateFormationPositions()
     {
         cubePositions.Clear();
@@ -137,80 +237,169 @@ public class VirusCubeAttackEffect : MonoBehaviour
         expandedPositions.Clear();
 
         int positionIndex = 0;
-        int totalPositions = 0;
+        int totalPositions = CountEdgePositions();
 
-        // ¸ÕÀú ÃÑ À§Ä¡ °³¼ö °è»ê
         for (int x = 0; x < cubeSize.x; x++)
         {
             for (int y = 0; y < cubeSize.y; y++)
             {
                 for (int z = 0; z < cubeSize.z; z++)
                 {
-                    bool isEdge = (x == 0 || x == cubeSize.x - 1) ||
-                                  (y == 0 || y == cubeSize.y - 1) ||
-                                  (z == 0 || z == cubeSize.z - 1);
-                    if (isEdge) totalPositions++;
+                    if (!IsEdgePosition(x, y, z)) continue;
+
+                    Vector3 cubePos = CalculateCubePosition(x, y, z);
+                    cubePositions.Add(cubePos);
+                    compactPositions.Add(cubePos * compactScale);
+
+                    Vector3 expandPos = CalculateExpandPosition(cubePos, positionIndex, totalPositions);
+                    expandedPositions.Add(expandPos);
+
+                    positionIndex++;
                 }
             }
         }
 
-        // ½ÇÁ¦ À§Ä¡ °è»ê
-        for (int x = 0; x < cubeSize.x; x++)
-        {
-            for (int y = 0; y < cubeSize.y; y++)
-            {
-                for (int z = 0; z < cubeSize.z; z++)
-                {
-                    bool isEdge = (x == 0 || x == cubeSize.x - 1) ||
-                                  (y == 0 || y == cubeSize.y - 1) ||
-                                  (z == 0 || z == cubeSize.z - 1);
-
-                    if (isEdge)
-                    {
-                        // Áß½ÉÁ¡ ±âÁØÀ¸·Î Á¤À°¸éÃ¼ À§Ä¡ °è»ê
-                        Vector3 cubePos = new Vector3(
-                            (x - cubeSize.x / 2f + 0.5f) * voxelSpacing,
-                            (y - cubeSize.y / 2f + 0.5f) * voxelSpacing,
-                            (z - cubeSize.z / 2f + 0.5f) * voxelSpacing
-                        );
-
-                        cubePositions.Add(cubePos);
-
-                        // ¾ĞÃà À§Ä¡
-                        Vector3 compactPos = cubePos * compactScale;
-                        compactPositions.Add(compactPos);
-
-                        // Çâ»óµÈ ÆÛÁü À§Ä¡ °è»ê
-                        Vector3 expandPos;
-                        if (useEnhancedSpread && spreadCalculator != null)
-                        {
-                            Debug.Log("ÆÛÁü »óÅÂ °è»ê");
-                            expandPos = spreadCalculator.CalculateSpreadPosition(cubePos, positionIndex, totalPositions);
-                        }
-                        else
-                        {
-                            // ±âº» ÆÛÁü (±ÕµîÇÏ°Ô)
-                            Vector3 direction = cubePos.normalized;
-                            expandPos = direction * expandScale;
-                        }
-
-                        expandedPositions.Add(expandPos);
-                        positionIndex++;
-                    }
-                }
-            }
-        }
-
-        Debug.Log($"°è»êµÈ Å¥ºê À§Ä¡ °³¼ö: {cubePositions.Count}");
+        Debug.Log($"[VirusCubeAttack] í˜•ì„± ìœ„ì¹˜ ê³„ì‚° ì™„ë£Œ: {cubePositions.Count}ê°œ");
     }
 
-    /// <summary>
-    /// 1´Ü°è: Á¤À°¸éÃ¼ Çü¼º
-    /// </summary>
+    private int CountEdgePositions()
+    {
+        int count = 0;
+        for (int x = 0; x < cubeSize.x; x++)
+            for (int y = 0; y < cubeSize.y; y++)
+                for (int z = 0; z < cubeSize.z; z++)
+                    if (IsEdgePosition(x, y, z)) count++;
+        return count;
+    }
+
+    private bool IsEdgePosition(int x, int y, int z)
+    {
+        return (x == 0 || x == cubeSize.x - 1) ||
+               (y == 0 || y == cubeSize.y - 1) ||
+               (z == 0 || z == cubeSize.z - 1);
+    }
+
+    private Vector3 CalculateCubePosition(int x, int y, int z)
+    {
+        return new Vector3(
+            (x - cubeSize.x / 2f + 0.5f) * voxelSpacing,
+            (y - cubeSize.y / 2f + 0.5f) * voxelSpacing,
+            (z - cubeSize.z / 2f + 0.5f) * voxelSpacing
+        );
+    }
+
+    private Vector3 CalculateExpandPosition(Vector3 cubePos, int index, int total)
+    {
+        if (useEnhancedSpread && spreadCalculator != null)
+        {
+            return spreadCalculator.CalculateSpreadPosition(cubePos, index, total);
+        }
+
+        Vector3 direction = cubePos.normalized;
+        return direction * expandScale;
+    }
+
+    #endregion
+
+    #region Material Control
+
+    private void SetSharedBaseColor(Color baseColor)
+    {
+        if (sharedVoxelMaterial == null || cachedBaseColorPropertyId == -1) return;
+        sharedVoxelMaterial.SetColor(cachedBaseColorPropertyId, baseColor);
+    }
+
+    private void SetSharedEmission(Color emissionColor, float intensity, bool forceEnable = true)
+    {
+        if (sharedVoxelMaterial == null || !hasEmissionColorProperty) return;
+
+        float sanitizedIntensity = Mathf.Max(0f, intensity);
+        sharedVoxelMaterial.SetColor(EmissionColorId, emissionColor * sanitizedIntensity);
+
+        if (hasEmissionStrengthProperty)
+        {
+            sharedVoxelMaterial.SetFloat(EmissionStrengthId, sanitizedIntensity);
+        }
+
+        if (sanitizedIntensity <= 0.001f && !forceEnable)
+        {
+            sharedVoxelMaterial.DisableKeyword("_EMISSION");
+        }
+        else
+        {
+            sharedVoxelMaterial.EnableKeyword("_EMISSION");
+        }
+    }
+
+    private void ResetSharedMaterialToOriginalState()
+    {
+        SetSharedBaseColor(originalBaseColor);
+        SetSharedEmission(Color.black, 0f, false);
+    }
+
+    #endregion
+
+    #region Public API
+
+    public void StartLaserAttack()
+    {
+        if (isExecuting)
+        {
+            Debug.LogWarning("[VirusCubeAttack] ì´ë¯¸ ê³µê²©ì´ ì‹¤í–‰ ì¤‘ì…ë‹ˆë‹¤.");
+            return;
+        }
+
+        StartCoroutine(ExecuteLaserAttack());
+    }
+
+    public void StopEffect()
+    {
+        StopAllCoroutines();
+        ClearElectricArcs();
+        isExecuting = false;
+        ResetSharedMaterialToOriginalState();
+        Debug.Log("[VirusCubeAttack] íš¨ê³¼ ì¤‘ì§€ë¨");
+    }
+
+    public void SetReturnMode(bool shouldReturn)
+    {
+        shouldReturnToOriginal = shouldReturn;
+    }
+
+    #endregion
+
+    #region Attack Execution
+
+    private IEnumerator ExecuteLaserAttack()
+    {
+        isExecuting = true;
+        Debug.Log("[VirusCubeAttack] ë ˆì´ì € ê³µê²© ì‹œì‘");
+
+        yield return StartCoroutine(FormCubePhase());
+        yield return StartCoroutine(CompactAndChargePhase());
+        yield return StartCoroutine(ExpandAndLaserPhase());
+
+        if (shouldReturnToOriginal)
+        {
+            yield return StartCoroutine(ReturnToFloatingPhase());
+        }
+        else
+        {
+            ResetSharedMaterialToOriginalState();
+        }
+
+        isExecuting = false;
+        Debug.Log("[VirusCubeAttack] ë ˆì´ì € ê³µê²© ì™„ë£Œ");
+    }
+
+    #endregion
+
+    #region Phase 1: Cube Formation
+
     private IEnumerator FormCubePhase()
     {
         PlaySound(formationSound);
-        Debug.Log("Á¤À°¸éÃ¼ Çü¼º ½ÃÀÛ");
+        Debug.Log("[Phase 1] íë¸Œ í˜•ì„± ì‹œì‘");
 
         float elapsed = 0f;
         while (elapsed < formationTime)
@@ -218,127 +407,173 @@ public class VirusCubeAttackEffect : MonoBehaviour
             float progress = elapsed / formationTime;
             float easedProgress = Mathf.SmoothStep(0f, 1f, progress);
 
-            // °¢ º¹¼¿À» Á¤À°¸éÃ¼ À§Ä¡·Î ÀÌµ¿
             for (int i = 0; i < voxelChildren.Count; i++)
             {
-                Vector3 startPos = originalPositions[i];              // ¿ø·¡ ·£´ı À§Ä¡
-                Vector3 targetPos = i < cubePositions.Count ? cubePositions[i] : Vector3.zero; // Á¤À°¸éÃ¼ À§Ä¡
+                if (voxelChildren[i] == null) continue;
+
+                Vector3 startPos = GetSafeOriginalPosition(i);
+                Vector3 targetPos = GetSafeCubePosition(i);
 
                 voxelChildren[i].localPosition = Vector3.Lerp(startPos, targetPos, easedProgress);
-
-                // Çü¼ºµÇ¸é¼­ È¸Àü
                 voxelChildren[i].Rotate(Vector3.up, Time.deltaTime * 180f * (1f - easedProgress));
-
-                // »ö»ó º¯È­
-                Color lerpColor = Color.Lerp(formationColor, chargingColor, progress);
             }
+
+            Color emissionColor = Color.Lerp(idleOutlineColor, formationColor, progress);
+            float intensity = Mathf.Lerp(1f, 2f, progress);
+            SetSharedEmission(emissionColor, intensity);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        Debug.Log("Á¤À°¸éÃ¼ Çü¼º ¿Ï·á");
+        Debug.Log("[Phase 1] íë¸Œ í˜•ì„± ì™„ë£Œ");
     }
 
-    /// <summary>
-    /// 2´Ü°è: ¾ĞÃà ¹× Â÷Â¡
-    /// </summary>
+    #endregion
+
+    #region Phase 2: Compact and Charge
+
     private IEnumerator CompactAndChargePhase()
     {
         PlaySound(chargeSound);
-        Debug.Log("¾ĞÃà ¹× Â÷Â¡ ½ÃÀÛ");
+        Debug.Log("[Phase 2] ìˆ˜ì¶• ë° ì°¨ì§• ì‹œì‘");
 
-        // Â÷Â¡ ÆÄÆ¼Å¬ ½ÃÀÛ
-        if (chargeEffect != null)
-        {
-            chargeEffect.gameObject.SetActive(true);
-            chargeEffect.Play();
-        }
+        ActivateParticle(chargeEffect);
 
-        // ÄÚ¾î ¶óÀÌÆ® È°¼ºÈ­
-        if (coreLight != null)
+        if (useElectricArc)
         {
-            coreLight.enabled = true;
-            coreLight.color = chargingColor;
-            coreLight.transform.localPosition = Vector3.zero; // Áß½É¿¡ ¹èÄ¡
+            CreateElectricArcs();
         }
 
         float elapsed = 0f;
+        float nextArcUpdate = 0f;
+
         while (elapsed < compactTime)
         {
             float progress = elapsed / compactTime;
-            float intensity = Mathf.PingPong(elapsed * 4f, 1f);
+            Color currentEmission = CalculateChargingColor(progress);
+            float pulseSpeed = 3f + progress * 10f;
+            float intensity = Mathf.PingPong(elapsed * pulseSpeed, 1f);
 
-            // Á¤À°¸éÃ¼¸¦ Áß½ÉÀ¸·Î ¾ĞÃà
-            for (int i = 0; i < voxelChildren.Count; i++)
+            UpdateVoxelsCompacting(progress);
+            float emissionMultiplier = Mathf.Lerp(2f, 8f, progress);
+            Color pulseEmission = Color.Lerp(currentEmission, Color.white, intensity * 0.4f);
+            SetSharedEmission(pulseEmission, emissionMultiplier);
+
+            if (useElectricArc && elapsed >= nextArcUpdate)
             {
-                Vector3 cubePos = i < cubePositions.Count ? cubePositions[i] : Vector3.zero;
-                Vector3 compactPos = i < compactPositions.Count ? compactPositions[i] : Vector3.zero;
-
-                voxelChildren[i].localPosition = Vector3.Lerp(cubePos, compactPos, progress);
-
-                // Â÷Â¡ »ö»ó ÆŞ½º
-                Color pulseColor = Color.Lerp(chargingColor, attackColor, intensity);
-            }
-
-            // ¶óÀÌÆ® °­µµ Á¶Àı
-            if (coreLight != null)
-            {
-                coreLight.intensity = 2f + intensity * 3f;
+                UpdateElectricArcs(progress, currentEmission);
+                nextArcUpdate = elapsed + arcUpdateInterval;
             }
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        Debug.Log("¾ĞÃà ¹× Â÷Â¡ ¿Ï·á");
+        yield return new WaitForSeconds(0.15f);
+
+        if (useElectricArc)
+        {
+            ClearElectricArcs();
+        }
+
+        Debug.Log("[Phase 2] ìˆ˜ì¶• ë° ì°¨ì§• ì™„ë£Œ");
     }
 
-    /// <summary>
-    /// 3´Ü°è: ÆîÄ§ ¹× ·¹ÀÌÀú ¹ß»ç
-    /// </summary>
+    private Color CalculateChargingColor(float progress)
+    {
+        if (progress < COLOR_PHASE_1)
+        {
+            float t = progress / COLOR_PHASE_1;
+            return Color.Lerp(formationColor, chargingColor, t);
+        }
+
+        if (progress < COLOR_PHASE_2)
+        {
+            float t = (progress - COLOR_PHASE_1) / (COLOR_PHASE_2 - COLOR_PHASE_1);
+            return Color.Lerp(chargingColor, dangerColor, t);
+        }
+
+        float finalT = (progress - COLOR_PHASE_2) / (1f - COLOR_PHASE_2);
+        return Color.Lerp(dangerColor, attackColor, finalT);
+    }
+
+    private void UpdateVoxelsCompacting(float progress)
+    {
+        for (int i = 0; i < voxelChildren.Count; i++)
+        {
+            if (voxelChildren[i] == null) continue;
+
+            Vector3 cubePos = GetSafeCubePosition(i);
+            Vector3 compactPos = GetSafeCompactPosition(i);
+            voxelChildren[i].localPosition = Vector3.Lerp(cubePos, compactPos, progress);
+
+            if (progress > COLOR_PHASE_2)
+            {
+                float shake = (progress - COLOR_PHASE_2) / (1f - COLOR_PHASE_2);
+                voxelChildren[i].localPosition += Random.insideUnitSphere * 0.02f * shake;
+            }
+        }
+    }
+
+    #endregion
+
+    #region Phase 3: Expand and Laser
+
     private IEnumerator ExpandAndLaserPhase()
     {
         PlaySound(expandSound);
-        Debug.Log("ÆîÄ§ ¹× ·¹ÀÌÀú ¹ß»ç ½ÃÀÛ");
+        Debug.Log("[Phase 3] í™•ì‚° ë° ë ˆì´ì € ë°œì‚¬ ì‹œì‘");
 
-        // Â÷Â¡ È¿°ú Á¤Áö
-        if (chargeEffect != null)
-            chargeEffect.Stop();
+        ApplyWhiteFlash();
+        yield return new WaitForSeconds(0.06f);
 
-        // ÆîÄ§ È¿°ú ½ÃÀÛ
-        if (expandEffect != null)
-        {
-            expandEffect.gameObject.SetActive(true);
-            expandEffect.Play();
-        }
+        DeactivateParticle(chargeEffect);
+        ActivateParticle(expandEffect);
 
-        // ºü¸¥ ÆîÄ§ ¾Ö´Ï¸ŞÀÌ¼Ç
         float elapsed = 0f;
         while (elapsed < expandTime)
         {
             float progress = elapsed / expandTime;
-            float easedProgress = 1f - Mathf.Pow(1f - progress, 3f); // °¡¼Ó °î¼±
+            float easedProgress = 1f - Mathf.Pow(1f - progress, 3f);
 
             for (int i = 0; i < voxelChildren.Count; i++)
             {
-                Vector3 compactPos = i < compactPositions.Count ? compactPositions[i] : Vector3.zero;
-                Vector3 expandPos = i < expandedPositions.Count ? expandedPositions[i] : Vector3.zero;
+                if (voxelChildren[i] == null) continue;
 
+                Vector3 compactPos = GetSafeCompactPosition(i);
+                Vector3 expandPos = GetSafeExpandPosition(i);
                 voxelChildren[i].localPosition = Vector3.Lerp(compactPos, expandPos, easedProgress);
             }
+
+            ApplyExpandFade(progress);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
+
+        Debug.Log("[Phase 3] í™•ì‚° ë° ë ˆì´ì € ë°œì‚¬ ì™„ë£Œ");
     }
 
-    /// <summary>
-    /// 4´Ü°è: ¿ø·¡ ·£´ı ÇÃ·ÎÆÃ »óÅÂ·Î º¹±Í
-    /// </summary>
+    private void ApplyWhiteFlash()
+    {
+        SetSharedEmission(Color.white, 10f);
+    }
+
+    private void ApplyExpandFade(float progress)
+    {
+        Color fadeEmission = Color.Lerp(attackColor, Color.black, progress);
+        float fadeIntensity = Mathf.Lerp(8f, 0f, progress);
+        SetSharedEmission(fadeEmission, fadeIntensity, progress < 0.999f);
+    }
+
+    #endregion
+
+    #region Phase 4: Return to Floating
+
     private IEnumerator ReturnToFloatingPhase()
     {
-        Debug.Log("¿ø·¡ ÇÃ·ÎÆÃ »óÅÂ·Î º¹±Í ½ÃÀÛ");
+        Debug.Log("[Phase 4] ì›ë˜ í”Œë¡œíŒ… ìƒíƒœë¡œ ë³µê·€ ì‹œì‘");
 
         float elapsed = 0f;
         while (elapsed < returnTime)
@@ -348,107 +583,157 @@ public class VirusCubeAttackEffect : MonoBehaviour
 
             for (int i = 0; i < voxelChildren.Count; i++)
             {
-                // ÇöÀç ÆîÄ§ À§Ä¡¿¡¼­ ¿ø·¡ ·£´ı ÇÃ·ÎÆÃ À§Ä¡·Î º¹±Í
-                Vector3 expandPos = i < expandedPositions.Count ? expandedPositions[i] : voxelChildren[i].localPosition;
-                Vector3 originalPos = i < originalPositions.Count ? originalPositions[i] : Vector3.zero;
+                if (voxelChildren[i] == null) continue;
+
+                Vector3 expandPos = GetSafeExpandPosition(i);
+                Vector3 originalPos = GetSafeOriginalPosition(i);
 
                 voxelChildren[i].localPosition = Vector3.Lerp(expandPos, originalPos, easedProgress);
-
-                // ½ºÄÉÀÏ º¹±¸
-                float scale = Mathf.Lerp(voxelChildren[i].localScale.x, 1f, easedProgress);
-                voxelChildren[i].localScale = Vector3.one * scale;
-
-                // º¹±ÍÇÏ¸é¼­ ºÎµå·¯¿î È¸Àü
+                voxelChildren[i].localScale = Vector3.Lerp(voxelChildren[i].localScale, Vector3.one, easedProgress);
                 voxelChildren[i].Rotate(Vector3.up, Time.deltaTime * 90f * (1f - progress));
             }
 
-            // ¶óÀÌÆ® Á¡ÁøÀû ²¨Áü
-            if (coreLight != null)
-            {
-                coreLight.intensity = Mathf.Lerp(5f, 0f, progress);
-            }
+            Color emissionColor = Color.Lerp(attackColor, originalEmissionColor, easedProgress);
+            float currentIntensity = Mathf.Lerp(6f, 0f, easedProgress);
+            bool keepEmission = easedProgress < 0.999f && currentIntensity > 0.01f;
+            SetSharedEmission(emissionColor, currentIntensity, keepEmission);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
-        // ¿ÏÀüÈ÷ ¿ø·¡ »óÅÂ·Î º¹±¸
         RestoreOriginalFloatingState();
-
-        Debug.Log("¿ø·¡ ÇÃ·ÎÆÃ »óÅÂ º¹±Í ¿Ï·á");
+        Debug.Log("[Phase 4] ì›ë˜ í”Œë¡œíŒ… ìƒíƒœ ë³µê·€ ì™„ë£Œ");
     }
 
-    /// <summary>
-    /// ¿ø·¡ ÇÃ·ÎÆÃ »óÅÂ·Î ¿ÏÀü º¹±¸
-    /// </summary>
     private void RestoreOriginalFloatingState()
     {
-        for (int i = 0; i < voxelChildren.Count && i < originalPositions.Count; i++)
+        for (int i = 0; i < voxelChildren.Count; i++)
         {
-            // À§Ä¡ ¿ÏÀü º¹±¸
-            voxelChildren[i].localPosition = originalPositions[i];
+            if (voxelChildren[i] == null) continue;
 
-            // ½ºÄÉÀÏ º¹±¸
+            if (i < originalPositions.Count)
+            {
+                voxelChildren[i].localPosition = originalPositions[i];
+            }
             voxelChildren[i].localScale = Vector3.one;
-
         }
 
-        // ÀÌÆåÆ® Á¤¸®
-        if (coreLight != null)
-            coreLight.enabled = false;
+        ResetSharedMaterialToOriginalState();
 
-        if (chargeEffect != null)
-            chargeEffect.gameObject.SetActive(false);
+        DeactivateParticle(chargeEffect);
+        DeactivateParticle(expandEffect);
 
-        if (expandEffect != null)
-            expandEffect.gameObject.SetActive(false);
-
+        Debug.Log("[VirusCubeAttack] ìƒíƒœ ì™„ì „ ë³µì› (Material ìƒ‰ìƒ/Emission ì´ˆê¸°í™”)");
     }
 
+    #endregion
 
-    /// <summary>
-    /// 5´Ü°è: ¼Ò¸ê (º¹±ÍÇÏÁö ¾ÊÀ» ¶§)
-    /// </summary>
-    private IEnumerator DissolvePhase()
+    #region Electric Arc Management
+
+    private void CreateElectricArcs()
     {
-        Debug.Log("¹ÙÀÌ·¯½º Å¥ºê ¼Ò¸ê ½ÃÀÛ");
+        ClearElectricArcs();
 
-        float elapsed = 0f;
-        while (elapsed < returnTime)
+        for (int i = 0; i < arcCount; i++)
         {
-            float progress = elapsed / returnTime;
+            GameObject arcObj = new GameObject($"ElectricArc_{i}");
+            arcObj.transform.SetParent(transform);
+            arcObj.transform.localPosition = Vector3.zero;
 
-            for (int i = 0; i < voxelChildren.Count; i++)
-            {
-                // ½ºÄÉÀÏ °¨¼Ò
-                float scale = Mathf.Lerp(1f, 0f, progress);
-                voxelChildren[i].localScale = Vector3.one * scale;
+            LineRenderer lr = arcObj.AddComponent<LineRenderer>();
+            lr.startWidth = arcMinWidth;
+            lr.endWidth = arcMinWidth * 0.5f;
+            lr.positionCount = 2;
+            lr.material = sharedArcMaterial;
+            lr.startColor = formationColor;
+            lr.endColor = Color.white;
+            lr.numCapVertices = 5;
 
-                // ·£´ı È¸Àü
-                voxelChildren[i].Rotate(Random.insideUnitSphere, Time.deltaTime * 360f);
-
-                // ·£´ıÇÏ°Ô Èğ¾îÁü
-                Vector3 randomOffset = Random.insideUnitSphere * progress * 3f;
-                Vector3 expandPos = i < expandedPositions.Count ? expandedPositions[i] : voxelChildren[i].localPosition;
-                voxelChildren[i].localPosition = expandPos + randomOffset;
-            }
-
-            // ¶óÀÌÆ® ÆäÀÌµå¾Æ¿ô
-            if (coreLight != null)
-            {
-                coreLight.intensity = Mathf.Lerp(5f, 0f, progress);
-            }
-
-            elapsed += Time.deltaTime;
-            yield return null;
+            electricArcs.Add(lr);
         }
 
-        // Á¤¸®
-        if (coreLight != null)
-            coreLight.enabled = false;
+        Debug.Log($"[VirusCubeAttack] ì „ê¸° ì•„í¬ {arcCount}ê°œ ìƒì„±");
+    }
 
-        // °´Ã¼ ºñÈ°¼ºÈ­
-        gameObject.SetActive(false);
+    private void UpdateElectricArcs(float intensity, Color currentColor)
+    {
+        if (sharedArcMaterial != null && sharedArcMaterial.HasProperty(EmissionColorId))
+        {
+            float emissionPower = 2f + intensity * 3f;
+            sharedArcMaterial.SetColor(EmissionColorId, currentColor * emissionPower);
+        }
+
+        foreach (LineRenderer arc in electricArcs)
+        {
+            if (arc == null) continue;
+
+            arc.SetPosition(0, transform.position);
+
+            Vector3 randomDirection = Random.onUnitSphere;
+            float currentDistance = arcDistance * Mathf.Max(0.2f, intensity);
+            Vector3 endPoint = transform.position + randomDirection * currentDistance;
+            arc.SetPosition(1, endPoint);
+
+            arc.startColor = currentColor;
+            arc.endColor = Color.white;
+
+            float width = Mathf.Lerp(arcMinWidth, arcMaxWidth, intensity);
+            arc.startWidth = width;
+            arc.endWidth = width * 0.5f;
+        }
+    }
+
+    private void ClearElectricArcs()
+    {
+        foreach (LineRenderer arc in electricArcs)
+        {
+            if (arc != null)
+            {
+                Destroy(arc.gameObject);
+            }
+        }
+        electricArcs.Clear();
+    }
+
+    #endregion
+
+    #region Utility Methods
+
+    private Vector3 GetSafeOriginalPosition(int index)
+    {
+        return index < originalPositions.Count ? originalPositions[index] : Vector3.zero;
+    }
+
+    private Vector3 GetSafeCubePosition(int index)
+    {
+        return index < cubePositions.Count ? cubePositions[index] : Vector3.zero;
+    }
+
+    private Vector3 GetSafeCompactPosition(int index)
+    {
+        return index < compactPositions.Count ? compactPositions[index] : Vector3.zero;
+    }
+
+    private Vector3 GetSafeExpandPosition(int index)
+    {
+        return index < expandedPositions.Count ? expandedPositions[index] : Vector3.zero;
+    }
+
+    private void ActivateParticle(ParticleSystem particle)
+    {
+        if (particle == null) return;
+
+        particle.gameObject.SetActive(true);
+        particle.Play();
+    }
+
+    private void DeactivateParticle(ParticleSystem particle)
+    {
+        if (particle == null) return;
+
+        particle.Stop();
+        particle.gameObject.SetActive(false);
     }
 
     private void PlaySound(AudioClip clip)
@@ -459,37 +744,59 @@ public class VirusCubeAttackEffect : MonoBehaviour
         }
     }
 
-    public void StopEffect()
+    private void CleanupResources()
     {
-        StopAllCoroutines();
-        isExecuting = false;
+        ClearElectricArcs();
+
+        if (sharedArcMaterial != null)
+        {
+            Destroy(sharedArcMaterial);
+            sharedArcMaterial = null;
+        }
+
+        if (sharedVoxelMaterial != null)
+        {
+            foreach (Transform child in voxelChildren)
+            {
+                if (child == null) continue;
+
+                Renderer renderer = child.GetComponent<Renderer>();
+                if (renderer != null && originalSharedMaterial != null)
+                {
+                    renderer.sharedMaterial = originalSharedMaterial;
+                }
+            }
+
+            Destroy(sharedVoxelMaterial);
+            sharedVoxelMaterial = null;
+        }
+
+        Debug.Log("[VirusCubeAttack] ë¦¬ì†ŒìŠ¤ ì •ë¦¬ ì™„ë£Œ");
     }
 
-    public void SetReturnMode(bool shouldReturn)
-    {
-        shouldReturnToOriginal = shouldReturn;
-    }
+    #endregion
 
-    /// <summary>
-    /// ¿¡µğÅÍ ±âÁî¸ğ - Á¤À°¸éÃ¼ Çü¼º À§Ä¡ Ç¥½Ã
-    /// </summary>
+    #region Gizmos
+
     private void OnDrawGizmosSelected()
     {
-        // Å¥ºê Áß½ÉÁ¡ Ç¥½Ã
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, 0.2f);
 
-        // Á¤À°¸éÃ¼ ¿µ¿ª Ç¥½Ã
         Gizmos.color = Color.cyan;
-        Vector3 cubeExtents = Vector3.one * cubeSize.x * voxelSpacing;
+        Vector3 cubeExtents = new Vector3(
+            cubeSize.x * voxelSpacing,
+            cubeSize.y * voxelSpacing,
+            cubeSize.z * voxelSpacing
+        );
         Gizmos.DrawWireCube(transform.position, cubeExtents);
 
-        // ¾ĞÃà ¿µ¿ª Ç¥½Ã
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(transform.position, cubeExtents * compactScale);
 
-        // ÆîÄ§ ¿µ¿ª Ç¥½Ã
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(transform.position, cubeExtents * expandScale);
     }
+
+    #endregion
 }
