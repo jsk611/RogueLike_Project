@@ -18,7 +18,7 @@ public class UnknownVirusBoss : BossBase
 
     // 각 폼 컴포넌트 캐시
     private WormBossPrime wormComponent;
-    private Troy trojanComponent;
+    //private Troy trojanComponent;
     private Ransomware ransomwareComponent;
 
     // 현재 활성화된 폼 정보
@@ -189,11 +189,11 @@ public class UnknownVirusBoss : BossBase
             wormFormObject.SetActive(false);
         }
 
-        if (trojanFormObject != null)
-        {
-            trojanComponent = trojanFormObject.GetComponent<Troy>();
-            trojanFormObject.SetActive(false);
-        }
+        //if (trojanFormObject != null)
+        //{
+        //    trojanComponent = trojanFormObject.GetComponent<Troy>();
+        //    trojanFormObject.SetActive(false);
+        //}
 
         if (ransomwareFormObject != null)
         {
@@ -383,10 +383,10 @@ public class UnknownVirusBoss : BossBase
                 targetFormObject = wormFormObject;
                 currentActiveBoss = wormComponent;
                 break;
-            case BossForm.Trojan:
-                targetFormObject = trojanFormObject;
-                currentActiveBoss = trojanComponent;
-                break;
+            //case BossForm.Trojan:
+            //    targetFormObject = trojanFormObject;
+            //    currentActiveBoss = trojanComponent;
+            //    break;
             case BossForm.Ransomware:
                 targetFormObject = ransomwareFormObject;
                 currentActiveBoss = ransomwareComponent;

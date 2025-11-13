@@ -833,20 +833,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   viewRadius: 30
   viewAngle: 90
+  eyePoint: {fileID: 7822874171110480717}
   targetMask:
     serializedVersion: 2
     m_Bits: 1152
-  obstacleMask:
+  occluderMask:
     serializedVersion: 2
-    m_Bits: 256
-  playerMask:
-    serializedVersion: 2
-    m_Bits: 1152
-  upClear: 0
-  downClear: 0
-  leftClear: 0
-  rightClear: 0
-  visibleTargets: []
+    m_Bits: 4194167
+  pollInterval: 0.2
+  maxVisibleTargets: 32
 --- !u!114 &9018077404518988307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -934,12 +929,15 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   rotateSpeed: 2
+  maxSpeedRange: 10
+  minSpeedRange: 6
   master: {fileID: 0}
   anim: {fileID: 7822874171100673263}
   nmAgent: {fileID: 6331770368663035288}
   fov: {fileID: 5040080202300145526}
   monsterStatus: {fileID: 9018077404518988307}
   playerRigidBody: {fileID: 0}
+  useAdaptiveAggression: 1
   attackRange: 15
   attackCooldown: 3
   splashFx: {fileID: 0}

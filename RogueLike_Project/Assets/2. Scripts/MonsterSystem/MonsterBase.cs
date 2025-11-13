@@ -267,9 +267,9 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual void CheckPlayer()
     {
-        if (fov.visibleTargets.Count > 0)
+        if (fov.VisibleTargets.Count > 0)
         {
-            target = fov.visibleTargets[0];
+            target = fov.VisibleTargets[0];
             ChangeState(State.CHASE);
         }
     }
@@ -277,12 +277,7 @@ public abstract class MonsterBase : MonoBehaviour
 
     protected virtual bool DetectedPlayer()
     {
-        if (fov.visibleTargets.Count > 0)
-        {
-            return true;
-        }
-
-        return false;
+        return fov != null && fov.VisibleTargets.Count > 0;
     }
 
 
@@ -303,7 +298,7 @@ public abstract class MonsterBase : MonoBehaviour
             }
         }
         // 적응형 시스템이 비활성화된 경우 FieldOfView 기반 감지만 사용
-        else if (!useAdaptiveAggression && fov.visibleTargets.Count > 0)
+        else if (!useAdaptiveAggression && fov.VisibleTargets.Count > 0)
         {
             ChangeState(State.CHASE);
         }
