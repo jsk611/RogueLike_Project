@@ -77,9 +77,9 @@ public class SniperMonster : RangedMonster
 
     protected override void CheckPlayer()
     {
-        if (fov.VisibleTargets.Count > 0)
+        if (fov.visibleTargets.Count > 0)
         {
-            target = fov.VisibleTargets[0];
+            target = fov.visibleTargets[0];
             ChangeState(State.ATTACK);
             // `State.CHASE`로 상태를 변경하지 않음
             Debug.Log($"{name} has detected a player, but won't chase.");
