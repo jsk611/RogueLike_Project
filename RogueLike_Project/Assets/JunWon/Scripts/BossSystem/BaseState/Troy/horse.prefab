@@ -292,11 +292,15 @@ MonoBehaviour:
     type: 3}
   enemyCountData: {fileID: 11400000, guid: a3426f7f3ea80194fb19aefdf45b1ee6, type: 2}
   monsterList: []
-  copyList: []
   runInterval: 7
+  camouflageInterval: 10
+  lurkInterval: 20
+  stunInterval: 5
   enemySummonAmount: 3
+  bossAnimator: {fileID: 0}
+  horseMesh: {fileID: 0}
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
-  bomb: {fileID: 7367227017500463239, guid: c0566a570bf75264c82c6241a746e673, type: 3}
+  lurkPhase: 0
   originalLurkHeathBoundary: []
 --- !u!95 &8014969182548315342
 Animator:

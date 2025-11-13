@@ -1296,7 +1296,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1868915405367026331}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84a35d31de276aa43b52111d87d79086, type: 3}
+  m_Script: {fileID: 11500000, guid: c684d0c8d97cdbc44a54fa828726b19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
@@ -1332,6 +1332,7 @@ MonoBehaviour:
   horseMesh: {fileID: 2580938915237438132}
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
   lurkPhase: 0
+  lurkCut: 3
   originalLurkHeathBoundary: []
 --- !u!195 &3770145670662832450
 NavMeshAgent:

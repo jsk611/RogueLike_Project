@@ -12,7 +12,7 @@ public class DieState_Troy : State<Troy>
     {
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
         GameObject.Instantiate(owner.BOMBEFFECT, owner.transform.position,Quaternion.Euler(Vector3.left*90));
-        Collider[] targets = Physics.OverlapSphere(owner.transform.position, 12f, LayerMask.GetMask("Character"));
+        Collider[] targets = Physics.OverlapSphere(owner.transform.position, 7f, LayerMask.GetMask("Character"));
         if (targets.Length > 0) owner.Player.GetComponent<PlayerStatus>().DecreaseHealth(owner.BossStatus.GetAttackDamage());
         foreach (StatusBehaviour enemies in owner.SUMMONEDMONSTERS)
         {
