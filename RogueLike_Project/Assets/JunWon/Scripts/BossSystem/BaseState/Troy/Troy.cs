@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR.Haptics;
 using UnityEngine.ProBuilder.MeshOperations;
 using UnityEngine.SocialPlatforms;
 using static UnityEngine.UI.GridLayoutGroup;
@@ -65,13 +66,19 @@ public class Troy : BossBase
         Standby = 4,
         Camouflage = 5,
         WakeUp = 6,
-        Lurk = 7
+        Lurk = 7,
+        Crash = 8,
     }
     private AnimatorState curState;
+    public AnimatorState CURSTATE => curState;
 
-    public bool lurkPhase;
+    [HideInInspector] public bool lurkPhase;
+    [HideInInspector] public bool crashPhase;
+
     public float lurkCut;
+    public float crashCut;
     private float accumulatedDamage;
+    [HideInInspector] public bool crash;
 
     private void Awake()
     {
@@ -97,6 +104,7 @@ public class Troy : BossBase
         var camouflageState = new CamouflageState_Troy(this);
         var stunnedState = new StunnedStateTroy(this);
         var lurkState = new LurkState_Troy(this);
+        var crashState = new CrashState_Troy(this);
         var dieState = new DieState_Troy(this);
 
         
@@ -118,8 +126,10 @@ public class Troy : BossBase
         Transition<Troy> lurkToRun = new Transition<Troy>(lurkState, runState, () => curState == AnimatorState.Rush);
         Transition<Troy> lurkToStun = new Transition<Troy>(lurkState, stunnedState, () => curState == AnimatorState.Stunned);
 
+        Transition<Troy> idleToCrash = new Transition<Troy>(idleState, crashState, () => bossStatus.GetHealth() <= (bossStatus.GetMaxHealth()/2f) && crash);
+        Transition<Troy> crashToStun = new Transition<Troy>(crashState, stunnedState, () => (curState == AnimatorState.Stunned && !crash));
 
-        Transition<Troy> death = new Transition<Troy>(idleState, dieState, () => bossStatus.GetHealth()<=0);
+
         fsm = new StateMachine<Troy>(introState);
 
         fsm.AddTransition(introToIdle);
@@ -138,7 +148,9 @@ public class Troy : BossBase
         fsm.AddTransition(lurkToStun);
         fsm.AddTransition(lurkToRun);
 
-        fsm.AddTransition(death);
+        fsm.AddTransition(idleToCrash);
+        fsm.AddTransition(crashToStun);
+
     }
     private void InitializeComponents()
     {
@@ -147,6 +159,8 @@ public class Troy : BossBase
         fov = GetComponent<FieldOfView>();
         bossStatus = GetComponent<BossStatus>();
         lurkPhase = false;
+        crashPhase = false;
+        crash = true;
         accumulatedDamage = 0;
         curState = isBoss? AnimatorState.Idle : AnimatorState.Lurk;
     }
@@ -154,8 +168,8 @@ public class Troy : BossBase
     public override void TakeDamage(float damage, bool showDamage = true)
     {
         if (isCamouflaged) return;
-        if (lurkPhase) accumulatedDamage += damage;
-        if (accumulatedDamage >= lurkCut)
+        if (lurkPhase || crashPhase) accumulatedDamage += damage;
+        if ((lurkPhase && accumulatedDamage >= lurkCut) || (crashPhase && accumulatedDamage >= crashCut))
         {
             accumulatedDamage = 0;
             lurkPhase = false;
@@ -169,6 +183,12 @@ public class Troy : BossBase
 
         EventManager.Instance.TriggerMonsterDamagedEvent();
         Instantiate(UIDamaged, transform.position + new Vector3(0, UnityEngine.Random.Range(0f, height / 2), 0), Quaternion.identity).GetComponent<UIDamage>().damage = damage;
+
+        if(bossStatus.GetHealth() <=0)
+        {
+            var death = new DieState_Troy(this);
+            fsm.ForcedTransition(death);
+        }
     }
  
 
@@ -178,6 +198,10 @@ public class Troy : BossBase
         GetComponent<BoxCollider>().enabled = val;
         transform.Find("EnemyIcon").gameObject.SetActive(val);
     }
+    public void HideHP(bool val)
+    {
+        HPBar.gameObject.SetActive(val);
+    }
     public void CoroutineRunner(IEnumerator coroutine)
     {
         StartCoroutine(coroutine);
@@ -186,6 +210,11 @@ public class Troy : BossBase
     {
         curState = state;
         bossAnimator.SetInteger(HashState, (int)state);
+    }
+    public void MakeDoll()
+    {
+        var DollState = new IntroState_Troy(this);
+        fsm.ForcedTransition(DollState);
     }
 
     #region Reset

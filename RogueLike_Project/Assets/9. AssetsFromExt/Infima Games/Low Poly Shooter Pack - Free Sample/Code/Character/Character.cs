@@ -870,7 +870,6 @@ namespace InfimaGames.LowPolyShooterPack
         public override void CancelAiming()
         {
             if (!holdingButtonAim) return;
-            Debug.Log("WTF");
             equippedWeapon.ZoomEffect(false);
             characterStatus.SetMovementSpeed(characterStatus.GetMovementSpeed() + 5);
             holdingButtonAim = false;

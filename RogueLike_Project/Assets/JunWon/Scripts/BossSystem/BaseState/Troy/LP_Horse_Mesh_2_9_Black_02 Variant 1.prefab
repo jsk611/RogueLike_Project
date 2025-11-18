@@ -1332,7 +1332,8 @@ MonoBehaviour:
   horseMesh: {fileID: 2580938915237438132}
   bombEffect: {fileID: 1427962332153456, guid: 301583a5af63a494298d60cd9f296909, type: 3}
   lurkPhase: 0
-  lurkCut: 3
+  lurkCut: 1
+  crash: 0
   originalLurkHeathBoundary: []
 --- !u!195 &3770145670662832450
 NavMeshAgent:

@@ -28,6 +28,7 @@ public class IdleState_Troy : State<Troy>
     }
     public override void Update()
     {
+
         runTimer += Time.deltaTime;
         camouflageTimer += Time.deltaTime;
         if(!owner.lurkPhase) lurkTimer += Time.deltaTime;

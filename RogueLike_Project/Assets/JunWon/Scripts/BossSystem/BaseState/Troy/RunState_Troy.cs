@@ -60,7 +60,8 @@ public class RunState_Troy : State<Troy>
     {
         owner.Animator.Play("Stunned");
         yield return new WaitForSeconds(3.5f);
-        owner.ChangeState(Troy.AnimatorState.Lurk);
+        if (owner.lurkPhase) owner.ChangeState(Troy.AnimatorState.Lurk);
+        else owner.ChangeState(Troy.AnimatorState.Idle);
     }
 }
 

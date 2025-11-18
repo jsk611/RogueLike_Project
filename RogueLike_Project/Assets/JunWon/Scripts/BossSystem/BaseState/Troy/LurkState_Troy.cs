@@ -16,13 +16,17 @@ public class LurkState_Troy : State<Troy>
     Vector3[] dir = new Vector3[3];
     Transform player;
 
+    bool standby;
+
 
     public override void Enter()
     {
         originSpeed = owner.BossStatus.GetMovementSpeed();
         owner.NmAgent.isStopped = false;
+        standby = true;
         timer = 0f;
         if (!owner.isBoss) return;
+
         player = owner.Player;
         dir[0] = player.right;
         dir[1] = -player.right;
@@ -32,10 +36,12 @@ public class LurkState_Troy : State<Troy>
             Troy alter = GameObject.Instantiate(owner.gameObject).GetComponent<Troy>();
             alter.GetComponent<BossBase>().isBoss = false;
             alter.NmAgent.SetDestination(player.position + dir[i] * 20);
-            alter.BossStatus.SetMovementSpeed(originSpeed * 5);
+            alter.BossStatus.SetMovementSpeed(originSpeed * 10);
+            alter.BossStatus.SetHealth(200);
             alter.HideAndSeek(false);
         }
         owner.NmAgent.SetDestination(player.position + player.forward * 50);
+        owner.BossStatus.SetMovementSpeed(originSpeed * 10);
         owner.HideAndSeek(false);
     }
     public override void Update()
