@@ -119,14 +119,14 @@ public class Troy : BossBase
         Transition<Troy> StunToIdle = new Transition<Troy>(stunnedState, idleState, () => curState == AnimatorState.WakeUp);
 
         Transition<Troy> idleToRun = new Transition<Troy>(idleState, runState, () => curState == AnimatorState.Rush);
-        Transition<Troy> runToIdle = new Transition<Troy>(runState, idleState, () => curState == AnimatorState.Idle);
+        Transition<Troy> runToIdle = new Transition<Troy>(runState, idleState, () => curState == AnimatorState.Idle || curState == AnimatorState.WakeUp);
 
         Transition<Troy> idleToLurk = new Transition<Troy>(idleState, lurkState, () => curState == AnimatorState.Lurk);
         Transition<Troy> runToLurk = new Transition<Troy>(runState, lurkState, () => curState == AnimatorState.Lurk);
         Transition<Troy> lurkToRun = new Transition<Troy>(lurkState, runState, () => curState == AnimatorState.Rush);
         Transition<Troy> lurkToStun = new Transition<Troy>(lurkState, stunnedState, () => curState == AnimatorState.Stunned);
 
-        Transition<Troy> idleToCrash = new Transition<Troy>(idleState, crashState, () => bossStatus.GetHealth() <= (bossStatus.GetMaxHealth()/2f) && crash);
+        Transition<Troy> idleToCrash = new Transition<Troy>(idleState, crashState, () => ((bossStatus.GetHealth() <= (bossStatus.GetMaxHealth()/2f)) && crash && isBoss));
         Transition<Troy> crashToStun = new Transition<Troy>(crashState, stunnedState, () => (curState == AnimatorState.Stunned && !crash));
 
 
@@ -171,8 +171,9 @@ public class Troy : BossBase
         if (lurkPhase || crashPhase) accumulatedDamage += damage;
         if ((lurkPhase && accumulatedDamage >= lurkCut) || (crashPhase && accumulatedDamage >= crashCut))
         {
-            accumulatedDamage = 0;
             lurkPhase = false;
+            crashPhase = false;
+            accumulatedDamage = 0;
             ChangeState(AnimatorState.Stunned);
         }
 

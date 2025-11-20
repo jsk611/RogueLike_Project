@@ -8,6 +8,7 @@ public class CrashState_Troy : State<Troy>
 
     float deathTimer = 10f;
     float originSpeed;
+    float originDamage;
     PlayerStatus playerStatus;
 
     bool standby;
@@ -19,6 +20,7 @@ public class CrashState_Troy : State<Troy>
         owner.ChangeState(Troy.AnimatorState.Crash);
         owner.crashPhase = true;
         originSpeed = owner.BossStatus.GetMovementSpeed();
+        originDamage = owner.BossStatus.GetAttackDamage();
         stamp = new List<GameObject>();
         standby = true;
         playerStatus = owner.Player.GetComponent<PlayerStatus>();
@@ -42,7 +44,7 @@ public class CrashState_Troy : State<Troy>
         }
         else if(deathTimer <= 0)
         {
-            if(standby) owner.Animator.Play("Standby");
+            if(standby) owner.Animator.CrossFade("Standby",0.3f);
             standby = false;
             return;
         }
@@ -57,11 +59,11 @@ public class CrashState_Troy : State<Troy>
     public override void Exit()
     {
         owner.HideAndSeek(true);
-        owner.crashPhase = false;
+        owner.HideHP(true);
+        owner.BossStatus.SetAttackDamage(originDamage);
         foreach(GameObject stp in stamp)
         {
-            stp.SetActive(false);
-            GameObject.Destroy(stp);
+            if(stp != null) GameObject.Destroy(stp);
         }
     }
 

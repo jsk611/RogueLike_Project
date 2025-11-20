@@ -13,7 +13,8 @@ public class StunnedStateTroy : State<Troy>
         stunTimer = 0;
         owner.NmAgent.isStopped = true;
         owner.lurkPhase = false;
-        owner.ChangeState(Troy.AnimatorState.Idle);
+        owner.crashPhase = false;
+        owner.Animator.Play("Staggered");
     }
     public override void Update()
     {
