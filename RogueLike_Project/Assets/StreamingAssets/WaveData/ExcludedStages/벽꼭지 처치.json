@@ -5,8 +5,8 @@
   "isRepeating": true,
   "maps": [
     {
-      "file": "1030김이삭_2",
-      "duration": 60
+      "file": "1111김이삭_1",
+      "duration": 20
     }
   ],
   "isRandomPos": true,
@@ -65,12 +65,5 @@
 
   "isRandomEvent": false,
   "events": [
-    {
-      "type": "SinkHole",
-      "repeat": 5,
-      "delay": 20,
-      "startDelay": 10,
-      "count": 40
-    }
   ]
 }

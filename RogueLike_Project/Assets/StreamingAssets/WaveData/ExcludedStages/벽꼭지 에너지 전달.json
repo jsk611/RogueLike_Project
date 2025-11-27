@@ -5,8 +5,8 @@
   "isRepeating": true,
   "maps": [
     {
-      "file": "1030김이삭_1_수정",
-      "duration": 60
+      "file": "1111김이삭_1",
+      "duration": 20
     }
   ],
   "isRandomPos": true,
@@ -56,8 +56,27 @@
     }
   ],
   "mission": {
-    "type": "Survive",
-    "time": 70
+
+    "type": "Item",
+    "itemPoints" : [
+      {
+        "x" : 6.5,
+        "y" : 6.5
+      },
+      {
+        "x" : 38.5,
+        "y" : 6.5
+      },
+      {
+        "x" : 6.5,
+        "y" : 38.5
+      },
+      {
+        "x" : 38.5,
+        "y" : 38.5
+      }
+    ]
+    
 
   },
 

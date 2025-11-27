@@ -57,20 +57,21 @@
   ],
   "mission": {
 
-    "type": "Killing",
-    "count": 14
-    
+    "type": "Capture",
+    "time": 8,
+    "footholdPoint" : {
+      "x" : 14.5,
+      "y" : 14.5
+    },
+    "footholdHeight" : 7,
+    "footholdSize" : {
+      "x" : 8,
+      "y" : 8
+    }
 
   },
 
   "isRandomEvent": false,
   "events": [
-    {
-      "type": "SinkHole",
-      "repeat": 5,
-      "delay": 20,
-      "startDelay": 10,
-      "count": 40
-    }
   ]
 }

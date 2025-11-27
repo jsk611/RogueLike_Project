@@ -5,7 +5,7 @@
   "isRepeating": true,
   "maps": [
     {
-      "file": "1030김이삭_1_수정",
+      "file": "1118김이삭_2",
       "duration": 60
     }
   ],
@@ -56,12 +56,20 @@
     }
   ],
   "mission": {
-    "type": "Survive",
-    "time": 70
+
+    "type": "Killing",
+    "count": 14
+    
 
   },
 
   "isRandomEvent": false,
   "events": [
+    {
+      "type": "Building",
+      "repeat": 30,
+      "delay": 10,
+      "count": 4
+    }
   ]
 }

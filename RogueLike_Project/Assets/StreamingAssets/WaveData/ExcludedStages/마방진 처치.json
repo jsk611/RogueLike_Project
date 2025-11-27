@@ -65,12 +65,5 @@
 
   "isRandomEvent": false,
   "events": [
-    {
-      "type": "SinkHole",
-      "repeat": 5,
-      "delay": 20,
-      "startDelay": 10,
-      "count": 40
-    }
   ]
 }
