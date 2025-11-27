@@ -55,6 +55,7 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameObject upgradeUI;
 
     WaveData waveData;
+    DefaultEvents defaultEventsPreset;
     bool isMissionEnd;
 
     [Header("Enhanced Debug System")]
@@ -76,12 +77,12 @@ public class WaveManager : MonoBehaviour
     [SerializeField] KeyCode toggleGodModeKey = KeyCode.G;
     [SerializeField] KeyCode killAllEnemiesKey = KeyCode.K;
 
-    // µð¹ö±× »óÅÂ ÃßÀû
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool debugInitialized = false;
     private string lastDebugAction = "";
     private float debugActionTime = 0f;
 
-    //½ºÅ×ÀÌÁö ¿µ±¸ º¯È­
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È­
     private enum EternalChange
     {
         None = 0,
@@ -96,6 +97,18 @@ public class WaveManager : MonoBehaviour
 
     void Start()
     {
+        string defaultPath = Path.Combine(Application.streamingAssetsPath, "WaveData/DefaultEvents/DefaultEvents.json");
+        if (File.Exists(defaultPath))
+        {
+            string defaultText = File.ReadAllText(defaultPath);
+            defaultEventsPreset = JsonUtility.FromJson<DefaultEvents>(defaultText);
+        }
+        else
+        {
+            Debug.LogError("path is not detected" + defaultPath);
+            return;
+        }
+        
         upgradeManager = FindObjectOfType<UpgradeManager_New>();
         tileManager = FindObjectOfType<TileManager>();
         enemySpawnLogic = FindObjectOfType<EnemySpawnLogic>();
@@ -286,12 +299,12 @@ public class WaveManager : MonoBehaviour
         GUILayout.Label("DEBUG WAVE MANAGER", GUI.skin.GetStyle("label"));
         GUILayout.Space(10);
         
-        // ÇöÀç »óÅÂ Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ç¥ï¿½ï¿½
         GUILayout.Label($"Current: Stage {currentStage}, Wave {currentWave}");
         GUILayout.Label($"Debug Target: Stage {debugStage}, Wave {debugWave}");
         GUILayout.Space(10);
         
-        // µð¹ö±× ¼³Á¤
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         GUILayout.BeginHorizontal();
         GUILayout.Label("Stage:");
         if (GUILayout.Button("-") && debugStage > 1) { debugStage--; }
@@ -308,7 +321,7 @@ public class WaveManager : MonoBehaviour
         
         GUILayout.Space(10);
         
-        // ºü¸¥ ¾×¼Ç ¹öÆ°µé
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½×¼ï¿½ ï¿½ï¿½Æ°ï¿½ï¿½
         if (GUILayout.Button("Start Debug Wave"))
         {
             RestartDebugWave();
@@ -331,7 +344,7 @@ public class WaveManager : MonoBehaviour
         
         GUILayout.Space(10);
         
-        // ´ÜÃàÅ° Á¤º¸
+        // ï¿½ï¿½ï¿½ï¿½Å° ï¿½ï¿½ï¿½ï¿½
         GUILayout.Label("Shortcuts:", GUI.skin.GetStyle("label"));
         GUILayout.Label($"Next Wave: {nextWaveKey}");
         GUILayout.Label($"Prev Wave: {prevWaveKey}");
@@ -342,7 +355,7 @@ public class WaveManager : MonoBehaviour
         
         GUILayout.Space(10);
         
-        // ¸¶Áö¸· ¾×¼Ç Ç¥½Ã
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×¼ï¿½ Ç¥ï¿½ï¿½
         if (!string.IsNullOrEmpty(lastDebugAction) && Time.time - debugActionTime < 3f)
         {
             GUI.color = Color.green;
@@ -356,7 +369,7 @@ public class WaveManager : MonoBehaviour
 
     IEnumerator StartDebugWave()
     {
-        // ±âº» ¸Ê ¼³Á¤
+        // ï¿½âº» ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         tileManager.MakeMapByCSV(startMapPath, 7, 7);
         yield return StartCoroutine(tileManager.MoveTilesByArray(0, 0, 0));
         yield return new WaitForSeconds(0.5f);
@@ -370,18 +383,18 @@ public class WaveManager : MonoBehaviour
         
         Debug.Log($"[DEBUG] Starting Wave: Stage {debugStage}, Wave {debugWave}");
  
-        // Á¤ºñ ¿þÀÌºêÀÎ °æ¿ì
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         if (debugWave == 5 || debugWave == 0)
         {
             yield return StartCoroutine(Maintenance());
         }
-        // º¸½º ¿þÀÌºêÀÎ °æ¿ì
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         else if (debugWave == 10)
         {
             LoadWaveData($"{debugStage}-boss");
             yield return StartCoroutine(RunWave());
         }
-        // ÀÏ¹Ý ¿þÀÌºêÀÎ °æ¿ì
+        // ï¿½Ï¹ï¿½ ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         else
         {
             int mapMaxIdx = stageMapNum[debugStage - 1];
@@ -406,7 +419,7 @@ public class WaveManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("ÆÄÀÏ Ã£±â ½ÇÆÐ!: " + path);
+            Debug.LogError("ï¿½ï¿½ï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½!: " + path);
             return false;
         }
     }
@@ -454,7 +467,7 @@ public class WaveManager : MonoBehaviour
 
     void ChangeStage(float duration = 3f)
     {
-        //ÇÏ´Ã »ö º¯°æ
+        //ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Color skycolor = skyboxMaterials[currentStage - 1].GetColor("_SkyColor");
         Color Horizon = skyboxMaterials[currentStage - 1].GetColor("_HorizonColor");
         float horizonStrength = skyboxMaterials[currentStage - 1].GetFloat("_HorizonStrength");
@@ -495,7 +508,7 @@ public class WaveManager : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
                 prevWave = randNum;
             }
-            //Á¤ºñ ½ºÅ×ÀÌÁö
+            //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             currentWave = 5;
             yield return new WaitForSeconds(0.5f);
             yield return StartCoroutine(Maintenance());
@@ -516,7 +529,7 @@ public class WaveManager : MonoBehaviour
                 prevWave = randNum;
             }
 
-            //º¸½ºÀü
+            //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             currentWave = 10;
             LoadWaveData($"{currentStage}-boss");
             yield return StartCoroutine(RunWave());
@@ -528,7 +541,7 @@ public class WaveManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
-        //µ¥¸ð ¹öÀüÀÌ¹Ç·Î 3½ºÅ×ÀÌÁö±îÁö¸¸ ÁøÇà
+        //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ 3ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         demoEndingUI.SetActive(true);
         yield return new WaitForSeconds(3f);
         demoEndingUI.SetActive(false);
@@ -595,10 +608,10 @@ public class WaveManager : MonoBehaviour
         isMissionEnd = false;
         WaveRandomEnforce.WaveRandomEvent();
         StartCoroutine(WaveRandomEnforce.PlayerRandomDebuff());
-        //UIÀÛ¾÷
+        //UIï¿½Û¾ï¿½
         if (waveData.mission.type.CompareTo("Boss") == 0) UIManager.instance.changeWaveText(currentStage.ToString() + "-<color=red>X");
         else UIManager.instance.changeWaveText(currentStage.ToString() + "-" + currentWave.ToString());
-        //¸Ê ºÒ·¯¿À±â
+        //ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½ï¿½ï¿½
         tileManager.InitializeArray(currentStage);
         Vector2Int playerPos = playerPositionData.playerTilePosition;
         Vector2Int tmp = new Vector2Int(playerPos.x, playerPos.y);
@@ -606,7 +619,7 @@ public class WaveManager : MonoBehaviour
         yield return StartCoroutine(tileManager.MoveTilesByArray());
         yield return new WaitForSeconds(1f);
 
-        //Àû ¼ÒÈ¯
+        //ï¿½ï¿½ ï¿½ï¿½È¯
         List<Coroutine> summonCoroutines = new List<Coroutine>();
         if (waveData.isRandomPos)
         {
@@ -623,31 +636,66 @@ public class WaveManager : MonoBehaviour
             }
         }
         
-        //ÀÓ¹«
+        //ï¿½Ó¹ï¿½
         switch (waveData.mission.type)
         {
-            case "Killing": StartCoroutine(KillingMission(waveData.mission.count)); break;
-            case "Boss": StartCoroutine(BossMission(waveData.mission.count, true)); break;
-            case "Survive": StartCoroutine(SurviveMission(waveData.mission.time)); break;
-            case "Capture": StartCoroutine(CaptureMission(waveData.mission.time, basePos)); break;
-            case "Item": StartCoroutine(ItemMission(basePos)); break;
+            case "Killing": 
+                StartCoroutine(KillingMission(waveData.mission.count)); 
+                break;
+            case "Boss": 
+                StartCoroutine(BossMission(waveData.mission.count, true));
+                break;
+            case "Survive": 
+                StartCoroutine(SurviveMission(waveData.mission.time));
+                break;
+            case "Capture": 
+                StartCoroutine(CaptureMission(waveData.mission.time, basePos)); 
+                break;
+            case "Item": 
+                StartCoroutine(ItemMission(basePos)); 
+                break;
         }
 
-        //¸ÖÆ¼ ¸ÊÀÏ½Ã ¸Ê º¯°æ
+        //ï¿½ï¿½Æ¼ ï¿½ï¿½ï¿½Ï½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Coroutine mapChanging = null;
         if (waveData.isMultiMap) mapChanging = StartCoroutine(MultiMapsChangingCoroutine(tmp, waveData.isRepeating));
-        //ÀÌº¥Æ®
-        foreach (var ev in waveData.events)
+        //ï¿½Ìºï¿½Æ®
+
+        if (ShouldRunHazards(waveData))
         {
-            switch (ev.type)
+            Debug.Log("Run Hazard");
+            float spikeChance = defaultEventsPreset.spikeChance;
+            float sinkChance  = defaultEventsPreset.sinkHoleChance;
+
+            if (UnityEngine.Random.value < spikeChance)
             {
-                case "Building": StartCoroutine(WallCrisis(ev.repeat, ev.delay, ev.count)); break;
-                case "SinkHole": StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.startDelay, ev.count)); break;
-                case "Spike": StartCoroutine(SpikeCrisis(ev.repeat, ev.delay, ev.count)); break;
-                default: Debug.LogError("Wrong Event Type"); break;
+                var ev = defaultEventsPreset.spike;
+                StartCoroutine(SpikeCrisis(ev.repeat, ev.delay, ev.count));
+                Debug.Log("Spike Run");
+            }
+
+            if (UnityEngine.Random.value < sinkChance)
+            {
+                var ev = defaultEventsPreset.sinkHole;
+                StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.startDelay, ev.count));
+                Debug.Log("Hole Run");
+            }
+
+            foreach (var ev in waveData.events)
+            {
+                switch (ev.type)
+                {
+                    case "Building": StartCoroutine(WallCrisis(ev.repeat, ev.delay, ev.count)); break;
+                    // case "SinkHole": StartCoroutine(HoleCrisis(ev.repeat, ev.delay, ev.startDelay, ev.count)); break;
+                    // case "Spike": StartCoroutine(SpikeCrisis(ev.repeat, ev.delay, ev.count)); break;
+                    default: Debug.LogError("Wrong Event Type"); break;
+                }
             }
         }
-        //ÀÓ¹« ¿Ï·á½Ã ÃÊ±âÈ­
+
+        
+        
+        //ï¿½Ó¹ï¿½ ï¿½Ï·ï¿½ï¿½ ï¿½Ê±ï¿½È­
         yield return new WaitUntil(() => isMissionEnd);
 
 
@@ -670,6 +718,19 @@ public class WaveManager : MonoBehaviour
         yield break;
     }
 
+    bool ShouldRunHazards(WaveData data)
+    {
+        if (defaultEventsPreset == null || !defaultEventsPreset.enabled) return false;
+
+        var type = data.mission.type;
+        if (type == "Boss") return false;
+        if (type == "Capture") return !defaultEventsPreset.skipCapture;
+        if (type == "Item") return !defaultEventsPreset.skipItem;
+
+        Debug.Log("Run Hazard");
+        return true; // Killing, Survive ë“±
+    }
+
     IEnumerator MultiMapsChangingCoroutine(Vector2Int basePos, bool isRepeating)
     {
         yield return new WaitForSeconds(waveData.maps[0].duration);
@@ -687,9 +748,9 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator SummonEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
-        yield return new WaitForSeconds(enemy.firstDelay); //Ã¹ ½ºÆù Áö¿¬½Ã°£
+        yield return new WaitForSeconds(enemy.firstDelay); //Ã¹ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ã°ï¿½
 
-        //Àû ½ºÆù À§Ä¡ Ç¥½Ã
+        //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ Ç¥ï¿½ï¿½
         List<Vector2Int> spawnPoints = new List<Vector2Int>();
         foreach(var spawnpoint in enemy.spawnPoints)
         {
@@ -713,7 +774,7 @@ public class WaveManager : MonoBehaviour
     
     IEnumerator SummonRandomPosEnemyCoroutine(Vector2Int basePos, EnemyInfo enemy)
     {
-        //Àû ½ºÆù À§Ä¡ Ç¥½Ã
+        //ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ Ç¥ï¿½ï¿½
         int count = (WaveRandomEnforce.enemyBuff == WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce)? enemy.count+(int)WaveRandomEnforce.enemyBuffVal[WaveRandomEnforce.EnemyWaveEnforce.quantityEnforce] : enemy.count ;
         EnemyType enemyType = enemy.type;
         while (count > 0)

@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "skipCapture": true,
+  "skipItem": true,
+  "spikeChance": 0.5,
+  "sinkHoleChance": 0.5,
+  "spike": {
+    "type": "Spike",
+    "repeat": 10,
+    "delay": 15,
+    "count": 10
+  },
+  "sinkHole": {
+    "type": "SinkHole",
+    "repeat": 5,
+    "delay": 20,
+    "startDelay": 10,
+    "count": 40
+  }
+}

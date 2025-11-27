@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 
+
+
 [Serializable]
 public class WaveData
 {
@@ -16,6 +18,7 @@ public class WaveData
     public MissionInfo mission;
     public bool isRandomEvent;
     public List<EventInfo> events;
+    public DefaultEvents defaultEvents;
 }
 
 [Serializable]
@@ -46,18 +49,18 @@ public class MissionInfo
 {
     public string type; //Killing, Boss, Survive, Capture, Item
 
-    //Ã³Ä¡or¾ÆÀÌÅÛ
+    //Ã³Ä¡orï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public int count;
 
-    //»ýÁ¸or°ÅÁ¡Á¡·É½Ã°£or¾ÆÀÌÅÛÈ¹µæ¼Ò¿ä½Ã°£
+    //ï¿½ï¿½ï¿½ï¿½orï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É½Ã°ï¿½orï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¹ï¿½ï¿½Ò¿ï¿½Ã°ï¿½
     public float time;
 
-    //°ÅÁ¡
+    //ï¿½ï¿½ï¿½ï¿½
     public Vector2Data footholdPoint;
     public float footholdHeight;
     public Vector2Data footholdSize;
 
-    //¾ÆÀÌÅÛ
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public List<Vector2Data> itemPoints;
 }
 
@@ -69,4 +72,16 @@ public class EventInfo
     public float delay;
     public float startDelay = 0;
     public int count;
+}
+
+[Serializable]
+public class DefaultEvents
+{
+    public bool enabled = true;
+    public bool skipCapture = true;
+    public bool skipItem = true;
+    public float spikeChance = 0.5f;
+    public float sinkHoleChance = 0.5f;
+    public EventInfo spike = new EventInfo();
+    public EventInfo sinkHole = new EventInfo();
 }
