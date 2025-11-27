@@ -675,6 +675,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1291651511864555020}
+    - targetCorrespondingSourceObject: {fileID: 100030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6561213057676713945}
   m_SourcePrefab: {fileID: 100100000, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2, type: 3}
 --- !u!95 &4651061701667495703 stripped
 Animator:
@@ -748,8 +752,8 @@ MonoBehaviour:
   SummonTimeInterval: 5
   MaxSummonCount: 5
   summonedEnemies:
-  - {fileID: 4549291608529419339, guid: 47f2dcb6c78a4de47a8cfff3ea8fb50d, type: 3}
-  - {fileID: 8183338938074982982, guid: 70c1d7ecf1583d449b9b8ca4da142074, type: 3}
+  - {fileID: 4549291608529419339, guid: 69ba24309d8e63243a09f8533c0bcf92, type: 3}
+  - {fileID: 8183338938074982982, guid: d85b2672f6ba4c049af085368cb4a71a, type: 3}
   monsterLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -890,6 +894,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6561213057676713945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4651061701674921161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack: []
+  Hit: []
+  Extra:
+  - {fileID: 8300000, guid: 96bb360849ee23c42aba380e75970e4f, type: 3}
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!4 &4651061701675217129 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400030, guid: 8753e01ab9c64bbbb4c6ffba9f37f4e2,

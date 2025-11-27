@@ -605,6 +605,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2532680700027459383}
+    - targetCorrespondingSourceObject: {fileID: 100066, guid: 860793eb3324391468f1c120a75ec049,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5177695765514884309}
     - targetCorrespondingSourceObject: {fileID: 100012, guid: 860793eb3324391468f1c120a75ec049,
         type: 3}
       insertIndex: -1
@@ -934,12 +938,15 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   rotateSpeed: 2
+  maxSpeedRange: 10
+  minSpeedRange: 6
   master: {fileID: 0}
   anim: {fileID: 7822874171100673263}
   nmAgent: {fileID: 6331770368663035288}
   fov: {fileID: 5040080202300145526}
   monsterStatus: {fileID: 9018077404518988307}
   playerRigidBody: {fileID: 0}
+  useAdaptiveAggression: 1
   attackRange: 15
   attackCooldown: 3
   splashFx: {fileID: 0}
@@ -988,6 +995,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5177695765514884309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7822874171110180717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: 6df3e50c4e7b16b4f932af13e67b669a, type: 3}
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!4 &7822874171110480689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400062, guid: 860793eb3324391468f1c120a75ec049,

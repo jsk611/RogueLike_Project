@@ -62,7 +62,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8897549556185495166}
-  m_LocalEulerAnglesHint: {x: 5.768274, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2804889583928745942
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ Transform:
   m_Children:
   - {fileID: 65671261024521816}
   m_Father: {fileID: 3784842488297378168}
-  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3915597521446134368
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,7 +427,7 @@ Transform:
   - {fileID: 4815859626652192624}
   - {fileID: 8897549556185495166}
   m_Father: {fileID: 9122756758787123253}
-  m_LocalEulerAnglesHint: {x: 0.75466895, y: 0.00000035762787, z: 0.0000011920929}
+  m_LocalEulerAnglesHint: {x: -0.45360863, y: -0.0062436354, z: 0.7886824}
 --- !u!1 &6217018779275343189
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,7 +458,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8388328335763605461}
-  m_LocalEulerAnglesHint: {x: 4.8280134, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 5.094001, y: 0, z: 0}
 --- !u!1 &7231484573933267505
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +525,7 @@ GameObject:
   - component: {fileID: 5564636742301616362}
   - component: {fileID: 1679814848857321663}
   - component: {fileID: 5479254341128776823}
+  - component: {fileID: 6501517504841432330}
   m_Layer: 16
   m_Name: Turret
   m_TagString: Untagged
@@ -768,6 +769,27 @@ MonoBehaviour:
   aimTime: 0.73
   attackTime: 2.42
   gun: {fileID: 840670844370095079}
+--- !u!114 &6501517504841432330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8183338938074982982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: f8ce6e253bff00c48af2139470a22e7c, type: 3}
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!1 &8239765794870893910
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,7 +822,7 @@ Transform:
   - {fileID: 1298204103423642872}
   - {fileID: 3450716139917588777}
   m_Father: {fileID: 8388328335763605461}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.0041196346}
+  m_LocalEulerAnglesHint: {x: 1.0897475, y: -0.47997135, z: -0.06927763}
 --- !u!1001 &2537455080892477568
 PrefabInstance:
   m_ObjectHideFlags: 0

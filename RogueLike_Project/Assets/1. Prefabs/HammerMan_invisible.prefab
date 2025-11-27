@@ -1113,6 +1113,7 @@ GameObject:
   - component: {fileID: 8991597118104028276}
   - component: {fileID: 3745496708373635735}
   - component: {fileID: 2633594184378361070}
+  - component: {fileID: 5056331031172202198}
   m_Layer: 16
   m_Name: HammerMan_invisible
   m_TagString: Untagged
@@ -1212,6 +1213,7 @@ MonoBehaviour:
   fov: {fileID: 3564155486099621860}
   monsterStatus: {fileID: 4670054622375643492}
   playerRigidBody: {fileID: 3095557521766637868}
+  useAdaptiveAggression: 1
   attackRange: 5
   attackCooldown: 3
   splashFx: {fileID: 0}
@@ -1362,6 +1364,28 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &5056331031172202198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3848184072437923404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: faee618265041c440991e6916f246117, type: 3}
+  - {fileID: 8300000, guid: 778aa40e19e36b341a88f709a6848409, type: 3}
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!1 &3895835360067326018
 GameObject:
   m_ObjectHideFlags: 0

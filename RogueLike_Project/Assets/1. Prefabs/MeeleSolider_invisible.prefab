@@ -559,7 +559,7 @@ Transform:
   - {fileID: 6436679974440156512}
   - {fileID: 8342795036229288071}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: -13.784799, y: 82.42296, z: -22.04479}
+  m_LocalEulerAnglesHint: {x: 63.73745, y: 30.347225, z: -175.19016}
 --- !u!1 &755965472862346864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1406,7 +1406,7 @@ Transform:
   - {fileID: 439537732812851932}
   - {fileID: 293510562826488415}
   m_Father: {fileID: 5442666568914709174}
-  m_LocalEulerAnglesHint: {x: 8.381007, y: -135.9632, z: -32.901478}
+  m_LocalEulerAnglesHint: {x: -9.092094, y: 28.864689, z: -28.295456}
 --- !u!1 &1751352733312315132
 GameObject:
   m_ObjectHideFlags: 0
@@ -2592,7 +2592,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8608053457814370040}
-  m_LocalEulerAnglesHint: {x: 16.702312, y: 106.66004, z: 99.89507}
+  m_LocalEulerAnglesHint: {x: 34.55524, y: 81.715546, z: 55.15712}
 --- !u!1 &3096841207055135056
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4416,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2506771786322330250}
-  m_LocalEulerAnglesHint: {x: -26.289345, y: -44.636578, z: 58.270836}
+  m_LocalEulerAnglesHint: {x: -63.330795, y: -85.71225, z: 138.92842}
 --- !u!1 &5930224978831692869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6205,6 +6205,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2712703648059829631}
+    - targetCorrespondingSourceObject: {fileID: 100066, guid: 860793eb3324391468f1c120a75ec049,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5674742930916007334}
     - targetCorrespondingSourceObject: {fileID: 100032, guid: 860793eb3324391468f1c120a75ec049,
         type: 3}
       insertIndex: -1
@@ -6492,6 +6496,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16e8d81c7d8865149b61db0974904aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5674742930916007334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2403159443017260015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: e7d5763178af0764eb42db87af86019d, type: 3}
+  - {fileID: 8300000, guid: 9046ba6c3bd934b4d8e04c0f47c9ea63, type: 3}
+  Hit: []
+  Extra: []
+  monster: {fileID: 0}
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!4 &2403159443017353131 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400038, guid: 860793eb3324391468f1c120a75ec049,

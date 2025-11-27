@@ -11,6 +11,7 @@ public class MonsterAnimationEventHandler : MonoBehaviour
     private StatusBehaviour statusBehaviour;
 
     private PlayerStatus player;
+    private PlayMonsterSound sound;
     
 
     private float FrozenTime;
@@ -22,6 +23,7 @@ public class MonsterAnimationEventHandler : MonoBehaviour
         monsterBase = GetComponent<MonsterBase>(); 
         animator = GetComponent<Animator>();
         statusBehaviour = GetComponent<StatusBehaviour>();
+        sound = GetComponent<PlayMonsterSound>();
 
         player = ServiceLocator.Current.Get<IGameModeService>().GetPlayerCharacter().GetComponent<PlayerStatus>();
     }

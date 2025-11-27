@@ -5,61 +5,34 @@ using UnityEngine;
 
 namespace InfimaGames.LowPolyShooterPack
 {
-    public class PlayMonsterSound : StateMachineBehaviour
+    public class PlayMonsterSound : MonoBehaviour
     {
         // Start is called before the first frame update
-        private enum SoundType
-        {
-            Attack,
-            Hit,
-            Extra1,
-            Extra2,
-            Extra3,
-            Extra4,
-        }
+        [SerializeField] List<AudioClip> Attack;
+        [SerializeField] List<AudioClip> Hit;
+        [SerializeField] List<AudioClip> Extra;
+    
         private AudioClip audioClip;
         private IAudioManagerService audioManagerService;
 
-        [SerializeField] private MonsterBase monster;
-        [SerializeField] private SoundType soundType;
         [SerializeField] private AudioSettings soundSettings = new AudioSettings(1.0f,0.0f,true);
-        [SerializeField] private bool playOnEnter = true;
         [SerializeField] private float delay;
-        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+
+        private void Start()
         {
-            if (!playOnEnter) return;
-
             audioManagerService ??= ServiceLocator.Current.Get<IAudioManagerService>();
-
-            audioClip = soundType switch
-            {
-                SoundType.Attack => monster.AttackSound,
-                SoundType.Hit => monster.HitSound,
-                SoundType.Extra1 => monster.ExtraSounds[0],
-                SoundType.Extra2 => monster.ExtraSounds[1],
-                SoundType.Extra3 => monster.ExtraSounds[2],
-                SoundType.Extra4 => monster.ExtraSounds[3],
-                _ => default
-            };
-            audioManagerService.PlayOneShotDelayed(audioClip, soundSettings, delay);
         }
-        public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        public void PlayAttackSound(int idx)
         {
-            if (playOnEnter) return;
-            audioManagerService ??= ServiceLocator.Current.Get<IAudioManagerService>();
-
-            audioClip = soundType switch
-            {
-                SoundType.Attack => monster.AttackSound,
-                SoundType.Hit => monster.HitSound,
-                SoundType.Extra1 => monster.ExtraSounds[0],
-                SoundType.Extra2 => monster.ExtraSounds[1],
-                SoundType.Extra3 => monster.ExtraSounds[2],
-                SoundType.Extra4 => monster.ExtraSounds[3],
-                _ => default
-            };
-
-            audioManagerService.PlayOneShotDelayed(audioClip, soundSettings, delay);
+            audioManagerService.PlayOneShotDelayed(Attack[idx], soundSettings, delay);
+        }
+        public void PlayHitSound(int idx)
+        {
+            audioManagerService.PlayOneShotDelayed(Hit[idx],soundSettings, delay);
+        }
+        public void PlayExtraSound(int dix)
+        {
+            audioManagerService.PlayOneShotDelayed(Extra[dix], soundSettings, delay);
         }
     }
 }

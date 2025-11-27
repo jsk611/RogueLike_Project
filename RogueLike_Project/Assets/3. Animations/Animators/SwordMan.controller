@@ -62,13 +62,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monster: {fileID: 8538740730035915066, guid: 96643f6a51fac3f4a8eb26d2f3ea5e5e, type: 3}
-  soundType: 0
+  Attack: []
+  Hit: []
+  Extra: []
   soundSettings:
     automaticCleanup: 1
     volume: 0.2
     spatialBlend: 0
-  playOnEnter: 1
   delay: 0
 --- !u!1102 &-4090393837790117205
 AnimatorState:
@@ -439,8 +439,7 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -3505300642004701440}
-  m_StateMachineBehaviours:
-  - {fileID: -4319330431103243145}
+  m_StateMachineBehaviours: []
   m_Position: {x: 180, y: -108, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

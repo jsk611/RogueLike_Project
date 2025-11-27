@@ -15,6 +15,7 @@ public class HammerMan : MonsterBase
     [SerializeField] private bool isJumping = false;
     [SerializeField] private float jumpCooldown = 1f;
     private bool canJump = true;
+    private bool charged = false;
     private Rigidbody rb;
 
     private CapsuleCollider collider;
@@ -55,6 +56,7 @@ public class HammerMan : MonsterBase
         Vector3 dir = (target.position - transform.position).normalized;
         rb.AddForce(new Vector3(dir.x * jumpForce, 15.0f * rb.mass, dir.z * jumpForce), ForceMode.Impulse);
         StartCoroutine(MoveInAir());
+        StartCoroutine(ShockWaveCharge());
         // 점프 쿨타임 시작
         Invoke(nameof(ResetJumpCooldown), jumpCooldown);
     }
@@ -62,17 +64,18 @@ public class HammerMan : MonsterBase
     void OnCollisionEnter(Collision collision)
     {
         // 착지 확인
-        if (isJumping )//&& collision.gameObject.layer==LayerMask.GetMask("Wall"))
+        if (isJumping && charged )//&& collision.gameObject.layer==LayerMask.GetMask("Wall"))
         {
             CreateShockwave(collision.contacts[0].point);
-            OnLanding();
         }
+        OnLanding();
     }
 
     void OnLanding()
     {
         // 착지 시 호출
         isJumping = false;
+        charged = false;
     }
 
     private void ResetJumpCooldown()
@@ -115,5 +118,10 @@ public class HammerMan : MonsterBase
             rb.AddForce(nav * chaseSpeed);
             yield return null;
         }
+    }
+    IEnumerator ShockWaveCharge()
+    {
+        yield return new WaitForSeconds(0.8f);
+        charged = true;
     }
 }

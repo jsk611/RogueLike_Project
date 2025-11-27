@@ -134,13 +134,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  monster: {fileID: 4221780997715074889, guid: eb69434c8528f5645b2b87cd77d296a9, type: 3}
-  soundType: 0
+  Attack: []
+  Hit: []
+  Extra: []
   soundSettings:
     automaticCleanup: 1
     volume: 0.2
     spatialBlend: 0
-  playOnEnter: 1
   delay: 0
 --- !u!1101 &-2114166057871874571
 AnimatorStateTransition:

@@ -351,6 +351,7 @@ GameObject:
   - component: {fileID: 4303473675281574568}
   - component: {fileID: 7407129381381145547}
   - component: {fileID: 994076788315644649}
+  - component: {fileID: 7529442428658949871}
   m_Layer: 16
   m_Name: HoverBot
   m_TagString: Untagged
@@ -467,12 +468,15 @@ MonoBehaviour:
   body: {fileID: 0}
   head: {fileID: 0}
   rotateSpeed: 2
+  maxSpeedRange: 10
+  minSpeedRange: 6
   master: {fileID: 0}
   anim: {fileID: 6068325511724340943}
   nmAgent: {fileID: 1555435097854624078}
   fov: {fileID: 763921145771254811}
   monsterStatus: {fileID: 9110442896728709607}
   playerRigidBody: {fileID: 4303473675281574568}
+  useAdaptiveAggression: 1
   attackRange: 10
   attackCooldown: 1
   splashFx: {fileID: 0}
@@ -593,6 +597,27 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &7529442428658949871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4549291608529419339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: f8ce6e253bff00c48af2139470a22e7c, type: 3}
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!1 &4640302736614388057
 GameObject:
   m_ObjectHideFlags: 0

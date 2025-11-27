@@ -2479,6 +2479,7 @@ GameObject:
   - component: {fileID: 6737020689261539520}
   - component: {fileID: 4210750534451347775}
   - component: {fileID: 8829762350533336468}
+  - component: {fileID: 5574554780171666597}
   m_Layer: 16
   m_Name: SpiderMinion
   m_TagString: Untagged
@@ -2723,6 +2724,26 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bf299c125a4594d488886eb748495140, type: 2}
   - {fileID: 11400000, guid: 4f8f6b5d114638b48aa5c1ce49bf9211, type: 2}
   - {fileID: 11400000, guid: b1899ce01db44cd4f90f8e6416ea1078, type: 2}
+--- !u!114 &5574554780171666597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368322638257693185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack: []
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!1 &7543102413471786734
 GameObject:
   m_ObjectHideFlags: 0

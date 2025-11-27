@@ -675,6 +675,7 @@ GameObject:
   - component: {fileID: 594921379378772637}
   - component: {fileID: 5128283943808585932}
   - component: {fileID: 4649702839008637074}
+  - component: {fileID: 2923001434172391176}
   m_Layer: 16
   m_Name: Golem_invisible
   m_TagString: Monster
@@ -930,6 +931,27 @@ MonoBehaviour:
   mBase: {fileID: 0}
   partName: Body
   damageMultiplier: 1
+--- !u!114 &2923001434172391176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698881975617418477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de10b11d0ff19634d9e8a2a9eedbbd5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attack:
+  - {fileID: 8300000, guid: fd53c9a757a8aaf468c894d906e993d2, type: 3}
+  Hit: []
+  Extra: []
+  soundSettings:
+    automaticCleanup: 1
+    volume: 1
+    spatialBlend: 0
+  delay: 0
 --- !u!1 &6784086843725728512
 GameObject:
   m_ObjectHideFlags: 0
