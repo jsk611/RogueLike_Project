@@ -11,8 +11,11 @@ public class EnemySpawnLogic : MonoBehaviour
     [SerializeField] GameObject[] enemyPrefabs;
     [SerializeField] GameObject[] bossPrefabs;
 
-    [SerializeField] EnemyCountData enemyCountData;
+    private readonly List<(EnemyType type, float weight)> currentEnemyPool = new();
+    private float currentTotalWeight = 0f;
 
+
+    [SerializeField] EnemyCountData enemyCountData;
 
     private void Start()
     {
@@ -21,7 +24,50 @@ public class EnemySpawnLogic : MonoBehaviour
         mapSize = tileManager.GetMapSize;
     }
 
+    public void BuildPoolForRound(int roundIndex)
+    {
+        currentEnemyPool.Clear();
+        currentTotalWeight = 0f;
 
+        // foreach (var def in enemyDefinitions)
+        // {
+        //     if (def == null) continue;
+        //     if (roundIndex < def.unlockRound) // 아직 안 풀린 몹
+        //         continue;
+
+        //     float w = def.baseWeight;
+        //     if (w <= 0f) continue;
+
+        //     currentEnemyPool.Add((def.type, w));
+        //     currentTotalWeight += w;
+        // }
+
+        if (currentEnemyPool.Count == 0)
+        {
+            Debug.LogWarning($"[EnemySpawnLogic] Round {roundIndex} 에 사용 가능한 몬스터가 없습니다.");
+        }
+    }
+
+    private EnemyType GetRandomTypeFromPool()
+    {
+        if (currentEnemyPool.Count == 0)
+        {
+            Debug.LogError("[EnemySpawnLogic] currentEnemyPool 이 비어 있음. EnemyType.None 반환.");
+            return EnemyType.None;
+        }
+
+        float r = Random.value * currentTotalWeight;
+        float acc = 0f;
+
+        foreach (var entry in currentEnemyPool)
+        {
+            acc += entry.weight;
+            if (r <= acc)
+                return entry.type;
+        }
+
+        return currentEnemyPool[currentEnemyPool.Count - 1].type; // float 오차 대비
+    }
     public GameObject SpawnEnemy(int x, int y, EnemyType enemyType)
     {
         GameObject enemyPrefab = GetEnemyPrefab(enemyType);

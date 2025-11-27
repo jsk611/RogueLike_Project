@@ -1,0 +1,69 @@
+{
+  "waveIndex": 1,
+  "isMultiMap": true,
+  "wallHeight": 12,
+  "isRepeating": true,
+  "maps": [
+    {
+      "file": "1111김이삭_1",
+      "duration": 20
+    }
+  ],
+  "isRandomPos": true,
+  "enemies": [
+    {
+      "type": 101,
+      "count": 4,
+      "spawnDelay": 15
+    },
+    {
+      "type": 111,
+      "count": 6,
+      "spawnDelay": 15
+    },
+    {
+      "type": 102,
+      "count": 4,
+      "spawnDelay": 25
+    },
+    {
+      "type": 212,
+      "count": 4,
+      "spawnDelay": 10
+    },
+    {
+      "type": 213,
+      "count": 2,
+      "spawnDelay": 15,
+      "firstDelay": 5
+    },
+    {
+      "type": 301,
+      "count": 2,
+      "spawnDelay": 15,
+      "firstDelay": 15
+    },
+    {
+      "type": 302,
+      "count": 1,
+      "spawnDelay": 25,
+      "firstDelay": 5
+    },
+    {
+      "type": 311,
+      "count": 2,
+      "spawnDelay": 20
+    }
+  ],
+  "mission": {
+
+    "type": "Killing",
+    "count": 14
+    
+
+  },
+
+  "isRandomEvent": false,
+  "events": [
+  ]
+}
