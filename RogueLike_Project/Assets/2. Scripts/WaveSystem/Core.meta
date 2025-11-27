@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:RogueLike_Project/Assets/2. Scripts/WaveSystem/Core.meta
 guid: 34ca71f66478cd24ba05fb34515f1360
 folderAsset: yes
+========
+guid: 82750f7395486c14b9eabb992b4d0a69
+>>>>>>>> 75e8a6339031a92613bbcec715186b87b8afaf37:RogueLike_Project/Assets/StreamingAssets/WaveData/ExcludedStages/계단 처치.json.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
